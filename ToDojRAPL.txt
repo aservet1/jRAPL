@@ -1,0 +1,11 @@
+msr.c
+	- make sure you like the #define's names
+	- sort the defines in the header file
+
+refactoring: ## thurs 11/19 #
+	- rename variables
+	- remove unused code
+	- clean up deprecated /// comments
+
+JavaDoc 
+	- 
