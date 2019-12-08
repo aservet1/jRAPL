@@ -1,2 +1,2 @@
-there is cpuid functions in the .c jrapl files, right? if you find stuff, related it to your 
+there are cpuid functions in the .c jrapl files, right? if you find stuff, related it to your 
 	CS220 Lab10 bc you worked with that kinda stuff...
