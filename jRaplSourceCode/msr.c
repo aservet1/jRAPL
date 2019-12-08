@@ -5,14 +5,14 @@
 #include "arch_spec.h"
 
 
-/** Note that when reaserching MSR, it stands for Model-Specific Register, not to be 
+/** Note that when reaserching MSR, it stands for Model-Specific Register, not to be
  *    confused with Machine State Register
  *
  *  Great info found on https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
  *    starting on page 3207
  *
  *  "<--- Alejandro's Interpretation --->" comments are not official documentation. Mostly just notes to
- *    self to remember how the functions work and what they do. 
+ *    self to remember how the functions work and what they do.
  */
 
 //factor of F for time_window_limit. It represents these four value.
@@ -28,10 +28,10 @@ putBitField(uint64_t inField, uint64_t *data, uint64_t width, uint64_t offset)
 	uint64_t bitMask;
 
 	/*The bits to be overwritten are located in the leftmost part.*/
-	if ((offset+width) == MSR_SIZE) 
-    {
-        bitMask = (mask<<offset);
-    } else {
+	if ((offset+width) == MSR_SIZE)
+	{
+        	bitMask = (mask<<offset);
+    	} else {
 		bitMask = (mask<<offset) ^ (mask<<(offset + width));
 	}
 	/*Reset the bits in *data that will be overwritten to be 0, and keep other bits the same.*/
@@ -64,14 +64,15 @@ extractBitField(uint64_t inField, uint64_t width, uint64_t offset)
 /* <--- Alejandro's Interpretation --->
  * Reads the msr into a uint64_t
  */
-uint64_t read_msr(int fd, uint64_t which) {
+uint64_t read_msr(int fd, uint64_t which)
+{
 
 	uint64_t data = 0;
 
 	if ( pread(fd, &data, sizeof data, which) != sizeof data ) {
 	  printf("pread error!\n");
 	}
-	
+
 	return data;
 }
 
@@ -79,7 +80,7 @@ uint64_t read_msr(int fd, uint64_t which) {
  * Writes (presumably updated) msr data to msr register
  */
 void write_msr(int fd, uint64_t which, uint64_t limit_info) {
-	if ( pwrite(fd, &limit_info , sizeof limit_info, which) != sizeof limit_info) 
+	if ( pwrite(fd, &limit_info , sizeof limit_info, which) != sizeof limit_info)
 	  printf("pwrite error!\n");
 }
 
@@ -96,7 +97,7 @@ double calc_time_window(uint64_t Y, uint64_t F) {
 /* <--- Alejandro's Interpretation --->
  * Takes the previously calculated time window (the human readable verson) and a given F and calculates the Y value. See formula above.
  */
-void 
+void
 calc_y(uint64_t *Y, uint64_t F, jdouble custm_time) {
 	rapl_msr_unit rapl_unit = get_rapl_unit();
 	*Y = log2(custm_time / rapl_unit.time / F_arr[F]);
@@ -111,10 +112,10 @@ get_specs(int fd, uint64_t addr) {
 	rapl_msr_unit rapl_unit = get_rapl_unit();
 	uint64_t msr;
 	rapl_msr_power_limit_t limit_info;
-	msr = read_msr(fd, addr);	
+	msr = read_msr(fd, addr);
 	limit_info.power_limit = rapl_unit.power * extractBitField(msr, POWER_LIMIT_SIZE, POWER_LIMIT_START);
 	limit_info.time_window_limit = calc_time_window(extractBitField(msr, Y_SIZE, Y_START_TIMEWINDOW_1), extractBitField(msr, F_SIZE, F_START_TIMEWINDOW_1));
-	limit_info.clamp_enable = extractBitField(msr, CLAMP_ENABLE_SIZE, CLAMP_SET1_ENABLE_START); 
+	limit_info.clamp_enable = extractBitField(msr, CLAMP_ENABLE_SIZE, CLAMP_SET1_ENABLE_START);
 	limit_info.limit_enable = extractBitField(msr, LIMIT_ENABLE_SIZE, LIMIT_ENABLE_START);
 	limit_info.lock_enable = extractBitField(msr, LOCK_ENABLE_SIZE, LOCK_ENABLE_START);
 	return limit_info;
@@ -142,7 +143,7 @@ set_package_power_limit_enable(int fd, uint64_t setting, uint64_t addr) {
 void
 set_dram_power_limit_enable(int fd, uint64_t setting, uint64_t addr) {
 	uint64_t msr;
-	msr = read_msr(fd, addr);	
+	msr = read_msr(fd, addr);
 
 	//enable set
 	putBitField(setting, &msr, DRAM_POWER_LIMIT_SETTING_SIZE, DRAM_POWER_LIMIT_SETTING_START); ////possibly rethink name
@@ -158,7 +159,7 @@ set_dram_power_limit_enable(int fd, uint64_t setting, uint64_t addr) {
 void
 set_package_clamp_enable(int fd, uint64_t setting, uint64_t addr) {
 	uint64_t msr;
-	msr = read_msr(fd, addr);	
+	msr = read_msr(fd, addr);
 
 	//clamp set #1
 	putBitField(setting, &msr, CLAMP_ENABLE_SIZE, CLAMP_SET1_ENABLE_START);
@@ -179,7 +180,7 @@ set_package_clamp_enable(int fd, uint64_t setting, uint64_t addr) {
 //This idea is loop four possible sets of Y and F, and in return to get 
 //the time window, then use the set of Y and F that is smaller than but 
 //closest to the customized time.
-void 
+void
 convert_optimal_yf_from_time(uint64_t *Y, uint64_t *F, jdouble custm_time) {
 	uint64_t temp_y;
 	double time_window = 0.0;
@@ -187,9 +188,9 @@ convert_optimal_yf_from_time(uint64_t *Y, uint64_t *F, jdouble custm_time) {
 	double smal_delta = DELTA_MAX;
 	int i = 0;
 	for(i = 0; i < 4; i++) {
-		calc_y(&temp_y, i, custm_time);		
+		calc_y(&temp_y, i, custm_time);
 		time_window = calc_time_window(temp_y, i);
-		delta = custm_time -time_window;
+		delta = custm_time - time_window;
 		if(delta > 0 && delta < smal_delta) {
 			smal_delta = delta;
 			*Y = temp_y;
@@ -207,7 +208,7 @@ set_pkg_time_window_limit(int fd, uint64_t addr, jdouble custm_time) {
 	uint64_t msr;
 	uint64_t Y;
 	uint64_t F;
-	msr = read_msr(fd, addr);	
+	msr = read_msr(fd, addr);
 	//Set the customized time window.
 	convert_optimal_yf_from_time(&Y, &F, custm_time);
 
@@ -232,7 +233,7 @@ set_dram_time_window_limit(int fd, uint64_t addr, jdouble custm_time) {
 	uint64_t msr;
 	uint64_t Y;
 	uint64_t F;
-	msr = read_msr(fd, addr);	
+	msr = read_msr(fd, addr);
 	//Set the customized time window.
 	convert_optimal_yf_from_time(&Y, &F, custm_time);
 
@@ -251,9 +252,9 @@ set_dram_time_window_limit(int fd, uint64_t addr, jdouble custm_time) {
  */
 void
 set_pkg_power_limit(int fd, uint64_t addr, jdouble custm_power) {
-	rapl_msr_unit rapl_unit = get_rapl_unit();	
+	rapl_msr_unit rapl_unit = get_rapl_unit();
 	uint64_t msr;
-	msr = read_msr(fd, addr);	
+	msr = read_msr(fd, addr);
 	//Set the customized power.
 	uint64_t power_limit = custm_power / rapl_unit.power;
 	//Keep everything else the same.
@@ -270,7 +271,7 @@ set_pkg_power_limit(int fd, uint64_t addr, jdouble custm_power) {
  */
 void
 set_dram_power_limit(int fd, uint64_t addr, jdouble custm_power) {
-	rapl_msr_unit rapl_unit = get_rapl_unit();	
+	rapl_msr_unit rapl_unit = get_rapl_unit();
 	uint64_t msr;
 	msr = read_msr(fd, addr);
 	//Set the customized power.
@@ -291,13 +292,13 @@ set_dram_power_limit(int fd, uint64_t addr, jdouble custm_power) {
 /*Get unit information to be multiplied with */
 void get_msr_unit(rapl_msr_unit *unit_obj, uint64_t data) {
 
-	uint64_t power_bit = extractBitField(data, POWER_BIT_SIZE, POWER_BIT_START);
-	uint64_t energy_bit = extractBitField(data, ENERGY_BIT_SIZE, ENERGY_BIT_START);
-	uint64_t time_bit = extractBitField(data, TIME_BIT_SIZE, TIME_BIT_START);       ////** ask kenan - what is the time being retrieved?
+	uint64_t power_bits = extractBitField(data, POWER_BIT_SIZE, POWER_BIT_START);
+	uint64_t energy_bits = extractBitField(data, ENERGY_BIT_SIZE, ENERGY_BIT_START);
+	uint64_t time_bits = extractBitField(data, TIME_BIT_SIZE, TIME_BIT_START);       //// ask kenan - what is the time being retrieved?
 
-	unit_obj->power = (1.0 / _2POW(power_bit));	
-	unit_obj->energy = (1.0 / _2POW(energy_bit));	
-	unit_obj->time = (1.0 / _2POW(time_bit));	
+	unit_obj->power = (1.0 / _2POW(power_bits));
+	unit_obj->energy = (1.0 / _2POW(energy_bits));
+	unit_obj->time = (1.0 / _2POW(time_bits));
 }
 
 /* <--- Alejandro's Interpretation --->
@@ -307,7 +308,6 @@ void get_msr_unit(rapl_msr_unit *unit_obj, uint64_t data) {
 double
 get_wraparound_energy(double energy_unit) {
 	printf("Energy Unit: %f Wrap Around: %f\n", energy_unit, 1.0 / energy_unit);
-	//WRAPAROUND_VALUE = 1.0 / energy_unit;	<-- got rid of the use of WRAPAROUND_VALUE as a global varaible bc it seemed unnecessary
 	return 1.0 / energy_unit;
 }
 
@@ -316,7 +316,7 @@ get_wraparound_energy(double energy_unit) {
  * so the caller doesnt need to know that value
  */
 void
-get_rapl_pkg_parameters(int fd, rapl_msr_unit *unit_obj, rapl_msr_parameter *paras) { ///(?) whats the point of the type casts?
+get_rapl_pkg_parameters(int fd, rapl_msr_unit *unit_obj, rapl_msr_parameter *paras) {
 	get_rapl_parameters(fd, MSR_PKG_POWER_INFO, (rapl_msr_unit *)unit_obj, (rapl_msr_parameter *)paras);
 }
 
@@ -325,7 +325,7 @@ get_rapl_pkg_parameters(int fd, rapl_msr_unit *unit_obj, rapl_msr_parameter *par
  * so the caller doesnt need to know that value
  */
 void
-get_rapl_dram_parameters(int fd, rapl_msr_unit *unit_obj, rapl_msr_parameter *paras) { ///(?) whats the point of the type casts?
+get_rapl_dram_parameters(int fd, rapl_msr_unit *unit_obj, rapl_msr_parameter *paras) {
 	get_rapl_parameters(fd, MSR_DRAM_POWER_INFO, (rapl_msr_unit *)unit_obj, (rapl_msr_parameter *)paras);
 }
 
@@ -335,7 +335,7 @@ get_rapl_dram_parameters(int fd, rapl_msr_unit *unit_obj, rapl_msr_parameter *pa
  * Processes bit field data into relevant human-readable number using the unit object's data
  * ...data put into unit_obj was proceessed with fomula [1.0 / _2POW(data)]
  */
-void 
+void
 get_rapl_parameters(int fd, uint64_t msr_addr, rapl_msr_unit *unit_obj, rapl_msr_parameter *paras) {
 	uint64_t thermal_spec_power;
 	uint64_t max_power;
