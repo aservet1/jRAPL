@@ -80,7 +80,7 @@ cpuid_info_t getProcessorTopology(uint32_t level);
 
 uint64_t get_num_core_thread();
 
-uint64_t get_num_pkg_thread();
+uint64_t get_num_pkg_thread();  
 
 uint64_t get_num_pkg_core();
 
