@@ -2,6 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+//// DVFS stands for Dynamic Voltage and Frequency Scaling
+
+/** Alejandro's Interpretation
+ *	
+ *	
+ *	Returns 1 if failed writing opening and closing file. Return 0 if no errors.
+ */
 int check_write_gov(int cores, char govFile[cores][60], const char *target) {
 	int i;
 	int rc;
@@ -55,7 +63,13 @@ int check_write_gov(int cores, char govFile[cores][60], const char *target) {
 
 }
 
-write_freq_all_cores(int cores, char filename[cores][60], const char *cur_freq, const char *scal_freq, int freq) {
+/** Alejandro's Interpretation
+ *	
+ *
+ *
+ *	Returns 1 if failed writing opening and closing file. Return 0 if no errors.
+ */
+int write_freq_all_cores(int cores, char filename[cores][60], const char *cur_freq, const char *scal_freq, int freq) {
 	int i;
 	FILE *f[cores];
     int rc;
@@ -71,8 +85,6 @@ write_freq_all_cores(int cores, char filename[cores][60], const char *cur_freq, 
 			return 1;
 		}
 
-	//    data_length = strlen(freq);
-	 //   data_written = fwrite(freq, 1, data_length, f); //For binary code
 		data_length = get_pos_intnum(freq);
 		data_written = fprintf(f[i], "%d", freq);  //For integer
 
@@ -108,5 +120,5 @@ write_freq_all_cores(int cores, char filename[cores][60], const char *cur_freq, 
 	    printf("cpu_freq: %d\n", cpu_freq[i]);
 		printf("scal_cpufreq: %d\n", scal_cpufreq[i]);
 	}
-
+	return 0;
 }

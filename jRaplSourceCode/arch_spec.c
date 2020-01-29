@@ -123,10 +123,11 @@ uint64_t get_num_pkg_core()
 /** <Alejandro's Interpretation>
  *	Initializes some data about the system, returns number of cores.
 	
-	num_core_thread; 	//number of physical threads per core
-	num_pkg_thread; 	//number of physical threads per package 
-	num_pkg_core; 		//number of cores per package
-	num_pkg; 			//number of packages for current machine
+	Below used to be global variables
+	  num_core_thread; 	//number of physical threads per core
+	  num_pkg_thread; 	//number of physical threads per package 
+	  num_pkg_core;		//number of cores per package
+	  num_pkg; 			//number of packages for current machine
 
  */
 uint64_t getSocketNum() {
