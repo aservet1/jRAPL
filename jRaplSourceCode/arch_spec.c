@@ -13,6 +13,10 @@
  *	- (?) Direct  CPUID  access  through  this  device
           should only be used in exceptional cases.
  *	Calls cpuid with eax=1 which returns info abt if its SANDYBRIDGE, BROADWELL, ...
+ *	EAX	Version Information: Type, Family, Model, and Stepping ID
+-	EBX	Bits 7-0: Brand Index
+-	-	Bits 15-8: CLFLUSH line size (Value . 8 = cache line size in bytes)
+-	-	Bits 23-16: Number of logical processors per physical processor; two for the Pentium 4 processor supporting Hyper-Threading Technology
  */
 uint32_t
 get_cpu_model(void)
@@ -32,7 +36,9 @@ int core_num() {
 
 /** <Alejandro's Interpretation>
  *	Gets info from cpuid call to identify where the APIC stuff is.
- *	To my understnading, APIC stuff can target parts of the process and interrupt it
+ *	To my understnading, APIC stuff can target parts of the process and interrupt it // APIC the advanced programmable interrupt controller
+-	tech that intel developed to streamline interrupt handling on multiprocessor systems
+
  *	We care about this bc we want to interrupt processes that pass a certain energy level
  */
 void 
