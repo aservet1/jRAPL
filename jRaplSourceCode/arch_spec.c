@@ -23,6 +23,7 @@ get_cpu_model(void)
 {
 	uint32_t eax, ebx, ecx, edx;
     eax = 0x01;
+	ecx = 0x0;
 	CPUID;
 	return (((eax>>16)&0xFU)<<4) + ((eax>>4)&0xFU);
 }
