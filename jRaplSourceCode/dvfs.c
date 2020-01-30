@@ -6,7 +6,8 @@
 //// DVFS stands for Dynamic Voltage and Frequency Scaling
 
 /**	Alejandro's interpretation
- *	Return 1 if negative, otherwise return number of base 10 digits in value
+ *	Return 1 if negative, otherwise return number of base 10 digits in value 
+ *		147 => 3, 328974 => 6, -1812973128973 => 1, etc
  */
 int get_pos_intnum(int value) {
 	int num = 1;
