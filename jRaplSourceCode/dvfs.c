@@ -6,7 +6,7 @@
 //// DVFS stands for Dynamic Voltage and Frequency Scaling
 
 /**	Alejandro's interpretation
- *	Return 1 if negative, otherwise return number of base 10 digits in value 
+ *	Return 1 if negative, otherwise return number of base 10 digits in value
  *		147 => 3, 328974 => 6, -1812973128973 => 1, etc
  */
 int get_pos_intnum(int value) {
@@ -19,8 +19,8 @@ int get_pos_intnum(int value) {
 }
 
 /** Alejandro's Interpretation
- *	
- *	
+ *
+ *
  *	Returns 1 if failed writing opening and closing file. Return 0 if no errors.
  */
 int check_write_gov(int cores, char govFile[cores][60], const char *target) {
@@ -77,7 +77,7 @@ int check_write_gov(int cores, char govFile[cores][60], const char *target) {
 }
 
 /** Alejandro's Interpretation
- *	
+ *
  *
  *
  *	Returns 1 if failed writing opening and closing file. Return 0 if no errors.
@@ -85,12 +85,12 @@ int check_write_gov(int cores, char govFile[cores][60], const char *target) {
 int write_freq_all_cores(int cores, char filename[cores][60], const char *cur_freq, const char *scal_freq, int freq) {
 	int i;
 	FILE *f[cores];
-    int rc;
-    size_t data_length, data_written;
+  int rc;
+  size_t data_length, data_written;
 	int cpu_freq[cores];
 	int scal_cpufreq[cores];
 
-	for(i = 0; i < cores; i++) { 
+	for(i = 0; i < cores; i++) {
 		f[i] = fopen(filename[i], "w");
 		if (f[i] == NULL) {
 			//LOGI("Failed to open %s: %s", filename, strerror(errno));
@@ -119,7 +119,7 @@ int write_freq_all_cores(int cores, char filename[cores][60], const char *cur_fr
 			printf("Failed to open %s", cur_freq);
 			return 1;
 		}
-		
+
 		fscanf(f[i], "%d", &cpu_freq[i]);
 		rc= fclose(f[i]);
 		f[i] = fopen(scal_freq, "r");
