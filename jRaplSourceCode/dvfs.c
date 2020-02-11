@@ -130,7 +130,7 @@ int write_freq_all_cores(int cores, char filename[cores][60], const char *cur_fr
 		}
 		fscanf(f[i], "%d", &scal_cpufreq[i]);
 		rc= fclose(f[i]);
-	    printf("cpu_freq: %d\n", cpu_freq[i]);
+	  printf("cpu_freq: %d\n", cpu_freq[i]);
 		printf("scal_cpufreq: %d\n", scal_cpufreq[i]);
 	}
 	return 0;

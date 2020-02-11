@@ -6,11 +6,11 @@ public class EnergyCheckUtils {
 	public native static int scale(int freq);                   // not used yet in this file
 	public native static int[] freqAvailable();                 // not used yet in this file
 	public native static double[] GetPackagePowerSpec();        // not used yet in this file
-	public native static double[] GetDramPowerSpec();           // not used yet in this file           
+	public native static double[] GetDramPowerSpec();           // not used yet in this file
 	public native static void SetPackagePowerLimit(int socketId, int level, double costomPower);        // not used yet in this file
-    public native static void SetPackageTimeWindowLimit(int socketId, int level, double costomTimeWin); // not used yet in this file
-    public native static void SetDramTimeWindowLimit(int socketId, int level, double costomTimeWin);    // not used yet in this file
-    public native static void SetDramPowerLimit(int socketId, int level, double costomPower);           // not used yet in this file
+  public native static void SetPackageTimeWindowLimit(int socketId, int level, double costomTimeWin); // not used yet in this file
+  public native static void SetDramTimeWindowLimit(int socketId, int level, double costomTimeWin);    // not used yet in this file
+  public native static void SetDramPowerLimit(int socketId, int level, double costomPower);           // not used yet in this file
 
 	/** Documentation not done. See CPUScaler.c for source
 	 *  Initializes the energy profile of the system. Starts collecting info
@@ -27,7 +27,7 @@ public class EnergyCheckUtils {
 	*/
 	public native static int GetSocketNum();
 
-    /** Returns a string with energy information. 
+    /** Returns a string with energy information.
         Formatted "1stSocketInfo @ 2ndSocketInfo @ ... @ NthSocketInfo" with @ delimiters
         Each NthSocketInfo subsection formatted "dram/uncore_energy#cpu_energy#package_energy" with # delimieters
         This string gets parsed into an array in getEnergyStats().
@@ -45,8 +45,8 @@ public class EnergyCheckUtils {
 	/** Number of sockets CPU has. Determined in ProfileInit() method. */
 	public static int socketNum;
 
-    /// the static block loads the library of native C calls from the JAR. also initializes a profile and gets number of CPU sockets	
-    static {
+    /// the static block loads the library of native C calls from the JAR. also initializes a profile and gets number of CPU sockets
+  static {
 		try {
 			Field fieldSysPath = ClassLoader.class
 					.getDeclaredField("sys_paths");
@@ -66,9 +66,9 @@ public class EnergyCheckUtils {
 	}
 
 	/**
-     * Parses string generated from the native EnergyStatCheck() method into an array of doubles.
+   * Parses string generated from the native EnergyStatCheck() method into an array of doubles.
 	 * @return an array of current energy information.
-     * Array will be size (3 * socketnum). There will be three entries per socket
+   * Array will be size (3 * socketnum). There will be three entries per socket
 	 * The first entry is: Dram/uncore gpu energy (depends on the cpu architecture)
 	 * The second entry is: CPU energy
 	 * The third entry is: Package energy
