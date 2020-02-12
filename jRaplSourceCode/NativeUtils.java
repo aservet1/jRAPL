@@ -90,7 +90,7 @@ public class NativeUtils {
         int readBytes;
 
         // Open and check input stream
-        InputStream is = NativeUtils.class.getResourceAsStream("libCPUScaler.so");
+        InputStream is = NativeUtils.class.getResourceAsStream(filename);
         if (is == null) {
             throw new FileNotFoundException("File " + path + " was not found inside JAR.");
         }
