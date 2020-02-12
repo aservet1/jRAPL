@@ -48,6 +48,8 @@ public class EnergyCheckUtils {
 
     /// the static block loads the library of native C calls from the JAR. also initializes a profile and gets number of CPU sockets
   static {
+		String JRAPL_PATH = System.getenv("JRAPL_PATH"); // THIS HAS TO BE SET UP AND EXPORTED IN BASHRC
+		System.out.println(JRAPL_PATH+"/libCPUScaler.so");
 		try {
 			Field fieldSysPath = ClassLoader.class
 					.getDeclaredField("sys_paths");
@@ -58,7 +60,7 @@ public class EnergyCheckUtils {
 		}
 
 		try {
-		NativeUtils.loadLibraryFromJar("/jrapl/libCPUScaler.so");
+			NativeUtils.loadLibraryFromJar(JRAPL_PATH+"/libCPUScaler.so");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

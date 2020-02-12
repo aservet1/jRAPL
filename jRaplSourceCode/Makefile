@@ -4,7 +4,7 @@ JAVA_HOME=${JAVA_HOME}
 JAVA_INCLUDE = $(JAVA_HOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
-all: lib_shared_CPUScaler
+all: lib_shared_CPUScaler javafiles
 
 common:
 	echo $(JAVA_HOME)
@@ -16,6 +16,9 @@ lib_shared_CPUScaler: common
 cdriver: *.c
 	#gcc -g -fsanitize=address -fno-omit-frame-pointer -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) CPUScaler.c arch_spec.c msr.c dvfs.c cdriver.c -o cdriver -lm
 	gcc -g -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) CPUScaler.c arch_spec.c msr.c dvfs.c cdriver.c -o cdriver -lm
+
+javafiles:
+	javac *.java -d .
 
 clean:
 	rm -f lib_share_CPUScaler $(TARGET) cdriver *.class
