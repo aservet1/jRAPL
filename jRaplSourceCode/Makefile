@@ -1,7 +1,7 @@
 TARGET = libCPUScaler.so CPUScaler.o arch_spec.o msr.o dvfs.o
 CFLAGS = -fPIC -g -c -Wall
-Java_Home=${JAVA_HOME}
-JAVA_INCLUDE = $(Java_Home)/include
+JAVAHOME=${JAVA_HOME}
+JAVA_INCLUDE = $(JAVAHOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
 all: lib_shared_CPUScaler javafiles
