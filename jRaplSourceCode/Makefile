@@ -1,6 +1,6 @@
 TARGET = libCPUScaler.so CPUScaler.o arch_spec.o msr.o dvfs.o
 CFLAGS = -fPIC -g -c -Wall
-JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
+JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 JAVA_INCLUDE = $(JAVA_HOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
