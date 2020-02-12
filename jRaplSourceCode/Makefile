@@ -1,13 +1,13 @@
 TARGET = libCPUScaler.so CPUScaler.o arch_spec.o msr.o dvfs.o
 CFLAGS = -fPIC -g -c -Wall
-JAVA_HOME=${JAVA_HOME}
-JAVA_INCLUDE = $(JAVA_HOME)/include
+Java_Home=${JAVA_HOME}
+JAVA_INCLUDE = $(Java_Home)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
 all: lib_shared_CPUScaler javafiles
 
 common:
-	echo $(JAVA_HOME)
+	echo $(Java_Home)
 	gcc $(CFLAGS) -I $(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) CPUScaler.c arch_spec.c msr.c dvfs.c
 
 lib_shared_CPUScaler: common
