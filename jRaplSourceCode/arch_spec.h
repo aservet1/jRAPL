@@ -9,6 +9,7 @@
  * for those CPUID information (December 2016)
  *
  * Table: CPUID Signature Values of DisplayFamily_DisplayModel
+ * Need to add cases for more recent architectures 7th gen onwards - kaby lake and coffee lake
  */
 #define SANDYBRIDGE          0x2AU
 #define SANDYBRIDGE_EP       0x2DU

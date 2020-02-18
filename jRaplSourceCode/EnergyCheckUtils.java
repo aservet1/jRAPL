@@ -9,9 +9,9 @@ public class EnergyCheckUtils {
 	public native static double[] GetPackagePowerSpec();        // not used yet in this file
 	public native static double[] GetDramPowerSpec();           // not used yet in this file
 	public native static void SetPackagePowerLimit(int socketId, int level, double costomPower);        // not used yet in this file
-  public native static void SetPackageTimeWindowLimit(int socketId, int level, double costomTimeWin); // not used yet in this file
-  public native static void SetDramTimeWindowLimit(int socketId, int level, double costomTimeWin);    // not used yet in this file
-  public native static void SetDramPowerLimit(int socketId, int level, double costomPower);           // not used yet in this file
+	public native static void SetPackageTimeWindowLimit(int socketId, int level, double costomTimeWin); // not used yet in this file
+	public native static void SetDramTimeWindowLimit(int socketId, int level, double costomTimeWin);    // not used yet in this file
+	public native static void SetDramPowerLimit(int socketId, int level, double costomPower);           // not used yet in this file
 
 	/** Documentation not done. See CPUScaler.c for source
 	 *  Initializes the energy profile of the system. Starts collecting info
