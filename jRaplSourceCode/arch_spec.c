@@ -138,6 +138,3 @@ uint64_t getSocketNum() {
 	return num_pkg;
 }
 
-int main(){
-	printf("%x\n",get_cpu_model());
-}
