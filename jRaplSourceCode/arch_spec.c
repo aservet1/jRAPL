@@ -137,3 +137,7 @@ uint64_t getSocketNum() {
 	uint64_t num_pkg = coreNum / num_pkg_thread;
 	return num_pkg;
 }
+
+int main(){
+	printf("%x\n",get_cpu_model());
+}
