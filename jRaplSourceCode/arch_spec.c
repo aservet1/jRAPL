@@ -42,7 +42,7 @@ int core_num() {
 
  *	We care about this bc we want to interrupt processes that pass a certain energy level
  */
-void 
+void
 parse_apic_id(cpuid_info_t info_l0, cpuid_info_t info_l1, APIC_ID_t *my_id){
 
 	// Get the SMT ID (SMT = Simultaneous MultiThreading)
@@ -61,7 +61,7 @@ parse_apic_id(cpuid_info_t info_l0, cpuid_info_t info_l1, APIC_ID_t *my_id){
 }
 
 /** <Alejandro's Interpretation>
- *	Gets CPUID info given eax_in and ecx_in and eax and ecx x86 args. Stores 
+ *	Gets CPUID info given eax_in and ecx_in and eax and ecx x86 args. Stores
  *  reulting e[a/b/c/d]x values in a cpuid_info_t struct
  */
 void cpuid(uint32_t eax_in, uint32_t ecx_in, cpuid_info_t *ci) {
@@ -85,13 +85,13 @@ void cpuid(uint32_t eax_in, uint32_t ecx_in, cpuid_info_t *ci) {
  *  Wraps up the cpuid function that gets cpuid information stuff. More abstract and easy to deal with
  *	no specific numbers or assembly or whatever. Always passes in 0xb because thats the cpuid() arg that
  *	gives info about packages and cores and APIC info
- *	
+ *
  *	see intel manual pdf p. 771 for info about when eax_in = 0x0b; ebx bits 15-00 are number of logical preprocessors at this level type
  *		the number reflects configuration as shipped by Intel
 
 	- INTEL: CPUID eax=0x0000000B
-	  For Intel CPUs (and not AMD), this CPUID function tells you "Number of bits to shift right APIC ID to get next level APIC ID", and needs to be used twice. The 		  first time (with ECX=0) it tells you how many bits of the APIC ID is used to identify the logical CPU within each core (logical_CPU_bits). The second time (with 
-	  ECX=1) it tells you how many bits of the APIC ID is used to identify the core and logical CPU within the chip, and to get "core_bits" from this value you subtract 
+	  For Intel CPUs (and not AMD), this CPUID function tells you "Number of bits to shift right APIC ID to get next level APIC ID", and needs to be used twice. The 		  first time (with ECX=0) it tells you how many bits of the APIC ID is used to identify the logical CPU within each core (logical_CPU_bits). The second time (with
+	  ECX=1) it tells you how many bits of the APIC ID is used to identify the core and logical CPU within the chip, and to get "core_bits" from this value you subtract
 	  "logical_CPU_bits" from it.
  */
 cpuid_info_t getProcessorTopology(uint32_t level) {
@@ -123,10 +123,10 @@ uint64_t get_num_pkg_core()
 
 /** <Alejandro's Interpretation>
  *	Initializes some data about the system, returns number of cores.
-	
+
 	Below used to be global variables
 	  num_core_thread; 	//number of physical threads per core
-	  num_pkg_thread; 	//number of physical threads per package 
+	  num_pkg_thread; 	//number of physical threads per package
 	  num_pkg_core;		//number of cores per package
 	  num_pkg; 			//number of packages for current machine
 
