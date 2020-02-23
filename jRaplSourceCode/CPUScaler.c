@@ -21,9 +21,9 @@ static uint64_t num_pkg;
 /** <Alejandro's Interpretation>
  *  Takes the energy info and packages it into a formatted string... # delimits the 3 energy attribs and @ delimits multiple package readings (1 pkg = 3 energy attribs)
  *	Sets offset to the end of the string by the end of this
- *	I belive the i is an iterator to see how many packages have been put into the string  
+ *	I belive the i is an iterator to see how many packages have been put into the string
  *	If more than 1 pkg, puts a @ at the end of the string because there's going to be another set of package info after that
- *	
+ *
  */
 void copy_to_string(char *ener_info, char uncore_buffer[60], int uncore_num, char cpu_buffer[60], int cpu_num, char package_buffer[60], int package_num, int i, int *offset) {
 	memcpy(ener_info + *offset, &uncore_buffer, uncore_num);
@@ -45,7 +45,8 @@ void copy_to_string(char *ener_info, char uncore_buffer[60], int uncore_num, cha
 }
 
 
-/*Assumed to be called only during or after ProfileInit, when fd[] is initialized and fd[0] actually means something*/
+/*Assumed to be called only during or after ProfileInit, when static variable fd[] is initialized
+  and fd[0] actually means something*/
 rapl_msr_unit get_rapl_unit()
 {
 	rapl_msr_unit rapl_unit;
@@ -74,7 +75,7 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_ProfileInit(JNIEnv *env, jcla
 	/*only two domains are supported for parameters check*/
 	parameters = (rapl_msr_parameter *)malloc(2 * sizeof(rapl_msr_parameter));
 	fd = (int *) malloc(num_pkg * sizeof(int));
-	
+
 	for(i = 0; i < num_pkg; i++) {
 		if(i > 0) {
 			core += num_pkg_thread / 2; 	//measure the first core of each package
@@ -105,7 +106,7 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_GetSocketNum(JNIEnv *env, jcl
  *	Pass in gpu, dram, cpu, and package buffers. There are num_pkg buffers per type of computer thing. One buffer per package that the computer has.
  *	Filling up the buffers. The for loop is so you get a different reading for all the packages. Reads the msr for that package with fd[i]
  *  Based on the CPU model, it either adds dram info or gpu info. I guess that certain models use gpus and others drams?
- *  Interpret/process MSR reading for dram differently based on CPU model before storing it in the buffer....................... 
+ *  Interpret/process MSR reading for dram differently based on CPU model before storing it in the buffer.......................
  */
 void
 initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][60], char cpu_buffer[num_pkg][60], char package_buffer[num_pkg][60]) {
@@ -129,7 +130,7 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
 
 		sprintf(package_buffer[i], "%f", package[i]);
 		sprintf(cpu_buffer[i], "%f", pp0[i]);
-		
+
 		switch(cpu_model) {
 			case SANDYBRIDGE_EP:
 			case HASWELL1:
@@ -140,7 +141,8 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
 			case SKYLAKE2:
 			case BROADWELL:
 			case BROADWELL2:
-	
+case MY_CPU_MODEL_THING:
+
 				result = read_msr(fd[i],MSR_DRAM_ENERGY_STATUS);
 				if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
 					dram[i] =(double)result*MSR_DRAM_ENERGY_UNIT;
@@ -150,30 +152,29 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
 
 				sprintf(dram_buffer[i], "%f", dram[i]);
 
-				info_size += strlen(package_buffer[i]) + strlen(dram_buffer[i]) + strlen(cpu_buffer[i]) + 4;	
+				info_size += strlen(package_buffer[i]) + strlen(dram_buffer[i]) + strlen(cpu_buffer[i]) + 4;
 
-				/*Insert socket number*/	
-				
+				/*Insert socket number*/
+
 				break;
 			case SANDYBRIDGE:
 			case IVYBRIDGE:
-
 
 				result = read_msr(fd[i],MSR_PP1_ENERGY_STATUS);
 				pp1[i] = (double) result *rapl_unit.energy;
 
 				sprintf(gpu_buffer[i], "%f", pp1[i]);
 
-				info_size += strlen(package_buffer[i]) + strlen(gpu_buffer[i]) + strlen(cpu_buffer[i]) + 4;	
-				
+				info_size += strlen(package_buffer[i]) + strlen(gpu_buffer[i]) + strlen(cpu_buffer[i]) + 4;
+
 		}
 	}
 }
 
 
 /** <Alejandro's Interpretation>
- * Makes a string from the energy info. Initializes energy info with that function above and 
- * 
+ * Makes a string from the energy info. Initializes energy info with that function above and
+ *
  * The first entry is: Dram/uncore gpu energy (depends on the cpu architecture)
  * The second entry is: CPU energy
  * The third entry is: Package energy
@@ -182,8 +183,8 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 		jclass jcls) {
 	jstring ener_string;
 	char gpu_buffer[num_pkg][60];
-	char dram_buffer[num_pkg][60]; 
-	char cpu_buffer[num_pkg][60]; 
+	char dram_buffer[num_pkg][60];
+	char cpu_buffer[num_pkg][60];
 	char package_buffer[num_pkg][60];
 	int dram_num = 0L;	///  dram_num is the id number of that component
 	int cpu_num = 0L;	///  same applies to the other x_num varaibles (num is id number)
@@ -211,13 +212,13 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 			case SKYLAKE2:
 			case BROADWELL:
 			case BROADWELL2:
-
+case MY_CPU_MODEL_THING:
 				//copy_to_string(ener_info, dram_buffer, dram_num, cpu_buffer, cpu_num, package_buffer, package_num, i, &offset);
-				/*Insert socket number*/	
+				/*Insert socket number*/
 				dram_num = strlen(dram_buffer[i]);
 				cpu_num = strlen(cpu_buffer[i]);
 				package_num = strlen(package_buffer[i]);
-				
+
 				memcpy(ener_info + offset, &dram_buffer[i], dram_num);
 				//split sign
 				ener_info[offset + dram_num] = '#';
@@ -233,12 +234,12 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 				} else {
 					memcpy(ener_info + offset + dram_num + cpu_num + 2, &package_buffer[i], package_num + 1);
 				}
-				
-				break;	
+
+				break;
 			case SANDYBRIDGE:
 			case IVYBRIDGE:
 
-				gpu_num = strlen(gpu_buffer[i]);		
+				gpu_num = strlen(gpu_buffer[i]);
 				cpu_num = strlen(cpu_buffer[i]);
 				package_num = strlen(package_buffer[i]);
 
@@ -259,7 +260,7 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 					memcpy(ener_info + offset + gpu_num + cpu_num + 2, &package_buffer[i],
 							package_num + 1);
 				}
-				
+
 				break;
 		default:
 				printf("non of archtectures are detected\n");
@@ -268,7 +269,7 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 		}
 	}
 
-	ener_string = (*env)->NewStringUTF(env, ener_info);	
+	ener_string = (*env)->NewStringUTF(env, ener_info);
 	return ener_string;
 
 }
@@ -278,7 +279,6 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
  */
 JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_ProfileDealloc
    (JNIEnv * env, jclass jcls) {
-	free(fd);	
+	free(fd);
 	free(parameters);
 }
-

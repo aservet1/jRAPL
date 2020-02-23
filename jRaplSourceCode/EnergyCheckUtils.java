@@ -2,8 +2,10 @@ package jrapl;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Arrays;
 
 public class EnergyCheckUtils {
+	/// can't find the definitons of these anywhere........
 	public native static int scale(int freq);                   // not used yet in this file
 	public native static int[] freqAvailable();                 // not used yet in this file
 	public native static double[] GetPackagePowerSpec();        // not used yet in this file
@@ -49,8 +51,7 @@ public class EnergyCheckUtils {
     /// the static block loads the library of native C calls from the JAR. also initializes a profile and gets number of CPU sockets
   static {
 		try {
-			Field fieldSysPath = ClassLoader.class
-					.getDeclaredField("sys_paths");
+			Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
 			fieldSysPath.setAccessible(true);
 			fieldSysPath.set(null, null);
 		} catch (Exception e) {
@@ -58,8 +59,8 @@ public class EnergyCheckUtils {
 		}
 
 		try {
-		
-		NativeUtils.loadLibraryFromJar("/jrapl/libCPUScaler.so");
+
+		NativeUtils.loadLibraryFromJar("/home/alejandro/Documents/Projects/jRAPL/jRaplSourceCode/libCPUScaler.so");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -84,6 +85,7 @@ public class EnergyCheckUtils {
 			double[] stats = new double[3]; // 3 stats per socket
 			String[] energy = EnergyInfo.split("#");
 
+			System.out.println(Arrays.toString(energy));
 			stats[0] = Double.parseDouble(energy[0]);
 			stats[1] = Double.parseDouble(energy[1]);
 			stats[2] = Double.parseDouble(energy[2]);

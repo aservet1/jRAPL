@@ -36,7 +36,7 @@ putBitField(uint64_t inField, uint64_t *data, uint64_t width, uint64_t offset)
 	}
 	/*Reset the bits in *data that will be overwritten to be 0, and keep other bits the same.*/
 	*data = ~bitMask & *data;
-    /*Overwrite the cleared bits with new ones provided in inField*/	
+    /*Overwrite the cleared bits with new ones provided in inField*/
 	*data = *data | (inField<<offset);
 }
 
@@ -70,7 +70,7 @@ uint64_t read_msr(int fd, uint64_t which)
 	uint64_t data = 0;
 
 	if ( pread(fd, &data, sizeof data, which) != sizeof data ) {
-	  printf("pread error!\n");
+	  printf("ERROR read_msr(): pread error!\n");
 	}
 
 	return data;
@@ -173,12 +173,12 @@ set_package_clamp_enable(int fd, uint64_t setting, uint64_t addr) {
 
 /* <--- Alejandro's Interpretation --->
  * Takes the "human readable" time window values custm_time and figures out which
- * bit fields Y and F it would like to use and store in the MSR to represent it. The 
+ * bit fields Y and F it would like to use and store in the MSR to represent it. The
  * ideal Y and F values are the ones that would represent a custom time closest to custm_time
  * but would still be lower, so we don't overstep the time window limit.
  */
-//This idea is loop four possible sets of Y and F, and in return to get 
-//the time window, then use the set of Y and F that is smaller than but 
+//This idea is loop four possible sets of Y and F, and in return to get
+//the time window, then use the set of Y and F that is smaller than but
 //closest to the customized time.
 void
 convert_optimal_yf_from_time(uint64_t *Y, uint64_t *F, jdouble custm_time) {
@@ -266,7 +266,7 @@ set_pkg_power_limit(int fd, uint64_t addr, jdouble custm_power) {
 }
 
 /* <--- Alejandro's Interpretation --->
- * Takes "human readable" power value, adjusts it to fit in the bit field, stores in the low end power limit field 
+ * Takes "human readable" power value, adjusts it to fit in the bit field, stores in the low end power limit field
  * (the high end is also included here but commented out)
  */
 void
@@ -361,11 +361,11 @@ get_rapl_parameters(int fd, uint64_t msr_addr, rapl_msr_unit *unit_obj, rapl_msr
  * Gets your rapl parameters and the domain (?) you wanna get them from. Then puts the data from
  * the parameter list into an an array. {thermal_spec_power, min_power, max_power, max_time_window}
  */
-void 
+void
 getPowerSpec(double result[4], rapl_msr_parameter *parameters, int domain)
 {
 	result[0] = parameters[domain].thermal_spec_power;
-	result[1] = parameters[domain].min_power;	
-	result[2] = parameters[domain].max_power;	
-	result[3] = parameters[domain].max_time_window;	
+	result[1] = parameters[domain].min_power;
+	result[2] = parameters[domain].max_power;
+	result[3] = parameters[domain].max_time_window;
 }
