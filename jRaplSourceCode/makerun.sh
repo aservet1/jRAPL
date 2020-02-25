@@ -4,5 +4,5 @@ make javafiles
 
 if [ $? == 0 ]
 then
-	java jrapl.DriverAlejandro
+	sudo java jrapl.DriverAlejandro
 fi
