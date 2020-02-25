@@ -23,8 +23,8 @@
 #define BROADWELL			       0xD4U
 #define BROADWELL2	     	   0x4FU
 
-#define APOLLO_LAKE          0x5CU //alejandro's computer
-#define COFFEE_LAKE          0x9eu // rutvik's computer
+#define APOLLOLAKE          0x5CU //alejandro's computer
+#define COFFEELAKE2          0x9eu // rutvik's computer
 
 #define CPUID                     \
     __asm__ volatile ("cpuid"     \
