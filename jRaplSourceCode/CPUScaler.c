@@ -141,8 +141,8 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
 			case SKYLAKE2:
 			case BROADWELL:
 			case BROADWELL2:
-			case APOLLO_LAKE:
-			case COFFEE_LAKE:
+			case APOLLOLAKE:
+			case COFFEELAKE2:
 
 				result = read_msr(fd[i],MSR_DRAM_ENERGY_STATUS);
 				if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
@@ -213,8 +213,8 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 			case SKYLAKE2:
 			case BROADWELL:
 			case BROADWELL2:
-			case APOLLO_LAKE:
-			case COFFEE_LAKE:
+			case APOLLOLAKE:
+			case COFFEELAKE2:
 				//copy_to_string(ener_info, dram_buffer, dram_num, cpu_buffer, cpu_num, package_buffer, package_num, i, &offset);
 				/*Insert socket number*/
 				dram_num = strlen(dram_buffer[i]);
