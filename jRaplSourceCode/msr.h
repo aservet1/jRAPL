@@ -9,23 +9,23 @@
  * Reference Intel ® 64 and IA-32 Architectures Software Developer’s Manual
  * for those CPUID information (December 2016)
  */
-#define MSR_RAPL_POWER_UNIT		0x606
+#define MSR_RAPL_POWER_UNIT				0x606
 
 /**Energy measurement**/
-#define MSR_PP0_ENERGY_STATUS		0x639
-#define MSR_PP1_ENERGY_STATUS       0x641
-#define MSR_PKG_ENERGY_STATUS		0x611
-#define MSR_DRAM_ENERGY_STATUS		0x619
+#define MSR_PP0_ENERGY_STATUS			0x639 //read to cpu_buffer[i] in CPUScaler.c
+#define MSR_PP1_ENERGY_STATUS     0x641 //read to gpu_buffer[i] in CPUScaler.c
+#define MSR_PKG_ENERGY_STATUS			0x611 //read to package[i] in CPUScaler.c (total energy usage)
+#define MSR_DRAM_ENERGY_STATUS		0x619 //read to dram_buffer[i] in CPUScaler.c
 
 /**Power/time window maximum/minimum information(Only support for PKG and DRAM **/
-#define MSR_PKG_POWER_INFO		0x614
-#define MSR_DRAM_POWER_INFO     0x61C
+#define MSR_PKG_POWER_INFO				0x614
+#define MSR_DRAM_POWER_INFO     	0x61C
 
 /**Power limit**/
-#define MSR_PKG_POWER_LIMIT        0x610
-#define MSR_DRAM_POWER_LIMIT       0x618
-#define MSR_PP0_POWER_LIMIT        0x638
-#define MSR_PP1_POWER_LIMIT        0x640
+#define MSR_PKG_POWER_LIMIT       0x610
+#define MSR_DRAM_POWER_LIMIT      0x618
+#define MSR_PP0_POWER_LIMIT       0x638
+#define MSR_PP1_POWER_LIMIT       0x640
 
 /*Power domains*/
 #define PKG_DOMAIN	0
@@ -105,17 +105,17 @@ typedef struct rapl_msr_parameter {
 	double min_power;
 	double max_power;
 	double max_time_window;
-} rapl_msr_parameter; 
+} rapl_msr_parameter;
 
 typedef struct rapl_msr_power_limit_t {
 	double power_limit;
-	/* time_window_limit = 2^Y*F 
+	/* time_window_limit = 2^Y*F
 	 * F(23:22) Y(21:17)
 	 */
-	double time_window_limit; 
+	double time_window_limit;
 	uint64_t clamp_enable;
 	uint64_t limit_enable;
-	uint64_t lock_enable; 
+	uint64_t lock_enable;
 } rapl_msr_power_limit_t;
 
 ////deglobalized(?)
@@ -125,13 +125,13 @@ extern int *fd;
 extern rapl_msr_parameter *parameters;*/
 
 
-typedef enum { 
+typedef enum {
 	MINIMUM_POWER_LIMIT = 0,
 	MAXIMUM_POWER_LIMIT,
 	COSTOM_POWER_LIMIT
 } msr_power_set;
 
-typedef enum { 
+typedef enum {
 	NA = 0,
 	MAXIMUM_TIME_WINDOW,
 	COSTOM_TIME_WINDOW
@@ -139,11 +139,11 @@ typedef enum {
 #define _2POW(e)	\
 ((e == 0) ? 1 : (2 << (e - 1)))
 
-double 
+double
 calc_time_window(uint64_t Y, uint64_t F);
 
 void
-calc_y(uint64_t *Y, uint64_t F, jdouble custm_time);		
+calc_y(uint64_t *Y, uint64_t F, jdouble custm_time);
 
 rapl_msr_power_limit_t
 get_specs(int fd, uint64_t addr);
