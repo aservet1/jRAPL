@@ -125,7 +125,7 @@ public class EnergyCheckUtils {
 				System.err.format("Caught: " + e);
 			}
 			double[] after = getEnergyStats();
-			System.out.println("dram: " + (after[0] - before[0])  + " cpu: " + (after[1] - before[1])  + " package: " + (after[2] - before[2])  );
+			System.out.println("dram: " + (after[0] - before[0])  + "\tcpu: " + (after[1] - before[1])  + "\tpackage: " + (after[2] - before[2])  );
 		}
 		// Unreachable
 		//ProfileDealloc();
