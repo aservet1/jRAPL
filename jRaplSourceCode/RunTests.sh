@@ -5,7 +5,7 @@ sudo modprobe msr #make a way to test if this is necessary before repeatedly doi
 case $1 in
 
 	"alej")
-		sudo java jrapl.DriverAlejandro
+		sudo java jrapl.DriverAlejandro | grep -E 'Avg|StDev|Results'
 		;;
 	"echeck")
 		echo 'this will do an infinite loop. press Ctrl+C to exit.'

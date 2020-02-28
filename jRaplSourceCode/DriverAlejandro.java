@@ -13,39 +13,58 @@ public class DriverAlejandro
 		}
 	}
 
+	/* Times a method call, returns time in microseconds */
+	public static long timeIt(Runnable method)
+	{
+		long startTime, endTime;
+		startTime = System.nanoTime();
+		method.run();
+		endTime = System.nanoTime();
+		long elapsed = (endTime - startTime) / 1000;
+		return elapsed;
+	}
+
+	private static double average(long[] results)
+	{
+		long total = 0;
+		for (int i = 0; i < results.length; i++)
+			total += results[i];
+		return total / results.length;
+	}
+
+	private static double stdev(long[] results)
+	{
+		int N = results.length;
+		double avg = average(results);
+		int deviationSum = 0;
+		for (int i = 0; i < results.length; i++)
+			deviationSum += Math.pow((results[i]-avg),2);
+		return Math.sqrt(deviationSum/(N-1));
+	}
+
+	public static void timeItStats(Runnable method, String name, int iterations)
+	{
+		int i = 0;
+		long[] results = new long[iterations];
+		for (int x = 0; x < iterations; x++) {
+			long time = timeIt(method);
+			System.out.println(time+"; "+x);
+			results[i++] = time;
+		}
+		System.out.println("Avg:\t" + average(results));
+		System.out.println("StDev:\t" + stdev(results));
+	}
+
 	public static void main(String[] args)
 	{
-		//repeatGetEnergyStats(10);
-		long startTime, endTime;
-
-		System.out.println("\n--------------------------------------------\n < Running static block:\n");
-		startTime = System.nanoTime();
 		EnergyCheckUtils e = new EnergyCheckUtils();
-		endTime = System.nanoTime();
-		System.out.println("\n < Static block took " + (endTime - startTime) + " nanoseconds");
 
-		System.out.println("\n--------------------------------------------\n < Running ProfileInit():\n");
-		startTime = System.nanoTime();
-		EnergyCheckUtils.ProfileInit();
-		endTime = System.nanoTime();
-		System.out.println("\n <  Profileinit() took " + (endTime - startTime) + " nanoseconds");
+		timeItStats(EnergyCheckUtils::getEnergyStats, "getEnergyStats", 5000);
 
-		System.out.println("\n--------------------------------------------\n < Running GetSocketNum():\n");
-		startTime = System.nanoTime();
-		EnergyCheckUtils.GetSocketNum();
-		endTime = System.nanoTime();
-		System.out.println("\n < GetSocketNum() took " + (endTime - startTime) + " nanoseconds");
-
-		System.out.println("\n--------------------------------------------\n < Running EnergyStatCheck():\n");
-		startTime = System.nanoTime();
-		EnergyCheckUtils.EnergyStatCheck();
-		endTime = System.nanoTime();
-		System.out.println("\n < EnergyStatCheck() took " + (endTime - startTime) + " nanoseconds");
-
-		System.out.println("\n--------------------------------------------\n < Running getEnergyStats():\n");
-		startTime = System.nanoTime();
-		double[] stats = EnergyCheckUtils.getEnergyStats();
-		endTime = System.nanoTime();
-		System.out.println("\n < getEnergyStats() took " + (endTime - startTime) + " nanoseconds");
+		/*timeIt(EnergyCheckUtils::ProfileInit, "ProfileInit");
+		timeIt(EnergyCheckUtils::GetSocketNum, "GetSocketNum");
+		timeIt(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck");
+		timeIt(EnergyCheckUtils::getEnergyStats, "getEnergyStats");
+		*/
 	}
 }
