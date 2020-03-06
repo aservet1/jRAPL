@@ -11,7 +11,7 @@ case $1 in
 		echo 'this will do an infinite loop. press Ctrl+C to exit.'
 		echo -n 'press enter to start: '
 		read
-		sudo java jrapl.EnergyCheckUtils | grep 'dram'
+		sudo java jrapl.EnergyCheckUtils | grep -E 'dram|cpu|package'
 		;;
 	*)
 		echo "current valid entries are 'alej' and 'echeck'"
