@@ -151,11 +151,13 @@ int get_architecture_category(uint32_t cpu_model){
 			cpu_model == BROADWELL2 ||
 			cpu_model == APOLLOLAKE ||
 			cpu_model == COFFEELAKE2
+			//|| cpu_model == KABYLAKE
 	) return READ_FROM_DRAM;
 
 	if(
 		cpu_model ==  SANDYBRIDGE ||
-		cpu_model == IVYBRIDGE
+		cpu_model == IVYBRIDGE ||
+		cpu_model == KABYLAKE
 	) return READ_FROM_GPU;
 
 	return UNDEFINED_ARCHITECTURE;
