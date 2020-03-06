@@ -48,18 +48,22 @@ public class DriverAlejandro
 		long[] results = new long[iterations];
 		for (int x = 0; x < iterations; x++) {
 			long time = timeIt(method);
-			System.out.println(time+"; "+x);
+			//System.out.println(time);
 			results[i++] = time;
 		}
 		System.out.println("Avg:\t" + average(results));
 		System.out.println("StDev:\t" + stdev(results));
+		Arrays.sort(results);
+		System.out.println(Arrays.toString(results));
 	}
 
 	public static void main(String[] args)
 	{
+		//get the static block out of the way by making this useless object
 		EnergyCheckUtils e = new EnergyCheckUtils();
 
-		timeItStats(EnergyCheckUtils::getEnergyStats, "getEnergyStats", 5000);
+		int iterations = Integer.parseInt(args[0]);
+		timeItStats(EnergyCheckUtils::getEnergyStats, "getEnergyStats", iterations);
 
 		/*timeIt(EnergyCheckUtils::ProfileInit, "ProfileInit");
 		timeIt(EnergyCheckUtils::GetSocketNum, "GetSocketNum");
