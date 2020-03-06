@@ -276,6 +276,7 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 		}
 	}
 
+	//// hmm why would be turn it into a string just to turn it back into an array in java's getEnergyStats()?
 	ener_string = (*env)->NewStringUTF(env, ener_info);
 	return ener_string;
 
