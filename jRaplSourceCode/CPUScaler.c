@@ -10,14 +10,19 @@
 #include "CPUScaler.h"
 #include "arch_spec.h"
 #include "msr.h"
+<<<<<<< HEAD
 #define UNDEFINED_ARCH 0
 #define DRAM 1
 #define GPU 2
+=======
+
+>>>>>>> 6829df1852f1446b6a9305f19281b432d99b37b6
 static rapl_msr_parameter *parameters;
 static int *fd;
 static uint64_t num_pkg;
 
 
+<<<<<<< HEAD
 int get_arch_category(uint32_t cpu_model){
 	if(
 			cpu_model == SANDYBRIDGE_EP ||
@@ -40,6 +45,8 @@ int get_arch_category(uint32_t cpu_model){
 
 	return UNDEFINED_ARCH;
 }
+=======
+>>>>>>> 6829df1852f1446b6a9305f19281b432d99b37b6
 
 /// Comments starting with '///' are my (Alejandro's) notes to self. feel free to delete them if I haven't and they aren't useful to you. Same goes for the
 /// <Alejandro's Intepretation> comments that describe functions. None of this is official documentation.
