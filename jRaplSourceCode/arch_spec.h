@@ -48,6 +48,10 @@ typedef struct cpuid_info_t {
 	uint32_t edx;
 } cpuid_info_t;
 
+#define UNDEFINED_ARCHITECTURE 0 //
+#define READ_FROM_DRAM 1 // Used in the switch case statements in CPUScler.c to identify if the cpu model reads from DRAM buffer
+#define READ_FROM_GPU 2 // Used in the switch case statements in CPUScler.c to identify if the cpu model reads from the GPU buffer
+
 /* None of these are global variables any more
 extern uint32_t eax, ebx, ecx, edx;
 extern uint32_t cpu_model;
@@ -91,5 +95,7 @@ uint64_t get_num_pkg_core();
 uint64_t getSocketNum();
 
 rapl_msr_unit get_rapl_unit();
+
+int get_architecture_category(uint32_t cpu_model);
 
 #endif

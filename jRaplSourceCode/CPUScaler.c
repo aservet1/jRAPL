@@ -10,36 +10,12 @@
 #include "CPUScaler.h"
 #include "arch_spec.h"
 #include "msr.h"
-#define UNDEFINED_ARCHITECTURE 0
-#define READ_FROM_DRAM 1
-#define READ_FROM_GPU 2
+
 static rapl_msr_parameter *parameters;
 static int *fd;
 static uint64_t num_pkg;
 
-int get_architecture_category(uint32_t cpu_model){
-	if(
-			cpu_model == SANDYBRIDGE_EP ||
-			cpu_model == HASWELL1 ||
-			cpu_model == HASWELL2 ||
-			cpu_model == HASWELL3 ||
-			cpu_model == HASWELL_EP ||
-			cpu_model == SKYLAKE1 ||
-			cpu_model == SKYLAKE2 ||
-			cpu_model == BROADWELL ||
-			cpu_model == BROADWELL2 ||
-			cpu_model == APOLLOLAKE ||
-			cpu_model == COFFEELAKE2
-	) return READ_FROM_DRAM;
 
-	if(
-		cpu_model ==  SANDYBRIDGE ||
-		cpu_model == IVYBRIDGE
-	) return READ_FROM_GPU;
-
-	return UNDEFINED_ARCHITECTURE;
-
-}	
 
 /// Comments starting with '///' are my (Alejandro's) notes to self. feel free to delete them if I haven't and they aren't useful to you. Same goes for the
 /// <Alejandro's Intepretation> comments that describe functions. None of this is official documentation.
