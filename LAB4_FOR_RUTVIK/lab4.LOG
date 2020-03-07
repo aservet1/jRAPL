@@ -1,0 +1,1129 @@
+
+Script started on 2020-02-22 13:01:14-0500
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4[00m$ cd exercises/1-point/
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ ls
+main.cc  point.cc  point.hh
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile 
+g++ -MT point.o -MMD -MP -MF .deps/point.d -g -Wall -std=c++17 -c point.cc
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ point.o main.o -o main
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ ls
+[0m[01;32mmain[0m  main.cc  main.o  point.cc  point.hh  point.o
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ atom[K[K[K[Knano *.cc
+[?1049h[22;0;0t[1;39r(B[m[4l[?7h[39;49m[?1h=[?1h=[?1h=[?25l[39;49m(B[m[H[2J[37;77H(B[0;7m[ Reading File ](B[m[37;83H(B[0;7m 44 lines ](B[m[37;83H(B[0;7ming File ](B[m[K[37;83H(B[0;7m 19 lines ](B[m[H(B[0;7m  [1/2]                                                                        main.cc                                                                                   [1;168H(B[m[38d(B[0;7m^G(B[m Get Help     (B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut Text     (B[0;7m^J(B[m Justify[81G(B[0;7m^C(B[m Cur Pos[97G(B[0;7mM-U(B[m Undo[38;113H(B[0;7mM-A(B[m Mark Text   (B[0;7mM-](B[m To Bracket  (B[0;7mM-▲(B[m Previous[39d(B[0;7m^X(B[m Close[39;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Uncut Text   (B[0;7m^T(B[m To Spell     (B[0;7m^_(B[m Go To Line   (B[0;7mM-E(B[m Redo[39;113H(B[0;7mM-6(B[m Copy Text   (B[0;7mM-W(B[m WhereIs Next(B[0;7mM-▼(B[m Next[37d[3d(B[0;1m[36m#include[39m(B[m (B[0;1m[33m"point.hh"[5d[36m#include[39m(B[m (B[0;1m[33m<iostream>[7d[34m//declare an array of points[8d(B[0m[32mstatic[39m(B[m [32mconst[39m(B[m Point points[] = {[9;3HPoint(0, 0), Point(3, 4), Point(1, 1), Point(4, 5),[10d};[11d(B[0;1m[34m//use standard idiom to figure out number of elements in array[12d(B[0m[32mstatic[39m(B[m constexpr [32mauto[39m(B[m nPoints = [32msizeof[39m(B[m(points)/[32msizeof[39m(B[m(points[0]);[14d[32mstatic[39m(B[m [32mvoid[15d[39m(B[moutSizes(std::ostream& out) {[16;3Hout << (B[0;1m[33m"sizeof(double) = "[39m(B[m << [32msizeof[39m(B[m([32mdouble[39m(B[m) << std::endl;[17;3Hout << (B[0;1m[33m"sizeof(Point) = "[39m(B[m << [32msizeof[39m(B[m(Point) << std::endl;[18d}[20d(B[0;1m[34m/** output pair-wise distance between all points in points[] to out. */[21d(B[0m[32mstatic[39m(B[m [32mvoid[22d[39m(B[moutDistances(std::ostream& out)[23d{[24d (B[0;1m[33mfor[39m(B[m ([32mauto[39m(B[m i = 0u; i < nPoints - 1; i++) {[25;5HPoint pi = points[i];[26;5H(B[0;1m[33mfor[39m(B[m ([32mauto[39m(B[m j = i + 1; j < nPoints; j++) {[27;7HPoint pj = points[j];[28;7Hout << (B[0;1m[33m"distance from "[39m(B[m << pi.toString()[29;11H<< (B[0;1m[33m" to "[39m(B[m << pj.toString()[30;11H<< (B[0;1m[33m" is "[39m(B[m << pi.distance(pj)[31;11H<< std::endl;[32;5H}[33;3H}[34d}[36d[32mint[39m(B[m main() {[3d[?12l[?25h[?25l[C[?12l[?25h[?25l[1;4H(B[0;7m2[1;80Hpoint.cc[168G(B[m[37;73H(B[0;7m[ Switched to point.cc ](B[m[5;11H(B[0;1m[33mcmath>[39m(B[m[K[6d(B[0;1m[36m#include[39m(B[m (B[0;1m[33m<string>[7d[36m#include[39m(B[m (B[0;1m[33m<sstream>[39m(B[m[K[8d[K[9d(B[0;1m[34m/** return distance of this point from other point */[10d(B[0m[32mdouble[39m(B[m Point::distance([32mconst[39m(B[m Point& other) [32mconst[39m(B[m {[11d  [32mconst[39m(B[m [32mauto[39m(B[m dx = x - other.x;[K[12d  [32mconst[39m(B[m [32mauto[39m(B[m dy = y - other.y;[K[13;3H[35mreturn[39m(B[m sqrt(dx*dx + dy*dy);[14d}[K[15d[K[16dstd::string Point::toString() [32mconst[39m(B[m {[K[17;3H(B[0;1m[34m//declaring s to be a stringstream allows usage similar to std::cout[18d[39m(B[m  std::stringstream s;[19;3Hs << (B[0;1m[33m"("[39m(B[m << x << (B[0;1m[33m", "[39m(B[m << y << (B[0;1m[33m")"[39m(B[m; (B[0;1m[34m//normal (x, y) format[20d[39m(B[m  [35mreturn[39m(B[m s.str(); (B[0;1m[34m//return std::string underlying stringstream[39m(B[m[K[21d}[K[22d[K[23d[K[24d[K[25d[K[26d[K[27d[K[28d[K[29d[K[30d[K[31d[K[32d[K[33d[K[34d[K[36d[K[3d[?12l[?25h[?25l[1;4H(B[0;7m1[1;80Hmain.cc [168G(B[m[37;73H (B[0;7m[ Switched to main[97G(B[m[5;11H(B[0;1m[33miostream>[6d[39m(B[m[K[7d(B[0;1m[34m//declare an array of points[8d(B[0m[32mstatic[39m(B[m [32mconst[39m(B[m Point points[] = {[9d  Point(0, 0), Point(3, 4), Point(1, 1), Point(4, 5),[10d};[K[11d(B[0;1m[34m//use standard idiom to figure out number of elements in array[12d(B[0m[32mstatic[39m(B[m constexpr [32mauto[39m(B[m nPoints = [32msizeof[39m(B[m(points)/[32msizeof[39m(B[m(points[0]);[13d[K[14d[32mstatic[39m(B[m [32mvoid[15d[39m(B[moutSizes(std::ostream& out) {[16d  out << (B[0;1m[33m"sizeof(double) = "[39m(B[m << [32msizeof[39m(B[m([32mdouble[39m(B[m) << std::endl;[17;3Hout << (B[0;1m[33m"sizeof(Point) = "[39m(B[m << [32msizeof[39m(B[m(Point) << std::endl;[K[18d}[K[19d[K[20d(B[0;1m[34m/** output pair-wise distance between all points in points[] to out. */[21d(B[0m[32mstatic[39m(B[m [32mvoid[22d[39m(B[moutDistances(std::ostream& out)[23d{[24d (B[0;1m[33mfor[39m(B[m ([32mauto[39m(B[m i = 0u; i < nPoints - 1; i++) {[25;5HPoint pi = points[i];[26;5H(B[0;1m[33mfor[39m(B[m ([32mauto[39m(B[m j = i + 1; j < nPoints; j++) {[27;7HPoint pj = points[j];[28;7Hout << (B[0;1m[33m"distance from "[39m(B[m << pi.toString()[29;11H<< (B[0;1m[33m" to "[39m(B[m << pj.toString()[30;11H<< (B[0;1m[33m" is "[39m(B[m << pi.distance(pj)[31;11H<< std::endl;[32;5H}[33;3H}[34d}[36d[32mint[39m(B[m main() {[3;2H[?12l[?25h[?25l[1;4H(B[0;7m2[1;80Hpoint.cc[168G(B[m[37;73H(B[0;7m[ Switched to point[97G(B[m[5;11H(B[0;1m[33mcmath>[39m(B[m[K[6d(B[0;1m[36m#include[39m(B[m (B[0;1m[33m<string>[7d[36m#include[39m(B[m (B[0;1m[33m<sstream>[39m(B[m[K[8d[K[9d(B[0;1m[34m/** return distance of this point from other point */[10d(B[0m[32mdouble[39m(B[m Point::distance([32mconst[39m(B[m Point& other) [32mconst[39m(B[m {[11d  [32mconst[39m(B[m [32mauto[39m(B[m dx = x - other.x;[K[12d  [32mconst[39m(B[m [32mauto[39m(B[m dy = y - other.y;[K[13;3H[35mreturn[39m(B[m sqrt(dx*dx + dy*dy);[14d}[K[15d[K[16dstd::string Point::toString() [32mconst[39m(B[m {[K[17;3H(B[0;1m[34m//declaring s to be a stringstream allows usage similar to std::cout[18d[39m(B[m  std::stringstream s;[19;3Hs << (B[0;1m[33m"("[39m(B[m << x << (B[0;1m[33m", "[39m(B[m << y << (B[0;1m[33m")"[39m(B[m; (B[0;1m[34m//normal (x, y) format[20d[39m(B[m  [35mreturn[39m(B[m s.str(); (B[0;1m[34m//return std::string underlying stringstream[39m(B[m[K[21d}[K[22d[K[23d[K[24d[K[25d[K[26d[K[27d[K[28d[K[29d[K[30d[K[31d[K[32d[K[33d[K[34d[K[36d[K[3d[?12l[?25h[?25l[1;4H(B[0;7m1[1;80Hmain.cc [168G(B[m[37;73H (B[0;7m[ Switched to main[97G(B[m[1;6H(B[0;7m1[168G(B[m[39;4HExit [37d[5;11H(B[0;1m[33miostream>[6d[39m(B[m[K[7d(B[0;1m[34m//declare an array of points[8d(B[0m[32mstatic[39m(B[m [32mconst[39m(B[m Point points[] = {[9d  Point(0, 0), Point(3, 4), Point(1, 1), Point(4, 5),[10d};[K[11d(B[0;1m[34m//use standard idiom to figure out number of elements in array[12d(B[0m[32mstatic[39m(B[m constexpr [32mauto[39m(B[m nPoints = [32msizeof[39m(B[m(points)/[32msizeof[39m(B[m(points[0]);[13d[K[14d[32mstatic[39m(B[m [32mvoid[15d[39m(B[moutSizes(std::ostream& out) {[16d  out << (B[0;1m[33m"sizeof(double) = "[39m(B[m << [32msizeof[39m(B[m([32mdouble[39m(B[m) << std::endl;[17;3Hout << (B[0;1m[33m"sizeof(Point) = "[39m(B[m << [32msizeof[39m(B[m(Point) << std::endl;[K[18d}[K[19d[K[20d(B[0;1m[34m/** output pair-wise distance between all points in points[] to out. */[21d(B[0m[32mstatic[39m(B[m [32mvoid[22d[39m(B[moutDistances(std::ostream& out)[23d{[24d (B[0;1m[33mfor[39m(B[m ([32mauto[39m(B[m i = 0u; i < nPoints - 1; i++) {[25;5HPoint pi = points[i];[26;5H(B[0;1m[33mfor[39m(B[m ([32mauto[39m(B[m j = i + 1; j < nPoints; j++) {[27;7HPoint pj = points[j];[28;7Hout << (B[0;1m[33m"distance from "[39m(B[m << pi.toString()[29;11H<< (B[0;1m[33m" to "[39m(B[m << pj.toString()[30;11H<< (B[0;1m[33m" is "[39m(B[m << pi.distance(pj)[31;11H<< std::endl;[32;5H}[33;3H}[34d}[36d[32mint[39m(B[m main() {[3;2H[?12l[?25h[?25l[37d[J[39;169H[?12l[?25h[39;1H[?1049l[23;0;0t[?1l>]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ p point.cc line.cc
+p: command not found
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ p point.cc line.cc[1@c
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ nano line.cc 
+[?1049h[22;0;0t[1;39r(B[m[4l[?7h[39;49m[?1h=[?1h=[?1h=[?25l[39;49m(B[m[H[2J[37;77H(B[0;7m[ Reading File ](B[m[37;83H(B[0;7m 19 lines ](B[m[H(B[0;7m  GNU nano 2.9.3                                                                    line.cc                                                                              [1;168H(B[m[38d(B[0;7m^G(B[m Get Help     (B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut Text     (B[0;7m^J(B[m Justify[81G(B[0;7m^C(B[m Cur Pos[97G(B[0;7mM-U(B[m Undo[38;113H(B[0;7mM-A(B[m Mark Text   (B[0;7mM-](B[m To Bracket  (B[0;7mM-▲(B[m Previous[39d(B[0;7m^X(B[m Exit[39;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Uncut Text   (B[0;7m^T(B[m To Spell     (B[0;7m^_(B[m Go To Line   (B[0;7mM-E(B[m Redo[39;113H(B[0;7mM-6(B[m Copy Text   (B[0;7mM-W(B[m WhereIs Next(B[0;7mM-▼(B[m Next[37d[3d(B[0;1m[36m#include[39m(B[m (B[0;1m[33m"point.hh"[5d[36m#include[39m(B[m (B[0;1m[33m<cmath>[6d[36m#include[39m(B[m (B[0;1m[33m<string>[7d[36m#include[39m(B[m (B[0;1m[33m<sstream>[9d[34m/** return distance of this point from other point */[10d(B[0m[32mdouble[39m(B[m Point::distance([32mconst[39m(B[m Point& other) [32mconst[39m(B[m {[11;3H[32mconst[39m(B[m [32mauto[39m(B[m dx = x - other.x;[12;3H[32mconst[39m(B[m [32mauto[39m(B[m dy = y - other.y;[13;3H[35mreturn[39m(B[m sqrt(dx*dx + dy*dy);[14d}[16dstd::string Point::toString() [32mconst[39m(B[m {[17;3H(B[0;1m[34m//declaring s to be a stringstream allows usage similar to std::cout[18;3H[39m(B[mstd::stringstream s;[19;3Hs << (B[0;1m[33m"("[39m(B[m << x << (B[0;1m[33m", "[39m(B[m << y << (B[0;1m[33m")"[39m(B[m; (B[0;1m[34m//normal (x, y) format[20;3H(B[0m[35mreturn[39m(B[m s.str(); (B[0;1m[34m//return std::string underlying stringstream[21d[39m(B[m}[3d[?12l[?25h[?25l[4d[?12l[?25h[?25l[5d[?12l[?25h[?25l[6d[?12l[?25h[?25l[7d[?12l[?25h[?25l[8d[?12l[?25h[?25l[9d[?12l[?25h[?25l[10d[?12l[?25h[?25l[11d[?12l[?25h[?25l[12d[?12l[?25h[?25l[13d[?12l[?25h[?25l[14d[?12l[?25h[?25l[15d[?12l[?25h[?25l[16d[?12l[?25h[?25l[17d[?12l[?25h[?25l[18d[?12l[?25h[?25l[19d[?12l[?25h[?25l[20d[?12l[?25h[?25l[21d[?12l[?25h[?25l[22d[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[37d[K[22d[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[1;160H(B[0;7mModified(B[m[22d*[?12l[?25h[?25l/[?12l[?25h[?25l[A[?12l[?25h[?25l[A [?12l[?25h[?25l[A[?12l[?25h[?25l[A[?12l[?25h[?25l[A[?12l[?25h[?25l[A[?12l[?25h[?25l[A[?12l[?25h[?25l[A}[?12l[?25h[?25l[A [?12l[?25h[?25l[A[?12l[?25h[?25l[A[?12l[?25h[?25l[A[?12l[?25h[?25l[A[?12l[?25h[?25l[A[?12l[?25h[?25l[9;3H[?12l[?25h[?25l[10d[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[9;54H[?12l[?25h[?25l[?12l[?25h[?25l[C[?12l[?25h[?25l [10d(B[0;1m[34mdouble Point::distance(const Point& other) const {[11d  const auto dx = x - other.x;[12d  const auto dy = y - other.y;[13d  return sqrt(dx*dx + dy*dy);[14d}[16dstd::string Point::toString() const {[17d  [18d  std::stringstream s;[19d  s << "(" << x << ", " << y << ")"; [20d  return s.str(); [21d}[22d*/[9;53H[39m(B[m[?12l[?25h[?25l[42m [49m(B[m[K[?12l[?25h[?25l [?12l[?25h[?25l[10d[?12l[?25h[?25l[11;31H[?12l[?25h[?25l[12d[?12l[?25h[?25l[13d[?12l[?25h[?25l[14;2H[?12l[?25h[?25l[15d[?12l[?25h[?25l[16;38H[?12l[?25h[?25l[17;51H[?12l[?25h[?25l[18;23H[?12l[?25h[?25l[19;51H[?12l[?25h[?25l[20d[?12l[?25h[?25l[21;2H[?12l[?25h[?25l[22;3H[?12l[?25h[?25l[23d[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[24d[?12l[?25h[?25l[38;17H[26X[38;43H(B[0;7mM-D(B[m DOS Format[18X[38;81H    (B[0;7mM-A(B[m Append          [38;113H[14X[38;127H(B[0;7mM-B(B[m Backup File[K[39;2H(B[0;7mC(B[m Cancel[17G[26X[39;43H(B[0;7mM-M(B[m Mac Format[28X[39;85H(B[0;7mM-P(B[m Prepend         [39;113H[14X[39;127H(B[0;7m^T(B[m To Files[K[37d(B[0;7mFile Name to Write: line.cc                                                                                                                                              [37;1H(B[m[37;28H[?12l[?25h[?25l[K[1;168H[1;160H(B[0;7m        (B[m[37;76H(B[0;7m[ Wrote 21 lines ](B[m[38;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut Text     (B[0;7m^J(B[m Justify[81G(B[0;7m^C(B[m Cur Pos      (B[0;7mM-U(B[m Undo[38;113H(B[0;7mM-A(B[m Mark Text   (B[0;7mM-](B[m To Bracket  (B[0;7mM-▲(B[m Previous[39;2H(B[0;7mX(B[m Exit  [17G(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace      (B[0;7m^U(B[m Uncut Text   (B[0;7m^T(B[m To Spell     (B[0;7m^_(B[m Go To Line   (B[0;7mM-E(B[m Redo[39;113H(B[0;7mM-6(B[m Copy Text   (B[0;7mM-W(B[m WhereIs Next(B[0;7mM-▼(B[m Next[37d[24d[?12l[?25h[?25l[37d[J[39;169H[?12l[?25h[39;1H[?1049l[23;0;0t[?1l>]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ a[Kls
+line.cc  [0m[01;32mmain[0m  main.cc  main.o  point.cc  point.hh  point.o
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ nano line.cc 
+[?1049h[22;0;0t[1;39r(B[m[4l[?7h[39;49m[?1h=[?1h=[?1h=[?25l[39;49m(B[m[H[2J[37;77H(B[0;7m[ Reading File ](B[m[37;83H(B[0;7m 21 lines ](B[m[H(B[0;7m  GNU nano 2.9.3                                                                    line.cc                                                                              [1;168H(B[m[38d(B[0;7m^G(B[m Get Help     (B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut Text     (B[0;7m^J(B[m Justify[81G(B[0;7m^C(B[m Cur Pos[97G(B[0;7mM-U(B[m Undo[38;113H(B[0;7mM-A(B[m Mark Text   (B[0;7mM-](B[m To Bracket  (B[0;7mM-▲(B[m Previous[39d(B[0;7m^X(B[m Exit[39;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Uncut Text   (B[0;7m^T(B[m To Spell     (B[0;7m^_(B[m Go To Line   (B[0;7mM-E(B[m Redo[39;113H(B[0;7mM-6(B[m Copy Text   (B[0;7mM-W(B[m WhereIs Next(B[0;7mM-▼(B[m Next[37d[3d(B[0;1m[36m#include[39m(B[m (B[0;1m[33m"point.hh"[5d[36m#include[39m(B[m (B[0;1m[33m<cmath>[6d[36m#include[39m(B[m (B[0;1m[33m<string>[7d[36m#include[39m(B[m (B[0;1m[33m<sstream>[9d[34m/** return distance of this point from other point[10ddouble Point::distance(const Point& other) const {[11d  const auto dx = x - other.x;[12d  const auto dy = y - other.y;[13d  return sqrt(dx*dx + dy*dy);[14d}[16dstd::string Point::toString() const {[17d  //declaring s to be a stringstream allows usage similar to std::cout[18d  std::stringstream s;[19d  s << "(" << x << ", " << y << ")"; //normal (x, y) format[20d  return s.str(); //return std::string underlying stringstream[21d}[22d*/[3d[39m(B[m[?12l[?25h[?25l[37d[J[39;169H[?12l[?25h[39;1H[?1049l[23;0;0t[?1l>]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ rm line.cc 
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ ls
+[0m[01;32mmain[0m  main.cc  main.o  point.cc  point.hh  point.o
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ c[Kmake clean
+make: *** No rule to make target 'clean'.  Stop.
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make clean -f ../Makefile 
+rm -rf *.o *~ main .deps .gitignore
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ ls
+main.cc  point.cc  point.hh
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ nano point.[K[K[K[K[K[K[K[K[K[K[Kcat main.cc 
+#include "point.hh"
+
+#include <iostream>
+
+//declare an array of points
+static const Point points[] = {
+  Point(0, 0), Point(3, 4), Point(1, 1), Point(4, 5),
+};
+//use standard idiom to figure out number of elements in array
+static constexpr auto nPoints = sizeof(points)/sizeof(points[0]);
+
+static void
+outSizes(std::ostream& out) {
+  out << "sizeof(double) = " << sizeof(double) << std::endl;
+  out << "sizeof(Point) = " << sizeof(Point) << std::endl;
+}
+
+/** output pair-wise distance between all points in points[] to out. */
+static void
+outDistances(std::ostream& out)
+{
+  for (auto i = 0u; i < nPoints - 1; i++) {
+    Point pi = points[i];
+    for (auto j = i + 1; j < nPoints; j++) {
+      Point pj = points[j];
+      out << "distance from " << pi.toString()
+	  << " to " << pj.toString()
+	  << " is " << pi.distance(pj)
+	  << std::endl;
+    }
+  }
+}
+
+int main() {
+
+  //instead of hardcoding std::cout in functions, we pass it as a param.
+  //so if we wanted to output to a file, the code for the functions
+  //would not need to change (the code in this function would change).
+  std::ostream& out = std::cout;
+
+  outDistances(out); out << std::endl;
+
+  outSizes(out);
+}
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ nano point.cc [K[K[K[K[K[K[K[K[K[K[K[K[K[Katom *.cc
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ atom *.cccat main.cc ls[Kmake clean -f ../Makefile [Kls[Krm line.cc [2@nano[C[C[C[C[C[C[C[C[Cls[Knano line.cc cp point.cc line.cc[1P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[9Pnano *.ccls[Kmake -f ../Makefile ls[Kmake -f ../Makefile 
+g++ -MT point.o -MMD -MP -MF .deps/point.d -g -Wall -std=c++17 -c point.cc
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ -MT line.o -MMD -MP -MF .deps/line.d -g -Wall -std=c++17 -c line.cc
+In file included from [01m[Kline.cc:1:0[m[K:
+[01m[Kline.hh:10:9:[m[K [01;31m[Kerror: [m[K‘[01m[KPoint[m[K’ does not name a type; did you mean ‘[01m[Kuint[m[K’?
+   const [01;31m[KPoint[m[K p1, p2;
+         [01;31m[K^~~~~[m[K
+         [32m[Kuint[m[K
+[01m[Kline.hh:13:14:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K)[m[K’ before ‘[01m[Kp1[m[K’
+   Line(Point [01;31m[Kp1[m[K, Point p2) : p1(p1), p2(p2) { }
+              [01;31m[K^~[m[K
+[01m[Kline.cc:[m[K In member function ‘[01m[Kdouble Line::length() const[m[K’:
+[01m[Kline.cc:8:10:[m[K [01;31m[Kerror: [m[K‘[01m[Kp1[m[K’ was not declared in this scope
+   return [01;31m[Kp1[m[K.distance(p2)
+          [01;31m[K^~[m[K
+[01m[Kline.cc:8:10:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Ky1[m[K’
+   return [01;36m[Kp1[m[K.distance(p2)
+          [01;36m[K^~[m[K
+          [32m[Ky1[m[K
+[01m[Kline.cc:8:22:[m[K [01;31m[Kerror: [m[K‘[01m[Kp2[m[K’ was not declared in this scope
+   return p1.distance([01;31m[Kp2[m[K)
+                      [01;31m[K^~[m[K
+[01m[Kline.cc:9:1:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ before ‘[01m[K}[m[K’ token
+ [01;31m[K}[m[K
+ [01;31m[K^[m[K
+../Makefile:48: recipe for target 'line.o' failed
+make: *** [line.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile 
+g++ -MT line.o -MMD -MP -MF .deps/line.d -g -Wall -std=c++17 -c line.cc
+[01m[Kline.cc:[m[K In member function ‘[01m[Kdouble Line::length() const[m[K’:
+[01m[Kline.cc:9:1:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ before ‘[01m[K}[m[K’ token
+ [01;31m[K}[m[K
+ [01;31m[K^[m[K
+../Makefile:48: recipe for target 'line.o' failed
+make: *** [line.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile 
+g++ -MT line.o -MMD -MP -MF .deps/line.d -g -Wall -std=c++17 -c line.cc
+g++ point.o main.o line.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main point.o main.o line.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile 
+g++ -MT line.o -MMD -MP -MF .deps/line.d -g -Wall -std=c++17 -c line.cc
+[01m[Kline.cc:11:13:[m[K [01;31m[Kerror: [m[Kprototype for ‘[01m[Kstd::__cxx11::string Line::toString()[m[K’ does not match any in class ‘[01m[KLine[m[K’
+ std::string [01;31m[KLine[m[K::toString()
+             [01;31m[K^~~~[m[K
+In file included from [01m[Kline.cc:1:0[m[K:
+[01m[Kline.hh:22:15:[m[K [01;31m[Kerror: [m[Kcandidate is: std::__cxx11::string Line::toString() const
+   std::string [01;31m[KtoString[m[K() const;
+               [01;31m[K^~~~~~~~[m[K
+../Makefile:48: recipe for target 'line.o' failed
+make: *** [line.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile 
+g++ -MT line.o -MMD -MP -MF .deps/line.d -g -Wall -std=c++17 -c line.cc
+g++ point.o main.o line.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main point.o main.o line.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+[01m[Kmain.cc:[m[K In function ‘[01m[Kint main()[m[K’:
+[01m[Kmain.cc:36:21:[m[K [01;35m[Kwarning: [m[Kcomparison between signed and unsigned integer expressions [[01;35m[K-Wsign-compare[m[K]
+   for (int i = 1; [01;35m[Ki < nPoints[m[K; i++)
+                   [01;35m[K~~^~~~~~~~~[m[K
+[01m[Kmain.cc:40:5:[m[K [01;31m[Kerror: [m[K‘[01m[KLine[m[K’ was not declared in this scope
+     [01;31m[KLine[m[K line = new Line(p1,p2);
+     [01;31m[K^~~~[m[K
+[01m[Kmain.cc:40:5:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kuint[m[K’
+     [01;36m[KLine[m[K line = new Line(p1,p2);
+     [01;36m[K^~~~[m[K
+     [32m[Kuint[m[K
+[01m[Kmain.cc:41:18:[m[K [01;31m[Kerror: [m[K‘[01m[Kline[m[K’ was not declared in this scope
+     std::cout << [01;31m[Kline[m[K.toString() << std::endl;
+                  [01;31m[K^~~~[m[K
+[01m[Kmain.cc:41:18:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kuint[m[K’
+     std::cout << [01;36m[Kline[m[K.toString() << std::endl;
+                  [01;36m[K^~~~[m[K
+                  [32m[Kuint[m[K
+[01m[Kmain.cc:[m[K At global scope:
+[01m[Kmain.cc:20:1:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvoid outDistances(std::ostream&)[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+ [01;35m[KoutDistances[m[K(std::ostream& out)
+ [01;35m[K^~~~~~~~~~~~[m[K
+[01m[Kmain.cc:13:1:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvoid outSizes(std::ostream&)[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+ [01;35m[KoutSizes[m[K(std::ostream& out) {
+ [01;35m[K^~~~~~~~[m[K
+../Makefile:48: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+[01m[Kmain.cc:2:2:[m[K [01;31m[Kerror: [m[Kinvalid preprocessing directive #inlcude; did you mean #include?
+ #[01;31m[Kinlcude[m[K "line.hh"
+  [01;31m[K^~~~~~~[m[K
+  [32m[Kinclude[m[K
+[01m[Kmain.cc:[m[K In function ‘[01m[Kint main()[m[K’:
+[01m[Kmain.cc:37:21:[m[K [01;35m[Kwarning: [m[Kcomparison between signed and unsigned integer expressions [[01;35m[K-Wsign-compare[m[K]
+   for (int i = 1; [01;35m[Ki < nPoints[m[K; i++)
+                   [01;35m[K~~^~~~~~~~~[m[K
+[01m[Kmain.cc:41:5:[m[K [01;31m[Kerror: [m[K‘[01m[KLine[m[K’ was not declared in this scope
+     [01;31m[KLine[m[K line = new Line(p1,p2);
+     [01;31m[K^~~~[m[K
+[01m[Kmain.cc:41:5:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kuint[m[K’
+     [01;36m[KLine[m[K line = new Line(p1,p2);
+     [01;36m[K^~~~[m[K
+     [32m[Kuint[m[K
+[01m[Kmain.cc:42:18:[m[K [01;31m[Kerror: [m[K‘[01m[Kline[m[K’ was not declared in this scope
+     std::cout << [01;31m[Kline[m[K.toString() << std::endl;
+                  [01;31m[K^~~~[m[K
+[01m[Kmain.cc:42:18:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kuint[m[K’
+     std::cout << [01;36m[Kline[m[K.toString() << std::endl;
+                  [01;36m[K^~~~[m[K
+                  [32m[Kuint[m[K
+[01m[Kmain.cc:[m[K At global scope:
+[01m[Kmain.cc:21:1:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvoid outDistances(std::ostream&)[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+ [01;35m[KoutDistances[m[K(std::ostream& out)
+ [01;35m[K^~~~~~~~~~~~[m[K
+[01m[Kmain.cc:14:1:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvoid outSizes(std::ostream&)[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+ [01;35m[KoutSizes[m[K(std::ostream& out) {
+ [01;35m[K^~~~~~~~[m[K
+../Makefile:48: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+[01m[Kmain.cc:[m[K In function ‘[01m[Kint main()[m[K’:
+[01m[Kmain.cc:37:21:[m[K [01;35m[Kwarning: [m[Kcomparison between signed and unsigned integer expressions [[01;35m[K-Wsign-compare[m[K]
+   for (int i = 1; [01;35m[Ki < nPoints[m[K; i++)
+                   [01;35m[K~~^~~~~~~~~[m[K
+[01m[Kmain.cc:41:17:[m[K [01;31m[Kerror: [m[Kconversion from ‘[01m[KLine*[m[K’ to non-scalar type ‘[01m[KLine[m[K’ requested
+     Line line = [01;31m[Knew Line(p1,p2)[m[K;
+                 [01;31m[K^~~~~~~~~~~~~~~[m[K
+[01m[Kmain.cc:[m[K At global scope:
+[01m[Kmain.cc:21:1:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvoid outDistances(std::ostream&)[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+ [01;35m[KoutDistances[m[K(std::ostream& out)
+ [01;35m[K^~~~~~~~~~~~[m[K
+[01m[Kmain.cc:14:1:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvoid outSizes(std::ostream&)[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+ [01;35m[KoutSizes[m[K(std::ostream& out) {
+ [01;35m[K^~~~~~~~[m[K
+../Makefile:48: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+[01m[Kmain.cc:[m[K In function ‘[01m[Kint main()[m[K’:
+[01m[Kmain.cc:41:17:[m[K [01;31m[Kerror: [m[Kconversion from ‘[01m[KLine*[m[K’ to non-scalar type ‘[01m[KLine[m[K’ requested
+     Line line = [01;31m[Knew Line(p1,p2)[m[K;
+                 [01;31m[K^~~~~~~~~~~~~~~[m[K
+[01m[Kmain.cc:[m[K At global scope:
+[01m[Kmain.cc:21:1:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvoid outDistances(std::ostream&)[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+ [01;35m[KoutDistances[m[K(std::ostream& out)
+ [01;35m[K^~~~~~~~~~~~[m[K
+[01m[Kmain.cc:14:1:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvoid outSizes(std::ostream&)[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+ [01;35m[KoutSizes[m[K(std::ostream& out) {
+ [01;35m[K^~~~~~~~[m[K
+../Makefile:48: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+[01m[Kmain.cc:21:1:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvoid outDistances(std::ostream&)[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+ [01;35m[KoutDistances[m[K(std::ostream& out)
+ [01;35m[K^~~~~~~~~~~~[m[K
+[01m[Kmain.cc:14:1:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvoid outSizes(std::ostream&)[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+ [01;35m[KoutSizes[m[K(std::ostream& out) {
+ [01;35m[K^~~~~~~~[m[K
+g++ point.o main.o line.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main point.o main.o line.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ point.o main.o line.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main point.o main.o line.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ ls
+line.cc  line.hh  line.o  [0m[01;32mmain[0m  main.cc  main.o  point.cc  point.hh  point.o
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ ./main 
+(0, 0) -- (0, 0)
+(3, 4) -- (0, 0)
+(1, 1) -- (3, 4)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ ./main ls[Kmake -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ point.o main.o line.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main point.o main.o line.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile [13P./main[C
+(0, 0) -- (3, 4)
+(3, 4) -- (1, 1)
+(1, 1) -- (4, 5)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ ./main [13@make -f ../Makefile[C
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ point.o main.o line.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main point.o main.o line.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile [13P./main[C
+(3, 4) -- (1, 1)
+(4, 5) -- (0, 0)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ ./main [13@make -f ../Makefile[C
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ point.o main.o line.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main point.o main.o line.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile [13P./main[C
+(0, 0) -- (3, 4)
+(1, 1) -- (4, 5)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ ./main [13@make -f ../Makefile[C
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+[01m[Kmain.cc:8:66:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K}[m[K’ before ‘[01m[K;[m[K’ token
+   Point(0, 0), Point(3, 4), Point(1, 1), Point(4, 5), Point(1,17)[01;31m[K;[m[K
+                                                                  [01;31m[K^[m[K
+[01m[Kmain.cc:9:1:[m[K [01;31m[Kerror: [m[Kexpected declaration before ‘[01m[K}[m[K’ token
+ [01;31m[K}[m[K;
+ [01;31m[K^[m[K
+../Makefile:48: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ point.o main.o line.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main point.o main.o line.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ make -f ../Makefile [13P./main[C
+(0, 0) -- (3, 4)
+(1, 1) -- (4, 5)
+(1, 17) -- (0, 0)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ gt[Kit status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	[31mmodified:   .gitignore[m
+	[31mmodified:   main.cc[m
+	[31mmodified:   ../../lab4.LOG[m
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	[31m../../.gitignore[m
+	[31mline.cc[m
+	[31mline.hh[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/1-point[00m$ cd ,[K..
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ ls
+[0m[01;34m1-point[0m  [01;34m2-shape[0m  [01;34m3-expr[0m  Makefile
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	[31mmodified:   1-point/.gitignore[m
+	[31mmodified:   1-point/main.cc[m
+	[31mmodified:   ../lab4.LOG[m
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	[31m../.gitignore[m
+	[31m1-point/line.cc[m
+	[31m1-point/line.hh[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ git add ..
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	[32mnew file:   ../.gitignore[m
+	[32mmodified:   1-point/.gitignore[m
+	[32mnew file:   1-point/line.cc[m
+	[32mnew file:   1-point/line.hh[m
+	[32mmodified:   1-point/main.cc[m
+	[32mmodified:   ../lab4.LOG[m
+
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ git commit =-[K[K-m ''d'o'n'e' 'w'i't'[1P'[1P'[1P'[1P'[1P'[1P'[1P'[1P'f'i'n's'i'h'e'd' 'e'x'e'r'c'i's'e' '1'
+[master 178864c] finsihed exercise 1
+ 6 files changed, 350 insertions(+), 53 deletions(-)
+ create mode 100644 work/lab4/.gitignore
+ create mode 100644 work/lab4/exercises/1-point/line.cc
+ create mode 100644 work/lab4/exercises/1-point/line.hh
+ rewrite work/lab4/lab4.LOG (85%)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ git push
+Counting objects: 12, done.
+Delta compression using up to 2 threads.
+Compressing objects:  11% (1/9)   Compressing objects:  22% (2/9)   Compressing objects:  33% (3/9)   Compressing objects:  44% (4/9)   Compressing objects:  55% (5/9)   Compressing objects:  66% (6/9)   Compressing objects:  77% (7/9)   Compressing objects:  88% (8/9)   Compressing objects: 100% (9/9)   Compressing objects: 100% (9/9), done.
+Writing objects:   8% (1/12)   Writing objects:  16% (2/12)   Writing objects:  25% (3/12)   Writing objects:  33% (4/12)   Writing objects:  41% (5/12)   Writing objects:  50% (6/12)   Writing objects:  58% (7/12)   Writing objects:  66% (8/12)   Writing objects:  75% (9/12)   Writing objects:  83% (10/12)   Writing objects:  91% (11/12)   Writing objects: 100% (12/12)   Writing objects: 100% (12/12), 5.90 KiB | 1.97 MiB/s, done.
+Total 12 (delta 2), reused 0 (delta 0)
+remote: Resolving deltas:   0% (0/2)[Kremote: Resolving deltas:  50% (1/2)[Kremote: Resolving deltas: 100% (2/2)[Kremote: Resolving deltas: 100% (2/2), completed with 2 local objects.[K
+To github.com:aservet1/i240a.git
+   39e0181..178864c  master -> master
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ ls
+[0m[01;34m1-point[0m  [01;34m2-shape[0m  [01;34m3-expr[0m  Makefile
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ cd 2-shape/
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ ls
+main.cc  point.cc  point.hh  shapes.hh  tostring.cc  tostring.hh
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ ls
+main.cc  point.cc  point.hh  shapes.hh  tostring.cc  tostring.hh
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ atim *[1P[1@o
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ make 0f [K[K[K-f ../Makefile 
+g++ -MT tostring.o -MMD -MP -MF .deps/tostring.d -g -Wall -std=c++17 -c tostring.cc
+g++ -MT point.o -MMD -MP -MF .deps/point.d -g -Wall -std=c++17 -c point.cc
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ tostring.o point.o main.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main tostring.o point.o main.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ ls
+[0m[01;32mmain[0m  main.cc  main.o  point.cc  point.hh  point.o  shapes.hh  tostring.cc  tostring.hh  tostring.o
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ ./main 
+Circle[(0, 0), 1] perimeter: 6.28319
+Rectangle[(1, 1), (4, 5)] perimeter: 14
+Circle[(1, 1), 2] perimeter: 12.5664
+Rectangle[(0, 0), (5, 4)] perimeter: 18
+
+sizeof(double) = 8
+sizeof(Point) = 24
+
+sizeof(ToString) = 8
+sizeof(Shape) = 8
+sizeof(Circle) = 40
+sizeof(Rectangle) = 56
+
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ ./main ls[Kmake -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ tostring.o point.o main.o -o main
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ make -f ../Makefile [13P./main[C
+Circle[(0, 0), 1] perimeter: 6.28319
+Rectangle[(1, 1), (4, 5)] perimeter: 14
+Circle[(1, 1), 2] perimeter: 12.5664
+Rectangle[(0, 0), (5, 4)] perimeter: 18
+
+sizeof(double) = 8
+sizeof(Point) = 24
+
+sizeof(ToString) = 8
+sizeof(Shape) = 8
+sizeof(Circle) = 40
+sizeof(Rectangle) = 56
+
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ ./main [13@make -f ../Makefile[C
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+[01m[Kmain.cc:[m[K In function ‘[01m[Kvoid outShapes(std::ostream&)[m[K’:
+[01m[Kmain.cc:46:17:[m[K [01;31m[Kerror: [m[K‘[01m[KshateP[m[K’ was not declared in this scope
+     auto area = [01;31m[KshateP[m[K->area();
+                 [01;31m[K^~~~~~[m[K
+[01m[Kmain.cc:46:17:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[KshapeP[m[K’
+     auto area = [01;36m[KshateP[m[K->area();
+                 [01;36m[K^~~~~~[m[K
+                 [32m[KshapeP[m[K
+../Makefile:48: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ tostring.o point.o main.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main tostring.o point.o main.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ make -f ../Makefile [13P./main[C
+Circle[(0, 0), 1]
+perimeter:	6.28319
+area:	3.14159
+Rectangle[(1, 1), (4, 5)]
+perimeter:	14
+area:	12
+Circle[(1, 1), 2]
+perimeter:	12.5664
+area:	12.5664
+Rectangle[(0, 0), (5, 4)]
+perimeter:	18
+area:	20
+
+sizeof(double) = 8
+sizeof(Point) = 24
+
+sizeof(ToString) = 8
+sizeof(Shape) = 8
+sizeof(Circle) = 40
+sizeof(Rectangle) = 56
+
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ ./main [13@make -f ../Makefile[C
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ tostring.o point.o main.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main tostring.o point.o main.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ make -f ../Makefile [13P./main[C
+Circle[(0, 0), 1]
+	perimeter:	6.28319
+	area:		3.14159
+Rectangle[(1, 1), (4, 5)]
+	perimeter:	14
+	area:		12
+Circle[(1, 1), 2]
+	perimeter:	12.5664
+	area:		12.5664
+Rectangle[(0, 0), (5, 4)]
+	perimeter:	18
+	area:		20
+
+sizeof(double) = 8
+sizeof(Point) = 24
+
+sizeof(ToString) = 8
+sizeof(Shape) = 8
+sizeof(Circle) = 40
+sizeof(Rectangle) = 56
+
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ ls
+[0m[01;32mmain[0m  main.cc  main.o  point.cc  point.hh  point.o  shapes.hh  tostring.cc  tostring.hh  tostring.o
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/2-shape[00m$ cd[Kc [K[Kd ..
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ ls
+[0m[01;34m1-point[0m  [01;34m2-shape[0m  [01;34m3-expr[0m  Makefile
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	[31mmodified:   2-shape/main.cc[m
+	[31mmodified:   2-shape/shapes.hh[m
+	[31mmodified:   ../lab4.LOG[m
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	[31m2-shape/.gitignore[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ git add 2-shape/
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ git cimmit -m ''f'i'n's'i'h'e'd' 'e'x'[1P'[1P'[1P'[1P'[1P'[1P'[1P'[1P'i's'h'e'd' 'e'x'e'r'c'i's'e' '2'
+git: 'cimmit' is not a git command. See 'git --help'.
+
+The most similar command is
+	commit
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ git cimmit -m 'finished exercise 2'[1P[1@o
+[master 7085642] finished exercise 2
+ 3 files changed, 26 insertions(+), 5 deletions(-)
+ create mode 100644 work/lab4/exercises/2-shape/.gitignore
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ git push
+Counting objects: 9, done.
+Delta compression using up to 2 threads.
+Compressing objects:  14% (1/7)   Compressing objects:  28% (2/7)   Compressing objects:  42% (3/7)   Compressing objects:  57% (4/7)   Compressing objects:  71% (5/7)   Compressing objects:  85% (6/7)   Compressing objects: 100% (7/7)   Compressing objects: 100% (7/7), done.
+Writing objects:  11% (1/9)   Writing objects:  22% (2/9)   Writing objects:  33% (3/9)   Writing objects:  44% (4/9)   Writing objects:  55% (5/9)   Writing objects:  66% (6/9)   Writing objects:  77% (7/9)   Writing objects:  88% (8/9)   Writing objects: 100% (9/9)   Writing objects: 100% (9/9), 1.10 KiB | 1.10 MiB/s, done.
+Total 9 (delta 3), reused 0 (delta 0)
+remote: Resolving deltas:   0% (0/3)[Kremote: Resolving deltas:  33% (1/3)[Kremote: Resolving deltas:  66% (2/3)[Kremote: Resolving deltas: 100% (3/3)[Kremote: Resolving deltas: 100% (3/3), completed with 3 local objects.[K
+To github.com:aservet1/i240a.git
+   178864c..7085642  master -> master
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises[00m$ cd 3-expr/
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ls
+expr.cc  expr.hh  main.cc  parse.cc  parse.hh  tostring.cc  tostring.hh
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ls
+expr.cc  expr.hh  main.cc  parse.cc  parse.hh  tostring.cc  tostring.hh
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ls
+expr.cc  expr.hh  main.cc  parse.cc  parse.hh  tostring.cc  tostring.hh
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ atom *
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ls
+expr.cc  expr.hh  main.cc  parse.cc  parse.hh  tostring.cc  tostring.hh
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make [K -f ../Makefile 
+g++ -MT tostring.o -MMD -MP -MF .deps/tostring.d -g -Wall -std=c++17 -c tostring.cc
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ -MT parse.o -MMD -MP -MF .deps/parse.d -g -Wall -std=c++17 -c parse.cc
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+g++ tostring.o main.o parse.o expr.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main tostring.o main.o parse.o expr.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ls
+expr.cc  expr.hh  expr.o  [0m[01;32mmain[0m  main.cc  main.o  parse.cc  parse.hh  parse.o  tostring.cc  tostring.hh  tostring.o
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./w[Kmain 
+usage: ./main PREFIX_EXPR...
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main + 1 2
+unexpected end-of-input "+"
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main + 1 2'[1@'
+(1) + (2)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main '+ 1 2' '4'
+(1) + (2)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main '+ 1 2 4'[1@-[1@ 
+((1) - (2)) + (4)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main '+ - 1 2 4'[1P[1P[C[1@-
+((1) + (2)) - (4)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main '-+ 1 2 4'[1@ 
+((1) + (2)) - (4)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ pythn[Kon3
+Python 3.6.7 (default, Oct 22 2018, 11:32:17) 
+[GCC 8.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 77 / ()8)+)5)
+5.923076923076923
+>>> 77/8
+9.625
+>>> 
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make 0f[K[K-f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ -MT parse.o -MMD -MP -MF .deps/parse.d -g -Wall -std=c++17 -c parse.cc
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+[01m[Kexpr.cc:[m[K In member function ‘[01m[Kint AddExpr::eval() const[m[K’:
+[01m[Kexpr.cc:31:15:[m[K [01;31m[Kerror: [m[K‘[01m[Kconst ExprPtr {aka const class std::shared_ptr<Expr>}[m[K’ has no member named ‘[01m[Keval[m[K’
+   return left.[01;31m[Keval[m[K() + right.eval();
+               [01;31m[K^~~~[m[K
+[01m[Kexpr.cc:31:30:[m[K [01;31m[Kerror: [m[K‘[01m[Kconst ExprPtr {aka const class std::shared_ptr<Expr>}[m[K’ has no member named ‘[01m[Keval[m[K’
+   return left.eval() + right.[01;31m[Keval[m[K();
+                              [01;31m[K^~~~[m[K
+../Makefile:48: recipe for target 'expr.o' failed
+make: *** [expr.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+[01m[Kexpr.cc:[m[K In member function ‘[01m[Kint AddExpr::eval() const[m[K’:
+[01m[Kexpr.cc:31:16:[m[K [01;31m[Kerror: [m[K‘[01m[Kconst ExprPtr {aka const class std::shared_ptr<Expr>}[m[K’ has no member named ‘[01m[Keval[m[K’
+   return *left.[01;31m[Keval[m[K() + *right.eval();
+                [01;31m[K^~~~[m[K
+[01m[Kexpr.cc:31:32:[m[K [01;31m[Kerror: [m[K‘[01m[Kconst ExprPtr {aka const class std::shared_ptr<Expr>}[m[K’ has no member named ‘[01m[Keval[m[K’
+   return *left.eval() + *right.[01;31m[Keval[m[K();
+                                [01;31m[K^~~~[m[K
+../Makefile:48: recipe for target 'expr.o' failed
+make: *** [expr.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+[01m[Kexpr.cc:[m[K In member function ‘[01m[Kint AddExpr::eval() const[m[K’:
+[01m[Kexpr.cc:31:18:[m[K [01;31m[Kerror: [m[K‘[01m[Kusing element_type = class Expr {aka class Expr}[m[K’ has no member named ‘[01m[Keval[m[K’
+   return (*left).[01;31m[Keval[m[K() + (*right).eval();
+                  [01;31m[K^~~~[m[K
+[01m[Kexpr.cc:31:36:[m[K [01;31m[Kerror: [m[K‘[01m[Kusing element_type = class Expr {aka class Expr}[m[K’ has no member named ‘[01m[Keval[m[K’
+   return (*left).eval() + (*right).[01;31m[Keval[m[K();
+                                    [01;31m[K^~~~[m[K
+../Makefile:48: recipe for target 'expr.o' failed
+make: *** [expr.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ -MT parse.o -MMD -MP -MF .deps/parse.d -g -Wall -std=c++17 -c parse.cc
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+[01m[Kexpr.cc:[m[K In member function ‘[01m[Kint AddExpr::eval() const[m[K’:
+[01m[Kexpr.cc:31:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kint Expr::eval() const[m[K’ is private within this context
+   return (*left).eval([01;31m[K)[m[K + (*right).eval();
+                       [01;31m[K^[m[K
+In file included from [01m[Kexpr.cc:1:0[m[K:
+[01m[Kexpr.hh:11:7:[m[K [01;36m[Knote: [m[Kdeclared private here
+   int [01;36m[Keval[m[K() const;
+       [01;36m[K^~~~[m[K
+[01m[Kexpr.cc:31:41:[m[K [01;31m[Kerror: [m[K‘[01m[Kint Expr::eval() const[m[K’ is private within this context
+   return (*left).eval() + (*right).eval([01;31m[K)[m[K;
+                                         [01;31m[K^[m[K
+In file included from [01m[Kexpr.cc:1:0[m[K:
+[01m[Kexpr.hh:11:7:[m[K [01;36m[Knote: [m[Kdeclared private here
+   int [01;36m[Keval[m[K() const;
+       [01;36m[K^~~~[m[K
+../Makefile:48: recipe for target 'expr.o' failed
+make: *** [expr.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ -MT parse.o -MMD -MP -MF .deps/parse.d -g -Wall -std=c++17 -c parse.cc
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+[01m[Kexpr.cc:15:17:[m[K [01;31m[Kerror: [m[Kno ‘[01m[Kint IntExpr::eval() const[m[K’ member function declared in class ‘[01m[KIntExpr[m[K’
+ IntExpr::eval() [01;31m[Kconst[m[K
+                 [01;31m[K^~~~~[m[K
+[01m[Kexpr.cc:29:17:[m[K [01;31m[Kerror: [m[Kno ‘[01m[Kint AddExpr::eval() const[m[K’ member function declared in class ‘[01m[KAddExpr[m[K’
+ AddExpr::eval() [01;31m[Kconst[m[K
+                 [01;31m[K^~~~~[m[K
+../Makefile:48: recipe for target 'expr.o' failed
+make: *** [expr.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+In file included from [01m[Kmain.cc:1:0[m[K:
+[01m[Kexpr.hh:11:7:[m[K [01;31m[Kerror: [m[Kinitializer specified for non-virtual method ‘[01m[Kint Expr::eval() const[m[K’
+   int [01;31m[Keval[m[K() const = 0;
+       [01;31m[K^~~~[m[K
+../Makefile:48: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ -MT parse.o -MMD -MP -MF .deps/parse.d -g -Wall -std=c++17 -c parse.cc
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+[01m[Kexpr.cc:[m[K In member function ‘[01m[Kint AddExpr::eval() const[m[K’:
+[01m[Kexpr.cc:31:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kint Expr::eval() const[m[K’ is private within this context
+   return (*left).eval([01;31m[K)[m[K + (*right).eval();
+                       [01;31m[K^[m[K
+In file included from [01m[Kexpr.cc:1:0[m[K:
+[01m[Kexpr.hh:11:7:[m[K [01;36m[Knote: [m[Kdeclared private here
+   int [01;36m[Keval[m[K() const;
+       [01;36m[K^~~~[m[K
+[01m[Kexpr.cc:31:41:[m[K [01;31m[Kerror: [m[K‘[01m[Kint Expr::eval() const[m[K’ is private within this context
+   return (*left).eval() + (*right).eval([01;31m[K)[m[K;
+                                         [01;31m[K^[m[K
+In file included from [01m[Kexpr.cc:1:0[m[K:
+[01m[Kexpr.hh:11:7:[m[K [01;36m[Knote: [m[Kdeclared private here
+   int [01;36m[Keval[m[K() const;
+       [01;36m[K^~~~[m[K
+../Makefile:48: recipe for target 'expr.o' failed
+make: *** [expr.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ -MT parse.o -MMD -MP -MF .deps/parse.d -g -Wall -std=c++17 -c parse.cc
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+g++ tostring.o main.o parse.o expr.o -o main
+expr.o: In function `AddExpr::eval() const':
+/home/alejandro/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr/expr.cc:31: undefined reference to `Expr::eval() const'
+/home/alejandro/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr/expr.cc:31: undefined reference to `Expr::eval() const'
+collect2: error: ld returned 1 exit status
+../Makefile:18: recipe for target 'main' failed
+make: *** [main] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ -MT parse.o -MMD -MP -MF .deps/parse.d -g -Wall -std=c++17 -c parse.cc
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+[01m[Kexpr.cc:15:17:[m[K [01;31m[Kerror: [m[Kno ‘[01m[Kint IntExpr::eval() const[m[K’ member function declared in class ‘[01m[KIntExpr[m[K’
+ IntExpr::eval() [01;31m[Kconst[m[K
+                 [01;31m[K^~~~~[m[K
+../Makefile:48: recipe for target 'expr.o' failed
+make: *** [expr.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ -MT parse.o -MMD -MP -MF .deps/parse.d -g -Wall -std=c++17 -c parse.cc
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+[01m[Kexpr.cc:[m[K In member function ‘[01m[Kint AddExpr::eval() const[m[K’:
+[01m[Kexpr.cc:31:17:[m[K [01;31m[Kerror: [m[K‘[01m[Kconst ExprPtr {aka const class std::shared_ptr<Expr>}[m[K’ has no member named ‘[01m[Keval[m[K’
+   return (left).[01;31m[Keval[m[K() + (right).eval();
+                 [01;31m[K^~~~[m[K
+[01m[Kexpr.cc:31:34:[m[K [01;31m[Kerror: [m[K‘[01m[Kconst ExprPtr {aka const class std::shared_ptr<Expr>}[m[K’ has no member named ‘[01m[Keval[m[K’
+   return (left).eval() + (right).[01;31m[Keval[m[K();
+                                  [01;31m[K^~~~[m[K
+../Makefile:48: recipe for target 'expr.o' failed
+make: *** [expr.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ clearr
+[3J[H[2J[3J[H[2J]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ clearrmake -f ../Makefile 
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+g++ tostring.o main.o parse.o expr.o -o main
+expr.o: In function `AddExpr::eval() const':
+/home/alejandro/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr/expr.cc:31: undefined reference to `Expr::eval() const'
+/home/alejandro/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr/expr.cc:31: undefined reference to `Expr::eval() const'
+collect2: error: ld returned 1 exit status
+../Makefile:18: recipe for target 'main' failed
+make: *** [main] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+In file included from [01m[Kmain.cc:1:0[m[K:
+[01m[Kexpr.hh:12:7:[m[K [01;31m[Kerror: [m[Kinitializer specified for non-virtual method ‘[01m[Kint Expr::eval() const[m[K’
+   int [01;31m[Keval[m[K() const = 0;
+       [01;31m[K^~~~[m[K
+../Makefile:48: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ nano ../2-shape/
+.deps/       .gitignore   main         main.cc      main.o       point.cc     point.hh     point.o      shapes.hh    tostring.cc  tostring.hh  tostring.o
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ nano ../2-shape/point.hh
+[?1049h[22;0;0t[1;39r(B[m[4l[?7h[39;49m[?1h=[?1h=[?1h=[?25l[39;49m(B[m[H[2J[37;77H(B[0;7m[ Reading File ](B[m[37;83H(B[0;7m 19 lines ](B[m[H(B[0;7m  GNU nano 2.9.3                                                              ../2-shape/point.hh                                                                        [1;168H(B[m[38d(B[0;7m^G(B[m Get Help     (B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut Text     (B[0;7m^J(B[m Justify[81G(B[0;7m^C(B[m Cur Pos[97G(B[0;7mM-U(B[m Undo[38;113H(B[0;7mM-A(B[m Mark Text   (B[0;7mM-](B[m To Bracket  (B[0;7mM-▲(B[m Previous[39d(B[0;7m^X(B[m Exit[39;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Uncut Text   (B[0;7m^T(B[m To Spell     (B[0;7m^_(B[m Go To Line   (B[0;7mM-E(B[m Redo[39;113H(B[0;7mM-6(B[m Copy Text   (B[0;7mM-W(B[m WhereIs Next(B[0;7mM-▼(B[m Next[37d[3d(B[0;1m[36m#ifndef[39m(B[m (B[0;1m[31mPOINT_HH_[4d[36m#define[39m(B[m (B[0;1m[31mPOINT_HH_[6d[36m#include[39m(B[m (B[0;1m[33m<string>[8d[36m#include[39m(B[m (B[0;1m[33m"tostring.hh"[10d[34m//similar to Point from previous exercise, but this definition extends[11d//ToString.[12d(B[0m[32mstruct[39m(B[m Point : [32mpublic[39m(B[m ToString {[13;3H[32mconst[39m(B[m [32mdouble[39m(B[m x, y;[14;3HPoint([32mdouble[39m(B[m x=0, [32mdouble[39m(B[m y=0) : x(x), y(y) { }[15;3H[32mdouble[39m(B[m distance([32mconst[39m(B[m Point& other) [32mconst[39m(B[m;[16;3Hstd::string toString() [32mconst[39m(B[m;[17d};[21d(B[0;1m[36m#endif[39m(B[m (B[0;1m[34m//ifndef POINT_HH_[3d[39m(B[m[?12l[?25h[?25l[37d[J[39;169H[?12l[?25h[39;1H[?1049l[23;0;0t[?1l>]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ nano ../2-shape/point.hh[K[K[K[K[K[K[K[Ktostring.
+[?1049h[22;0;0t[1;39r(B[m[4l[?7h[39;49m[?1h=[?1h=[?1h=[?25l[39;49m(B[m[H[2J[37;79H(B[0;7m[ New File ](B[m[H(B[0;7m  GNU nano 2.9.3                                                             ../2-shape/tostring.                                                                        [1;168H(B[m[38d(B[0;7m^G(B[m Get Help     (B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut Text     (B[0;7m^J(B[m Justify[81G(B[0;7m^C(B[m Cur Pos[97G(B[0;7mM-U(B[m Undo[38;113H(B[0;7mM-A(B[m Mark Text   (B[0;7mM-](B[m To Bracket  (B[0;7mM-▲(B[m Previous[39d(B[0;7m^X(B[m Exit[39;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Uncut Text   (B[0;7m^T(B[m To Spell     (B[0;7m^_(B[m Go To Line   (B[0;7mM-E(B[m Redo[39;113H(B[0;7mM-6(B[m Copy Text   (B[0;7mM-W(B[m WhereIs Next(B[0;7mM-▼(B[m Next[37d[3d[39;49m(B[m[?12l[?25h[?25l[37d[J[39;169H[?12l[?25h[39;1H[?1049l[23;0;0t[?1l>]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ nano ../2-shape/tostring.hh 
+[?1049h[22;0;0t[1;39r(B[m[4l[?7h[39;49m[?1h=[?1h=[?1h=[?25l[39;49m(B[m[H[2J[37;77H(B[0;7m[ Reading File ](B[m[37;83H(B[0;7m 32 lines ](B[m[H(B[0;7m  GNU nano 2.9.3                                                            ../2-shape/tostring.hh                                                                       [1;168H(B[m[38d(B[0;7m^G(B[m Get Help     (B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut Text     (B[0;7m^J(B[m Justify[81G(B[0;7m^C(B[m Cur Pos[97G(B[0;7mM-U(B[m Undo[38;113H(B[0;7mM-A(B[m Mark Text   (B[0;7mM-](B[m To Bracket  (B[0;7mM-▲(B[m Previous[39d(B[0;7m^X(B[m Exit[39;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Uncut Text   (B[0;7m^T(B[m To Spell     (B[0;7m^_(B[m Go To Line   (B[0;7mM-E(B[m Redo[39;113H(B[0;7mM-6(B[m Copy Text   (B[0;7mM-W(B[m WhereIs Next(B[0;7mM-▼(B[m Next[37d[3d(B[0;1m[36m#ifndef[39m(B[m (B[0;1m[31mTO_STRING_HH_[4d[36m#define[39m(B[m (B[0;1m[31mTO_STRING_HH_[6d[36m#include[39m(B[m (B[0;1m[33m<iostream>[7d[36m#include[39m(B[m (B[0;1m[33m<string>[9d[34m/*[10dThis specification file sets up a class `ToString` which should[11dcontain a method called `toString()`.  This method is declared[12dvirtual, which means that this method can be overridden by any classes[13dwhich inherit from `ToString`.  The `= 0` means that the `ToString`[14dclass does not provide any implementation for the `toString()` method;[15dthis makes `toString()` a *pure virtual method*.  Since there is no[16dimplementation for `toString()` it is impossible to create an instance[17dof `ToString` and it is referred to as an *abstract class*.[18d*/[20d//Inheriting from this abstract class and defining a toString[21d//method allows a class to use << on an ostream.[22d(B[0m[32mstruct[39m(B[m ToString {[23;3H[32mvirtual[39m(B[m std::string toString() [32mconst[39m(B[m = 0;[24d};[26d(B[0;1m[34m/*[27dThis declaration provides the raison d'etre for the `ToString` class.[28dThe declaration overloads the `<<` operator to allow output of[29d`ToString` objects.  The `tostring.cc` implementation file provides a[30dtrivial implementation.[31d*/[32d[39m(B[mstd::ostream& (B[0;1m[33moperator[39m(B[m<<(std::ostream& out, [32mconst[39m(B[m ToString& obj);[33d[42m  [34d(B[0;1m[36m#endif[39m(B[m (B[0;1m[34m//ifndef TO_STRING_HH_[3d[39m(B[m[?12l[?25h[?25l[37d[J[39;169H[?12l[?25h[39;1H[?1049l[23;0;0t[?1l>]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ nano ../2-shape/tostring.hh [K[1Ppoint.hh[4Pmake -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ -MT parse.o -MMD -MP -MF .deps/parse.d -g -Wall -std=c++17 -c parse.cc
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+g++ tostring.o main.o parse.o expr.o -o main
+parse.o: In function `SubExpr::SubExpr(std::shared_ptr<Expr>&, std::shared_ptr<Expr>&, SubExpr::Private)':
+/home/alejandro/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr/expr.hh:88: undefined reference to `vtable for SubExpr'
+parse.o: In function `MulExpr::MulExpr(std::shared_ptr<Expr>&, std::shared_ptr<Expr>&, MulExpr::Private)':
+/home/alejandro/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr/expr.hh:112: undefined reference to `vtable for MulExpr'
+parse.o: In function `DivExpr::DivExpr(std::shared_ptr<Expr>&, std::shared_ptr<Expr>&, DivExpr::Private)':
+/home/alejandro/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr/expr.hh:135: undefined reference to `vtable for DivExpr'
+parse.o: In function `DivExpr::~DivExpr()':
+/home/alejandro/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr/expr.hh:116: undefined reference to `vtable for DivExpr'
+parse.o: In function `MulExpr::~MulExpr()':
+/home/alejandro/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr/expr.hh:93: undefined reference to `vtable for MulExpr'
+parse.o: In function `SubExpr::~SubExpr()':
+/home/alejandro/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr/expr.hh:69: undefined reference to `vtable for SubExpr'
+collect2: error: ld returned 1 exit status
+../Makefile:18: recipe for target 'main' failed
+make: *** [main] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile [8@nano ../2-shape/tostring.hh[C[8Pmake -f ../Makefile[C
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+g++ tostring.o main.o parse.o expr.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main tostring.o main.o parse.o expr.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+[01m[Kexpr.cc:[m[K In member function ‘[01m[Kvirtual std::__cxx11::string AddExpr::toString() const[m[K’:
+[01m[Kexpr.cc:37:55:[m[K [01;31m[Kerror: [m[Kno match for ‘[01m[Koperator+[m[K’ (operand types are ‘[01m[Kstd::__cxx11::basic_string<char>[m[K’ and ‘[01m[Kint[m[K’)
+   return [01;31m[KbinaryExprToString("+", left, right) + " = " + eval()[m[K;
+          [01;31m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~[m[K
+In file included from [01m[K/usr/include/c++/7/string:52:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/locale_classes.h:40[m[K,
+                 from [01m[K/usr/include/c++/7/bits/ios_base.h:41[m[K,
+                 from [01m[K/usr/include/c++/7/ios:42[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/basic_string.h:5995:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _CharT, class _Traits, class _Alloc> std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&&, _CharT)
+     [01;36m[Koperator[m[K+(basic_string<_CharT, _Traits, _Alloc>&& __lhs,
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/basic_string.h:5995:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  deduced conflicting types for parameter ‘[01m[K_CharT[m[K’ (‘[01m[Kchar[m[K’ and ‘[01m[Kint[m[K’)
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/string:52:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/locale_classes.h:40[m[K,
+                 from [01m[K/usr/include/c++/7/bits/ios_base.h:41[m[K,
+                 from [01m[K/usr/include/c++/7/ios:42[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/basic_string.h:5989:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _CharT, class _Traits, class _Alloc> std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&&, const _CharT*)
+     [01;36m[Koperator[m[K+(basic_string<_CharT, _Traits, _Alloc>&& __lhs,
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/basic_string.h:5989:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst _CharT*[m[K’ and ‘[01m[Kint[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/string:52:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/locale_classes.h:40[m[K,
+                 from [01m[K/usr/include/c++/7/bits/ios_base.h:41[m[K,
+                 from [01m[K/usr/include/c++/7/ios:42[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/basic_string.h:5983:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _CharT, class _Traits, class _Alloc> std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(_CharT, std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&&)
+     [01;36m[Koperator[m[K+(_CharT __lhs,
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/basic_string.h:5983:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kstd::__cxx11::basic_string<_CharT, _Traits, _Alloc>[m[K’ and ‘[01m[Kint[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/string:52:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/locale_classes.h:40[m[K,
+                 from [01m[K/usr/include/c++/7/bits/ios_base.h:41[m[K,
+                 from [01m[K/usr/include/c++/7/ios:42[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/basic_string.h:5977:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _CharT, class _Traits, class _Alloc> std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(const _CharT*, std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&&)
+     [01;36m[Koperator[m[K+(const _CharT* __lhs,
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/basic_string.h:5977:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst _CharT*[m[K’ and ‘[01m[Kstd::__cxx11::basic_string<char>[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/string:52:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/locale_classes.h:40[m[K,
+                 from [01m[K/usr/include/c++/7/bits/ios_base.h:41[m[K,
+                 from [01m[K/usr/include/c++/7/ios:42[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/basic_string.h:5965:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _CharT, class _Traits, class _Alloc> std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&&, std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&&)
+     [01;36m[Koperator[m[K+(basic_string<_CharT, _Traits, _Alloc>&& __lhs,
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/basic_string.h:5965:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kstd::__cxx11::basic_string<_CharT, _Traits, _Alloc>[m[K’ and ‘[01m[Kint[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/string:52:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/locale_classes.h:40[m[K,
+                 from [01m[K/usr/include/c++/7/bits/ios_base.h:41[m[K,
+                 from [01m[K/usr/include/c++/7/ios:42[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/basic_string.h:5959:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _CharT, class _Traits, class _Alloc> std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&, std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&&)
+     [01;36m[Koperator[m[K+(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/basic_string.h:5959:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kstd::__cxx11::basic_string<_CharT, _Traits, _Alloc>[m[K’ and ‘[01m[Kint[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/string:52:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/locale_classes.h:40[m[K,
+                 from [01m[K/usr/include/c++/7/bits/ios_base.h:41[m[K,
+                 from [01m[K/usr/include/c++/7/ios:42[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/basic_string.h:5953:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _CharT, class _Traits, class _Alloc> std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&&, const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&)
+     [01;36m[Koperator[m[K+(basic_string<_CharT, _Traits, _Alloc>&& __lhs,
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/basic_string.h:5953:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst std::__cxx11::basic_string<_CharT, _Traits, _Alloc>[m[K’ and ‘[01m[Kint[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/string:52:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/locale_classes.h:40[m[K,
+                 from [01m[K/usr/include/c++/7/bits/ios_base.h:41[m[K,
+                 from [01m[K/usr/include/c++/7/ios:42[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/basic_string.h:5941:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _CharT, class _Traits, class _Alloc> std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&, _CharT)
+     [01;36m[Koperator[m[K+(const basic_string<_CharT, _Traits, _Alloc>& __lhs, _CharT __rhs)
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/basic_string.h:5941:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  deduced conflicting types for parameter ‘[01m[K_CharT[m[K’ (‘[01m[Kchar[m[K’ and ‘[01m[Kint[m[K’)
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/string:52:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/locale_classes.h:40[m[K,
+                 from [01m[K/usr/include/c++/7/bits/ios_base.h:41[m[K,
+                 from [01m[K/usr/include/c++/7/ios:42[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/basic_string.h:5925:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _CharT, class _Traits, class _Alloc> std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&, const _CharT*)
+     [01;36m[Koperator[m[K+(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/basic_string.h:5925:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst _CharT*[m[K’ and ‘[01m[Kint[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/string:53:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/locale_classes.h:40[m[K,
+                 from [01m[K/usr/include/c++/7/bits/ios_base.h:41[m[K,
+                 from [01m[K/usr/include/c++/7/ios:42[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/basic_string.tcc:1173:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _CharT, class _Traits, class _Alloc> std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(_CharT, const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&)
+     [01;36m[Koperator[m[K+(_CharT __lhs, const basic_string<_CharT, _Traits, _Alloc>& __rhs)
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/basic_string.tcc:1173:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst std::__cxx11::basic_string<_CharT, _Traits, _Alloc>[m[K’ and ‘[01m[Kint[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/string:53:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/locale_classes.h:40[m[K,
+                 from [01m[K/usr/include/c++/7/bits/ios_base.h:41[m[K,
+                 from [01m[K/usr/include/c++/7/ios:42[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/basic_string.tcc:1157:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _CharT, class _Traits, class _Alloc> std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(const _CharT*, const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&)
+     [01;36m[Koperator[m[K+(const _CharT* __lhs,
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/basic_string.tcc:1157:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst _CharT*[m[K’ and ‘[01m[Kstd::__cxx11::basic_string<char>[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/string:52:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/locale_classes.h:40[m[K,
+                 from [01m[K/usr/include/c++/7/bits/ios_base.h:41[m[K,
+                 from [01m[K/usr/include/c++/7/ios:42[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/basic_string.h:5888:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _CharT, class _Traits, class _Alloc> std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&, const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&)
+     [01;36m[Koperator[m[K+(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/basic_string.h:5888:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst std::__cxx11::basic_string<_CharT, _Traits, _Alloc>[m[K’ and ‘[01m[Kint[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/bits/stl_algobase.h:67:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/char_traits.h:39[m[K,
+                 from [01m[K/usr/include/c++/7/ios:40[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/stl_iterator.h:1201:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _Iterator> constexpr std::move_iterator<_IteratorL> std::operator+(typename std::move_iterator<_IteratorL>::difference_type, const std::move_iterator<_IteratorL>&)
+     [01;36m[Koperator[m[K+(typename move_iterator<_Iterator>::difference_type __n,
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/stl_iterator.h:1201:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst std::move_iterator<_IteratorL>[m[K’ and ‘[01m[Kint[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/bits/stl_algobase.h:67:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/char_traits.h:39[m[K,
+                 from [01m[K/usr/include/c++/7/ios:40[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/stl_iterator.h:400:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _Iterator> constexpr std::reverse_iterator<_Iterator> std::operator+(typename std::reverse_iterator<_Iterator>::difference_type, const std::reverse_iterator<_Iterator>&)
+     [01;36m[Koperator[m[K+(typename reverse_iterator<_Iterator>::difference_type __n,
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/stl_iterator.h:400:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst std::reverse_iterator<_Iterator>[m[K’ and ‘[01m[Kint[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+In file included from [01m[K/usr/include/c++/7/bits/stl_algobase.h:67:0[m[K,
+                 from [01m[K/usr/include/c++/7/bits/char_traits.h:39[m[K,
+                 from [01m[K/usr/include/c++/7/ios:40[m[K,
+                 from [01m[K/usr/include/c++/7/ostream:38[m[K,
+                 from [01m[K/usr/include/c++/7/iostream:39[m[K,
+                 from [01m[Ktostring.hh:4[m[K,
+                 from [01m[Kexpr.hh:4[m[K,
+                 from [01m[Kexpr.cc:1[m[K:
+[01m[K/usr/include/c++/7/bits/stl_iterator.h:972:5:[m[K [01;36m[Knote: [m[Kcandidate: template<class _Iterator, class _Container> __gnu_cxx::__normal_iterator<_Iterator, _Container> __gnu_cxx::operator+(typename __gnu_cxx::__normal_iterator<_Iterator, _Container>::difference_type, const __gnu_cxx::__normal_iterator<_Iterator, _Container>&)
+     [01;36m[Koperator[m[K+(typename __normal_iterator<_Iterator, _Container>::difference_type
+     [01;36m[K^~~~~~~~[m[K
+[01m[K/usr/include/c++/7/bits/stl_iterator.h:972:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[Kexpr.cc:37:62:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst __gnu_cxx::__normal_iterator<_Iterator, _Container>[m[K’ and ‘[01m[Kint[m[K’
+   return binaryExprToString("+", left, right) + " = " + eval([01;36m[K)[m[K;
+                                                              [01;36m[K^[m[K
+../Makefile:48: recipe for target 'expr.o' failed
+make: *** [expr.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+g++ tostring.o main.o parse.o expr.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main tostring.o main.o parse.o expr.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile [8@nano ../2-shape/tostring.hh[C[8Pmake -f ../Makefile[C
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+g++ tostring.o main.o parse.o expr.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main tostring.o main.o parse.o expr.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ls
+expr.cc  expr.hh  expr.o  [0m[01;32mmain[0m  main.cc  main.o  parse.cc  parse.hh  parse.o  tostring.cc  tostring.hh  tostring.o
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ,.[K[K./main [K ''+' '1' '2'
+(1) + (2) = 3
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main '+ 1 2'[1P[1@-
+(1) - (2) = -1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main '- 1 2'[1@-[1@ 
+unexpected end-of-input "- - 1 2"
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main '- - 1 2' '4'
+((1) - (2) = -1) - (4) = -5
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main '- - 1 2 4'[2P'[2P[C[C[C[C+[C[C[C[C[Cls[Kmake -f ../Makefile 
+g++ -MT expr.o -MMD -MP -MF .deps/expr.d -g -Wall -std=c++17 -c expr.cc
+g++ tostring.o main.o parse.o expr.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main tostring.o main.o parse.o expr.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile [2P./main '- - 1 2 4'
+((1) - (2)) - (4)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main '- - 1 2 4'make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+[01m[Kmain.cc:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[01m[Kmain.cc:15:33:[m[K [01;31m[Kerror: [m[Kcannot allocate an object of abstract type ‘[01m[KExpr[m[K’
+     Expr parsed = *parse(argv[i][01;31m[K)[m[K;
+                                 [01;31m[K^[m[K
+In file included from [01m[Kmain.cc:1:0[m[K:
+[01m[Kexpr.hh:10:7:[m[K [01;36m[Knote: [m[K  because the following virtual functions are pure within ‘[01m[KExpr[m[K’:
+ class [01;36m[KExpr[m[K : public ToString {
+       [01;36m[K^~~~[m[K
+In file included from [01m[Kexpr.hh:4:0[m[K,
+                 from [01m[Kmain.cc:1[m[K:
+[01m[Ktostring.hh:10:23:[m[K [01;36m[Knote: [m[K	virtual std::__cxx11::string ToString::toString() const
+   virtual std::string [01;36m[KtoString[m[K() const = 0;
+                       [01;36m[K^~~~~~~~[m[K
+In file included from [01m[Kmain.cc:1:0[m[K:
+[01m[Kexpr.hh:12:15:[m[K [01;36m[Knote: [m[K	virtual int Expr::eval() const
+   virtual int [01;36m[Keval[m[K() const = 0;
+               [01;36m[K^~~~[m[K
+[01m[Kmain.cc:15:10:[m[K [01;31m[Kerror: [m[Kcannot declare variable ‘[01m[Kparsed[m[K’ to be of abstract type ‘[01m[KExpr[m[K’
+     Expr [01;31m[Kparsed[m[K = *parse(argv[i]);
+          [01;31m[K^~~~~~[m[K
+../Makefile:48: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+[01m[Kmain.cc:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[01m[Kmain.cc:15:33:[m[K [01;31m[Kerror: [m[Kcannot allocate an object of abstract type ‘[01m[KExpr[m[K’
+     auto parsed = *parse(argv[i][01;31m[K)[m[K;
+                                 [01;31m[K^[m[K
+In file included from [01m[Kmain.cc:1:0[m[K:
+[01m[Kexpr.hh:10:7:[m[K [01;36m[Knote: [m[K  because the following virtual functions are pure within ‘[01m[KExpr[m[K’:
+ class [01;36m[KExpr[m[K : public ToString {
+       [01;36m[K^~~~[m[K
+In file included from [01m[Kexpr.hh:4:0[m[K,
+                 from [01m[Kmain.cc:1[m[K:
+[01m[Ktostring.hh:10:23:[m[K [01;36m[Knote: [m[K	virtual std::__cxx11::string ToString::toString() const
+   virtual std::string [01;36m[KtoString[m[K() const = 0;
+                       [01;36m[K^~~~~~~~[m[K
+In file included from [01m[Kmain.cc:1:0[m[K:
+[01m[Kexpr.hh:12:15:[m[K [01;36m[Knote: [m[K	virtual int Expr::eval() const
+   virtual int [01;36m[Keval[m[K() const = 0;
+               [01;36m[K^~~~[m[K
+[01m[Kmain.cc:15:10:[m[K [01;31m[Kerror: [m[Kcannot declare variable ‘[01m[Kparsed[m[K’ to be of abstract type ‘[01m[KExpr[m[K’
+     auto [01;31m[Kparsed[m[K = *parse(argv[i]);
+          [01;31m[K^~~~~~[m[K
+../Makefile:48: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ tostring.o main.o parse.o expr.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main tostring.o main.o parse.o expr.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile [2P./main '- - 1 2 4'make -f ../Makefile [2P./main '- - 1 2 4'
+0x562fe58bdf50
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main '- - 1 2 4'
+0x559b7b66ef50
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main '- - 1 2 4'make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ tostring.o main.o parse.o expr.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main tostring.o main.o parse.o expr.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile [2P./main '- - 1 2 4'
+((1) - (2)) - (4)
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./main '- - 1 2 4'make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+[01m[Kmain.cc:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[01m[Kmain.cc:16:26:[m[K [01;31m[Kerror: [m[K‘[01m[Kusing ExprPtr = class std::shared_ptr<Expr> {aka class std::shared_ptr<Expr>}[m[K’ has no member named ‘[01m[Keval[m[K’
+     int result = *parsed.[01;31m[Keval[m[K();
+                          [01;31m[K^~~~[m[K
+../Makefile:48: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile 
+g++ -MT main.o -MMD -MP -MF .deps/main.d -g -Wall -std=c++17 -c main.cc
+g++ tostring.o main.o parse.o expr.o -o main
+cat </dev/null >.gitignore
+echo .deps >.gitignore
+for t in main tostring.o main.o parse.o expr.o; do echo $t >>.gitignore; done
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ make -f ../Makefile [2P./main '- - 1 2 4'
+((1) - (2)) - (4) = -5
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ clearr
+[3J[H[2J[3J[H[2J]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./,ain [K[K[K[K[Kmain ""+" "1" "2"[C ""-" "3" "4"[C ""*" "5" "6"[C ""/" "7"7" "8"
+(1) + (2) = 3
+(3) - (4) = -1
+(5) * (6) = 30
+(77) / (8) = 9
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ./amin ""*" "+" "1" "2" "3"[1P"4"[C[1@a[1P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C ""-" "*" "3" "4" "5"[C ""/" "*" "5" "6" "1"0"[C ""/" "7"7" [A]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C ""+" "8" "5"
+((1) + (2)) * (4) = 12
+((3) * (4)) - (5) = 7
+((5) * (6)) / (10) = 3
+(77) / ((8) + (5)) = 5
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ ,.[K[K./main ""+" "+" "+" "/" "2"2" "3" "[1P"[1P"6" "*" "5" "3" "-" "2" "4"[1P"5" "*" "3" "5"
+((((22) / (6)) + ((5) * (3))) + ((2) - (5))) + ((3) * (5)) = 30
+]0;alejandro@alejandro-Lenovo-ideapad-120S-11IAP: ~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[01;32malejandro@alejandro-Lenovo-ideapad-120S-11IAP[00m:[01;34m~/Documents/BingFiles/Spring2020/CS240/i240a/work/lab4/exercises/3-expr[00m$ exit
+
+Script done on 2020-02-22 16:12:12-0500

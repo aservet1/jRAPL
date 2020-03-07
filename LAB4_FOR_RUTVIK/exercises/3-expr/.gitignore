@@ -1,0 +1,6 @@
+.deps
+main
+tostring.o
+main.o
+parse.o
+expr.o
