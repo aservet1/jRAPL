@@ -10,43 +10,11 @@
 #include "CPUScaler.h"
 #include "arch_spec.h"
 #include "msr.h"
-<<<<<<< HEAD
-#define UNDEFINED_ARCH 0
-#define DRAM 1
-#define GPU 2
-=======
-
->>>>>>> 6829df1852f1446b6a9305f19281b432d99b37b6
 static rapl_msr_parameter *parameters;
 static int *fd;
 static uint64_t num_pkg;
 
 
-<<<<<<< HEAD
-int get_arch_category(uint32_t cpu_model){
-	if(
-			cpu_model == SANDYBRIDGE_EP ||
-			cpu_model == HASWELL1 ||
-			cpu_model == HASWELL2 ||
-			cpu_model == HASWELL3 ||
-			cpu_model == HASWELL_EP ||
-			cpu_model == SKYLAKE1 ||
-			cpu_model == SKYLAKE2 ||
-			cpu_model == BROADWELL ||
-			cpu_model == BROADWELL2 ||
-			cpu_model == APOLLOLAKE ||
-			cpu_model == COFFEELAKE2
-	) return DRAM;
-
-	if(
-		cpu_model ==  SANDYBRIDGE ||
-		cpu_model == IVYBRIDGE
-	) return GPU;
-
-	return UNDEFINED_ARCH;
-}
-=======
->>>>>>> 6829df1852f1446b6a9305f19281b432d99b37b6
 
 /// Comments starting with '///' are my (Alejandro's) notes to self. feel free to delete them if I haven't and they aren't useful to you. Same goes for the
 /// <Alejandro's Intepretation> comments that describe functions. None of this is official documentation.
@@ -163,9 +131,9 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
 
 		sprintf(package_buffer[i], "%f", package[i]);
 		sprintf(cpu_buffer[i], "%f", pp0[i]);
-		int arch_category = get_arch_category(cpu_model);
-		switch(arch_category) {
-			case DRAM:
+		int architecture_category = get_architecture_category(cpu_model);
+		switch(architecture_category) {
+			case READ_FROM_DRAM:
 				result = read_msr(fd[i],MSR_DRAM_ENERGY_STATUS);
 				if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
 					dram[i] =(double)result*MSR_DRAM_ENERGY_UNIT;
@@ -180,7 +148,7 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
 				/*Insert socket number*/
 
 				break;
-			case GPU:
+			case READ_FROM_GPU:
 				result = read_msr(fd[i],MSR_PP1_ENERGY_STATUS);
 				pp1[i] = (double) result *rapl_unit.energy;
 
@@ -188,7 +156,7 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
 
 				info_size += strlen(package_buffer[i]) + strlen(gpu_buffer[i]) + strlen(cpu_buffer[i]) + 4;
 				break;
-			case UNDEFINED_ARCH:
+			case UNDEFINED_ARCHITECTURE:
 				printf("Architecture not found\n");
 				break;
 
@@ -225,10 +193,10 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 
   	bzero(ener_info, 512);
 	initialize_energy_info(gpu_buffer, dram_buffer, cpu_buffer, package_buffer);
-	int arch_catergory = get_arch_category(cpu_model);
+	int architecture_catergory = get_architecture_category(cpu_model);
 	for(i = 0; i < num_pkg; i++) {
-		switch(arch_catergory) {
-			case DRAM:
+		switch(architecture_catergory) {
+			case READ_FROM_DRAM:
 				//copy_to_string(ener_info, dram_buffer, dram_num, cpu_buffer, cpu_num, package_buffer, package_num, i, &offset);
 				/*Insert socket number*/
 				dram_num = strlen(dram_buffer[i]);
@@ -252,7 +220,7 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 				}
 
 				break;
-			case GPU:
+			case READ_FROM_GPU:
 
 				gpu_num = strlen(gpu_buffer[i]);
 				cpu_num = strlen(cpu_buffer[i]);
@@ -277,7 +245,7 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 				}
 
 				break;
-		case UNDEFINED_ARCH:
+		case UNDEFINED_ARCHITECTURE:
 				printf("Architecture not found\n");
 				break;
 
