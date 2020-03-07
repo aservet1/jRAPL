@@ -10,25 +10,23 @@
 #include "CPUScaler.h"
 #include "arch_spec.h"
 #include "msr.h"
+
+/// Comments starting with '///' are my (Alejandro's) notes to self.
+/// None of this is official documentation.
+
 static rapl_msr_parameter *parameters;
 static int *fd;
 static uint64_t num_pkg;
-
-
-
-/// Comments starting with '///' are my (Alejandro's) notes to self. feel free to delete them if I haven't and they aren't useful to you. Same goes for the
-/// <Alejandro's Intepretation> comments that describe functions. None of this is official documentation.
 
 /** <Alejandro's Interpretation>
  *  Takes the energy info and packages it into a formatted string... # delimits the 3 energy attribs and @ delimits multiple package readings (1 pkg = 3 energy attribs)
  *	Sets offset to the end of the string by the end of this
  *	I belive the i is an iterator to see how many packages have been put into the string
  *	If more than 1 pkg, puts a @ at the end of the string because there's going to be another set of package info after that
- *
  */
-void copy_to_string(char *ener_info, char uncore_buffer[60], int uncore_num, char cpu_buffer[60], int cpu_num, char package_buffer[60], int package_num, int i, int *offset) {
+void copy_to_string(char *ener_info, char uncore_buffer[60], int uncore_num, char cpu_buffer[60], int cpu_num, char package_buffer[60], int package_num, int i, int *offset)
+{
 	memcpy(ener_info + *offset, &uncore_buffer, uncore_num);
-	//split sign
 	ener_info[*offset + uncore_num] = '#';
 	memcpy(ener_info + *offset + uncore_num + 1, &cpu_buffer, cpu_num);
 	ener_info[*offset + uncore_num + cpu_num + 1] = '#';
@@ -37,7 +35,6 @@ void copy_to_string(char *ener_info, char uncore_buffer[60], int uncore_num, cha
 		*offset += uncore_num + cpu_num + package_num + 2;
 		if(num_pkg > 1) {
 			ener_info[*offset++] = '@';
-//			*offset++;
 		}
 	} else {
 		memcpy(ener_info + *offset + uncore_num + cpu_num + 2, &package_buffer, package_num + 1);
@@ -46,8 +43,7 @@ void copy_to_string(char *ener_info, char uncore_buffer[60], int uncore_num, cha
 }
 
 
-/*Assumed to be called only during or after ProfileInit, when static variable fd[] is initialized
-  and fd[0] actually means something*/
+/* Assumed to be called only during or after ProfileInit, when static variable fd[] is initialized */
 rapl_msr_unit get_rapl_unit()
 {
 	rapl_msr_unit rapl_unit;
