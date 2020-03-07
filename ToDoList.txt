@@ -1,8 +1,1 @@
-plot the results from the three devices in excel or whatever, do data anlysis. make a graph
-
-make uncore display, not package display (should do it on the c side? or in java?)
-
-time each individual c function indside the c side (see how much exta overhead in JNI)
-	plot difference in c and java overhead
-
-v i s u a l i z a t i o n s
+/home/alejandro/Documents/BingFiles/Spring2020/todo_spr2020/Lists/jRAPL.todo
