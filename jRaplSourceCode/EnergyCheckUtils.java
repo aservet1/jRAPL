@@ -125,7 +125,11 @@ public class EnergyCheckUtils {
 				System.err.format("Caught: " + e);
 			}
 			double[] after = getEnergyStats();
-			System.out.println("dram: " + (after[0] - before[0])  + "\tcpu: " + (after[1] - before[1])  + "\tpackage: " + (after[2] - before[2])  );
+			double dramReading = after[0] - before[0];
+			double cpuReading = after[1] - before[1];
+			double packageReading = after[2] - before[2];
+			double uncoreReading = packageReading - cpuReading;
+			System.out.println("dram: " + dramReading  + "\tcpu: " + cpuReading  + "\tuncore: " + uncoreReading  );
 		}
 		// Unreachable
 		//ProfileDealloc();
