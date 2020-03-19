@@ -7,8 +7,31 @@
 #include <stdint.h>
 #include <string.h>
 #include "arch_spec.h"
+#include <sys/time.h>
+#include <sys/types.h>
 
+int timeval_subtract1 (struct timeval *result, struct timeval *x, struct timeval *y)
+{
+  /* Perform the carry for the later subtraction by updating y. */
+  if (x->tv_usec < y->tv_usec) {
+    int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
+    y->tv_usec -= 1000000 * nsec;
+    y->tv_sec += nsec;
+  }
+  if (x->tv_usec - y->tv_usec > 1000000) {
+    int nsec = (x->tv_usec - y->tv_usec) / 1000000;
+    y->tv_usec += 1000000 * nsec;
+    y->tv_sec -= nsec;
+  }
 
+  /* Compute the time remaining to wait.
+     tv_usec is certainly positive. */
+  result->tv_sec = x->tv_sec - y->tv_sec;
+  result->tv_usec = x->tv_usec - y->tv_usec;
+
+  /* Return 1 if result is negative. */
+  return x->tv_sec < y->tv_sec;
+}
 /** <Alejandro's Interpretation>
  *	- (?) Direct  CPUID  access  through  this  device
           should only be used in exceptional cases.
@@ -132,10 +155,15 @@ uint64_t get_num_pkg_core()
 
  */
 uint64_t getSocketNum() {
+	struct timeval start, end, diff;
+	gettimeofday(&start, NULL);
 	int coreNum = core_num();
 	uint64_t num_pkg_thread = get_num_pkg_thread();
 	uint64_t num_pkg = coreNum / num_pkg_thread;
-	return num_pkg;
+	gettimeofday(&end,NULL);
+	timeval_subtract1(&diff, &end, &start);
+  	printf("getSocketNum(): %ld\n", diff.tv_sec*1000 + diff.tv_usec);
+	return num_pkg;	
 }
 
 int get_architecture_category(uint32_t cpu_model){

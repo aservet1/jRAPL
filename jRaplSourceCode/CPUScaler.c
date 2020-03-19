@@ -10,10 +10,33 @@
 #include "CPUScaler.h"
 #include "arch_spec.h"
 #include "msr.h"
+#include <sys/time.h>
+#include <sys/types.h>
 
 /// Comments starting with '///' are my (Alejandro's) notes to self.
 /// None of this is official documentation.
+int timeval_subtract2 (struct timeval *result, struct timeval *x, struct timeval *y)
+{
+  /* Perform the carry for the later subtraction by updating y. */
+  if (x->tv_usec < y->tv_usec) {
+    int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
+    y->tv_usec -= 1000000 * nsec;
+    y->tv_sec += nsec;
+  }
+  if (x->tv_usec - y->tv_usec > 1000000) {
+    int nsec = (x->tv_usec - y->tv_usec) / 1000000;
+    y->tv_usec += 1000000 * nsec;
+    y->tv_sec -= nsec;
+  }
 
+  /* Compute the time remaining to wait.
+     tv_usec is certainly positive. */
+  result->tv_sec = x->tv_sec - y->tv_sec;
+  result->tv_usec = x->tv_usec - y->tv_usec;
+
+  /* Return 1 if result is negative. */
+  return x->tv_sec < y->tv_sec;
+}
 static rapl_msr_parameter *parameters;
 static int *fd;
 static uint64_t num_pkg;
@@ -59,6 +82,8 @@ rapl_msr_unit get_rapl_unit()
  *  initializes the rapl unit (stuff holding the conversions to translate msr data sections into meaningful 'human-readable' stuff)
  */
 JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_ProfileInit(JNIEnv *env, jclass jcls) {
+	struct timeval start, end, diff;
+	gettimeofday(&start, NULL);
 	int i;
 	char msr_filename[BUFSIZ];
 	int core = 0;
@@ -83,6 +108,9 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_ProfileInit(JNIEnv *env, jcla
 
 	rapl_unit = get_rapl_unit();
 	wraparound_energy = get_wraparound_energy(rapl_unit.energy);
+	gettimeofday(&end,NULL);
+	timeval_subtract2(&diff, &end, &start);
+	printf("ProfileInit(): %ld\n", diff.tv_sec*1000 + diff.tv_usec);
 
 	return wraparound_energy;
 }
@@ -158,6 +186,7 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
 
 		}
 	}
+	
 }
 
 
@@ -170,6 +199,8 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
  */
 JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *env,
 		jclass jcls) {
+	struct timeval start, end, diff;
+	gettimeofday(&start, NULL);
 	jstring ener_string;
 	char gpu_buffer[num_pkg][60];
 	char dram_buffer[num_pkg][60];
@@ -250,6 +281,9 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 
 	//// hmm why would be turn it into a string just to turn it back into an array in java's getEnergyStats()?
 	ener_string = (*env)->NewStringUTF(env, ener_info);
+	gettimeofday(&end,NULL);
+	timeval_subtract2(&diff, &end, &start);
+	printf("energyStatCheck(): %ld\n", diff.tv_sec*1000 + diff.tv_usec);
 	return ener_string;
 
 }
