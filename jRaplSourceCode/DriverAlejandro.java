@@ -24,6 +24,12 @@ public class DriverAlejandro
 		return elapsed;
 	}
 
+	public static void run500(Runnable method)
+	{
+		for (int x = 0; x < 500; x++)
+			method.run();
+	}
+
 	private static double average(long[] results)
 	{
 		long total = 0;
@@ -63,12 +69,24 @@ public class DriverAlejandro
 		EnergyCheckUtils e = new EnergyCheckUtils();
 
 		int iterations = Integer.parseInt(args[0]);
-		timeItStats(EnergyCheckUtils::getEnergyStats, "getEnergyStats", iterations);
+		//timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
+		//timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
 
-		/*timeIt(EnergyCheckUtils::ProfileInit, "ProfileInit");
-		timeIt(EnergyCheckUtils::GetSocketNum, "GetSocketNum");
-		timeIt(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck");
-		timeIt(EnergyCheckUtils::getEnergyStats, "getEnergyStats");
-		*/
+		for (int i = 0; i < iterations; i++) {
+			EnergyCheckUtils.ProfileInit();
+			EnergyCheckUtils.ProfileDealloc();
+		} System.out.println("\n");
+		EnergyCheckUtils.ProfileInit();
+
+		for (int i = 0; i < iterations; i++) {
+			EnergyCheckUtils.GetSocketNum();
+		}
+
+		for (int i = 0; i < iterations; i++) {
+			EnergyCheckUtils.EnergyStatCheck();
+		}
+
+		EnergyCheckUtils.ProfileDealloc();
+
 	}
 }

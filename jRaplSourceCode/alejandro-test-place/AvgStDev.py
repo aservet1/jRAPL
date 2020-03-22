@@ -3,6 +3,15 @@ from sys import argv
 from time import sleep
 from random import randint
 '''------------------------------------'''
+
+def remove_non_numeric_characters(s):
+	int_string = ''
+	for c in s:
+		if c.isnumeric():
+			int_string += c
+	return int_string
+
+'''------------------------------------'''
 def avg(l):
 	return sum(l)/len(l)
 
@@ -25,7 +34,7 @@ def stdev(l):
 '''------------------------------------'''
 
 if (len(argv) < 2):
-	print("need to pass file of ints to read as arg")
+	print("usage: python3 " + argv[0] + " inputFile")
 	exit(1)
 
 fileName = argv[1]
@@ -37,8 +46,9 @@ dataFile.close()
 intData = []
 for s in stringData:
 	s = s.strip()
-	i = int(s)
-	intData.append(i)
+	ints_from_s = remove_non_numeric_characters(s)
+	if (ints_from_s == ''): continue
+	intData.append(int(ints_from_s))
 
 average = avg(intData)
 standard_deviation = stdev(intData)
