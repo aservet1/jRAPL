@@ -53,14 +53,37 @@ public class DriverAlejandro
 		int i = 0;
 		long[] results = new long[iterations];
 		for (int x = 0; x < iterations; x++) {
+			if (name == "ProfileDealloc") EnergyCheckUtils.ProfileInit(); // prevents a 'double free or corruption' error
 			long time = timeIt(method);
 			//System.out.println(time);
 			results[i++] = time;
 		}
+		System.out.println("-----------------------------------");
+		System.out.println("Results for function: \'" + name +"\'");
 		System.out.println("Avg:\t" + average(results));
 		System.out.println("StDev:\t" + stdev(results));
-		Arrays.sort(results);
+		System.out.println("-----------------------------------");
+		//Arrays.sort(results);
 		System.out.println(Arrays.toString(results));
+	}
+
+	/* Runs all the native calls x amount of times. Assumes they're being timed
+		 and are printing results on the C side of things */
+	public static void runABunchOfNativeCalls(int x)
+	{
+		for (int i = 0; i < x; i++) {
+			EnergyCheckUtils.ProfileInit();
+			EnergyCheckUtils.ProfileDealloc();
+		}
+		System.out.println("\n");
+		EnergyCheckUtils.ProfileInit();
+		for (int i = 0; i < x; i++) {
+			EnergyCheckUtils.GetSocketNum();
+		}
+		for (int i = 0; i < x; i++) {
+			EnergyCheckUtils.EnergyStatCheck();
+		}
+		EnergyCheckUtils.ProfileDealloc();
 	}
 
 	public static void main(String[] args)
@@ -71,22 +94,12 @@ public class DriverAlejandro
 		int iterations = Integer.parseInt(args[0]);
 		//timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
 		//timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
+		timeItStats(EnergyCheckUtils::ProfileInit, "ProfileInit", iterations);
+		timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
+		timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
+		timeItStats(EnergyCheckUtils::ProfileDealloc, "ProfileDealloc", iterations);
+		//runABunchOfNativeCalls(iterations);
 
-		for (int i = 0; i < iterations; i++) {
-			EnergyCheckUtils.ProfileInit();
-			EnergyCheckUtils.ProfileDealloc();
-		} System.out.println("\n");
-		EnergyCheckUtils.ProfileInit();
-
-		for (int i = 0; i < iterations; i++) {
-			EnergyCheckUtils.GetSocketNum();
-		}
-
-		for (int i = 0; i < iterations; i++) {
-			EnergyCheckUtils.EnergyStatCheck();
-		}
-
-		EnergyCheckUtils.ProfileDealloc();
 
 	}
 }

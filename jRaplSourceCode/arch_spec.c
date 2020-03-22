@@ -46,7 +46,7 @@ int core_num() {
 void
 parse_apic_id(cpuid_info_t info_l0, cpuid_info_t info_l1, APIC_ID_t *my_id){
 
-	// Get the SMT ID (SMT = Simultaneous MultiThreading)
+	// Get the SMT ID (SMT = Simultaneous MultiTh/reading)
 	uint64_t smt_mask_width = info_l0.eax & 0x1f;
 	uint64_t smt_mask = ~((-1) << smt_mask_width);
 	my_id->smt_id = info_l0.edx & smt_mask;
@@ -125,7 +125,9 @@ uint64_t get_num_pkg_core()
 /** <Alejandro's Interpretation>
  *	Initializes some data about the system, returns number of cores.
 
-	Below used to be global variables
+	Below used to be global variables (hey i made these not global any more, should
+    probably update the comments for all the functions at some point...)
+    
 	  num_core_thread; 	//number of physical threads per core
 	  num_pkg_thread; 	//number of physical threads per package
 	  num_pkg_core;		//number of cores per package

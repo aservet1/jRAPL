@@ -20,9 +20,10 @@ static rapl_msr_parameter *parameters;
 static int *fd;
 static uint64_t num_pkg;
 
-int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval *y)
+/* Used when timing functions for test stuff, not part of actual energy measurements */
+/*static int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval *y)
 {
-  /* Perform the carry for the later subtraction by updating y. */
+  /// Perform the carry for the later subtraction by updating y.
   if (x->tv_usec < y->tv_usec) {
     int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
     y->tv_usec -= 1000000 * nsec;
@@ -34,14 +35,13 @@ int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval 
     y->tv_sec -= nsec;
   }
 
-  /* Compute the time remaining to wait.
-     tv_usec is certainly positive. */
+  // Compute the time remaining to wait. tv_usec is certainly positive.
   result->tv_sec = x->tv_sec - y->tv_sec;
   result->tv_usec = x->tv_usec - y->tv_usec;
 
-  /* Return 1 if result is negative. */
+  // Return 1 if result is negative.
   return x->tv_sec < y->tv_sec;
-}
+}*/
 
 /** <Alejandro's Interpretation>
  *  Takes the energy info and packages it into a formatted string... # delimits the 3 energy attribs and @ delimits multiple package readings (1 pkg = 3 energy attribs)
@@ -84,7 +84,7 @@ rapl_msr_unit get_rapl_unit()
  *  initializes the rapl unit (stuff holding the conversions to translate msr data sections into meaningful 'human-readable' stuff)
  */
 JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_ProfileInit(JNIEnv *env, jclass jcls) {
-	struct timeval start, end, diff; gettimeofday(&start, NULL); ///TIMING UTILITY
+	//struct timeval start, end, diff; gettimeofday(&start, NULL); ///TIMING UTILITY
 
   int i;
 	char msr_filename[BUFSIZ];
@@ -111,8 +111,8 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_ProfileInit(JNIEnv *env, jcla
 	rapl_unit = get_rapl_unit();
 	wraparound_energy = get_wraparound_energy(rapl_unit.energy);
 
-  gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start); ///TIMING UTILITY
-	printf("ProfileInit(): %ld\n", diff.tv_sec*1000 + diff.tv_usec); ///TIMING UTILITY
+  //gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start); ///TIMING UTILITY
+	//printf("ProfileInit(): %ld\n", diff.tv_sec*1000 + diff.tv_usec); ///TIMING UTILITY
 
 	return wraparound_energy;
 }
@@ -124,12 +124,12 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_ProfileInit(JNIEnv *env, jcla
  */
 JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_GetSocketNum(JNIEnv *env, jclass jcls) {
 
-  struct timeval start, end, diff; gettimeofday(&start, NULL); ///TIMING UTILITY
+  //struct timeval start, end, diff; gettimeofday(&start, NULL); ///TIMING UTILITY
 
   int socketNum = getSocketNum();
 
-  gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start); ///TIMING UTILITY
-  printf("GetSocketNum(): %ld\n", diff.tv_sec*1000 + diff.tv_usec); ///TIMING UTILITY
+  //gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start); ///TIMING UTILITY
+  //printf("GetSocketNum(): %ld\n", diff.tv_sec*1000 + diff.tv_usec); ///TIMING UTILITY
 
   return (jint)socketNum;    ///<link> arch_spec.c
 }
@@ -208,7 +208,7 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
  * The third entry is: Package energy
  */
 JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *env, jclass jcls) {
-	struct timeval start, end, diff; gettimeofday(&start, NULL); ///TIMING UTILITY
+	//struct timeval start, end, diff; gettimeofday(&start, NULL); ///TIMING UTILITY
 
   jstring ener_string;
 	char gpu_buffer[num_pkg][60];
@@ -288,11 +288,11 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 		}
 	}
 
-	//// hmm why would be turn it into a string just to turn it back into an array in java's getEnergyStats()?
+	/// hmm why would be turn it into a string just to turn it back into an array in java's getEnergyStats()?
 	ener_string = (*env)->NewStringUTF(env, ener_info);
 
-	gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start); ///TIMING UTILITY
-	printf("EnergyStatCheck(): %ld\n", diff.tv_sec*1000 + diff.tv_usec); ///TIMING UTILITY
+	//gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start); ///TIMING UTILITY
+	//printf("EnergyStatCheck(): %ld\n", diff.tv_sec*1000 + diff.tv_usec); ///TIMING UTILITY
 
   return ener_string;
 
@@ -302,11 +302,11 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
  * Free memory allocated by profile init function
  */
 JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_ProfileDealloc(JNIEnv * env, jclass jcls) {
-  struct timeval start, end, diff; gettimeofday(&start, NULL); ///TIMING UTILITY
+//  struct timeval start, end, diff; gettimeofday(&start, NULL); ///TIMING UTILITY
 
 	free(fd);
 	free(parameters);
 
-  gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start); ///TIMING UTILITY
-  printf("ProfileDealloc(): %ld\n", diff.tv_sec*1000 + diff.tv_usec); ///TIMING UTILITY
+  //gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start); ///TIMING UTILITY
+  //printf("ProfileDealloc(): %ld\n", diff.tv_sec*1000 + diff.tv_usec); ///TIMING UTILITY
 }
