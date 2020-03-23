@@ -13,10 +13,12 @@ cd alejandro-test-place/CData
 
 functions='EnergyStatCheck GetSocketNum ProfileInit ProfileDealloc'
 
+
 for f in $functions
 do
+	echo $f.data
 	file=$f.data
-	cat MajorOutput.data | grep $f > $file
+	grep $f MajorOutput.data > $file
 done
 
 rm MajorOutput.data
