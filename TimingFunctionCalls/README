@@ -1,0 +1,4 @@
+Data from timing functions on C side and Java side of things
+Scripts run under the assumption that DriverAlejandro and the C functions are set up to output the proper data
+Scripts might have to be tweaked because they're designed to operate out of a specific directory, but that can be changed easily
+Two directories of runtime data, one for Alejandro's latop and one for Rutvik's laptop
