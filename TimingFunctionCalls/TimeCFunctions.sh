@@ -7,11 +7,12 @@ trials=4000
 rm -rf CData
 mkdir CData
 
-cd ..
-sudo java jrapl.DriverAlejandro $trials > alejandro-test-place/CData/MajorOutput.data
-cd alejandro-test-place/CData
+cd ../jRaplSourceCode
+# we're assuming that this is set up for C side timing and the correct java call for that
+sudo java jrapl.DriverAlejandro $trials > ../TimingFunctionCalls/CData/MajorOutput.data
+cd ../TimingFunctionCalls/CData
 
-functions='EnergyStatCheck GetSocketNum ProfileInit ProfileDealloc'
+functions='ProfileInit GetSocketNum EnergyStatCheck ProfileDealloc'
 
 
 for f in $functions
