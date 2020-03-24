@@ -94,11 +94,11 @@ public class DriverAlejandro
 		int iterations = Integer.parseInt(args[0]);
 		//timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
 		//timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
-		timeItStats(EnergyCheckUtils::ProfileInit, "ProfileInit", iterations);
+		/*timeItStats(EnergyCheckUtils::ProfileInit, "ProfileInit", iterations);
 		timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
 		timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
-		timeItStats(EnergyCheckUtils::ProfileDealloc, "ProfileDealloc", iterations);
-		//runABunchOfNativeCalls(iterations);
+		timeItStats(EnergyCheckUtils::ProfileDealloc, "ProfileDealloc", iterations);*/
+		runABunchOfNativeCalls(iterations);
 
 
 	}
