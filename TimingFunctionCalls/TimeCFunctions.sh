@@ -26,6 +26,6 @@ rm MajorOutput.data
 
 for file in $(ls)
 do
-	python3 ../AvgStDev.py $file >> AVG_STDEV.data
-	echo '------------------------------' >> AVG_STDEV.data
+	python3 ../AvgStDev.py $file >> c-AVG_STDEV.data
+	echo '------------------------------' >> c-AVG_STDEV.data
 done
