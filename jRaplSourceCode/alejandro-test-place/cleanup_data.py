@@ -3,13 +3,14 @@
 from os import listdir
 
 files = listdir()
+print(files)
 
 for file in files:
-    if(file[-12:-5] == "cleaned"):
+    if(file.split('.')[1] != 'data'):
         continue
     newfile = file.split('.')[0] + "_cleaned" + ".data"
     newfh = open(newfile, 'w')
     fh = open(file, 'r')
     for line in fh:
         data = int(line.split()[1])
-        newfh.write('{}\n'.format(data))
+        newfh.write('{}\n'.format(data))    
