@@ -86,19 +86,27 @@ public class DriverAlejandro
 		EnergyCheckUtils.ProfileDealloc();
 	}
 
+	/*Assumes C side is set up time and print out the time it takes to do each MSR reading*/
+	public static void timePerSocketPerMsrReadings(int iterations)
+	{
+		for (int x = 0; x < iterations; x++)
+			EnergyCheckUtils.EnergyStatCheck();
+	}
+
 	public static void main(String[] args)
 	{
 		//get the static block out of the way by making this useless object
 		EnergyCheckUtils e = new EnergyCheckUtils();
 
 		int iterations = Integer.parseInt(args[0]);
+		timePerSocketPerMsrReadings(iterations);
 		//timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
 		//timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
 		/*timeItStats(EnergyCheckUtils::ProfileInit, "ProfileInit", iterations);
 		timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
 		timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
 		timeItStats(EnergyCheckUtils::ProfileDealloc, "ProfileDealloc", iterations);*/
-		runABunchOfNativeCalls(iterations);
+		//runABunchOfNativeCalls(iterations);
 
 
 	}

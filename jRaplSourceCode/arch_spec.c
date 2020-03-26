@@ -7,8 +7,8 @@
 #include <stdint.h>
 #include <string.h>
 #include "arch_spec.h"
-#include <sys/time.h>
-#include <sys/types.h>
+//#include <sys/time.h> 	// should confirm before removing, but i think these two commented out #include statements were from
+//#include <sys/types.h>	// when we were doing timing inside these functions, but now we aren't so we can remove?
 
 /** <Alejandro's Interpretation>
  *	- (?) Direct  CPUID  access  through  this  device
@@ -145,16 +145,19 @@ uint64_t getSocketNum() {
 
 int get_architecture_category(uint32_t cpu_model){
   switch (cpu_model) {
-  			case SANDYBRIDGE_EP:	case HASWELL1:		case HASWELL2:
+  			case SANDYBRIDGE_EP:		case HASWELL1:		case HASWELL2:
   			case HASWELL3:				case HASWELL_EP:	case SKYLAKE1:
   			case SKYLAKE2: 				case BROADWELL:		case BROADWELL2:
   			case APOLLOLAKE:			case COFFEELAKE2:
-  				return READ_FROM_DRAM;
+  				
+				return READ_FROM_DRAM;
 
   		case SANDYBRIDGE:	case IVYBRIDGE:	case KABYLAKE:
-  			return READ_FROM_GPU;
+  			
+				return READ_FROM_GPU;
 
   		default:
-  			return UNDEFINED_ARCHITECTURE;
+  			
+				return UNDEFINED_ARCHITECTURE;
   }
 }
