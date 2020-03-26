@@ -28,7 +28,7 @@ void cpuid(uint32_t eax_in, uint32_t ecx_in, cpuid_info_t *ci) {
 cpuid_info_t getProcessorTopology(uint32_t level)
 {
 	cpuid_info_t info;
-	cpuid(0xb, level, &info); ///define a constant for 0xb at some point...
+	cpuid(0xb, level, &info);
 	return info;
 }
 
