@@ -13,7 +13,12 @@ def remove_non_numeric_characters(s):
 
 '''------------------------------------'''
 def avg(l):
-	return sum(l)/len(l)
+	try:
+		retval = sum(l)/len(l)
+	except:
+		print("Divided by zero probably")
+		return 0
+	return 
 
 def deviations(l):
 	av = avg(l)
@@ -27,8 +32,12 @@ def stdev(l):
 	S = 0
 	for d in devs:
 		S += d**2
-	S /= (len(l)-1)
-	S = sqrt(S)
+	try:
+		S /= (len(l)-1)
+		S = sqrt(S)
+	except:
+		print("Divided by zero probably")
+		return 0
 	return S
 
 '''------------------------------------'''
