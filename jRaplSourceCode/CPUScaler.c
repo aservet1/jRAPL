@@ -21,7 +21,7 @@ static int *fd;
 static uint64_t num_pkg;
 
 /* Used when timing functions for test stuff, not part of actual energy measurements */
-static int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval *y)
+/*static int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval *y)
 {
   /// Perform the carry for the later subtraction by updating y.
   if (x->tv_usec < y->tv_usec) {
@@ -41,7 +41,7 @@ static int timeval_subtract (struct timeval *result, struct timeval *x, struct t
 
   // Return 1 if result is negative.
   return x->tv_sec < y->tv_sec;
-}
+}*/
 
 /** <Alejandro's Interpretation>
  *  Takes the energy info and packages it into a formatted string... # delimits the 3 energy attribs and @ delimits multiple package readings (1 pkg = 3 energy attribs)
@@ -146,7 +146,7 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_GetSocketNum(JNIEnv *env, jcl
 void
 initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][60], char cpu_buffer[num_pkg][60], char package_buffer[num_pkg][60]) {
 
-	/*timing*/struct timeval start, end, diff;
+	/*timing*///struct timeval start, end, diff;
 	uint32_t cpu_model = get_cpu_model();
 	double package[num_pkg];
 	double pp0[num_pkg];
@@ -158,17 +158,17 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
 	rapl_msr_unit rapl_unit = get_rapl_unit();
 	for (; i < num_pkg; i++) {
 
-		/*timing*/gettimeofday(&start, NULL);
+		/*timing*///gettimeofday(&start, NULL);
 		result = read_msr(fd[i], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
 		package[i] = (double) result * rapl_unit.energy;
-		/*timing*/gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start);
-		/*timing*/printf("Time reading PACKAGE MSR for Socket%d: %ld\n", i, diff.tv_sec*1000 + diff.tv_usec);
+		/*timing*///gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start);
+		/*timing*///printf("Time reading PACKAGE MSR for Socket%d: %ld\n", i, diff.tv_sec*1000 + diff.tv_usec);
 
-		/*timing*/gettimeofday(&start, NULL);
+		/*timing*///gettimeofday(&start, NULL);
 		result = read_msr(fd[i], MSR_PP0_ENERGY_STATUS);
 		pp0[i] = (double) result * rapl_unit.energy;
-		/*timing*/gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start);
-		/*timing*/printf("Time reading CORE MSR for Socket%d: %ld\n", i, diff.tv_sec*1000 + diff.tv_usec);
+		/*timing*///gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start);
+		/*timing*///printf("Time reading CORE MSR for Socket%d: %ld\n", i, diff.tv_sec*1000 + diff.tv_usec);
 
 
 		sprintf(package_buffer[i], "%f", package[i]);
@@ -176,10 +176,10 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
 		int architecture_category = get_architecture_category(cpu_model);
 		switch(architecture_category) {
 			case READ_FROM_DRAM:
-				/*timing*/gettimeofday(&start, NULL);
+				/*timing*///gettimeofday(&start, NULL);
 				result = read_msr(fd[i],MSR_DRAM_ENERGY_STATUS);
-				/*timing*/gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start);
-				/*timing*/printf("Time reading DRAM MSR for Socket%d: %ld\n", i, diff.tv_sec*1000 + diff.tv_usec);
+				/*timing*///gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start);
+				/*timing*///printf("Time reading DRAM MSR for Socket%d: %ld\n", i, diff.tv_sec*1000 + diff.tv_usec);
 				if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
 					dram[i] =(double)result*MSR_DRAM_ENERGY_UNIT;
 				} else {
@@ -194,10 +194,10 @@ initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][6
 
 				break;
 			case READ_FROM_GPU:
-				/*timing*/gettimeofday(&start, NULL);
+				/*timing*///gettimeofday(&start, NULL);
 				result = read_msr(fd[i],MSR_PP1_ENERGY_STATUS);
-				/*timing*/gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start);
-				/*timing*/printf("Time reading GPU MSR for Socket%d: %ld\n", i, diff.tv_sec*1000 + diff.tv_usec);
+				/*timing*///gettimeofday(&end,NULL); timeval_subtract(&diff, &end, &start);
+				/*timing*///printf("Time reading GPU MSR for Socket%d: %ld\n", i, diff.tv_sec*1000 + diff.tv_usec);
 				pp1[i] = (double) result *rapl_unit.energy;
 
 				sprintf(gpu_buffer[i], "%f", pp1[i]);
