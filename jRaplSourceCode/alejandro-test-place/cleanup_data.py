@@ -1,16 +1,19 @@
 #Script to remove the name of the function from each line in the C-output files
 
-from os import listdir
+import os
 
-files = listdir()
-print(files)
+files = os.listdir()
+#print(files)
 
 for file in files:
-    if(file.split('.')[1] != 'data'):
+    parts = file.split('.')
+    if(len(parts) != 2 or file.split('.')[1] != 'data' or parts[0].endswith("_cleaned")):
         continue
-    newfile = file.split('.')[0] + "_cleaned" + ".data"
+    newfile = parts[0] + "_cleaned" + ".data"
     newfh = open(newfile, 'w')
     fh = open(file, 'r')
     for line in fh:
-        data = int(line.split()[1])
-        newfh.write('{}\n'.format(data))    
+        data = line[len(parts[0])+1 :]
+        newfh.write('{}'.format(data))
+    os.remove(file)
+    os.rename(newfile, file)

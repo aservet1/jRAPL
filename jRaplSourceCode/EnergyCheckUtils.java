@@ -85,7 +85,7 @@ public class EnergyCheckUtils {
 			double[] stats = new double[3]; // 3 stats per socket
 			String[] energy = EnergyInfo.split("#");
 
-			System.out.println(Arrays.toString(energy));
+			//System.out.println(Arrays.toString(energy));
 			stats[0] = Double.parseDouble(energy[0]);
 			stats[1] = Double.parseDouble(energy[1]);
 			stats[2] = Double.parseDouble(energy[2]);
@@ -112,26 +112,47 @@ public class EnergyCheckUtils {
 
   /** Frees memory allocated by profile initialization. Done at the end of the program.
   */
-  public static void DeallocProfile() {
+	public static void DeallocProfile() {
 		ProfileDealloc();
-  }
+	}
 
-	public static void main(String[] args) {
-		while(true) {
-			double[] before = getEnergyStats();
-			try {
-				Thread.sleep(5);
-			} catch (Exception e) {
-				System.err.format("Caught: " + e);
+	public static void Stats(int index, String name, int iters){ //index can be 0 (DRAM), 2 (CORE), 3 (PACKAGE) // name should store the identifier for each line // iters is the number of iterations
+		double[] before;
+		double[] after;
+		double reading;
+		double totalTime = 0;
+		int numReadings = 0;
+		int totalNonZero = 0;
+		long timeAtLastNonZero = 0;
+		long timeAtThisNonZero = 0;
+		double totalEnergy = 0;
+		int lastNonZero = 0;
+		while(iters > numReadings) {
+			before = getEnergyStats();
+			after = getEnergyStats();
+			reading = after[index] - before[index];
+			if(reading != 0){
+				timeAtThisNonZero = System.nanoTime();
+				System.out.println(name + " " + reading + " " + ((timeAtThisNonZero - timeAtLastNonZero)/1000) + " " + lastNonZero);
+				totalTime += ((timeAtThisNonZero - timeAtLastNonZero)/1000);
+				lastNonZero = 0;
+				totalNonZero += 1;
+				numReadings += 1;
+				totalEnergy += reading;
+				timeAtLastNonZero = System.nanoTime();
 			}
-			double[] after = getEnergyStats();
-			double dramReading = after[0] - before[0];
-			double cpuReading = after[1] - before[1];
-			double packageReading = after[2] - before[2];
-			double uncoreReading = packageReading - cpuReading;
-			System.out.println("dram: " + dramReading  + "\tcpu: " + cpuReading  + "\tuncore: " + uncoreReading  );
+			else{
+				numReadings += 1;
+				lastNonZero += 1;
+			}
 		}
-		// Unreachable
-		//ProfileDealloc();
+		System.out.println(name + " totals: " + totalEnergy + " " + totalNonZero + " " + totalTime + " " + iters);
+	}	
+	
+	(String[] args) {
+		Stats(0, "DRAM", 100000);
+		Stats(1, "CORE", 100000);
+		Stats(2, "PACKAGE", 100000);
+		ProfileDealloc();
 	}
 }
