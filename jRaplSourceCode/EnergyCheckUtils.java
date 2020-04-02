@@ -149,7 +149,7 @@ public class EnergyCheckUtils {
 		System.out.println(name + " totals: " + totalEnergy + " " + totalNonZero + " " + totalTime + " " + iters);
 	}	
 	
-	(String[] args) {
+	public static void main(String[] args) {
 		Stats(0, "DRAM", 100000);
 		Stats(1, "CORE", 100000);
 		Stats(2, "PACKAGE", 100000);
