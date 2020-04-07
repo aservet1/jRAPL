@@ -60,7 +60,7 @@ public class EnergyCheckUtils {
 
 		try {
 
-		NativeUtils.loadLibraryFromJar("/home/alejandro/Documents/Projects/jRAPL/jRaplSourceCode/libCPUScaler.so");
+		NativeUtils.loadLibraryFromJar("/home/alejandro/jRAPL/jRaplSourceCode/libCPUScaler.so");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -89,7 +89,7 @@ public class EnergyCheckUtils {
 			stats[0] = Double.parseDouble(energy[0]);
 			stats[1] = Double.parseDouble(energy[1]);
 			stats[2] = Double.parseDouble(energy[2]);
-
+			
 			return stats;
 
 		} else {
@@ -147,7 +147,6 @@ public class EnergyCheckUtils {
 		}
 		System.out.println(name + " totals: " + totalEnergy + " " + totalNonZero + " " + totalTime + " " + iters);
 	}
-	
 	public static void main(String[] args) {
 		Stats(0, "DRAM", 100000);
 		Stats(1, "CORE", 100000);

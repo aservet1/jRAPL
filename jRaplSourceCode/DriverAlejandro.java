@@ -97,8 +97,9 @@ public class DriverAlejandro
 	{
 		//get the static block out of the way by making this useless object
 		new EnergyCheckUtils();
-		if(args.length > 0)
-			timePerSocketPerMsrReadings(Integer.parseInt(args[0]));
+		//if(args.length > 0)
+		//timePerSocketPerMsrReadings(Integer.parseInt(args[0]));
+		for (int x = 0; x < 100; x++) EnergyCheckUtils.getEnergyStats();
 		//timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
 		//timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
 		/*timeItStats(EnergyCheckUtils::ProfileInit, "ProfileInit", iterations);
