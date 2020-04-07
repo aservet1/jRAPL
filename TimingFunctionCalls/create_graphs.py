@@ -17,7 +17,7 @@ for file in files:
         fh = open(file, 'r')
         for datapoint in fh:
             y.append(int(datapoint))
-        x = [item for item in range(1, len(y)+1)]
+        x = range(1, len(y)+1)
         plt.scatter(x, y, marker = ",", s = 1)
         plt.ylabel('Time (μs)')
         plt.title(parts[0])

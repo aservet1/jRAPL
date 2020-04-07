@@ -3,6 +3,8 @@ package jrapl;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Arrays;
+import java.time.Duration;
+import java.time.Instant;
 
 public class EnergyCheckUtils {
 	/// can't find the definitons of these anywhere........
@@ -123,8 +125,8 @@ public class EnergyCheckUtils {
 		double totalTime = 0;
 		int numReadings = 0;
 		int totalNonZero = 0;
-		long timeAtLastNonZero = 0;
-		long timeAtThisNonZero = 0;
+		Instant timeAtLastNonZero = Instant.now();
+		Instant timeAtThisNonZero = null;
 		double totalEnergy = 0;
 		int lastNonZero = 0;
 		while(iters > numReadings) {
@@ -132,23 +134,22 @@ public class EnergyCheckUtils {
 			after = getEnergyStats();
 			reading = after[index] - before[index];
 			if(reading != 0){
-				timeAtThisNonZero = System.nanoTime();
-				System.out.println(name + " " + reading + " " + ((timeAtThisNonZero - timeAtLastNonZero)/1000) + " " + lastNonZero);
-				totalTime += ((timeAtThisNonZero - timeAtLastNonZero)/1000);
+				timeAtThisNonZero = Instant.now();
+				long timediff = Duration.between(timeAtLastNonZero, timeAtThisNonZero).toNanos()/1000;
+				System.out.println(name + " " + reading + " " + timediff + " " + lastNonZero);
+				totalTime += timediff;
 				lastNonZero = 0;
 				totalNonZero += 1;
-				numReadings += 1;
 				totalEnergy += reading;
-				timeAtLastNonZero = System.nanoTime();
+				timeAtLastNonZero = Instant.now();
 			}
 			else{
-				numReadings += 1;
 				lastNonZero += 1;
 			}
+			numReadings += 1;
 		}
 		System.out.println(name + " totals: " + totalEnergy + " " + totalNonZero + " " + totalTime + " " + iters);
 	}
-
 	public static void main(String[] args) {
 		Stats(0, "DRAM", 100000);
 		Stats(1, "CORE", 100000);
