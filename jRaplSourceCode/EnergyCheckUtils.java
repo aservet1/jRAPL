@@ -137,17 +137,16 @@ public class EnergyCheckUtils {
 				totalTime += ((timeAtThisNonZero - timeAtLastNonZero)/1000);
 				lastNonZero = 0;
 				totalNonZero += 1;
-				numReadings += 1;
 				totalEnergy += reading;
 				timeAtLastNonZero = System.nanoTime();
 			}
 			else{
-				numReadings += 1;
 				lastNonZero += 1;
 			}
+			numReadings += 1;
 		}
 		System.out.println(name + " totals: " + totalEnergy + " " + totalNonZero + " " + totalTime + " " + iters);
-	}	
+	}
 	
 	public static void main(String[] args) {
 		Stats(0, "DRAM", 100000);
