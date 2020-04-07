@@ -9,17 +9,17 @@ dirName=""
 
 if [ "$2" = "mem" ]; then
 	dirName=$1"EnergyData_stressed_"$2
-	stress-ng --vm 4 --vm-bytes 50% --all 0 --timeout 30s >/dev/null 1>&2 &
+	stress-ng --vm 2 --vm-bytes 50% --all 0 --timeout 60s >/dev/null 1>&2 &
 fi
 
 if [ "$2" = "cpu" ]; then
 	dirName=$1"EnergyData_stressed_"$2
-	stress-ng --cpu 8 --all	0 --timeout 30s >/dev/null 1>&2 &
+	stress-ng --cpu 2 --all	0 --timeout 60s >/dev/null 1>&2 &
 fi
 
 if [ "$2" = "both" ]; then
 	dirName=$1"EnergyData_stressed_"$2
-	stress-ng --vm 4 --cpu 8 --vm-bytes 50% --all 0 --timeout 60s >/dev/null 1>&2 &
+	stress-ng --vm 2 --cpu 2 --vm-bytes 50% --all 0 --timeout 180s >/dev/null 1>&2 &
 fi
 
 if [ "$dirName" = "" ]; then
@@ -50,7 +50,7 @@ done
 
 python3 ../EnergyStatsStats.py
 
-rm ../CORE.data ../PACKAGE.data ../DRAM.data
+rm -f ../CORE.data ../PACKAGE.data ../DRAM.data
 
 
 
