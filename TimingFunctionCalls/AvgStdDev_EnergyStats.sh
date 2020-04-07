@@ -44,6 +44,13 @@ do
 	grep $f Output > $f.data
 done
 
-../../jRaplSourceCode/alejandro-test-place/cleanupScript.sh
+cd ../
 
-python3 ../EnergyStatsStats.py
+../jRaplSourceCode/alejandro-test-place/cleanupScript.sh
+
+python3 EnergyStatsStats.py
+
+rm CORE.data PACKAGE.data DRAM.data
+
+
+
