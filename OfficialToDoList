@@ -2,7 +2,7 @@
 change timing stuff to store in an array and print later
 DaCapo benchmarks. find out how the benchmarks work --  Rutvik
 keep making the document good. work on formatting
-standardize file naming conventions
+standardize file naming conventions -- make scripts always ask for name as arg so they can name all your output
 run all of the benchmarks
 ------------------------------------------------------------------------------
 
