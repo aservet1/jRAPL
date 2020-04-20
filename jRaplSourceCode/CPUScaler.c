@@ -239,12 +239,13 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 	for(i = 0; i < num_pkg; i++) {
 		switch(architecture_catergory) {
 			case READ_FROM_DRAM:
-				//copy_to_string(ener_info, dram_buffer, dram_num, cpu_buffer, cpu_num, package_buffer, package_num, i, &offset);
+
 				/*Insert socket number*/
 				dram_num = strlen(dram_buffer[i]);
 				cpu_num = strlen(cpu_buffer[i]);
 				package_num = strlen(package_buffer[i]);
 
+				//copy_to_string(ener_info, dram_buffer, dram_num, cpu_buffer, cpu_num, package_buffer, package_num, i, &offset);
 				memcpy(ener_info + offset, &dram_buffer[i], dram_num);
 				//split sign
 				ener_info[offset + dram_num] = '#';
