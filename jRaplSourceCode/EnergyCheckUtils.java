@@ -118,49 +118,13 @@ public class EnergyCheckUtils {
 		ProfileDealloc();
 	}
 
-	public static void Stats(int index, String name, int iters){ //index can be 0 (DRAM), 2 (CORE), 3 (PACKAGE) // name should store the identifier for each line // iters is the number of iterations
-		double[] before;
-		double[] after;
-		double reading;
-		double totalTime = 0;
-		int numReadings = 0;
-		int totalNonZero = 0;
-		Instant timeAtLastNonZero = Instant.now();
-		Instant timeAtThisNonZero = null;
-		double totalEnergy = 0;
-		int lastNonZero = 0;
-		while(iters > numReadings) {
-			before = getEnergyStats();
-			after = getEnergyStats();
-			reading = after[index] - before[index];
-			if(reading != 0){
-				timeAtThisNonZero = Instant.now();
-				long timediff = Duration.between(timeAtLastNonZero, timeAtThisNonZero).toNanos()/1000;
-				System.out.println(name + " " + reading + " " + timediff + " " + lastNonZero);
-				totalTime += timediff;
-				lastNonZero = 0;
-				totalNonZero += 1;
-				totalEnergy += reading;
-				timeAtLastNonZero = Instant.now();
-			}
-			else{
-				lastNonZero += 1;
-			}
-			numReadings += 1;
-		}
-		System.out.println(name + " totals: " + totalEnergy + " " + totalNonZero + " " + totalTime + " " + iters);
-	}
-
 	public native static void StartTimeLogs();
 	public native static void FinalizeTimeLogs();
 	public native static void testJNI(int num);
 
 	public static void main(String[] args)
 	{
-		/*Stats(0, "DRAM", 100000);
-		Stats(1, "CORE", 100000);
-		Stats(2, "PACKAGE", 100000);
-		ProfileDealloc();*/
 		testJNI(Integer.parseInt(args[0]));
+		DeallocProfile();
 	}
 }
