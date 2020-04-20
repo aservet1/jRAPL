@@ -1,8 +1,10 @@
 package jrapl;
 
 import java.util.Arrays;
+import java.time.Duration;
+import java.time.Instant;
 
-public class DriverAlejandro
+public class RuntimeTestUtils
 {
 	public static void repeatGetEnergyStats()
 	{
@@ -108,8 +110,8 @@ public class DriverAlejandro
 		double totalEnergy = 0;
 		int lastNonZero = 0;
 		while(iters > numReadings) {
-			before = getEnergyStats();
-			after = getEnergyStats();
+			before = EnergyCheckUtils.getEnergyStats();
+			after = EnergyCheckUtils.getEnergyStats();
 			reading = after[index] - before[index];
 			if(reading != 0){
 				timeAtThisNonZero = Instant.now();
@@ -134,7 +136,7 @@ public class DriverAlejandro
 		Stats(0, "DRAM", 100000);
 		Stats(1, "CORE", 100000);
 		Stats(2, "PACKAGE", 100000);
-		ProfileDealloc();
+		EnergyCheckUtils.ProfileDealloc();
 	}
 
 	public static void main(String[] args)

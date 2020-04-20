@@ -3,8 +3,6 @@ package jrapl;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Arrays;
-import java.time.Duration;
-import java.time.Instant;
 
 public class EnergyCheckUtils {
 	/// can't find the definitons of these anywhere........
