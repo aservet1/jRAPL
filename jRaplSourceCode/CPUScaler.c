@@ -20,28 +20,20 @@ static rapl_msr_parameter *parameters;
 static int *fd;
 static uint64_t num_pkg;
 
-/* Used when timing functions for test stuff, not part of actual energy measurements */
-/*static int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval *y)
+JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_testJNI(JNIEnv *env, jclass jcls, jint jNum)
 {
-  /// Perform the carry for the later subtraction by updating y.
-  if (x->tv_usec < y->tv_usec) {
-    int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
-    y->tv_usec -= 1000000 * nsec;
-    y->tv_sec += nsec;
-  }
-  if (x->tv_usec - y->tv_usec > 1000000) {
-    int nsec = (x->tv_usec - y->tv_usec) / 1000000;
-    y->tv_usec += 1000000 * nsec;
-    y->tv_sec -= nsec;
-  }
+	int cNum = jNum;
+	printf("the num passed is: %d\n",cNum);
+}
 
-  // Compute the time remaining to wait. tv_usec is certainly positive.
-  result->tv_sec = x->tv_sec - y->tv_sec;
-  result->tv_usec = x->tv_usec - y->tv_usec;
-
-  // Return 1 if result is negative.
-  return x->tv_sec < y->tv_sec;
-}*/
+JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_StartTimeLogs(JNIEnv *env, jclass jcls)
+{
+	printf("hello world\n");
+}
+JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls)
+{
+	printf("hello world\n");
+}
 
 /** <Alejandro's Interpretation>
  *  Takes the energy info and packages it into a formatted string... # delimits the 3 energy attribs and @ delimits multiple package readings (1 pkg = 3 energy attribs)

@@ -91,7 +91,7 @@ public class EnergyCheckUtils {
 			stats[0] = Double.parseDouble(energy[0]);
 			stats[1] = Double.parseDouble(energy[1]);
 			stats[2] = Double.parseDouble(energy[2]);
-			
+
 			return stats;
 
 		} else {
@@ -150,10 +150,17 @@ public class EnergyCheckUtils {
 		}
 		System.out.println(name + " totals: " + totalEnergy + " " + totalNonZero + " " + totalTime + " " + iters);
 	}
-	public static void main(String[] args) {
-		Stats(0, "DRAM", 100000);
+
+	public native static void StartTimeLogs();
+	public native static void FinalizeTimeLogs();
+	public native static void testJNI(int num);
+
+	public static void main(String[] args)
+	{
+		/*Stats(0, "DRAM", 100000);
 		Stats(1, "CORE", 100000);
 		Stats(2, "PACKAGE", 100000);
-		ProfileDealloc();
+		ProfileDealloc();*/
+		testJNI(Integer.parseInt(args[0]));
 	}
 }

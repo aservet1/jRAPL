@@ -1,2 +1,2 @@
 all:
-	gcc CPUScaler_Timing-Utils.c -o CPUScaler_Timing-Utils
+	gcc CPUScaler_TimingUtils.c -o CPUScaler_TimingUtils
