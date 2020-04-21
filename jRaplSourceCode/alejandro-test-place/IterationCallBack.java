@@ -60,4 +60,3 @@ public void complete(String benchmark, boolean valid) {
 }
 
 }
-

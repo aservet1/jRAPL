@@ -98,44 +98,68 @@ public class RuntimeTestUtils
 // index can be 0 (DRAM), 2 (CORE), 3 (PACKAGE) -- index from getenergyStats()
 // name should store the identifier for each line
 // iters is the number of iterations
-	public static void Stats(int index, String name, int iters){
-		double[] before;
-		double[] after;
-		double reading;
-		double totalTime = 0;
-		int numReadings = 0;
-		int totalNonZero = 0;
-		Instant timeAtLastNonZero = Instant.now();
+	public static class EnergyReadings{
+		public double[][] energyStats;
+		public Instant times[];
+
+		public EnergyReadings(int iters){
+			energyStats = new double[iters][3];
+			times = new Instant[iters];
+		}
+	}
+
+	public static void printDiffs(EnergyReadings data, String name, int index){ //if data != null, prints all the changes in the values from the energyStats in data followed by a summary of the totals, else prints nothing
+		if(data == null){
+			return;
+		}
+		Instant timeAtLastNonZero = data.times[0];
 		Instant timeAtThisNonZero = null;
-		double totalEnergy = 0;
+		long totalTime = 0;
+		long timeDiff = 0;
+		double[] before = data.energyStats[0];
+		double[] after = null;
 		int lastNonZero = 0;
-		while(iters > numReadings) {
-			before = EnergyCheckUtils.getEnergyStats();
-			after = EnergyCheckUtils.getEnergyStats();
+		int totalNonZero = 0;
+		double reading = 0;
+		double totalEnergy = 0;
+
+		for(int i = 1; i < data.times.length; i++){
+			after = data.energyStats[i];
 			reading = after[index] - before[index];
 			if(reading != 0){
-				timeAtThisNonZero = Instant.now();
-				long timediff = Duration.between(timeAtLastNonZero, timeAtThisNonZero).toNanos()/1000;
-				System.out.println(name + " " + reading + " " + timediff + " " + lastNonZero);
-				totalTime += timediff;
+				timeAtThisNonZero = data.times[i];
+				timeDiff = Duration.between(timeAtLastNonZero, timeAtThisNonZero).toNanos() / 1000;
+				System.out.println(name + " " + reading + " " + timeDiff + " " + lastNonZero);
+				totalTime += timeDiff;
 				lastNonZero = 0;
 				totalNonZero += 1;
 				totalEnergy += reading;
-				timeAtLastNonZero = Instant.now();
-			}
+				timeAtLastNonZero = timeAtThisNonZero;
+				before = after;
+		}
 			else{
 				lastNonZero += 1;
 			}
-			numReadings += 1;
 		}
-		System.out.println(name + " totals: " + totalEnergy + " " + totalNonZero + " " + totalTime + " " + iters);
+		System.out.println(name + " totals: " + totalEnergy + " " + totalNonZero + " " + totalTime + " " + data.times.length);
+	}
+	public static EnergyReadings getReadings(int iters){ //Runs the getEnergyStats function `iter` number of times
+		EnergyReadings data = new EnergyReadings(iters);
+		int i = 0;
+		while(i < iters) {
+			data.energyStats[i] = EnergyCheckUtils.getEnergyStats();
+			data.times[i] = Instant.now();
+			i++;
+		}
+		return data;
 	}
 
 	public static void DramCorePackageStats()
 	{
-		Stats(0, "DRAM", 100000);
-		Stats(1, "CORE", 100000);
-		Stats(2, "PACKAGE", 100000);
+		EnergyReadings data = getReadings(100000);
+		printDiffs(data, "DRAM", 0);
+		printDiffs(data, "CORE", 1);
+		printDiffs(data, "PACKAGE", 2);
 		EnergyCheckUtils.ProfileDealloc();
 	}
 
@@ -145,7 +169,8 @@ public class RuntimeTestUtils
 		new EnergyCheckUtils();
 		//if(args.length > 0)
 		//timePerSocketPerMsrReadings(Integer.parseInt(args[0]));
-		for (int x = 0; x < 100; x++) EnergyCheckUtils.getEnergyStats();
+		//for (int x = 0; x < 100; x++) EnergyCheckUtils.getEnergyStats();
+		DramCorePackageStats();
 		//timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
 		//timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
 		/*timeItStats(EnergyCheckUtils::ProfileInit, "ProfileInit", iterations);
