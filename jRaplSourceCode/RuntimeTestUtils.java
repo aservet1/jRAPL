@@ -1,6 +1,7 @@
 package jrapl;
 
 import java.util.Arrays;
+import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -18,11 +19,11 @@ public class RuntimeTestUtils
 	/* Times a method call, returns time in microseconds */
 	public static long timeIt(Runnable method)
 	{
-		long startTime, endTime;
-		startTime = System.nanoTime();
+		Instant start, end;
+		start = Instant.now();
 		method.run();
-		endTime = System.nanoTime();
-		long elapsed = (endTime - startTime) / 1000;
+		end = Instant.now();
+		long elapsed = Duration.between(start, end).toNanos() / 1000;
 		return elapsed;
 	}
 
@@ -71,30 +72,6 @@ public class RuntimeTestUtils
 
 	/* Runs all the native calls x amount of times. Assumes they're being timed
 		 and are printing results on the C side of things */
-	public static void runABunchOfNativeCalls(int x)
-	{
-		for (int i = 0; i < x; i++) {
-			EnergyCheckUtils.ProfileInit();
-			EnergyCheckUtils.ProfileDealloc();
-		}
-		System.out.println("\n");
-		EnergyCheckUtils.ProfileInit();
-		for (int i = 0; i < x; i++) {
-			EnergyCheckUtils.GetSocketNum();
-		}
-		for (int i = 0; i < x; i++) {
-			EnergyCheckUtils.EnergyStatCheck();
-		}
-		EnergyCheckUtils.ProfileDealloc();
-	}
-
-	/*Assumes C side is set up time and print out the time it takes to do each MSR reading*/
-	public static void timePerSocketPerMsrReadings(int iterations)
-	{
-		for (int x = 0; x < iterations; x++)
-			EnergyCheckUtils.EnergyStatCheck();
-	}
-
 // index can be 0 (DRAM), 2 (CORE), 3 (PACKAGE) -- index from getenergyStats()
 // name should store the identifier for each line
 // iters is the number of iterations
@@ -154,30 +131,53 @@ public class RuntimeTestUtils
 		return data;
 	}
 
-	public static void DramCorePackageStats()
+	public static void DramCorePackageStats(int iters)
 	{
-		EnergyReadings data = getReadings(100000);
+		EnergyReadings data = getReadings(iters);
 		printDiffs(data, "DRAM", 0);
 		printDiffs(data, "CORE", 1);
 		printDiffs(data, "PACKAGE", 2);
 		EnergyCheckUtils.ProfileDealloc();
 	}
 
+
 	public static void main(String[] args)
 	{
 		//get the static block out of the way by making this useless object
 		new EnergyCheckUtils();
-		//if(args.length > 0)
-		//timePerSocketPerMsrReadings(Integer.parseInt(args[0]));
-		//for (int x = 0; x < 100; x++) EnergyCheckUtils.getEnergyStats();
-		DramCorePackageStats();
-		//timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
-		//timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
-		/*timeItStats(EnergyCheckUtils::ProfileInit, "ProfileInit", iterations);
-		timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
-		timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
-		timeItStats(EnergyCheckUtils::ProfileDealloc, "ProfileDealloc", iterations);*/
-		//runABunchOfNativeCalls(iterations);
+		int iterations;
+		if(args.length != 2){
+			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");
+			return;
+		}
+		boolean timingFunctionCalls = (args[0] == "--time-native-calls"), timingMsrReadings = (args[0] == "--time-msr-readings");
+		try{
+			iterations = Integer.parseInt(args[0]);
+		}
+		catch(NumberFormatException e){
+			System.out.println("Illegal value for NUM_ITERATIONS");
+			return;
+		}
+		
+		if(args[0] == "--time-java-calls"){ //Java function timing
+			timeItStats(EnergyCheckUtils::ProfileInit, "ProfileInit", iterations);
+			timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
+			timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
+			timeItStats(EnergyCheckUtils::ProfileDealloc, "ProfileDealloc", iterations);
+		}
+		else if(args[0] == "--read-energy-values"){ //Timing and reading energy register
+			DramCorePackageStats(iterations);
+		}
+		else if(timingFunctionCalls || timingMsrReadings){
+			EnergyCheckUtils.StartTimeLogs(iterations, timingFunctionCalls, timingMsrReadings);
+			for (int i = 0; i < iterations; i++) {
+				EnergyCheckUtils.ProfileInit();
+				EnergyCheckUtils.GetSocketNum();
+				EnergyCheckUtils.EnergyStatCheck();
+				EnergyCheckUtils.ProfileDealloc();
+			}
+			EnergyCheckUtils.FinalizeTimeLogs();
+		}
 
 
 	}

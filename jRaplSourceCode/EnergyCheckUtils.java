@@ -3,6 +3,7 @@ package jrapl;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Arrays;
+//import java.lang.invoke.MethodHandles;
 
 public class EnergyCheckUtils {
 	/// can't find the definitons of these anywhere........
@@ -54,6 +55,9 @@ public class EnergyCheckUtils {
 			Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
 			fieldSysPath.setAccessible(true);
 			fieldSysPath.set(null, null);
+			/*Lookup cl = MethodHandles.privateLookupIn(ClassLoader.class, MethodHandles.lookup());
+			VarHandle sys_paths = cl.findStaticVarHandle(ClassLoader.class, "sys_paths", String[].class);
+			sys_paths.set(null);*/
 		} catch (Exception e) {
 
 		}
@@ -116,22 +120,10 @@ public class EnergyCheckUtils {
 		ProfileDealloc();
 	}
 
+
+	//Native calls for timing purposes
 	public native static void StartTimeLogs(int logLength, boolean timingFunctionCalls, boolean timingMsrReadings);
+
 	public native static void FinalizeTimeLogs();
 
-	public static void main(String[] args)
-	{
-		int iterations = Integer.parseInt(args[0]);
-		boolean timingFunctionCalls = true, timingMsrReadings = true;
-		StartTimeLogs(iterations, timingFunctionCalls, timingMsrReadings);
-		for (int i = 0; i < iterations; i++) {
-			ProfileInit();
-			GetSocketNum();
-			EnergyStatCheck();
-			ProfileDealloc();
-		}
-
-		//DeallocProfile();
-		FinalizeTimeLogs();
-	}
 }
