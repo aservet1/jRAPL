@@ -56,7 +56,7 @@ public class RuntimeTestUtils
 		int i = 0;
 		long[] results = new long[iterations];
 		for (int x = 0; x < iterations; x++) {
-			if (name == "ProfileDealloc") EnergyCheckUtils.ProfileInit(); // prevents a 'double free or corruption' error
+			if (name == "ProfileDealloc()") EnergyCheckUtils.ProfileInit(); // prevents a 'double free or corruption' error
 			long time = timeIt(method);
 			//System.out.println(time);
 			results[i++] = time;
@@ -67,7 +67,8 @@ public class RuntimeTestUtils
 		System.out.println("StDev:\t" + stdev(results));
 		System.out.println("-----------------------------------");
 		//Arrays.sort(results);
-		System.out.println(Arrays.toString(results));
+		for (i = 0; i < results.length; i++)
+			System.out.println(name + ": " + results[i]);
 	}
 
 	/* Runs all the native calls x amount of times. Assumes they're being timed
@@ -150,22 +151,22 @@ public class RuntimeTestUtils
 			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");
 			return;
 		}
-		boolean timingFunctionCalls = (args[0] == "--time-native-calls"), timingMsrReadings = (args[0] == "--time-msr-readings");
+		boolean timingFunctionCalls = (args[0].equals("--time-native-calls")), timingMsrReadings = (args[0].equals("--time-msr-readings"));
 		try{
-			iterations = Integer.parseInt(args[0]);
+			iterations = Integer.parseInt(args[1]);
 		}
 		catch(NumberFormatException e){
 			System.out.println("Illegal value for NUM_ITERATIONS");
 			return;
 		}
-		
-		if(args[0] == "--time-java-calls"){ //Java function timing
-			timeItStats(EnergyCheckUtils::ProfileInit, "ProfileInit", iterations);
-			timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum", iterations);
-			timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck", iterations);
-			timeItStats(EnergyCheckUtils::ProfileDealloc, "ProfileDealloc", iterations);
+
+		if(args[0].equals("--time-java-calls")){ //Java function timing
+			timeItStats(EnergyCheckUtils::ProfileInit, "ProfileInit()", iterations);
+			timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum()", iterations);
+			timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck()", iterations);
+			timeItStats(EnergyCheckUtils::ProfileDealloc, "ProfileDealloc()", iterations);
 		}
-		else if(args[0] == "--read-energy-values"){ //Timing and reading energy register
+		else if(args[0].equals("--read-energy-values")){ //Timing and reading energy register
 			DramCorePackageStats(iterations);
 		}
 		else if(timingFunctionCalls || timingMsrReadings){
@@ -178,6 +179,8 @@ public class RuntimeTestUtils
 			}
 			EnergyCheckUtils.FinalizeTimeLogs();
 		}
+		else 
+			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");
 
 
 	}
