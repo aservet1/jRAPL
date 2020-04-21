@@ -116,13 +116,22 @@ public class EnergyCheckUtils {
 		ProfileDealloc();
 	}
 
-	public native static void StartTimeLogs();
+	public native static void StartTimeLogs(int logLength, boolean timingFunctionCalls, boolean timingMsrReadings);
 	public native static void FinalizeTimeLogs();
-	public native static void testJNI(int num);
 
 	public static void main(String[] args)
 	{
-		testJNI(Integer.parseInt(args[0]));
-		DeallocProfile();
+		int iterations = Integer.parseInt(args[0]);
+		boolean timingFunctionCalls = true, timingMsrReadings = true;
+		StartTimeLogs(iterations, timingFunctionCalls, timingMsrReadings);
+		for (int i = 0; i < iterations; i++) {
+			ProfileInit();
+			GetSocketNum();
+			EnergyStatCheck();
+			ProfileDealloc();
+		}
+
+		//DeallocProfile();
+		FinalizeTimeLogs();
 	}
 }
