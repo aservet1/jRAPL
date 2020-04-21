@@ -82,15 +82,15 @@ void initAllLogs(const int length)
 	EnergyStatCheckLog = initTimeLog(length, "EnergyStatCheck()");
 	ProfileDeallocLog = initTimeLog(length, "ProfileDealloc()");
 	
-	dramSocket0Log = initTimeLog(length,"DRAM Socket 0");
-	packageSocket0Log = initTimeLog(length,"PACKAGE Socket 0");
-	coreSocket0Log = initTimeLog(length,"CORE Socket 0");
-	gpuSocket0Log = initTimeLog(length,"GPU Socket 0");
+	dramSocket0Log = initTimeLog(length,"DRAM Socket0");
+	packageSocket0Log = initTimeLog(length,"PACKAGE Socket0");
+	coreSocket0Log = initTimeLog(length,"CORE Socket0");
+	gpuSocket0Log = initTimeLog(length,"GPU Socket0");
 
-	dramSocket1Log = initTimeLog(length,"DRAM Socket 1");
-	packageSocket1Log = initTimeLog(length,"PACKAGE Socket 1");
-	coreSocket1Log = initTimeLog(length,"CORE Socket 1");
-	gpuSocket1Log = initTimeLog(length,"GPU Socket 1");
+	dramSocket1Log = initTimeLog(length,"DRAM Socket1");
+	packageSocket1Log = initTimeLog(length,"PACKAGE Socket1");
+	coreSocket1Log = initTimeLog(length,"CORE Socket1");
+	gpuSocket1Log = initTimeLog(length,"GPU Socket1");
 }
 
 void finalizeAllLogs()

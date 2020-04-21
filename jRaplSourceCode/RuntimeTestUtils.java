@@ -151,6 +151,7 @@ public class RuntimeTestUtils
 			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");
 			return;
 		}
+		//System.out.println(args[0]);
 		boolean timingFunctionCalls = (args[0].equals("--time-native-calls")), timingMsrReadings = (args[0].equals("--time-msr-readings"));
 		try{
 			iterations = Integer.parseInt(args[1]);
@@ -181,7 +182,6 @@ public class RuntimeTestUtils
 		}
 		else 
 			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");
-
 
 	}
 }

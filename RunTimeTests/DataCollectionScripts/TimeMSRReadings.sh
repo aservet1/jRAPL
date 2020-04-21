@@ -12,20 +12,20 @@ mkdir $DataCollectDirectory
 cd ../jRaplSourceCode
 
 # we're assuming that this is set up for C side timing of each core reading
-sudo java jrapl.DriverAlejandro $trials > ../TimingFunctionCalls/$DataCollectDirectory/MajorOutput.temp-data
+sudo java jrapl.RuntimeTestUtils --time-msr-readings $trials > ../RunTimeTests/$DataCollectDirectory/MajorOutput.temp-data
 
-cd ../TimingFunctionCalls/$DataCollectDirectory
+cd ../RunTimeTests/$DataCollectDirectory
 
-socket_num=$(../get_socket_num)
+socket_num=$(../DataCollectionScripts/get_socket_num)
 
 for (( n=0; n<$socket_num; n++ ))
 do
-	socket=Socket$n
+	socket="Socket"$n
 	mkdir $socket
 	cd $socket
 	overall_output=$socket.overall-data
 	grep $socket ../MajorOutput.temp-data > $overall_output
-
+	#cat $overall_output
 	power_domains="DRAM GPU PACKAGE CORE"
 	for pd in $power_domains
 	do
@@ -35,4 +35,4 @@ do
 	cd ..
 done
 
-rm MajorOutput.temp-data
+#rm MajorOutput.temp-data
