@@ -22,5 +22,5 @@ javafiles:
 	cp libCPUScaler.so jrapl/
 
 clean:
-	rm -f lib_share_CPUScaler $(TARGET) cdriver *.class
-	rm -r jrapl/
+	rm -f lib_share_CPUScaler $(TARGET) cdriver *.class *.o
+	rm -rf jrapl/
