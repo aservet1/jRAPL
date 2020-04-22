@@ -1,4 +1,5 @@
-from math import sqrt
+from statistics import stdev
+from statistics import mean
 from sys import argv
 from time import sleep
 from random import randint
@@ -11,34 +12,6 @@ def remove_non_numeric_characters(s):
 			int_string += c
 	return int_string
 
-'''------------------------------------'''
-def avg(l):
-	try:
-		retval = sum(l)/len(l)
-	except:
-		print("Divided by zero probably")
-		return 0
-	return 
-
-def deviations(l):
-	av = avg(l)
-	devs = []
-	for x in l:
-		devs.append(x-av)
-	return devs
-
-def stdev(l):
-	devs = deviations(l)
-	S = 0
-	for d in devs:
-		S += d**2
-	try:
-		S /= (len(l)-1)
-		S = sqrt(S)
-	except:
-		print("Divided by zero probably")
-		return 0
-	return S
 
 '''------------------------------------'''
 
@@ -59,9 +32,10 @@ for s in stringData:
 	if (ints_from_s == ''): continue
 	intData.append(int(ints_from_s))
 
-average = avg(intData)
+average = mean(intData)
 standard_deviation = stdev(intData)
 
 print('Results from file: \''+fileName+"\'")
 print("Avg:\t",average)
 print("StDev:\t",standard_deviation)
+print('------------------------------')

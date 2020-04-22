@@ -1,0 +1,16 @@
+Results from file: 'EnergyStatCheck.data'
+Avg:	 25.55
+StDev:	 20.344406400651554
+------------------------------
+Results from file: 'GetSocketNum.data'
+Avg:	 6.125
+StDev:	 0.3349320635285418
+------------------------------
+Results from file: 'ProfileDealloc.data'
+Avg:	 0.05
+StDev:	 0.22072142786315224
+------------------------------
+Results from file: 'ProfileInit.data'
+Avg:	 12.325
+StDev:	 6.977573966755097
+------------------------------
