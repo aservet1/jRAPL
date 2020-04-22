@@ -2,13 +2,13 @@
 
 sudo modprobe msr
 
-trials=40
+trials=4000
 
 rm -rf CData
 mkdir CData
 
-cd ../jRaplSourceCode
-# we're assuming that this is set up for C side timing and the correct java call for that
+cd ../src
+
 sudo java jrapl.RuntimeTestUtils --time-native-calls $trials > ../RunTimeTests/CData/MajorOutput.data
 cd ../RunTimeTests/CData
 
@@ -24,8 +24,7 @@ done
 
 rm MajorOutput.data
 
-for file in $(ls)
-do
-	python3 ../DataCollectionScripts/AvgStDev.py $file >> c-AVG_STDEV.stats
-	python3 ../DataCollectionScripts/create_graphs.py
-done
+python3 ../DataCollectionScripts/cleanup_data.py 
+
+python3 ../DataCollectionScripts/create_graphs.py
+

@@ -1,11 +1,30 @@
 #!/bin/bash
 
+sudo modprobe msr
+
 trials=4000
 
-sudo modprobe msr
-cd ../jRaplSourceCode
-# assumes the java and c files are properly set up for Java side timing
-sudo java jrapl.DriverAlejandro $trials |			\
-	grep -E 'Results|Avg|StDev|---' |		\
-	sed 's/.*---/------------------------------/'	\
-	> ../TimingFunctionCalls/java-AVG_STDEV.data
+rm -rf JavaData
+mkdir JavaData
+
+cd ../src
+
+sudo java jrapl.RuntimeTestUtils --time-java-calls $trials > ../RunTimeTests/JavaData/MajorOutput.data
+cd ../RunTimeTests/JavaData
+
+functions='ProfileInit GetSocketNum EnergyStatCheck ProfileDealloc'
+
+
+for f in $functions
+do
+	echo $f.data
+	file=$f.data
+	grep $f MajorOutput.data > $file
+done
+
+rm MajorOutput.data
+
+python3 ../DataCollectionScripts/cleanup_data.py 
+
+python3 ../DataCollectionScripts/create_graphs.py
+

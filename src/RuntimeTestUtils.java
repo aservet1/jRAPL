@@ -7,15 +7,6 @@ import java.time.Instant;
 
 public class RuntimeTestUtils
 {
-	public static void repeatGetEnergyStats()
-	{
-		for (int i = 0;; i++)
-		{
-			EnergyCheckUtils.getEnergyStats();
-			try { Thread.sleep(1000L); } catch (Exception e) { System.out.println("thread error"); }
-		}
-	}
-
 	/* Times a method call, returns time in microseconds */
 	public static long timeIt(Runnable method)
 	{
@@ -27,29 +18,6 @@ public class RuntimeTestUtils
 		return elapsed;
 	}
 
-	public static void run500(Runnable method)
-	{
-		for (int x = 0; x < 500; x++)
-			method.run();
-	}
-
-	private static double average(long[] results)
-	{
-		long total = 0;
-		for (int i = 0; i < results.length; i++)
-			total += results[i];
-		return total / results.length;
-	}
-
-	private static double stdev(long[] results)
-	{
-		int N = results.length;
-		double avg = average(results);
-		int deviationSum = 0;
-		for (int i = 0; i < results.length; i++)
-			deviationSum += Math.pow((results[i]-avg),2);
-		return Math.sqrt(deviationSum/(N-1));
-	}
 
 	public static void timeItStats(Runnable method, String name, int iterations)
 	{
@@ -58,14 +26,9 @@ public class RuntimeTestUtils
 		for (int x = 0; x < iterations; x++) {
 			if (name == "ProfileDealloc()") EnergyCheckUtils.ProfileInit(); // prevents a 'double free or corruption' error
 			long time = timeIt(method);
-			//System.out.println(time);
 			results[i++] = time;
 		}
-		System.out.println("-----------------------------------");
-		System.out.println("Results for function: \'" + name +"\'");
-		System.out.println("Avg:\t" + average(results));
-		System.out.println("StDev:\t" + stdev(results));
-		System.out.println("-----------------------------------");
+		
 		//Arrays.sort(results);
 		for (i = 0; i < results.length; i++)
 			System.out.println(name + ": " + results[i]);

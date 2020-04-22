@@ -41,7 +41,7 @@ fi
 mkdir $dirName
 echo $dirName
 
-cd ../jRaplSourceCode/
+cd ../src/
 
 sudo java jrapl.EnergyCheckUtils >../TimingFunctionCalls/$dirName/Output
 
@@ -58,7 +58,7 @@ done
 
 
 
-../../jRaplSourceCode/alejandro-test-place/cleanupScript.sh
+../../src/alejandro-test-place/cleanupScript.sh
 
 python3 ../EnergyStatsStats.py
 

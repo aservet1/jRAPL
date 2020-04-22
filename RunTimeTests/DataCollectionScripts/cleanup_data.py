@@ -3,7 +3,8 @@
 import os
 
 files = os.listdir()
-#print(files)
+
+print(files)
 
 for file in files:
     parts = file.split('.')
@@ -13,7 +14,8 @@ for file in files:
     newfh = open(newfile, 'w')
     fh = open(file, 'r')
     for line in fh:
-        data = line[len(parts[0])+1 :]
-        newfh.write('{}'.format(data))
+        data = line.split()[1]
+        if data.isdigit():
+            newfh.write('{}\n'.format(data))
     os.remove(file)
     os.rename(newfile, file)

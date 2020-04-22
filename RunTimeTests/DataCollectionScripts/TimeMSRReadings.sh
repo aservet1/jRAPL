@@ -9,7 +9,7 @@ DataCollectDirectory=Socket-MSR-Time-Data
 rm -rf $DataCollectDirectory
 mkdir $DataCollectDirectory
 
-cd ../jRaplSourceCode
+cd ../src
 
 # we're assuming that this is set up for C side timing of each core reading
 sudo java jrapl.RuntimeTestUtils --time-msr-readings $trials > ../RunTimeTests/$DataCollectDirectory/MajorOutput.temp-data
@@ -35,4 +35,4 @@ do
 	cd ..
 done
 
-#rm MajorOutput.temp-data
+rm MajorOutput.temp-data
