@@ -4,13 +4,15 @@ sudo modprobe msr
 
 trials=4000
 
-rm -rf CData
-mkdir CData
+outputdir=RuntimeResults/CFunctions
+
+rm -rf $outputdir
+mkdir -p $outputdir
 
 cd ../src
 
-sudo java jrapl.RuntimeTestUtils --time-native-calls $trials > ../RunTimeTests/CData/MajorOutput.data
-cd ../RunTimeTests/CData
+sudo java jrapl.RuntimeTestUtils --time-native-calls $trials > ../RunTimeTests/$outputdir/MajorOutput.data
+cd ../RunTimeTests/$outputdir
 
 functions='ProfileInit GetSocketNum EnergyStatCheck ProfileDealloc'
 

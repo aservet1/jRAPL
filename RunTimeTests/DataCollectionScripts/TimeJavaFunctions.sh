@@ -4,13 +4,15 @@ sudo modprobe msr
 
 trials=4000
 
-rm -rf JavaData
-mkdir JavaData
+outputdir=RuntimeResults/JavaFunctions
+
+rm -rf $outputdir
+mkdir -p $outputdir
 
 cd ../src
 
-sudo java jrapl.RuntimeTestUtils --time-java-calls $trials > ../RunTimeTests/JavaData/MajorOutput.data
-cd ../RunTimeTests/JavaData
+sudo java jrapl.RuntimeTestUtils --time-java-calls $trials > ../RunTimeTests/$outputdir/MajorOutput.data
+cd ../RunTimeTests/$outputdir
 
 functions='ProfileInit GetSocketNum EnergyStatCheck ProfileDealloc'
 
@@ -24,7 +26,7 @@ done
 
 rm MajorOutput.data
 
-python3 ../DataCollectionScripts/cleanup_data.py 
+python3 ../DataCollectionScripts/cleanup_data.py
 
 python3 ../DataCollectionScripts/create_graphs.py
 
