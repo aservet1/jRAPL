@@ -24,7 +24,7 @@ done
 
 rm MajorOutput.data
 
-python3 ../DataCollectionScripts/cleanup_data.py 
+python3 ../DataCollectionScripts/cleanup_data.py
 
 python3 ../DataCollectionScripts/create_graphs.py
 
