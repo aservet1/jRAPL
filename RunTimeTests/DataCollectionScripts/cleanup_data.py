@@ -13,8 +13,10 @@ for file in files:
     newfh = open(newfile, 'w')
     fh = open(file, 'r')
     for line in fh:
-        data = line.split()[1]
+        data = line.split()[-1]
         if data.isdigit():
             newfh.write('{}\n'.format(data))
+        else:
+            print(data)
     os.remove(file)
     os.rename(newfile, file)

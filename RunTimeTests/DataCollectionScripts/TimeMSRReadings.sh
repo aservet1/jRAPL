@@ -39,11 +39,13 @@ do
 	do
 		#echo $f.data
 		file=$f.data
-		cat $overall_output
 		grep $f $overall_output > $file
+		#echo $file
+		#tail -10 $file
 	done
 
 	python3 ../../../DataCollectionScripts/cleanup_data.py
+	python3 ../../../DataCollectionScripts/create_graphs.py
 
 	cd ..
 done
