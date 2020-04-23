@@ -1,22 +1,17 @@
 #!/bin/bash
 
-
-
 sudo modprobe msr
 
-
-
-
-if [ "$#" -lt 2 ]; then
-    echo "Usage: $0 $# name [java | c [number of iterations]]" >&2
-    exit
+if [ "$#" != 3 ]; then
+    echo "Usage: $0 [java | c] [number of iterations] [name to tag onto results folder]" >&2
+    exit 1
 fi
 
 if [ "$1" = "c" ]; then
-    outputdir=RuntimeResults/CFunctions
+    outputdir=RuntimeResults_$3/CFunctions
     flag="--time-native-calls"
 elif [ "$1" = "java" ]; then
-    outputdir=RuntimeResults/JavaFunctions
+    outputdir=RuntimeResults_$3/JavaFunctions
     flag="--time-java-calls"
 fi
 
