@@ -21,3 +21,4 @@ combine java and c data scripts to one that gets options to do c or java data	--
 wrapper function to gather java and c data to make the compariosn graphs	--rutvik
 generalize bar graph comparison (change name to bar_graph_comparisons.py)	--rutvik
 latex figure generator								--alej
+make the scripts dump into that one directory					--alej
