@@ -17,8 +17,6 @@ at some point check to make sure that the package-->uncore math is good to do on
 
 
 ***Script stuff***
-pass in identifier name thru $1							--alej
-make sure the script validates that identifier is passed thru $1		--alej
 combine java and c data scripts to one that gets options to do c or java data	--rutvik
 wrapper function to gather java and c data to make the compariosn graphs	--rutvik
 generalize bar graph comparison (change name to bar_graph_comparisons.py)	--rutvik
