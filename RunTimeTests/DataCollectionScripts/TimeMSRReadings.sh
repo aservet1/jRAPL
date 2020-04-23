@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ -z $1 ]
+if [ "$#" -ne $2 ]
 then
-	echo "usage: ./$0 (name to tag onto result files)"
+	echo "usage: ./$0 [number of trials] [name to tag onto results folder]"
 	exit 1
 fi
 
