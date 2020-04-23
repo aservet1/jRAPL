@@ -1,4 +1,4 @@
-TARGET = libCPUScaler.so CPUScaler.o arch_spec.o msr.o dvfs.o
+TARGET = libCPUScaler.so CPUScaler_TimingUtils.o CPUScaler.o arch_spec.o msr.o dvfs.o
 CFLAGS = -fPIC -g -c -Wall
 JAVAHOME=${JAVA_HOME}
 JAVA_INCLUDE = $(JAVAHOME)/include
@@ -22,5 +22,5 @@ javafiles:
 	cp libCPUScaler.so jrapl/
 
 clean:
-	rm -f lib_share_CPUScaler $(TARGET) cdriver *.class *.o
+	rm -f lib_share_CPUScaler $(TARGET) cdriver *.class
 	rm -rf jrapl/

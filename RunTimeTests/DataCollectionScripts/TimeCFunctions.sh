@@ -1,10 +1,16 @@
 #!/bin/bash
 
+if [ -z $1 ]
+then
+	echo "usage: ./$0 (name to tag onto result files)"
+	exit 1
+fi
+
 sudo modprobe msr
 
 trials=4000
 
-outputdir=RuntimeResults/CFunctions
+outputdir=RuntimeResults_$1/CFunctions
 
 rm -rf $outputdir
 mkdir -p $outputdir
