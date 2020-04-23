@@ -15,7 +15,7 @@ name=$2
 
 
 
-cd RuntimeResults_$1
+cd RuntimeResults_$2
 
 
 python3 ../DataCollectionScripts/bar_graphs.py CFunctions JavaFunctions
