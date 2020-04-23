@@ -5,12 +5,15 @@ from statistics import stdev
 
 files = listdir()
 
+stats = False
 
+if "stats" in files:
+    stats = True
 
 for file in files:
     parts = file.split('.')
     if(len(parts) == 1):
-        continue
+        continue   
     stats_fh = open('stats', 'a')
     if(parts[1] == 'data'):
         y = []
@@ -27,6 +30,7 @@ for file in files:
         if(len(y) == 0):
             y.append(0)
             y.append(0)
-        stats_fh.write("stats for {}:\nmean: {}\nstddev: {}\n--------------------------\n".format(parts[0], mean(y), stdev(y)))
+        if not stats:
+            stats_fh.write("stats for {}:\nmean: {}\nstddev: {}\n--------------------------\n".format(parts[0], mean(y), stdev(y)))
 
 
