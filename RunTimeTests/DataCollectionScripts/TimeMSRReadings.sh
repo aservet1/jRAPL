@@ -31,8 +31,19 @@ do
 	cd $socket
 	overall_output=$socket.overall-data
 	grep $socket ../MajorOutput.temp-data > $overall_output
-	#cat $overall_output
-	#python3 ../../../DataCollectionScripts/cleanup_data.py
+	
+	functions='DRAM CORE PACKAGE'
+
+
+	for f in $functions
+	do
+		#echo $f.data
+		file=$f.data
+		cat $overall_output
+		grep $f $overall_output > $file
+	done
+
+	python3 ../../../DataCollectionScripts/cleanup_data.py
 
 	cd ..
 done

@@ -38,12 +38,12 @@ if [ "$dirName" = "" ]; then
 	dirName=$1"EnergyData_idleCPU"
 fi
 
-mkdir $dirName
+mkdir -p  RuntimeResults/$dirName
 echo $dirName
 
 cd ../src/
 
-sudo java jrapl.EnergyCheckUtils >../TimingFunctionCalls/$dirName/Output
+sudo java jrapl.EnergyCheckUtils >../RunTimeTests/$dirName/Output
 
 cd ../TimingFunctionCalls/$dirName/
 
@@ -58,11 +58,11 @@ done
 
 
 
-../../src/alejandro-test-place/cleanupScript.sh
+python3
 
-python3 ../EnergyStatsStats.py
+python3 ../CalcEnergyStats.py
 
-rm -f ../CORE.data ../PACKAGE.data ../DRAM.data
+#rm -f ../CORE.data ../PACKAGE.data ../DRAM.data
 
 
 

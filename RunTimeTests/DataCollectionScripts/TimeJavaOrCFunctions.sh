@@ -7,22 +7,23 @@ sudo modprobe msr
 
 
 
-if [ "$#" -lt 2 ]; then
-    echo "Usage: $0 $# name [java | c [number of iterations]]" >&2
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 $# name java | c iterations" >&2
     exit
 fi
 
-if [ "$1" = "c" ]; then
-    outputdir=RuntimeResults/CFunctions
+if [ "$2" = "c" ]; then
+    outputdir=RuntimeResults_$1/CFunctions
     flag="--time-native-calls"
-elif [ "$1" = "java" ]; then
-    outputdir=RuntimeResults/JavaFunctions
+elif [ "$2" = "java" ]; then
+    outputdir=RuntimeResults_$1/JavaFunctions
     flag="--time-java-calls"
 fi
 
-trials=$2
+trials=$3
 
 mkdir -p $outputdir
+
 
 cd ../src
 
@@ -40,6 +41,7 @@ do
 done
 
 rm MajorOutput.data
+
 
 python3 ../../DataCollectionScripts/cleanup_data.py
 
