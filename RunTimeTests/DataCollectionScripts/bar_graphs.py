@@ -42,7 +42,7 @@ key2_ind = [(item + 0.35) for item in range(4)]
 xticks = [(item + 0.35/2) for item in range(4)]
 p1 = ax.bar(key1_ind, statdict[keys[0]][1], width = 0.35, yerr = statdict[keys[0]][2])
 p2 = ax.bar(key2_ind, statdict[keys[1]][1], width = 0.35,  yerr = statdict[keys[1]][2])
-ax.set_title('Timing comparison for ')
+ax.set_title('Timing comparison for ' + keys[0] + " and " + keys[1])
 ax.set_xticks(xticks)
 ax.set_xticklabels(statdict[keys[0]][0])
 ax.legend((p1[0], p2[0]), (keys[0], keys[1]))
