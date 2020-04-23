@@ -1,16 +1,16 @@
 stats for ProfileDealloc:
-mean: 0.09277319329832458
-stddev: 0.6988486825215537
+mean: 0.12028007001750438
+stddev: 0.9387368827567812
 --------------------------
 stats for GetSocketNum:
-mean: 6.00525
-stddev: 2.727193031847625
+mean: 6.03875
+stddev: 2.6995500236303314
 --------------------------
 stats for EnergyStatCheck:
-mean: 5.15475
-stddev: 2.3388394515218436
+mean: 6.6575
+stddev: 6.344466629607532
 --------------------------
 stats for ProfileInit:
-mean: 60.91475
-stddev: 915.7238328322255
+mean: 42.19575
+stddev: 795.4895623720643
 --------------------------

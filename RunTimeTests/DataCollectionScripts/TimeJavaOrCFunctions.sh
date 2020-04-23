@@ -4,7 +4,7 @@
 
 sudo modprobe msr
 
-trials=4000
+
 
 
 if [ "$#" -lt 2 ]; then
@@ -20,6 +20,7 @@ elif [ "$1" = "java" ]; then
     flag="--time-java-calls"
 fi
 
+trials=$2
 
 mkdir -p $outputdir
 
@@ -33,7 +34,7 @@ functions='ProfileInit GetSocketNum EnergyStatCheck ProfileDealloc'
 
 for f in $functions
 do
-	echo $f.data
+	#echo $f.data
 	file=$f.data
 	grep $f MajorOutput.data > $file
 done
