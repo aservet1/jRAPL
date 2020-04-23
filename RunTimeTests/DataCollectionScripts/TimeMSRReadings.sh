@@ -22,7 +22,7 @@ sudo java jrapl.RuntimeTestUtils --time-msr-readings $trials > ../RunTimeTests/$
 
 cd ../RunTimeTests/$outputdir
 
-socket_num=$(../DataCollectionScripts/get_socket_num)
+socket_num=$(../../DataCollectionScripts/get_socket_num)
 
 for (( n=0; n<$socket_num; n++ ))
 do
@@ -32,11 +32,7 @@ do
 	overall_output=$socket.overall-data
 	grep $socket ../MajorOutput.temp-data > $overall_output
 	#cat $overall_output
-	power_domains="DRAM GPU PACKAGE CORE"
-	for pd in $power_domains
-	do
-		grep $pd $overall_output | sed 's/^.*: //'> $pd.data
-	done
+	#python3 ../../../DataCollectionScripts/cleanup_data.py
 
 	cd ..
 done

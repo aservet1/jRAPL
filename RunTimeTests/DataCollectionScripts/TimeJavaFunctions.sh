@@ -12,7 +12,7 @@ trials=4000
 
 outputdir=RuntimeResults_$1/JavaFunctions
 
-rm -rf $outputdir
+
 mkdir -p $outputdir
 
 cd ../src
