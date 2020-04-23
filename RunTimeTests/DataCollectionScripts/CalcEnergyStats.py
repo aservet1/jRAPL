@@ -15,21 +15,21 @@ for file in files:
         for line in fh:
             data = line.split()
             try:
-                energies.append(float(data[0]))
+                energies.append(float(data[1]))
             except ValueError:
                 print(data)
                 continue
             try:
-                times.append(int(data[1]))
+                times.append(int(data[2]))
             except IndexError:
                 print(data)
                 continue
-            nonZeros.append(int(data[2]))
+            nonZeros.append(int(data[3]))
         datadict[file.split('.')[0]] = (energies, times, nonZeros)
 
+fh = open("stats", 'w')
+fh.write("--------------------------\n\n")
 for item in datadict.keys():
-    fname = item + ".stats"
-    fh = open(fname, 'w')
     energies = datadict[item][1]
     times = datadict[item][0]
     nonZeros = datadict[item][2]
@@ -54,4 +54,4 @@ for item in datadict.keys():
         plt.clf()
         i += 1
 
-    fh.write("Average energy change per non-zero reading: {}\nStdev of non-zero readings: {}\nAverage num readings between non-zero readings: {}\nStdev of num of readings between non-zero readings: {}\nAverage time between non-zero readings: {}μ\nStdev of time between non-zero readings: {}μ\n\nTotal energy consumed: {}\nTotal time taken: {}\n".format(meanEnergy, stdevEnergy, meanNonZeros, stdevNonZeros, meanTime, stdevTime, totalEnergy, totalTime))
+    fh.write("Stats for {}:\n--------------------------\nAverage energy change per non-zero reading: {}\nStdev of non-zero readings: {}\nAverage num readings between non-zero readings: {}\nStdev of num of readings between non-zero readings: {}\nAverage time between non-zero readings: {}μ\nStdev of time between non-zero readings: {}μ\n\nTotal energy consumed: {}\nTotal time taken: {}\n--------------------------\n\n".format(item,meanEnergy, stdevEnergy, meanNonZeros, stdevNonZeros, meanTime, stdevTime, totalEnergy, totalTime))
