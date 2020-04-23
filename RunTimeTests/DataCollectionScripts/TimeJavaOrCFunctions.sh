@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+
 sudo modprobe msr
 
 trials=4000
