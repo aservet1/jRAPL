@@ -1,0 +1,41 @@
+--------------------------
+
+Stats for DRAM:
+--------------------------
+Average energy change per non-zero reading: 0.0005904881355930275
+Stdev of non-zero readings: 0.0009225863853612146
+Average num readings between non-zero readings: 12.545762711864407
+Stdev of num of readings between non-zero readings: 5.492459953250515
+Average time between non-zero readings: 2052.2881355932204μ
+Stdev of time between non-zero readings: 3113.1518504413457μ
+
+Total energy consumed: 0.17419399999994312
+Total time taken: 605425
+--------------------------
+
+Stats for PACKAGE:
+--------------------------
+Average energy change per non-zero reading: 0.010058179661020896
+Stdev of non-zero readings: 0.015605902201148318
+Average num readings between non-zero readings: 12.545762711864407
+Stdev of num of readings between non-zero readings: 5.487503491511706
+Average time between non-zero readings: 2052.2881355932204μ
+Stdev of time between non-zero readings: 3124.422233669213μ
+
+Total energy consumed: 2.9671630000011646
+Total time taken: 605425
+--------------------------
+
+Stats for CORE:
+--------------------------
+Average energy change per non-zero reading: 0.008717267796610185
+Stdev of non-zero readings: 0.012478624113597726
+Average num readings between non-zero readings: 12.545762711864407
+Stdev of num of readings between non-zero readings: 5.494936507587179
+Average time between non-zero readings: 2052.2881355932204μ
+Stdev of time between non-zero readings: 3123.0010338633924μ
+
+Total energy consumed: 2.5715940000000046
+Total time taken: 605425
+--------------------------
+
