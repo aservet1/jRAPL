@@ -1,12 +1,12 @@
- ----------------------- Direct Assignments from Prof Liu ---------------------
-change timing stuff to store in an array and print later
-DaCapo benchmarks. find out how the benchmarks work --  Rutvik
+ ------------------------------ Higher Priority ------------------------------
 keep making the document good. work on formatting
-standardize file naming conventions -- make scripts always ask for name as arg so they can name all your output
-run all of the benchmarks
+make sure all the benchmarks work (all programs installed)				--probably easy
+timer implementation on java and C side (get energy readings ever x milliseconds)
+email khaled: 'can you send the source code behind the script you sent?'		--probably easy
+make the overleaf document better
 ------------------------------------------------------------------------------
 
-migt want to get the copy-to-string thing to work as one function
+get copy-to-string thing to work as one function (i think if we pass in the entire 2-D array it'll work fine)
 
 find out if it's OK to 'modprobe msr' every single time you run or if 
   it's better and also not a waste of time to first check if it's
@@ -14,11 +14,3 @@ find out if it's OK to 'modprobe msr' every single time you run or if
 
 at some point check to make sure that the package-->uncore math is good to do on C side or Java side
 	(probably better on java side so we also have the package reading available in the array that the java function returns...)
-
-
-***Script stuff***
-combine java and c data scripts to one that gets options to do c or java data	--rutvik
-wrapper function to gather java and c data to make the compariosn graphs	--rutvik
-generalize bar graph comparison (change name to bar_graph_comparisons.py)	--rutvik
-latex figure generator								--alej
-make the scripts dump into that one directory					--alej
