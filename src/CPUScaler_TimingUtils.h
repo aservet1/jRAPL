@@ -6,7 +6,7 @@ typedef struct {
 	int nItems;
 	const char* name;
 	int* array;
-}TimeLog;
+} TimeLog;
 
 int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval *y);
 
