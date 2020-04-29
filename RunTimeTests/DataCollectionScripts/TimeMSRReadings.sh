@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$#" -ne $2 ]
+if [ "$#" -ne 2 ]
 then
 	echo "usage: ./$0 [number of trials] [name to tag onto results folder]"
 	exit 1
@@ -8,9 +8,9 @@ fi
 
 sudo modprobe msr
 
-trials=4000
+trials=$1
 
-outputdir=RuntimeResults_$1/PerSocketMSRReadings
+outputdir=RuntimeResults_$2/PerSocketMSRReadings
 
 rm -rf $outputdir
 mkdir -p $outputdir
