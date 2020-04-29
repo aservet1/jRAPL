@@ -126,4 +126,18 @@ public class EnergyCheckUtils {
 
 	public native static void FinalizeTimeLogs();
 
+	public static void main(String[] args)
+	{
+		for (int x = 0; x < 1000; x++)
+		{
+			double[] before = getEnergyStats();
+			try { Thread.sleep(5); } catch (Exception e) { }
+			double[] after = getEnergyStats();
+			double dram = after[0] - before[0];
+			double cpu = after[1] - before[1];
+			double pkg = after[2] - before[2];
+			System.out.println("dram:\t"+dram+"\tcpu:\t"+cpu+"\tpackage:\t"+pkg);
+		}
+	}
+
 }
