@@ -25,7 +25,6 @@ cd ../src
 sudo java jrapl.RuntimeTestUtils $flag $trials > ../RunTimeTests/$outputdir/MajorOutput.data
 cd ../RunTimeTests/$outputdir
 
-cat MajorOutput.data
 
 functions='ProfileInit GetSocketNum EnergyStatCheck ProfileDealloc'
 
