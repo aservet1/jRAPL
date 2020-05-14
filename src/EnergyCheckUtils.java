@@ -146,18 +146,6 @@ public class EnergyCheckUtils {
 		for (int i = 0; i < readings.length; i++){
 			System.out.println("dram:\t"+readings[i][0]+"\tcpu:\t"+readings[i][1]+"\tpackage:\t"+readings[i][2]);
 		}
-		/*for (int x = 0; x < 500; x++)
-		{
-			double[] energy = energyStatOverDelay(100);
-			System.out.println("dram:\t"+energy[0]+"\tcpu:\t"+energy[1]+"\tpackage:\t"+energy[2]);
-			double[] before = getEnergyStats();
-			try { Thread.sleep(5); } catch (Exception e) { }
-			double[] after = getEnergyStats();
-			double dram = after[0] - before[0];
-			double cpu = after[1] - before[1];
-			double pkg = after[2] - before[2];
-			System.out.println("dram:\t"+dram+"\tcpu:\t"+cpu+"\tpackage:\t"+pkg);
-		}*/
 		DeallocProfile();
 	}
 
