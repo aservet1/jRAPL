@@ -15,7 +15,7 @@ elif [ "$1" = "java" ]; then
     flag="--time-java-calls"
 fi
 
-trials=$3
+trials=$2
 
 mkdir -p $outputdir
 
@@ -24,6 +24,8 @@ cd ../src
 
 sudo java jrapl.RuntimeTestUtils $flag $trials > ../RunTimeTests/$outputdir/MajorOutput.data
 cd ../RunTimeTests/$outputdir
+
+cat MajorOutput.data
 
 functions='ProfileInit GetSocketNum EnergyStatCheck ProfileDealloc'
 
