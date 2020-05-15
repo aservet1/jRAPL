@@ -117,7 +117,7 @@ public class EnergyCheckUtils {
 	}
 
 	// definitely need a better name. time is in milliseconds
-	public static double[] energyStatOverDelay(int time) {
+	public static double[] energyReadOverDelay(int time) {
 		double[] before = getEnergyStats();
 		try { Thread.sleep(time); } catch (Exception e) {}
 		double[] after  = getEnergyStats();
@@ -126,11 +126,11 @@ public class EnergyCheckUtils {
 	}
 
 	// this name is absolutely terrible as well
-	// calls 
-	public static double[][] multipleEnergyStatOverDelay(int time, int iterations) {
+	// will probably made obsolete by the EnergyReadCollector class...but it might be useful to keep it around for your own manual work
+	public static double[][] multipleEnergyReadOverDelay(int time, int iterations) {
 		double[][] results = new double[iterations][];
 		for (int i = 0 ; i < iterations; i++) {
-			results[i] = energyStatOverDelay(time);
+			results[i] = energyReadOverDelay(time);
 		}
 		return results;
 	}
@@ -142,10 +142,6 @@ public class EnergyCheckUtils {
 
 	public static void main(String[] args)
 	{
-		double[][] readings = multipleEnergyStatOverDelay(1000, 10);
-		for (int i = 0; i < readings.length; i++){
-			System.out.println("dram:\t"+readings[i][0]+"\tcpu:\t"+readings[i][1]+"\tpackage:\t"+readings[i][2]);
-		}
 		DeallocProfile();
 	}
 
