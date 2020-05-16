@@ -2,40 +2,40 @@
 
 Stats for DRAM:
 --------------------------
-Average energy change per non-zero reading: 0.0006207266666660871
-Stdev of non-zero readings: 0.0010563650389924881
-Average num readings between non-zero readings: 12.3
-Stdev of num of readings between non-zero readings: 6.699722951392697
-Average time between non-zero readings: 2206.3966666666665μ
-Stdev of time between non-zero readings: 3791.909424410345μ
+Average energy change per non-zero reading: 0.0014076699604744574
+Stdev of non-zero readings: 0.003517728463178017
+Average num readings between non-zero readings: 6.903162055335969
+Stdev of num of readings between non-zero readings: 5.372142102893972
+Average time between non-zero readings: 3754.009881422925μ
+Stdev of time between non-zero readings: 10311.952563562805μ
 
-Total energy consumed: 0.18621799999982613
-Total time taken: 661919
+Total energy consumed: 0.7122810000000754
+Total time taken: 1899529
 --------------------------
 
 Stats for PACKAGE:
 --------------------------
-Average energy change per non-zero reading: 0.011832655518391948
-Stdev of non-zero readings: 0.019641871672551544
-Average num readings between non-zero readings: 12.34448160535117
-Stdev of num of readings between non-zero readings: 6.682522128318459
-Average time between non-zero readings: 2213.7759197324413μ
-Stdev of time between non-zero readings: 3884.9895839074265μ
+Average energy change per non-zero reading: 0.02305435528940946
+Stdev of non-zero readings: 0.060319965069465575
+Average num readings between non-zero readings: 6.982035928143713
+Stdev of num of readings between non-zero readings: 5.353286527611481
+Average time between non-zero readings: 3791.4750499002μ
+Stdev of time between non-zero readings: 10365.133327549445μ
 
-Total energy consumed: 3.5379639999991923
-Total time taken: 661919
+Total energy consumed: 11.55023199999414
+Total time taken: 1899529
 --------------------------
 
 Stats for CORE:
 --------------------------
-Average energy change per non-zero reading: 0.009197715231789064
-Stdev of non-zero readings: 0.014975324483323138
-Average num readings between non-zero readings: 12.211920529801324
-Stdev of num of readings between non-zero readings: 6.786844095580556
-Average time between non-zero readings: 2191.7847682119204μ
-Stdev of time between non-zero readings: 3855.0692971394546μ
+Average energy change per non-zero reading: 0.016546958250498862
+Stdev of non-zero readings: 0.043515624683264455
+Average num readings between non-zero readings: 6.950298210735586
+Stdev of num of readings between non-zero readings: 5.371044816500172
+Average time between non-zero readings: 3776.3996023856857μ
+Stdev of time between non-zero readings: 10346.252743579376μ
 
-Total energy consumed: 2.7777100000002974
-Total time taken: 661919
+Total energy consumed: 8.323120000000927
+Total time taken: 1899529
 --------------------------
 
