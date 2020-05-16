@@ -35,13 +35,25 @@ public class EnergyReadingCollector implements Runnable
 		this.delay = d;
 	}
 
+	public double[] readOverDelay()
+	{
+		double[] before = EnergyCheckUtils.getEnergyStats();
+		try { Thread.sleep(delay); } catch (Exception e) {}
+		double[] after  = EnergyCheckUtils.getEnergyStats();
+		double[] reading = new double[3];
+		for (int i = 0; i < reading.length; i++){
+			reading[i] = after[i]-before[i];
+		}
+		return reading;
+	}
+
 	//deletes previous reading list record, make sure you save it if you need it before running this thread
 	public void run()
 	{
 		this.exit = false; this.readings = new ArrayList<double[]>();
 		while (!exit)
 		{
-			double[] reading = EnergyCheckUtils.energyReadOverDelay(this.delay);
+			double[] reading = readOverDelay();
 			try { Thread.sleep(this.delay);  } catch (Exception e) {}
 			this.readings.add(reading);
 		}
@@ -49,7 +61,7 @@ public class EnergyReadingCollector implements Runnable
 
 	public void end()
 	{
-		exit = true;
+		this.exit = true;
 	}
 
 	public String toString()

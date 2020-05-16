@@ -116,25 +116,6 @@ public class EnergyCheckUtils {
 		ProfileDealloc();
 	}
 
-	// definitely need a better name. time is in milliseconds
-	public static double[] energyReadOverDelay(int time) {
-		double[] before = getEnergyStats();
-		try { Thread.sleep(time); } catch (Exception e) {}
-		double[] after  = getEnergyStats();
-		double[] readings = {after[0]-before[0], after[1]-before[1], after[2]-before[2]};
-		return readings;
-	}
-
-	// this name is absolutely terrible as well
-	// will probably made obsolete by the EnergyReadCollector class...but it might be useful to keep it around for your own manual work
-	public static double[][] multipleEnergyReadOverDelay(int time, int iterations) {
-		double[][] results = new double[iterations][];
-		for (int i = 0 ; i < iterations; i++) {
-			results[i] = energyReadOverDelay(time);
-		}
-		return results;
-	}
-
 	//Native calls for timing purposes
 	public native static void StartTimeLogs(int logLength, boolean timingFunctionCalls, boolean timingMsrReadings);
 	public native static void FinalizeTimeLogs();
