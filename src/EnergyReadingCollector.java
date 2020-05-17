@@ -22,17 +22,17 @@ public class EnergyReadingCollector implements Runnable
 
 	public ArrayList<double[]> getReadings()
 	{
-		return new ArrayList<double[]>(this.readings);
+		return new ArrayList<double[]>(readings);
 	}
 
 	public int getDelay()
 	{
-		return this.delay;
+		return delay;
 	}
 
 	public void setDelay(int d)
 	{
-		this.delay = d;
+		delay = d;
 	}
 
 	public double[] readOverDelay()
@@ -47,34 +47,37 @@ public class EnergyReadingCollector implements Runnable
 		return reading;
 	}
 
-	//deletes previous reading list record, make sure you save it if you need it before running this thread
+	//deletes previous reading list record, make sure you save it if you need it before running thread
 	public void run()
 	{
-		this.exit = false; this.readings = new ArrayList<double[]>();
+		exit = false; readings = new ArrayList<double[]>();
 		while (!exit)
 		{
 			double[] reading = readOverDelay();
-			try { Thread.sleep(this.delay);  } catch (Exception e) {}
-			this.readings.add(reading);
+			try { Thread.sleep(delay);  } catch (Exception e) {}
+			readings.add(reading);
 		}
 	}
 
 	public void end()
 	{
-		this.exit = true;
+		exit = true;
 	}
 
 	public String toString()
 	{
 		String s = "";
-		s += "readings: " + this.readings.size() + "\n";
-		s += "delay: " + this.delay + "\n";
-		int i; for (i = 0; i < this.readings.size()-1; i++) {
-			double[] reading = this.readings.get(i);
-			s += (i+1) + "\tdram:\t" + reading[0] + "\tcore:\t" + reading[1] + "\tpkg:\t" + reading[2] + "\n";
+		s += "readings: " + readings.size() + "\n";
+		s += "delay: " + delay + "\n";
+		if (readings.size() != 0) {
+			int i;
+			for (i = 0; i < readings.size()-1; i++) {
+					double[] reading = readings.get(i);
+					s += (i+1) + "\tdram:\t" + reading[0] + "\tcore:\t" + reading[1] + "\tpkg:\t" + reading[2] + "\n";
+				}
+			double[] reading = readings.get(i);
+			s += (i+1) + "\tdram:\t" + reading[0] + "\tcore:\t" + reading[1] + "\tpkg:\t" + reading[2];
 		}
-		double[] reading = this.readings.get(i);
-		s += (i+1) + "\tdram:\t" + reading[0] + "\tcore:\t" + reading[1] + "\tpkg:\t" + reading[2];
 		return s;
 	}
 
