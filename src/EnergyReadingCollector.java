@@ -6,7 +6,7 @@ public class EnergyReadingCollector implements Runnable
 {
 	private ArrayList<double[]> readings;
 	private int delay; // milliseconds
-	static volatile boolean exit = false;
+	private volatile boolean exit = false;
 
 	public EnergyReadingCollector()
 	{
@@ -53,11 +53,10 @@ public class EnergyReadingCollector implements Runnable
 	//deletes previous reading list record, make sure you save it if you need it before running thread
 	public void run()
 	{
-		exit = false; readings = new ArrayList<double[]>();
+		exit = false; readings.clear();
 		while (!exit)
 		{
 			double[] reading = readOverDelay();
-			try { Thread.sleep(delay);  } catch (Exception e) {}
 			readings.add(reading);
 		}
 	}
@@ -74,30 +73,12 @@ public class EnergyReadingCollector implements Runnable
 		s += "delay: " + delay + "\n";
 		if (readings.size() != 0) {
 			int i;
-			for (i = 0; i < readings.size()-1; i++) {
+			for (i = 0; i < readings.size(); i++) {
 					double[] reading = readings.get(i);
 					s += (i+1) + "\tdram:\t" + reading[0] + "\tcore:\t" + reading[1] + "\tpkg:\t" + reading[2] + "\n";
-				}
-			double[] reading = readings.get(i);
-			s += (i+1) + "\tdram:\t" + reading[0] + "\tcore:\t" + reading[1] + "\tpkg:\t" + reading[2];
+			}
 		}
 		return s;
 	}
-
-	/*public static void main(String[] args)
-	{
-		EnergyReadingCollector ec = new EnergyReadingCollector(10);
-
-		new Thread(ec).start();
-		try { Thread.sleep(500); } catch (Exception e) {}
-		ec.end();
-		System.out.println(ec);
-
-		new Thread(ec).start();
-		try { Thread.sleep(250); } catch (Exception e) {}
-		ec.end();
-		System.out.println(ec);
-
-	}*/
 
 }
