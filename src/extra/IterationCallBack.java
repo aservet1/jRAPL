@@ -19,17 +19,6 @@ public void stop(boolean w) {
 	STOP_ITER_TS[CURRENT_ITERATION-1] = System.currentTimeMillis();
 	CURRENT_ITERATION++;
 	System.out.println("Iteration Stopping");
-	//if(CURRENT_ITERATION==5) {
-		try {
-			Class cls = Class.forName("org.jikesrvm.VM");
-			System.out.println("Calling end iteration");
-			Method m = cls.getDeclaredMethod("end_iteration", null);
-			Object o = m.invoke(null, null);
-		} catch(Exception exc) {
-			 exc.printStackTrace();
-		}
-	//}
-	
 }
 
 
