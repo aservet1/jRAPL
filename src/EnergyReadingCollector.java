@@ -20,9 +20,12 @@ public class EnergyReadingCollector implements Runnable
 		readings = new ArrayList<double[]>();
 	}
 
-	public ArrayList<double[]> getReadings()
+	public double[][] getReadings()
 	{
-		return new ArrayList<double[]>(readings);
+		double[][] readings_array = new double[readings.size()][];
+		for (int i = 0; i < readings.size(); i++)
+			readings_array[i] = readings.get(i);
+		return readings_array;
 	}
 
 	public int getDelay()
@@ -81,7 +84,7 @@ public class EnergyReadingCollector implements Runnable
 		return s;
 	}
 
-	public static void main(String[] args)
+	/*public static void main(String[] args)
 	{
 		EnergyReadingCollector ec = new EnergyReadingCollector(10);
 
@@ -95,6 +98,6 @@ public class EnergyReadingCollector implements Runnable
 		ec.end();
 		System.out.println(ec);
 
-	}
+	}*/
 
 }

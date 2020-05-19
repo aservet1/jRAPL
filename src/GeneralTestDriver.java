@@ -42,9 +42,11 @@ public class GeneralTestDriver
 		int d;
 		if (args.length == 0) d = 10;
 		else d = Integer.parseInt(args[0]);
+		
 		EnergyReadingCollector ec = new EnergyReadingCollector();
 		ec.setDelay(d);
-		int[] arr = randarr(11);
+		int[] arr = randarr(5);
+		System.out.println(Arrays.toString(arr));
 
 		new Thread(ec).start();
 		bogoSort(arr);
