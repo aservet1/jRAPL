@@ -45,16 +45,15 @@ public class GeneralTestDriver
 		
 		EnergyReadingCollector ec = new EnergyReadingCollector();
 		ec.setDelay(d);
-		//int[] arr = randarr(10);
-		//System.out.println(Arrays.toString(arr));
+		int[] arr = randarr(11);
 
-		new Thread(ec).start();
-		//bogoSort(arr);
-		try { Thread.sleep(Integer.parseInt(args[1])); } catch(Exception e) {}
-		ec.end();
+		ec.startReading();
+		bogoSort(arr);
+		ec.stopReading();
 
-		//System.out.println(Arrays.toString(arr)+"\n");
 		System.out.println(ec);
+
+		ec.writeReadingsToFile("temp.log");
 	}
 
 }
