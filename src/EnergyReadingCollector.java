@@ -5,10 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
 
-
 public class EnergyReadingCollector implements Runnable
 {
-	private ArrayList<double[]> readings; //@TODO -- might accidentally pick up an odd reading in the case that the thing stops really quick
+	private ArrayList<double[]> readings; 
 	private int delay; // milliseconds
 	private volatile boolean exit = false;
 
@@ -47,6 +46,7 @@ public class EnergyReadingCollector implements Runnable
 		}
 	}
 
+	//runs in the background
 	public void startReading()
 	{
 		new Thread(this).start();
@@ -57,7 +57,8 @@ public class EnergyReadingCollector implements Runnable
 		exit = true;
 	}
 
-	// run this before starting a thread on the same object for the second time
+	// run this before reusing the same EnergyReadingCollector
+	// make sure to save relevant info from readings because this resets
 	public void reInit()
 	{
 		exit = false;
@@ -66,16 +67,29 @@ public class EnergyReadingCollector implements Runnable
 
 	public double[][] getLastKReadings(int k)
 	{
-		double[][] readings_array = new double[k][];
-
 		int start = readings.size() - k;
 		int array_index = 0;
 
-		if (start < 0) start = 0;
+		if (start < 0) {
+			start = 0;
+			k = readings.size();
+		}
+		
+		double[][] readings_array = new double[k][];
 
 		for (int i = start; i < readings.size(); i++)
 			readings_array[array_index++] = readings.get(i);
 		return readings_array;
+	}
+	
+	public int getDelay()
+	{
+		return delay;
+	}
+
+	public void setDelay(int d)
+	{
+		delay = d;
 	}
 
 	private String labelledReading(double[] reading)
@@ -97,26 +111,12 @@ public class EnergyReadingCollector implements Runnable
 		}
 	}
 
-	public int getDelay()
-	{
-		return delay;
-	}
-
-	public void setDelay(int d)
-	{
-		delay = d;
-	}
-
 	public String toString()
 	{
 		String s = "";
-		s += "delay: " + delay + '\n';
-		if (readings.size() != 0) {
-			int i;
-			for (double[] reading : readings) {
-					s += labelledReading(reading) + "\n";
-			}
-		}
+		s += "delay: " + delay + " milliseconds\n";
+		for (double[] reading : readings)
+			s += labelledReading(reading) + "\n";
 		return s;
 	}
 
