@@ -1,6 +1,8 @@
 #ifndef CPUSCALER_TIMINGUTILS_H
 #define CPUSCALER_TIMINGUTILS_H
 
+#include<sys/time.h>
+
 typedef struct {
 	int length;
 	int nItems;
