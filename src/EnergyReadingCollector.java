@@ -41,7 +41,7 @@ public class EnergyReadingCollector implements Runnable
 		while (!exit)
 		{
 			double[] reading = readOverDelay();
-			if (!exit) readings.add(reading); // seems redundant, but this is in case the exit signal was set during the readOverDelay() signal --(is this OK?)
+			if (!exit) readings.add(reading); // seems redundant, but this is in case the exit signal was set during the readOverDelay() signal
 		}
 	}
 

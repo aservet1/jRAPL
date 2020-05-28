@@ -15,34 +15,35 @@ public class EnergyCheckUtils {
 	public native static void SetPackageTimeWindowLimit(int socketId, int level, double costomTimeWin); // not used yet in this file
 	public native static void SetDramTimeWindowLimit(int socketId, int level, double costomTimeWin);    // not used yet in this file
 	public native static void SetDramPowerLimit(int socketId, int level, double costomPower);           // not used yet in this file
+	public native static void SetPowerLimit(int ENABLE);       // not used yet in this file
 
 	/** Documentation not done. See CPUScaler.c for source
-	 *  Initializes the energy profile of the system. Starts collecting info
-	 *  Finds the CPU model (stored in C var)
-	 *  Finds number of suckets CPU has (stored in C var)
-	 *  fills the 'fd' int array which holds some sort of information about the msr for a given core number
+	 *  Initializes the energy profile of the system. To be called before accessing any jRAPL utility.
+	 *  Information initialized (stored entirely in static global variables on the C side):
+	 *  	CPU Model
+	 *  	Number of CPU sockets
+	 *  	Array of file handles for MSR readings
 	 *
-	 *  @return wraparound_energy a double representing the amount of energy in a socket or something
+	 *  @return wraparoundValue -- 
+	 *
 	*/
 	public native static int ProfileInit();
 
-	/** Documentation not done(?) See CPUScaler.c for source
-	 * @return Number of CPU sockets the computer has
+	/**
+	 *  @return Number of CPU sockets the current system has
 	*/
 	public native static int GetSocketNum();
 
-	/** Returns a string with energy information.
-	Formatted "1stSocketInfo @ 2ndSocketInfo @ ... @ NthSocketInfo" with @ delimiters
-	Each NthSocketInfo subsection formatted "dram/uncore_energy#cpu_energy#package_energy" with # delimieters
-	This string gets parsed into an array in getEnergyStats().
+	/** Returns a string with current total energy consumption reported in MSR registers.
+	 *	Formatted " 1stSocketInfo @ 2ndSocketInfo @ ... @ NthSocketInfo " with @ delimiters
+	 *	Each NthSocketInfo subsection formatted " dram_energy # cpu_energy # package_energy " with # delimieters
+	 *	This string gets parsed into an array in getEnergyStats().
 	*/
 	public native static String EnergyStatCheck();
 
-	/** Frees memory allocated by ProfileInit() method.
+	/** Free all memory allocated in ProfileInit()
 	*/
 	public native static void ProfileDealloc();
-
-	public native static void SetPowerLimit(int ENABLE);       // not used yet in this file
 
 	/**  Represents the energy in the rapl unit in a way that prevents bit overflow that would cause negative values. */
 	public static int wraparoundValue;
@@ -76,9 +77,12 @@ public class EnergyCheckUtils {
 	 * The first entry is: Dram/uncore gpu energy (depends on the cpu architecture)
 	 * The second entry is: CPU energy
 	 * The third entry is: Package energy
+	 * General layout of the array:
+	 * 	[dram_s1, cpu_s1, pkg_s1, dram_s2, cpu_s2, pkg_s2, ... , dram_sn, cpu_sn, pkg_sn]
+	 *	sn means socket number associated with this reading for all n greater than 1 	//@TODO -- is socket numbering 0 indexed or 1 indexed?
 	*/
 	public static double[] getEnergyStats() {
-		socketNum = GetSocketNum();
+		socketNum = GetSocketNum(); //@TODO -- is this redundant? can we just assume that it was already set during the sstatic block?
 		String EnergyInfo = EnergyStatCheck();
 		/*One Socket*/
 		if(socketNum == 1) {
@@ -110,7 +114,7 @@ public class EnergyCheckUtils {
 		}
 	}
 
-	/** Frees memory allocated by profile initialization. Done at the end of the program.
+	/** Frees memory allocated by ProfileInit(). Called when energy reading utility is done
 	*/
 	public static void DeallocProfile() {
 		ProfileDealloc();
@@ -123,6 +127,14 @@ public class EnergyCheckUtils {
 
 	public static void main(String[] args)
 	{
+		EnergyReadingCollector ec = new EnergyReadingCollector();
+
+		ec.startReading();
+		for (int x = 0; x < 1000000; x++) getEnergyStats();
+		ec.stopReading();
+
+		System.out.println(ec);
+
 		DeallocProfile();
 	}
 
