@@ -19,6 +19,9 @@ public void stop(boolean w) {
 	STOP_ITER_TS[CURRENT_ITERATION-1] = System.currentTimeMillis();
 	CURRENT_ITERATION++;
 	System.out.println("Iteration Stopping");
+
+	//code to run after X number of iterations ( is X = FIRE_AFTER ? )
+
 }
 
 
