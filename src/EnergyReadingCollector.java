@@ -9,9 +9,9 @@ import java.io.FileWriter;
 /**
 *	@author Alejandro Servetto
 *	Object that takes and stores energy readings over a set delay (milliseconds)
-*	Runs as a thread in the background between this.startReading() and this.stopReading()
-*	Every individual energy reading is the energy consumed (joules) over the course of the delay
-*	Energy read from three power domains: DRAM, CPU core, CPU package
+*	<br>Runs as a thread in the background between this.startReading() and this.stopReading()
+*	<br>Every individual energy reading is the energy consumed (joules) over the course of the delay
+*	<br>Energy read from three power domains: DRAM, CPU core, CPU package
 */
 public class EnergyReadingCollector implements Runnable
 {
@@ -20,12 +20,17 @@ public class EnergyReadingCollector implements Runnable
 	private volatile boolean exit = false;
 	private Thread t = null;
 
+	/** Initializes with a default delay setting of 10 milliseconds */
 	public EnergyReadingCollector()
 	{
 		delay = 10;
 		readings = new ArrayList<double[]>();
 	}
 
+	/**
+	*	Initializes with the delay interval passed as paramter
+	*	@param d The delay interval to take readings
+	*/
 	public EnergyReadingCollector(int d)
 	{
 		delay = d;
@@ -44,11 +49,24 @@ public class EnergyReadingCollector implements Runnable
 		return reading;
 	}
 
+	/*public void getNReadings(int n)
+	{
+		this.startReading();
+		while (readings.size() <= n) {int x=4; System.out.print(x);} // infinite loop unless I print garbage to the screen
+		this.stopReading();
+	}*/
+
 	private String labelledReading(double[] reading)
 	{
 		return "dram: " + reading[0] + "\tcore: " + reading[1] + "\tpkg: " + reading[2];
 	}
 
+
+	/**
+	*	Called and run internally by the Thread class. Runs a loop, continually reading energy consumption over the delay
+	*	interval and stores the reading. Loop is controlled by an internal boolean, which is set to stop
+	*	once the main thread calls <code>this.stopReading()</code>
+	*/	
 	public void run()
 	{
 		while (!exit)
@@ -60,7 +78,7 @@ public class EnergyReadingCollector implements Runnable
 
 	/**
 	*	Starts a thread with this object. Continually takes and stores energy readings
-	*	in the background while main thread runs. Will run until this.stopReading() is called
+	*	in the background while main thread runs. Will run until <code>this.stopReading()</code> is called
 	*/
 	public void startReading()
 	{
@@ -69,8 +87,8 @@ public class EnergyReadingCollector implements Runnable
 	}
 
 	/**
-	*	Stops the thread this object is running. Sets the 'exit' flag to true,
-	*	which ends the loop in the run() method.
+	*	Stops the thread this object is running. Sets the <code>exit</code> flag to true,
+	*	which ends the loop in the <code>run()</code> method.
 	*/
 	public void stopReading()
 	{
@@ -86,8 +104,8 @@ public class EnergyReadingCollector implements Runnable
 
 	/**
 	*	Resets the object for reuse.
-	*	Call this if you intend to reuse the same object for energy collection after already using it.
-	*	Clears out the current list of readings stored in the object.
+	*	<br>Call this if you intend to reuse the same object for energy collection after already using it.
+	*	<br>Clears out the current list of readings stored in the object.
 	*/
 	public void reInit()
 	{
@@ -97,9 +115,9 @@ public class EnergyReadingCollector implements Runnable
 
 	/**
 	*	Returns K most recent readings. Each readings is a double[] of the form
-	*	[dram energy, core energy, package energy]. If K is greater than the amount
-	*	of readings, simply returns all readings
-	*	@param k: Number of most recent readings
+	*	<br>[dram energy, core energy, package energy].
+	*	<br>If K is greater than the amount of readings, returns all readings
+	*	@param k Number of most recent readings
 	*	@return An array of the K most recent readings.
 	*/
 	public double[][] getLastKReadings(int k)
@@ -120,7 +138,7 @@ public class EnergyReadingCollector implements Runnable
 	}
 	
 	/**
-	*	@return The current delay (in milliseconds)
+	*	@return The current delay interval (in milliseconds)
 	*/
 	public int getDelay()
 	{
@@ -128,7 +146,7 @@ public class EnergyReadingCollector implements Runnable
 	}
 
 	/**
-	*	@param d: Sets the delay for this object (in milliseconds)
+	*	@param d Sets the delay interval (in milliseconds)
 	*/
 	public void setDelay(int d)
 	{
@@ -145,9 +163,9 @@ public class EnergyReadingCollector implements Runnable
 
 	/**
 	*	Dumps all readings to file, along with the delay between readings. Format:
-	*	Same format as toString(). @see toString()
+	*	Same format as <code>this.toString()</code>
 	*	
-	*	@param fileName: name of file to write to
+	*	@param fileName name of file to write to
 	*/
 	public void writeReadingsToFile(String fileName)
 	{
@@ -164,13 +182,14 @@ public class EnergyReadingCollector implements Runnable
 
 	/**
 	*	Returns a string representation of the object
-	*	Format:
-	*	delay: (ms)
-	*	dram: (joules)	core: (joules)	pkg: (joules)
-	*	dram: (joules)	core: (joules)	pkg: (joules)
-	*	dram: (joules)	core: (joules)	pkg: (joules)
-	*	dram: (joules)	core: (joules)	pkg: (joules)
-	*		... et cetera ...
+	*	<br>Format:
+	*	<br>  delay: (ms)
+	*	<br>  dram: (joules)	core: (joules)	pkg: (joules)
+	*	<br>  dram: (joules)	core: (joules)	pkg: (joules)
+	*	<br>  dram: (joules)	core: (joules)	pkg: (joules)
+	*	<br>  dram: (joules)	core: (joules)	pkg: (joules)
+	*	<br>	... et cetera ...
+		<br>  each entry per line is tab delimited
 	*	@return string representation of the object
 	*/
 	public String toString()
