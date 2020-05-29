@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"jrapl","l":"EnergyCheckUtils"},{"p":"jrapl","l":"EnergyReadingCollector"},{"p":"jrapl","l":"RuntimeTestUtils.EnergyReadings"},{"p":"jrapl","l":"GeneralTestDriver"},{"p":"jrapl","l":"NativeUtils"},{"p":"jrapl","l":"PerfCheckUtils"},{"p":"jrapl","l":"RuntimeTestUtils"}]

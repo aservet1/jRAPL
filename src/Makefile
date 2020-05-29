@@ -17,9 +17,12 @@ cdriver: *.c
 	#gcc -g -fsanitize=address -fno-omit-frame-pointer -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) CPUScaler.c arch_spec.c msr.c dvfs.c cdriver.c -o cdriver -lm
 	gcc -g -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) CPUScaler_TimingUtils.c CPUScaler.c arch_spec.c msr.c dvfs.c cdriver.c -o cdriver -lm
 
-javafiles:
+javafiles: *.java
 	javac *.java -d .
 	cp libCPUScaler.so jrapl/
+
+javadoc:
+	javadoc *.java -d ../javadoc
 
 clean:
 	rm -f lib_share_CPUScaler $(TARGET) cdriver *.class
