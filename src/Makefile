@@ -7,7 +7,7 @@ JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 all: lib_shared_CPUScaler javafiles
 
 common:
-	echo $(Java_Home)
+	echo $(JAVA_HOME)
 	gcc $(CFLAGS) -I $(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) CPUScaler_TimingUtils.c CPUScaler.c arch_spec.c msr.c dvfs.c
 
 lib_shared_CPUScaler: common
