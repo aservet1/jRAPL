@@ -5,10 +5,20 @@ import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
 
+/**
+*	Utilities for assessing runtime of (currently) a few things in C and Java. Can be used for performance diagnostics
+*	on a particular system. These methods are accessed externally through a shell script that runs "java RuntimeTestUtils"
+*	followed by command line arguments that tell the program which of these methods to use and how. Their output is then
+*	picked back up and processed by the shell script that called it initially.
+*/
 public class RuntimeTestUtils
 {
-	/* Times a method call, returns time in microseconds */
-	public static long timeIt(Runnable method)
+	/**
+	*	Times a method call, returns time in microseconds
+	*	@param method The equivalent of a function pointer in C/C++
+	*	@return the time it took to run the method, in microseconds
+	*/
+	public static long timeMethod(Runnable method)
 	{
 		Instant start, end;
 		start = Instant.now();
@@ -18,14 +28,17 @@ public class RuntimeTestUtils
 		return elapsed;
 	}
 
-
-	public static void timeItStats(Runnable method, String name, int iterations)
+	/**
+	*	Times a method multiple times. Stores runtime and then prints all
+	*	readings to standard output, labelled by the method name.
+	*/
+	public static void timeMethodMultipleIterations(Runnable method, String name, int iterations)
 	{
 		int i = 0;
 		long[] results = new long[iterations];
 		for (int x = 0; x < iterations; x++) {
 			if (name == "ProfileDealloc()") EnergyCheckUtils.ProfileInit(); // prevents a 'double free or corruption' error
-			long time = timeIt(method);
+			long time = timeMethod(method);
 			results[i++] = time;
 		}
 		
@@ -105,6 +118,17 @@ public class RuntimeTestUtils
 	}
 
 
+	/**
+	*	Reads command line argument and decides which of these methods to call.
+	*	@param args Array of command line arguments. Format:
+	*		OPTION NUM_ITERATIONS
+	*		OPTION can be 
+	*			--time-java-calls, which does the runtime of native calls from Java
+	*			--time-native-calls, which does the runtime of native calls directly in C
+	*			--time-msr-readings, which times how long it takes to access each MSR register when reading the energy consumption of each power domain
+	*			--read-energy-values ******@TODO THIS STUFF SHOULD BE IN ITS OWN CLASS SINCE IT'S DACAPO ENERGY, NOT RUNTIME TEST
+	*		NUM_ITERATIONS is the number of trials to run any of these options
+	*/
 	public static void main(String[] args)
 	{
 		//get the static block out of the way by making this useless object
@@ -125,10 +149,10 @@ public class RuntimeTestUtils
 		}
 
 		if(args[0].equals("--time-java-calls")){ //Java function timing
-			timeItStats(EnergyCheckUtils::ProfileInit, "ProfileInit()", iterations);
-			timeItStats(EnergyCheckUtils::GetSocketNum, "GetSocketNum()", iterations);
-			timeItStats(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck()", iterations);
-			timeItStats(EnergyCheckUtils::ProfileDealloc, "ProfileDealloc()", iterations);
+			timeMethodMultipleIterations(EnergyCheckUtils::ProfileInit, "ProfileInit()", iterations);
+			timeMethodMultipleIterations(EnergyCheckUtils::GetSocketNum, "GetSocketNum()", iterations);
+			timeMethodMultipleIterations(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck()", iterations);
+			timeMethodMultipleIterations(EnergyCheckUtils::ProfileDealloc, "ProfileDealloc()", iterations);
 		}
 		else if(args[0].equals("--read-energy-values")){ //Timing and reading energy register
 			DramCorePackageStats(iterations);
