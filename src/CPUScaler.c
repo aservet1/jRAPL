@@ -14,12 +14,19 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <stdbool.h>
-#include "CPUScalerShared.h"
 
 /// Comments starting with '///' are my (Alejandro's) notes to self.
 /// None of this is official documentation.
 
+#define MSR_DRAM_ENERGY_UNIT 0.000015
 
+rapl_msr_parameter *parameters;
+int *fd;
+uint64_t num_pkg;
+bool timingFunctionCalls = false;
+bool timingMsrReadings = false;
+
+struct timeval start, end, diff;
 
 JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
 {
@@ -138,7 +145,84 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_GetSocketNum(JNIEnv *env, jcl
  *  Based on the CPU model, it either adds dram info or gpu info. I guess that certain models use gpus and others drams?
  *  Interpret/process MSR reading for dram differently based on CPU model before storing it in the buffer.......................
  */
+void initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][60], char cpu_buffer[num_pkg][60], char package_buffer[num_pkg][60])
+{
+	uint32_t cpu_model = get_cpu_model();
+	double package[num_pkg];
+	double pp0[num_pkg];
+	double pp1[num_pkg];
+	double dram[num_pkg];
+	double result = 0.0;
+	int info_size = 0;
+	int i = 0;
+	rapl_msr_unit rapl_unit = get_rapl_unit();
+	for (; i < num_pkg; i++) {
 
+		if (timingMsrReadings) gettimeofday(&start, NULL);
+		result = read_msr(fd[i], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
+		package[i] = (double) result * rapl_unit.energy;
+		if (timingMsrReadings) {
+			gettimeofday(&end,NULL);
+			timeval_subtract(&diff, &end, &start);
+			logTime("PACKAGE Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
+		}
+
+		if (timingMsrReadings)gettimeofday(&start, NULL);
+		result = read_msr(fd[i], MSR_PP0_ENERGY_STATUS);
+		pp0[i] = (double) result * rapl_unit.energy;
+		if (timingMsrReadings) {
+			gettimeofday(&end,NULL);
+			timeval_subtract(&diff, &end, &start);
+			logTime("CORE Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
+		}
+
+		sprintf(package_buffer[i], "%f", package[i]);
+		sprintf(cpu_buffer[i], "%f", pp0[i]);
+		int architecture_category = get_architecture_category(cpu_model);
+		switch(architecture_category) {
+			case READ_FROM_DRAM:
+				if (timingMsrReadings) gettimeofday(&start, NULL);
+				result = read_msr(fd[i],MSR_DRAM_ENERGY_STATUS);
+				if (timingMsrReadings) {
+					gettimeofday(&end,NULL);
+					timeval_subtract(&diff, &end, &start);
+					logTime("DRAM Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
+				}
+				if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
+					dram[i] =(double)result*MSR_DRAM_ENERGY_UNIT;
+				} else {
+					dram[i] =(double)result*rapl_unit.energy;
+				}
+
+				sprintf(dram_buffer[i], "%f", dram[i]);
+
+				info_size += strlen(package_buffer[i]) + strlen(dram_buffer[i]) + strlen(cpu_buffer[i]) + 4;
+
+				/*Insert socket number*/
+
+				break;
+			case READ_FROM_GPU:
+				if (timingMsrReadings) gettimeofday(&start, NULL);
+				result = read_msr(fd[i],MSR_PP1_ENERGY_STATUS);
+				if (timingMsrReadings) {
+					gettimeofday(&end,NULL);
+					timeval_subtract(&diff, &end, &start);
+					logTime("GPU Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
+				}
+				pp1[i] = (double) result *rapl_unit.energy;
+
+				sprintf(gpu_buffer[i], "%f", pp1[i]);
+
+				info_size += strlen(package_buffer[i]) + strlen(gpu_buffer[i]) + strlen(cpu_buffer[i]) + 4;
+				break;
+			case UNDEFINED_ARCHITECTURE:
+				printf("Architecture not found\n");
+				break;
+
+		}
+	}
+
+}
 
 
 /** <Alejandro's Interpretation>
