@@ -9,8 +9,10 @@ public class EnergyCheckUtils {
 	/// can't find the definitons of these anywhere........
 	public native static int scale(int freq);                   // not used yet in this file
 	public native static int[] freqAvailable();                 // not used yet in this file
-	public native static double[] GetPackagePowerSpec();        // not used yet in this file
-	public native static double[] GetDramPowerSpec();           // not used yet in this file
+
+	/// related to msr.c functions
+	public native static double[] GetPackagePowerSpec();        // msr.c -- getPowerSpec() with parameter specified for domain
+	public native static double[] GetDramPowerSpec();           // msr.c -- getPowerSpec() with parameter specified for domain
 	public native static void SetPackagePowerLimit(int socketId, int level, double costomPower);        // not used yet in this file
 	public native static void SetPackageTimeWindowLimit(int socketId, int level, double costomTimeWin); // not used yet in this file
 	public native static void SetDramTimeWindowLimit(int socketId, int level, double costomTimeWin);    // not used yet in this file
