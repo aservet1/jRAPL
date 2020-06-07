@@ -39,22 +39,18 @@ public class GeneralTestDriver
 
 	public static void main(String[] args)
 	{
-		int d; d = 10;
-		//if (args.length == 0) d = 10;
-		//else d = Integer.parseInt(args[0]);
-		
+		EnergyCheckUtils.ProfileInit();
+
 		EnergyReadingCollector ec = new EnergyReadingCollector();
-		ec.setDelay(d);
-		//int[] arr = randarr(11);
 
 		ec.startReading();
-		//bogoSort(arr);
-		try { Thread.sleep(Integer.parseInt(args[0])); } catch (Exception e) {}
+		try { Thread.sleep(100); } catch (Exception e) {}
 		ec.stopReading();
 
 		System.out.println(ec);
 
-		//ec.writeReadingsToFile("temp.log");
+		EnergyCheckUtils.ProfileDealloc();
+			
 	}
 
 }

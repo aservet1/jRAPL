@@ -13,7 +13,7 @@ import java.io.FileWriter;
 *	<br>Every individual energy reading is the energy consumed (joules) over the course of the delay
 *	<br>Energy read from three power domains: DRAM, CPU core, CPU package
 */
-public class EnergyReadingCollector implements Runnable
+public class EnergyReadingCollector extends JRAPL implements Runnable
 {
 	private ArrayList<double[]> readings; 
 	private int delay; // milliseconds

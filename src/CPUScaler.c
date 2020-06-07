@@ -20,21 +20,21 @@
 
 #define MSR_DRAM_ENERGY_UNIT 0.000015
 
-rapl_msr_parameter *parameters;
-int *fd;
-uint64_t num_pkg;
-bool timingFunctionCalls = false;
-bool timingMsrReadings = false;
+static rapl_msr_parameter *parameters;
+static int *fd;
+static uint64_t num_pkg;
+static bool timingFunctionCalls = false;
+static bool timingMsrReadings = false;
 
 struct timeval start, end, diff;
 
-JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
+JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
 {
 	timingFunctionCalls = _timingFunctionCalls;
 	timingMsrReadings = _timingMsrReadings;
 	initAllLogs(logSize);
 }
-JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls)
+JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls)
 {
 	finalizeAllLogs();
 }

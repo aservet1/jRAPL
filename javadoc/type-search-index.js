@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"jrapl","l":"EnergyCheckUtils"},{"p":"jrapl","l":"EnergyReadingCollector"}]
