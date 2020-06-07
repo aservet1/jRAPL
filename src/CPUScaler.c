@@ -28,13 +28,13 @@ static bool timingMsrReadings = false;
 
 struct timeval start, end, diff;
 
-JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
+JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
 {
 	timingFunctionCalls = _timingFunctionCalls;
 	timingMsrReadings = _timingMsrReadings;
 	initAllLogs(logSize);
 }
-JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls)
+JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls)
 {
 	finalizeAllLogs();
 }

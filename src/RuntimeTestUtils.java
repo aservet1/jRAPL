@@ -11,8 +11,13 @@ import java.time.Instant;
 *	followed by command line arguments that tell the program which of these methods to use and how. Their output is then
 *	picked back up and processed by the shell script that called it initially.
 */
-public class RuntimeTestUtils
+public class RuntimeTestUtils extends JRAPL
 {
+	//Native calls to set up C side timing
+	public native static void StartTimeLogs(int logLength, boolean timingFunctionCalls, boolean timingMsrReadings);
+	public native static void FinalizeTimeLogs();
+
+
 	/**
 	*	Times a method call, returns time in microseconds
 	*	@param method The equivalent of a function pointer in C/C++
@@ -132,7 +137,7 @@ public class RuntimeTestUtils
 	public static void main(String[] args)
 	{
 		//get the static block out of the way by making this useless object
-		new EnergyCheckUtils();
+		new RuntimeTestUtils();
 		int iterations;
 		if(args.length != 2){
 			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");
@@ -158,14 +163,14 @@ public class RuntimeTestUtils
 			DramCorePackageStats(iterations);
 		}
 		else if(timingFunctionCalls || timingMsrReadings){
-			EnergyCheckUtils.StartTimeLogs(iterations, timingFunctionCalls, timingMsrReadings);
+			StartTimeLogs(iterations, timingFunctionCalls, timingMsrReadings);
 			for (int i = 0; i < iterations; i++) {
 				EnergyCheckUtils.ProfileInit();
 				EnergyCheckUtils.GetSocketNum();
 				EnergyCheckUtils.EnergyStatCheck();
 				EnergyCheckUtils.ProfileDealloc();
 			}
-			EnergyCheckUtils.FinalizeTimeLogs();
+			FinalizeTimeLogs();
 		}
 		else 
 			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");

@@ -134,9 +134,8 @@ public class EnergyCheckUtils extends JRAPL {
 	}
 
 	//Native calls for timing purposes
-	public native static void StartTimeLogs(int logLength, boolean timingFunctionCalls, boolean timingMsrReadings);
-	public native static void FinalizeTimeLogs();
-
+	//public native static void StartTimeLogs(int logLength, boolean timingFunctionCalls, boolean timingMsrReadings);
+	//public native static void FinalizeTimeLogs();
 
 	public static void main(String[] args)
 	{
