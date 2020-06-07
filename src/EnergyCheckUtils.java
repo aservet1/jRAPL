@@ -1,51 +1,6 @@
 package jrapl;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Arrays;
-//import java.lang.invoke.MethodHandles;
-
 public class EnergyCheckUtils extends JRAPL {
-	/** Seems to be defined in Kenan's CScaler.c for EnergyAwareJVM project <a href='https://github.com/kliu20/EnergyAwareJVM/blob/master/energy/CScaler.c'>here</a> */
-	public native static int scale(int freq);
-	/** Seems to be defined in Kenan's CScaler.c for EnergyAwareJVM project <a href='https://github.com/kliu20/EnergyAwareJVM/blob/master/energy/CScaler.c'>here</a> */
-	public native static int[] freqAvailable();
-
-	/** Not fully implemented yet; see msr.c
-	*
-	*/	
-	public native static double[] GetPackagePowerSpec();        // msr.c -- getPowerSpec() with parameter specified for domain (gotta wrap it up)
-	
-	/** Not fully implemented yet; see msr.c
-	*
-	*/
-	public native static double[] GetDramPowerSpec();           // msr.c -- getPowerSpec() with parameter specified for domain (gotta wrap it up)
-	
-	/** Not fully implemented yet; see msr.c
-	*
-	*/
-	public native static void SetPackagePowerLimit(int socketId, int level, double costomPower);
-
-	/** Not fully implemented yet; see msr.c
-	*
-	*/
-	public native static void SetPackageTimeWindowLimit(int socketId, int level, double costomTimeWin);
-
-	/** Not fully implemented yet; see msr.c
-	*
-	*/
-	public native static void SetDramTimeWindowLimit(int socketId, int level, double costomTimeWin);
-
-	/** Not fully implemented yet; see msr.c
-	*
-	*/
-	public native static void SetDramPowerLimit(int socketId, int level, double costomPower);
-
-	/** Not fully implemented yet; see msr.c
-	*
-	*/
-	public native static void SetPowerLimit(int ENABLE);
-
 	/** Documentation not done. See CPUScaler.c for source
 	 *  Initializes the energy profile of the system. To be called before accessing any jRAPL utility.
 	 *  Information initialized (stored entirely in static global variables on the C side):
@@ -102,7 +57,6 @@ public class EnergyCheckUtils extends JRAPL {
 			double[] stats = new double[3]; // 3 stats per socket
 			String[] energy = EnergyInfo.split("#");
 
-			//System.out.println(Arrays.toString(energy));
 			stats[0] = Double.parseDouble(energy[0]);
 			stats[1] = Double.parseDouble(energy[1]);
 			stats[2] = Double.parseDouble(energy[2]);
@@ -132,10 +86,6 @@ public class EnergyCheckUtils extends JRAPL {
 	public static void DeallocProfile() {
 		ProfileDealloc();
 	}
-
-	//Native calls for timing purposes
-	//public native static void StartTimeLogs(int logLength, boolean timingFunctionCalls, boolean timingMsrReadings);
-	//public native static void FinalizeTimeLogs();
 
 	public static void main(String[] args)
 	{

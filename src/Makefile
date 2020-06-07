@@ -22,7 +22,7 @@ javafiles: *.java
 	cp libCPUScaler.so jrapl/
 
 javadoc: *.java
-	javadoc EnergyCheckUtils.java EnergyReadingCollector.java -d ../javadoc
+	javadoc EnergyControlUtils.java EnergyCheckUtils.java EnergyReadingCollector.java -d ../javadoc
 
 clean:
 	rm -f lib_share_CPUScaler $(TARGET) cdriver *.class
