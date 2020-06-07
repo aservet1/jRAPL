@@ -20,11 +20,11 @@
 
 #define MSR_DRAM_ENERGY_UNIT 0.000015
 
-rapl_msr_parameter *parameters;
-int *fd;
-uint64_t num_pkg;
-bool timingFunctionCalls = false;
-bool timingMsrReadings = false;
+static rapl_msr_parameter *parameters;
+static int *fd;
+static uint64_t num_pkg;
+static bool timingFunctionCalls = false;
+static bool timingMsrReadings = false;
 
 struct timeval start, end, diff;
 

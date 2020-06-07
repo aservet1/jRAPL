@@ -5,38 +5,42 @@ import java.util.Map;
 import java.util.Arrays;
 //import java.lang.invoke.MethodHandles;
 
-public class EnergyCheckUtils extends JRAPL{
-	/** I have no idea where this is coming from on the C side */
+public class EnergyCheckUtils extends JRAPL {
+	/** Seems to be defined in Kenan's CScaler.c for EnergyAwareJVM project <a href='https://github.com/kliu20/EnergyAwareJVM/blob/master/energy/CScaler.c'>here</a> */
 	public native static int scale(int freq);
-	/** I have no idea where this is coming from on the C side */
+	/** Seems to be defined in Kenan's CScaler.c for EnergyAwareJVM project <a href='https://github.com/kliu20/EnergyAwareJVM/blob/master/energy/CScaler.c'>here</a> */
 	public native static int[] freqAvailable();
 
 	/** Not fully implemented yet; see msr.c
 	*
-	*/
+	*/	
+	public native static double[] GetPackagePowerSpec();        // msr.c -- getPowerSpec() with parameter specified for domain (gotta wrap it up)
 	
-	public native static double[] GetPackagePowerSpec();        // msr.c -- getPowerSpec() with parameter specified for domain
 	/** Not fully implemented yet; see msr.c
 	*
 	*/
-	public native static double[] GetDramPowerSpec();           // msr.c -- getPowerSpec() with parameter specified for domain
+	public native static double[] GetDramPowerSpec();           // msr.c -- getPowerSpec() with parameter specified for domain (gotta wrap it up)
 	
 	/** Not fully implemented yet; see msr.c
 	*
 	*/
 	public native static void SetPackagePowerLimit(int socketId, int level, double costomPower);
+
 	/** Not fully implemented yet; see msr.c
 	*
 	*/
 	public native static void SetPackageTimeWindowLimit(int socketId, int level, double costomTimeWin);
+
 	/** Not fully implemented yet; see msr.c
 	*
 	*/
 	public native static void SetDramTimeWindowLimit(int socketId, int level, double costomTimeWin);
+
 	/** Not fully implemented yet; see msr.c
 	*
 	*/
 	public native static void SetDramPowerLimit(int socketId, int level, double costomPower);
+
 	/** Not fully implemented yet; see msr.c
 	*
 	*/
@@ -52,12 +56,12 @@ public class EnergyCheckUtils extends JRAPL{
 	 *  @return wraparoundValue -- 
 	 *
 	*/
-	//public native static int ProfileInit();
+	public native static int ProfileInit();
 
-	/** Finds the number of CPU sockets the system has
+	/** Gets the number of CPU sockets the system has
 	 *  @return number of CPU sockets
 	*/
-	//public native static int GetSocketNum();
+	public native static int GetSocketNum();
 
 	/** Tells if the first reading per socket in EnergyStatCheck is DRAM energy or GPU energy
 	 *  @return 0 for undefined architecture, 1 for DRAM, 2 for GPU
@@ -76,8 +80,6 @@ public class EnergyCheckUtils extends JRAPL{
 	*/
 	public native static void ProfileDealloc();
 
-	public native static int ProfileInit();
-	public native static int GetSocketNum();
 	public static int wrapAroundValue;
 	public static int socketNum;
 
