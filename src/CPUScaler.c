@@ -7,27 +7,30 @@
 #include <stdint.h>
 #include <string.h>
 #include <inttypes.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <stdbool.h>
 #include "CPUScaler.h"
 #include "arch_spec.h"
 #include "msr.h"
 #include "CPUScaler_TimingUtils.h"
-#include <sys/time.h>
-#include <sys/types.h>
-#include <stdbool.h>
 #include "CPUScalerShared.h"
-
 /// Comments starting with '///' are my (Alejandro's) notes to self.
 /// None of this is official documentation.
 
+#define MSR_DRAM_ENERGY_UNIT 0.000015
+
+static rapl_msr_parameter *parameters;
 
 
-JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
+
+JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
 {
 	timingFunctionCalls = _timingFunctionCalls;
 	timingMsrReadings = _timingMsrReadings;
 	initAllLogs(logSize);
 }
-JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls)
+JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls)
 {
 	finalizeAllLogs();
 }
@@ -38,33 +41,7 @@ JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_FinalizeTimeLogs(JNIEnv *env,
  *	I belive the i is an iterator to see how many packages have been put into the string
  *	If more than 1 pkg, puts a @ at the end of the string because there's going to be another set of package info after that
  */
-void copy_to_string(char *ener_info, char uncore_buffer[60], int uncore_num, char cpu_buffer[60], int cpu_num, char package_buffer[60], int package_num, int i, int *offset)
-{
-	memcpy(ener_info + *offset, &uncore_buffer, uncore_num);
-	ener_info[*offset + uncore_num] = '#';
-	memcpy(ener_info + *offset + uncore_num + 1, &cpu_buffer, cpu_num);
-	ener_info[*offset + uncore_num + cpu_num + 1] = '#';
-	if(i < num_pkg - 1) {
-		memcpy(ener_info + *offset + uncore_num + cpu_num + 2, &package_buffer, package_num);
-		*offset += uncore_num + cpu_num + package_num + 2;
-		if(num_pkg > 1) {
-			ener_info[*offset++] = '@';
-		}
-	} else {
-		memcpy(ener_info + *offset + uncore_num + cpu_num + 2, &package_buffer, package_num + 1);
-	}
 
-}
-
-
-/* Assumed to be called only during or after ProfileInit, when static variable fd[] is initialized */
-rapl_msr_unit get_rapl_unit()
-{
-	rapl_msr_unit rapl_unit;
-	uint64_t unit_info = read_msr(fd[0], MSR_RAPL_POWER_UNIT);
-	get_msr_unit(&rapl_unit, unit_info);
-	return rapl_unit;
-}
 
 /** <Alejandro's Interpretation>
  *	Sets up an an energy profile. (*?)What exactly is an energy profile? A bunch of data stored about the current energy state...
@@ -140,7 +117,6 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_GetSocketNum(JNIEnv *env, jcl
  */
 
 
-
 /** <Alejandro's Interpretation>
  * Makes a string from the energy info. Initializes energy info with that function above and
  *
@@ -150,97 +126,17 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_GetSocketNum(JNIEnv *env, jcl
  */
 JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *env, jclass jcls) {
 	if (timingFunctionCalls) gettimeofday(&start, NULL);
-
 	jstring ener_string;
-	char gpu_buffer[num_pkg][60];
-	char dram_buffer[num_pkg][60];
-	char cpu_buffer[num_pkg][60];
-	char package_buffer[num_pkg][60];
-	int dram_num = 0L;	///  dram_num is the id number of that component
-	int cpu_num = 0L;	///  same applies to the other x_num varaibles (num is id number)
-	uint32_t cpu_model = get_cpu_model();
-
-	int package_num = 0L;
-	int gpu_num = 0L;
-	//construct a string
 	char ener_info[512];
-	int i;
-	int offset = 0;
-
-
-  	bzero(ener_info, 512);
-	initialize_energy_info(gpu_buffer, dram_buffer, cpu_buffer, package_buffer);
-	int architecture_catergory = get_architecture_category(cpu_model);
-	for(i = 0; i < num_pkg; i++) {
-		switch(architecture_catergory) {
-			case READ_FROM_DRAM:
-
-				/*Insert socket number*/
-				dram_num = strlen(dram_buffer[i]);
-				cpu_num = strlen(cpu_buffer[i]);
-				package_num = strlen(package_buffer[i]);
-
-				//copy_to_string(ener_info, dram_buffer, dram_num, cpu_buffer, cpu_num, package_buffer, package_num, i, &offset);
-				memcpy(ener_info + offset, &dram_buffer[i], dram_num);
-				//split sign
-				ener_info[offset + dram_num] = '#';
-				memcpy(ener_info + offset + dram_num + 1, &cpu_buffer[i], cpu_num);
-				ener_info[offset + dram_num + cpu_num + 1] = '#';
-				if(i < num_pkg - 1) {
-					memcpy(ener_info + offset + dram_num + cpu_num + 2, &package_buffer[i], package_num);
-					offset += dram_num + cpu_num + package_num + 2;
-					if(num_pkg > 1) {
-						ener_info[offset] = '@';
-						offset++;
-					}
-				} else {
-					memcpy(ener_info + offset + dram_num + cpu_num + 2, &package_buffer[i], package_num + 1);
-				}
-
-				break;
-			case READ_FROM_GPU:
-
-				gpu_num = strlen(gpu_buffer[i]);
-				cpu_num = strlen(cpu_buffer[i]);
-				package_num = strlen(package_buffer[i]);
-
-				//copy_to_string(ener_info, gpu_buffer, gpu_num, cpu_buffer, cpu_num, package_buffer, package_num, i, &offset);
-				memcpy(ener_info + offset, &gpu_buffer[i], gpu_num);
-				//split sign
-				ener_info[offset + gpu_num] = '#';
-				memcpy(ener_info + offset + gpu_num + 1, &cpu_buffer[i], cpu_num);
-				ener_info[offset + gpu_num + cpu_num + 1] = '#';
-				if(i < num_pkg - 1) {
-					memcpy(ener_info + offset + gpu_num + cpu_num + 2, &package_buffer[i], package_num);
-					offset += gpu_num + cpu_num + package_num + 2;
-					if(num_pkg > 1) {
-						ener_info[offset] = '@';
-						offset++;
-					}
-				} else {
-					memcpy(ener_info + offset + gpu_num + cpu_num + 2, &package_buffer[i],
-							package_num + 1);
-				}
-
-				break;
-		case UNDEFINED_ARCHITECTURE:
-				printf("Architecture not found\n");
-				break;
-
-		}
-	}
-
+	EnergyStatCheck_C(ener_info);
 	/// hmm why would be turn it into a string just to turn it back into an array in java's getEnergyStats()?
 	ener_string = (*env)->NewStringUTF(env, ener_info);
-
 	if (timingFunctionCalls) {
 		gettimeofday(&end,NULL);
 		timeval_subtract(&diff, &end, &start);
 		logTime("EnergyStatCheck()", diff.tv_sec*1000 + diff.tv_usec);
 	}
-
-  return ener_string;
-
+  	return ener_string;
 }
 
 /** <Alejandro's Interpretation>
