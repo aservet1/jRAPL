@@ -1,19 +1,13 @@
 package jrapl;
 
 public class EnergyCheckUtils extends JRAPL {
-	/** Documentation not done. See CPUScaler.c for source
-	 *  Initializes the energy profile of the system. To be called before accessing any jRAPL utility.
-	 *  Information initialized (stored entirely in static global variables on the C side):
-	 *  	CPU Model
-	 *  	Number of CPU sockets
-	 *  	Array of file handles for MSR readings
-	 *
-	 *  @return wraparoundValue -- 
-	 *
+	/** Call this before doing any JRAPL operations. Sets up the energy collection profile.
+	 *  <br>In other words, it initializes data about the system and allocates the proper
+	 *  <br>data structures in order to to facilitate the jRAPL interface
 	*/
 	public native static int ProfileInit();
 
-	/** Gets the number of CPU sockets the system has
+	/** Reports number of CPU sockets for the current system
 	 *  @return number of CPU sockets
 	*/
 	public native static int GetSocketNum();
@@ -24,33 +18,36 @@ public class EnergyCheckUtils extends JRAPL {
 	public native static int DramOrGpu();
 
 	/** Returns a string with current total energy consumption reported in MSR registers.
-	 *	Formatted " 1stSocketInfo @ 2ndSocketInfo @ ... @ NthSocketInfo " with @ delimiters
-	 *	Each NthSocketInfo subsection formatted " dram_energy # cpu_energy # package_energy " with # delimieters
-	 *	This string gets parsed into an array in getEnergyStats().
+	 *	<br>Formatted " 1stSocketInfo @ 2ndSocketInfo @ ... @ NthSocketInfo " with @ delimiters
+	 *	<br>Each NthSocketInfo subsection formatted " dram_energy # cpu_energy # package_energy " with # delimieters
+	 *	<br>This string gets parsed into an array in getEnergyStats().
+	 *	<br>Example string for a 2-socket machine: 9389.21312#239874.987213#97432.2333@12321.3211#987324.1222#1237.213
 	 *	@return String containing per socket energy info
 	*/
 	public native static String EnergyStatCheck();
 
-	/** Free all memory allocated in ProfileInit()
+	/** Free all native memory allocated in ProfileInit().
+	 *  <br>Call this when done using the jRAPL utilities to clean up resources allocated.
 	*/
 	public native static void ProfileDealloc();
 
-	public static int wrapAroundValue;
-	public static int socketNum;
+	/** I have to figure out what these things mean and why they're important to keep as variabls */
+	public static int wrapAroundValue;	//@TODO -- what even is the point of having these as static variables.
+	public static int socketNum;		//         what doe wrapAroundValue do? is it just the energy conversion unit?
+						//         is it to package up information that youre writing back to the MSRs??? I have no clue
 
-	/**
-	 * Parses string generated from the native EnergyStatCheck() method into an array of doubles.
-	 * @return an array of current energy information.
-	 * Array will be size (3 * socketnum). There will be three entries per socket
-	 * The first entry is: Dram/uncore gpu energy (depends on the cpu architecture)
-	 * The second entry is: CPU energy
-	 * The third entry is: Package energy
-	 * General layout of the array:
+	/** Parses string generated from the native EnergyStatCheck() method into an array of doubles.
+	 *  <br>Array will be size (3 * socketnum). There will be three entries per socket
+	 *  <br>The first entry is: Dram/uncore gpu energy (depends on the cpu architecture)
+	 *  <br>The second entry is: CPU energy
+	 *  <br>The third entry is: Package energy
+	 *  <br>General layout of the array:
 	 * 	[dram_s1, cpu_s1, pkg_s1, dram_s2, cpu_s2, pkg_s2, ... , dram_sn, cpu_sn, pkg_sn]
-	 *	sn means socket number associated with this reading for all n greater than 1 	//@TODO -- is socket numbering 0 indexed or 1 indexed?
+	 *	sn means socket number associated with this reading for all n greater than 1
+	 * @return an array of current energy information.
 	*/
 	public static double[] getEnergyStats() {
-		socketNum = GetSocketNum(); //@TODO -- is this redundant? can we just assume that it was already set during the sstatic block?
+		int socketNum = GetSocketNum(); //@TODO -- is this redundant? can we just assume that it was already set during the sstatic block?
 		String EnergyInfo = EnergyStatCheck();
 		/*One Socket*/
 		if(socketNum == 1) {
