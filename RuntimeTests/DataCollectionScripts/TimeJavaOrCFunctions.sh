@@ -22,8 +22,8 @@ mkdir -p $outputdir
 
 cd ../src
 
-sudo java jrapl.RuntimeTestUtils $flag $trials > ../RunTimeTests/$outputdir/MajorOutput.data
-cd ../RunTimeTests/$outputdir
+sudo java jrapl.RuntimeTestUtils $flag $trials > ../RuntimeTests/$outputdir/MajorOutput.data
+cd ../RuntimeTests/$outputdir
 
 
 functions='ProfileInit GetSocketNum EnergyStatCheck ProfileDealloc'

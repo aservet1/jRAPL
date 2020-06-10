@@ -18,9 +18,9 @@ mkdir -p $outputdir
 cd ../src
 
 # we're assuming that this is set up for C side timing of each core reading
-sudo java jrapl.RuntimeTestUtils --time-msr-readings $trials > ../RunTimeTests/$outputdir/MajorOutput.temp-data
+sudo java jrapl.RuntimeTestUtils --time-msr-readings $trials > ../RuntimeTests/$outputdir/MajorOutput.temp-data
 
-cd ../RunTimeTests/$outputdir
+cd ../RuntimeTests/$outputdir
 
 socket_num=$(../../DataCollectionScripts/get_socket_num)
 
