@@ -5,12 +5,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
 
-
 /**
-*	@author Alejandro Servetto
-*	Object that takes and stores energy readings over a set delay (milliseconds)
-*	<br>Runs as a thread in the background between this.startReading() and this.stopReading()
-*	<br>Every individual energy reading is the energy consumed (joules) over the course of the delay
+*	Reads and stores sytem energy consumption in a background thread.
+*	<br>Meant to record the progression of energy consumption of a program run in the main thread.
+*	<br>Spawns a therad between <code>this.startReading()</code> and <code>this.stopReading()</code>.
+*	<br>Every individual energy reading is the energy consumed (joules) over the course of a set millisecond delay
 *	<br>Energy read from three power domains: DRAM or GPU (depending on CPU model), CPU core, CPU package
 */
 public class EnergyReadingCollector extends JRAPL implements Runnable
@@ -21,7 +20,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	private Thread t = null;
 	private String powerDomain1;
 
-	/** Initializes with a default delay setting of 10 milliseconds */
+	/** Initializes reading collector with a default delay setting of 10 milliseconds */
 	public EnergyReadingCollector()
 	{
 		delay = 10;
@@ -36,8 +35,8 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	}
 
 	/**
-	*	Initializes with the delay interval passed as paramter
-	*	@param d The delay interval over which to take readings
+	*	Initializes reading collector with the delay interval passed as paramter
+	*	@param d The delay interval over which to take readings (in milliseconds)
 	*/
 	public EnergyReadingCollector(int d)
 	{
@@ -52,27 +51,10 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 		}
 	}
 
-	private double[] readOverDelay()
-	{
-		double[] before = EnergyCheckUtils.getEnergyStats();
-		try { Thread.sleep(delay); } catch (Exception e) {}
-		double[] after  = EnergyCheckUtils.getEnergyStats();
-		double[] reading = new double[3];
-		for (int i = 0; i < reading.length; i++){
-			reading[i] = after[i]-before[i];
-		}
-		return reading;
-	}
-
-	private String labelledReading(double[] reading)
-	{
-		return powerDomain1 + " " + reading[0] + "\tcore: " + reading[1] + "\tpkg: " + reading[2];
-	}
-
-
 	/**
-	*	Called and run internally by the Thread class via <code>this.startReading()</code>.
-	*	Do not call in the main thread. Runs a loop, continually reading energy consumption over 
+	*	Do not call this directly from the main thread. 
+	*	It is called and run internally by the Thread class via <code>this.startReading()</code>.
+	*	Runs a loop, continually reading energy consumption over 
 	*	the delay interval and stores the reading. Loop is controlled by an internal boolean,
 	*	which is set to stop once the main thread calls <code>this.stopReading()</code>
 	*/	
@@ -86,7 +68,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	}
 
 	/**
-	*	Starts collecting and soring energy readings in a separate thread. Continually takes and stores energy readings
+	*	Starts collecting and storing energy readings in a separate thread. Continually takes and stores energy readings
 	*	in the background while main thread runs. Will run until main thread calls <code>this.stopReading()</code>.
 	*/
 	public void startReading()
@@ -123,7 +105,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 
 	/**
 	*	Returns K most recent stored readings. Each readings is a double[] of the form
-	*	<br>[dram energy, core energy, package energy].
+	*	<br>[dram/gpu energy, core energy, package energy].
 	*	<br>If K is greater than the amount of readings, returns all readings
 	*	@param k Number of most recent readings
 	*	@return An array of the K most recent readings.
@@ -155,7 +137,8 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	}
 
 	/**
-	*	@param d Sets the delay interval (in milliseconds)
+	*	Sets the delay interval over which to take readings
+	*	@param d delay interval (in milliseconds)
 	*/
 	public void setDelay(int d)
 	{
@@ -164,7 +147,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 
 	/**
 	*	Gets the number of readings the object has currently collected
-	*	@return number of readings
+	*	@return number of readings collected so far
 	*/
 	public int getNumReadings()
 	{
@@ -172,7 +155,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	}
 
 	/**
-	*	Dumps all readings to file, along with the delay between readings. Format:
+	*	Dumps all readings to file, along with the delay between readings.
 	*	Same format as <code>this.toString()</code>
 	*	
 	*	@param fileName name of file to write to
@@ -191,24 +174,42 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	}
 
 	/**
-	*	Returns a string representation of the object
+	*	Human readable format of all data collected, as well all the delay interval over which the data was read.
 	*	<br>Format:
 	*	<br>  delay: (ms)
-	*	<br>  dram: (joules)	core: (joules)	pkg: (joules)
-	*	<br>  dram: (joules)	core: (joules)	pkg: (joules)
-	*	<br>  dram: (joules)	core: (joules)	pkg: (joules)
-	*	<br>  dram: (joules)	core: (joules)	pkg: (joules)
+	*	<br>  dram/gpu: (joules)	core: (joules)	pkg: (joules)
+	*	<br>  dram/gpu: (joules)	core: (joules)	pkg: (joules)
+	*	<br>  dram/gpu: (joules)	core: (joules)	pkg: (joules)
+	*	<br>  dram/gpu: (joules)	core: (joules)	pkg: (joules)
 	*	<br>	... et cetera ...
+	*	<br>  note that only one of "dram" and "gpu" will be listed for the first column, depending on your CPU model
 		<br>  each entry per line is tab delimited
-	*	@return string representation of the object
+	*	@return Human readable interpretation of the data stored in the object
 	*/
 	public String toString()
 	{
 		String s = "";
-		s += "delay: " + delay + " milliseconds\treadings: " + readings.size() + "\n";
+		s += "delay: " + delay + " milliseconds";
 		for (double[] reading : readings)
 			s += labelledReading(reading) + "\n";
 		return s;
+	}
+	
+	private double[] readOverDelay()
+	{
+		double[] before = EnergyCheckUtils.getEnergyStats();
+		try { Thread.sleep(delay); } catch (Exception e) {}
+		double[] after  = EnergyCheckUtils.getEnergyStats();
+		double[] reading = new double[3];
+		for (int i = 0; i < reading.length; i++){
+			reading[i] = after[i]-before[i];
+		}
+		return reading;
+	}
+
+	private String labelledReading(double[] reading)
+	{
+		return powerDomain1 + " " + reading[0] + "\tcore: " + reading[1] + "\tpkg: " + reading[2];
 	}
 
 }

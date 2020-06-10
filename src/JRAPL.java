@@ -4,11 +4,18 @@ import java.lang.reflect.Field;
 import java.util.Map;
 //import java.lang.invoke.MethodHandles;
 
+/**
+*	Superclass for all JRAPL-using classes. Loads the native jRAPL library into memory
+*	and allows access to all native calls. Also contains functions to generally facilitate
+*	the JRAPL interface.
+*/
 public class JRAPL {
+
+	private JRAPL() {} // private constructor -- never initialized
 	
-	/** Call this before doing any JRAPL operations. Sets up the energy collection profile.
-	 *  <br>In other words, it initializes data about the system and allocates the proper
-	 *  <br>data structures in order to to facilitate the jRAPL interface
+	/** Call this before doing any JRAPL operations. 
+	 *  <br>Initializes data about the system and allocates the proper
+	 *  data structures in order to to facilitate the jRAPL interface
 	*/
 	public native static int ProfileInit();
 

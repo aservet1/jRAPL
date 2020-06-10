@@ -17,6 +17,7 @@ public class RuntimeTestUtils extends JRAPL
 	public native static void StartTimeLogs(int logLength, boolean timingFunctionCalls, boolean timingMsrReadings);
 	public native static void FinalizeTimeLogs();
 
+	private RunTimeTestUtils() {} // private constructor -- never initialized
 
 	/**
 	*	Times a method call, returns time in microseconds

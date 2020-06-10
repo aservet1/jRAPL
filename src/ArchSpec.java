@@ -1,9 +1,11 @@
 package jrapl;
 
 /**
-*	Relevant functions for geting Architecture Specifications from the Java end.
+*	Access to architecture specifications. Could probably get more functions from the C side over here...
 */
 public class ArchSpec extends JRAPL {
+
+	private ArchSpec() {} // private constructor -- never initialized
 
 	/** Reports number of CPU sockets for the current system
 	 *  @return number of CPU sockets

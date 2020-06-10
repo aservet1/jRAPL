@@ -5,6 +5,19 @@ package jrapl;
 */
 public class EnergyCheckUtils extends JRAPL {
 
+	private EnergyCheckUtils() {} // private constructor -- never initialized
+	
+	/**	Rapl Energy Conversion unit, fixed with (1/unit) to make a small value to prevent integer overflow.
+	 *	I still don't fully understnand the concept behind this or how to use it. No current examples I can find anywhere
+	 *	(No current implementation actually initializes or makes use of this variable).
+	*/
+	public static int wrapAroundValue;
+	
+	/**	Number of CPU sockets the current system has.
+	 *	(No current implementation actually initializes or makes use of this variable).
+	*/
+	public static int socketNum;
+
 	/** Returns a string with current total energy consumption reported in MSR registers.
 	 *	<br>Formatted " 1stSocketInfo @ 2ndSocketInfo @ ... @ NthSocketInfo " with @ delimiters
 	 *	<br>Each NthSocketInfo subsection formatted " dram_energy # cpu_energy # package_energy " with # delimieters
@@ -14,10 +27,6 @@ public class EnergyCheckUtils extends JRAPL {
 	*/
 	public native static String EnergyStatCheck();
 
-	/** I have to figure out what these things mean and why they're important to keep as variabls */
-	public static int wrapAroundValue;	//@TODO -- what even is the point of having these as static variables.
-	public static int socketNum;		//         what doe wrapAroundValue do? is it just the energy conversion unit?
-						//         is it to package up information that youre writing back to the MSRs??? I have no clue
 
 	/** Parses string generated from the native EnergyStatCheck() method into an array of doubles.
 	 *  <br>Array will be size (3 * socketnum). There will be three entries per socket

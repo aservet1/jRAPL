@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"jrapl","l":"ArchSpec"},{"p":"jrapl","l":"EnergyCheckUtils"},{"p":"jrapl","l":"EnergyControlUtils"},{"p":"jrapl","l":"EnergyReadingCollector"},{"p":"jrapl","l":"JRAPL"}]
