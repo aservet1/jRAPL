@@ -13,7 +13,7 @@ public class GeneralTestDriver
 		EnergyReadingCollector ec = new EnergyReadingCollector();
 
 		ec.startReading();
-		try { Thread.sleep(100); } catch (Exception e) {}
+		while (ec.getNumReadings() < 100);
 		ec.stopReading();
 
 		System.out.println(ec);

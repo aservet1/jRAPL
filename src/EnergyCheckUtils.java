@@ -86,17 +86,9 @@ public class EnergyCheckUtils extends JRAPL {
 
 	public static void main(String[] args)
 	{
-		ProfileInit();
 
-		EnergyReadingCollector ec = new EnergyReadingCollector();
 
-		ec.startReading();
-		try { Thread.sleep(3000); } catch (Exception e) {}
-		ec.stopReading();
 
-		System.out.println(ec);
-
-		ProfileDealloc();
 	}
 
 }

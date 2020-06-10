@@ -11,7 +11,7 @@ import java.io.FileWriter;
 *	Object that takes and stores energy readings over a set delay (milliseconds)
 *	<br>Runs as a thread in the background between this.startReading() and this.stopReading()
 *	<br>Every individual energy reading is the energy consumed (joules) over the course of the delay
-*	<br>Energy read from three power domains: DRAM, CPU core, CPU package
+*	<br>Energy read from three power domains: DRAM or GPU (depending on CPU model), CPU core, CPU package
 */
 public class EnergyReadingCollector extends JRAPL implements Runnable
 {
@@ -29,7 +29,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 
 	/**
 	*	Initializes with the delay interval passed as paramter
-	*	@param d The delay interval to take readings
+	*	@param d The delay interval over which to take readings
 	*/
 	public EnergyReadingCollector(int d)
 	{
@@ -49,13 +49,6 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 		return reading;
 	}
 
-	/*public void getNReadings(int n)
-	{
-		this.startReading();
-		while (readings.size() <= n) {int x=4; System.out.print(x);} // infinite loop unless I print garbage to the screen
-		this.stopReading();
-	}*/
-
 	private String labelledReading(double[] reading)
 	{
 		return "dram: " + reading[0] + "\tcore: " + reading[1] + "\tpkg: " + reading[2];
@@ -63,9 +56,10 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 
 
 	/**
-	*	Called and run internally by the Thread class. Runs a loop, continually reading energy consumption over the delay
-	*	interval and stores the reading. Loop is controlled by an internal boolean, which is set to stop
-	*	once the main thread calls <code>this.stopReading()</code>
+	*	Called and run internally by the Thread class via <code>this.startReading()</code>.
+	*	Do not call in the main thread. Runs a loop, continually reading energy consumption over 
+	*	the delay interval and stores the reading. Loop is controlled by an internal boolean,
+	*	which is set to stop once the main thread calls <code>this.stopReading()</code>
 	*/	
 	public void run()
 	{
@@ -77,8 +71,8 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	}
 
 	/**
-	*	Starts a thread with this object. Continually takes and stores energy readings
-	*	in the background while main thread runs. Will run until <code>this.stopReading()</code> is called
+	*	Starts collecting and soring energy readings in a separate thread. Continually takes and stores energy readings
+	*	in the background while main thread runs. Will run until main thread calls <code>this.stopReading()</code>.
 	*/
 	public void startReading()
 	{
@@ -87,8 +81,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	}
 
 	/**
-	*	Stops the thread this object is running. Sets the <code>exit</code> flag to true,
-	*	which ends the loop in the <code>run()</code> method.
+	*	Stops collecting and storing energy readings.
 	*/
 	public void stopReading()
 	{
@@ -114,7 +107,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	}
 
 	/**
-	*	Returns K most recent readings. Each readings is a double[] of the form
+	*	Returns K most recent stored readings. Each readings is a double[] of the form
 	*	<br>[dram energy, core energy, package energy].
 	*	<br>If K is greater than the amount of readings, returns all readings
 	*	@param k Number of most recent readings
@@ -138,7 +131,8 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	}
 	
 	/**
-	*	@return The current delay interval (in milliseconds)
+	*	Gets the delay interval over which the object takes readings.
+	*	@return The delay interval (in milliseconds)
 	*/
 	public int getDelay()
 	{
@@ -154,7 +148,8 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	}
 
 	/**
-	*	@return number of readings currently stored in the object
+	*	Gets the number of readings the object has currently collected
+	*	@return number of readings
 	*/
 	public int getNumReadings()
 	{

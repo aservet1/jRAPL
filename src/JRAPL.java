@@ -6,27 +6,6 @@ import java.util.Map;
 
 public class JRAPL {
 	
-	//protected static int wraparoundValue;
-	//protected static int socketNum;
-
-	/** Documentation not done. See CPUScaler.c for source
-	*  Initializes the energy profile of the system. To be called before accessing any jRAPL utility.
-	*  Information initialized (stored entirely in static global variables on the C side):
-	*      CPU Model
-	*      Number of CPU sockets
-	*      Array of file handles for MSR readings
-	*
-	*  @return wraparoundValue -- 
-	*
-	*/
- 	//public native static int ProfileInit();
-  
- 	/** Finds the number of CPU sockets the system has
- 	*  @return number of CPU sockets
- 	*/
-	//public native static int GetSocketNum();
-
-
 	static {
 		try {
 			Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
@@ -42,7 +21,5 @@ public class JRAPL {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//wraparoundValue = ProfileInit();
-		//socketNum = GetSocketNum();
 	}
 }
