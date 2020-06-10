@@ -1,10 +1,13 @@
  ------------------------------ Higher Priority ------------------------------
-keep making the document good. work on formatting
 make sure all the benchmarks work (all programs installed)				--probably easy
 timer implementation on java and C side (get energy readings ever x milliseconds)
-email khaled: 'can you send the source code behind the script you sent?'		--probably easy
 make the overleaf document better
 ------------------------------------------------------------------------------
+use pthread.join()
+look up channel passing
+make C side do numbers instead of string to gather energy readings
+make ArchSpec.java
+make data collection collect datasets and display graphs with outliers removed via TwoSD or Grubbs Test
 
 get copy-to-string thing to work as one function (i think if we pass in the entire 2-D array it'll work fine)
 
