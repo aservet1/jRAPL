@@ -31,4 +31,4 @@
 #class
 *.class
 
-jRAPlSourceCode/Makefile
+src/Makefile

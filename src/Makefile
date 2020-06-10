@@ -21,8 +21,8 @@ javafiles: *.java
 	javac *.java -d .
 	cp libCPUScaler.so jrapl/
 
-javadoc: *.java
-	javadoc JRAPL.java ArchSpec.java EnergyControlUtils.java EnergyCheckUtils.java EnergyReadingCollector.java -d ../javadoc
+user-api: *.java
+	javadoc JRAPL.java ArchSpec.java EnergyControlUtils.java EnergyCheckUtils.java EnergyReadingCollector.java -d ../UserAPI
 
 clean:
 	rm -f lib_share_CPUScaler $(TARGET) cdriver *.class
