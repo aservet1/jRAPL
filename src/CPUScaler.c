@@ -79,7 +79,7 @@ rapl_msr_unit get_rapl_unit()
  *  the 'fd' array is an array of which msr regs. num msr regs is number of packages the computer has
  *  initializes the rapl unit (stuff holding the conversions to translate msr data sections into meaningful 'human-readable' stuff)
  */
-JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_ProfileInit(JNIEnv *env, jclass jcls) {
+JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls) {
 	if (timingFunctionCalls) gettimeofday(&start, NULL);
 
 	int i;
@@ -335,7 +335,7 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 /** <Alejandro's Interpretation>
  * Free memory allocated by profile init function
  */
-JNIEXPORT void JNICALL Java_jrapl_EnergyCheckUtils_ProfileDealloc(JNIEnv * env, jclass jcls) {
+JNIEXPORT void JNICALL Java_jrapl_JRAPL_ProfileDealloc(JNIEnv * env, jclass jcls) {
 	if (timingFunctionCalls) gettimeofday(&start, NULL);
 
 	free(fd);

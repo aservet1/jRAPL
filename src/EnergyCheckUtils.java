@@ -1,5 +1,8 @@
 package jrapl;
 
+/**
+*	Functions around getting energy reading of the system
+*/
 public class EnergyCheckUtils extends JRAPL {
 
 	/** Returns a string with current total energy consumption reported in MSR registers.

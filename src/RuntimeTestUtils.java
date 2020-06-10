@@ -42,7 +42,7 @@ public class RuntimeTestUtils extends JRAPL
 		int i = 0;
 		long[] results = new long[iterations];
 		for (int x = 0; x < iterations; x++) {
-			if (name == "ProfileDealloc()") EnergyCheckUtils.ProfileInit(); // prevents a 'double free or corruption' error
+			if (name == "ProfileDealloc()") JRAPL.ProfileInit(); // prevents a 'double free or corruption' error
 			long time = timeMethod(method);
 			results[i++] = time;
 		}
@@ -119,7 +119,7 @@ public class RuntimeTestUtils extends JRAPL
 		printDiffs(data, "DRAM", 0);
 		printDiffs(data, "CORE", 1);
 		printDiffs(data, "PACKAGE", 2);
-		EnergyCheckUtils.ProfileDealloc();
+		JRAPL.ProfileDealloc();
 	}
 
 
@@ -136,8 +136,7 @@ public class RuntimeTestUtils extends JRAPL
 	*/
 	public static void main(String[] args)
 	{
-		//get the static block out of the way by making this useless object
-		new RuntimeTestUtils();
+		new RuntimeTestUtils(); // get static block initialization out of the way in JRAPL super class so it doesnt interfere with runtime measurements
 		int iterations;
 		if(args.length != 2){
 			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");
@@ -154,10 +153,10 @@ public class RuntimeTestUtils extends JRAPL
 		}
 
 		if(args[0].equals("--time-java-calls")){ //Java function timing
-			timeMethodMultipleIterations(EnergyCheckUtils::ProfileInit, "ProfileInit()", iterations);
+			timeMethodMultipleIterations(JRAPL::ProfileInit, "ProfileInit()", iterations);
 			timeMethodMultipleIterations(ArchSpec::GetSocketNum, "GetSocketNum()", iterations);
 			timeMethodMultipleIterations(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck()", iterations);
-			timeMethodMultipleIterations(EnergyCheckUtils::ProfileDealloc, "ProfileDealloc()", iterations);
+			timeMethodMultipleIterations(JRAPL::ProfileDealloc, "ProfileDealloc()", iterations);
 		}
 		else if(args[0].equals("--read-energy-values")){ //Timing and reading energy register
 			DramCorePackageStats(iterations);
@@ -165,10 +164,10 @@ public class RuntimeTestUtils extends JRAPL
 		else if(timingFunctionCalls || timingMsrReadings){
 			StartTimeLogs(iterations, timingFunctionCalls, timingMsrReadings);
 			for (int i = 0; i < iterations; i++) {
-				EnergyCheckUtils.ProfileInit();
+				JRAPL.ProfileInit();
 				ArchSpec.GetSocketNum();
 				EnergyCheckUtils.EnergyStatCheck();
-				EnergyCheckUtils.ProfileDealloc();
+				JRAPL.ProfileDealloc();
 			}
 			FinalizeTimeLogs();
 		}
