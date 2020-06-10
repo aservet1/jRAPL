@@ -1,21 +1,6 @@
 package jrapl;
 
 public class EnergyCheckUtils extends JRAPL {
-	/** Call this before doing any JRAPL operations. Sets up the energy collection profile.
-	 *  <br>In other words, it initializes data about the system and allocates the proper
-	 *  <br>data structures in order to to facilitate the jRAPL interface
-	*/
-	public native static int ProfileInit();
-
-	/** Reports number of CPU sockets for the current system
-	 *  @return number of CPU sockets
-	*/
-	public native static int GetSocketNum();
-
-	/** Tells if the first reading per socket in EnergyStatCheck is DRAM energy or GPU energy
-	 *  @return 0 for undefined architecture, 1 for DRAM, 2 for GPU
-	*/
-	public native static int DramOrGpu();
 
 	/** Returns a string with current total energy consumption reported in MSR registers.
 	 *	<br>Formatted " 1stSocketInfo @ 2ndSocketInfo @ ... @ NthSocketInfo " with @ delimiters
@@ -25,11 +10,6 @@ public class EnergyCheckUtils extends JRAPL {
 	 *	@return String containing per socket energy info
 	*/
 	public native static String EnergyStatCheck();
-
-	/** Free all native memory allocated in ProfileInit().
-	 *  <br>Call this when done using the jRAPL utilities to clean up resources allocated.
-	*/
-	public native static void ProfileDealloc();
 
 	/** I have to figure out what these things mean and why they're important to keep as variabls */
 	public static int wrapAroundValue;	//@TODO -- what even is the point of having these as static variables.
@@ -47,7 +27,7 @@ public class EnergyCheckUtils extends JRAPL {
 	 * @return an array of current energy information.
 	*/
 	public static double[] getEnergyStats() {
-		int socketNum = GetSocketNum(); //@TODO -- is this redundant? can we just assume that it was already set during the sstatic block?
+		int socketNum = ArchSpec.GetSocketNum(); //@TODO -- is this redundant? can we just assume that it was already set during the sstatic block?
 		String EnergyInfo = EnergyStatCheck();
 		/*One Socket*/
 		if(socketNum == 1) {
@@ -76,12 +56,6 @@ public class EnergyCheckUtils extends JRAPL {
 			}
 			return stats;
 		}
-	}
-
-	/** Is there a point to this??? Frees memory allocated by ProfileInit().
-	*/
-	public static void DeallocProfile() {
-		ProfileDealloc();
 	}
 
 	public static void main(String[] args)

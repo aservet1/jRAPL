@@ -121,7 +121,7 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_ProfileInit(JNIEnv *env, jcla
 /** <Alejandro's Interpretation>
  * Gets num of cpu sockets but casts it as a jint for the java end of things
  */
-JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_GetSocketNum(JNIEnv *env, jclass jcls) {
+JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_GetSocketNum(JNIEnv *env, jclass jcls) {
 
 	if (timingFunctionCalls) gettimeofday(&start, NULL);
 
@@ -136,6 +136,11 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_GetSocketNum(JNIEnv *env, jcl
 	return (jint)socketNum; 
 }
 
+JNIEXPORT jint JNICALL Java_jral_ArchSpec_DramOrGPU(JNIEnv * env, jclass jcls) {
+	//@TODO -- set up timing utils, here and in CPUScaler_TimingUtils.c
+	return get_architecture_category(get_cpu_model());
+
+}
 
 
 /** <Alejandro's Interpretation>

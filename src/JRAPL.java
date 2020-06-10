@@ -6,6 +6,19 @@ import java.util.Map;
 
 public class JRAPL {
 	
+	/** Call this before doing any JRAPL operations. Sets up the energy collection profile.
+	 *  <br>In other words, it initializes data about the system and allocates the proper
+	 *  <br>data structures in order to to facilitate the jRAPL interface
+	*/
+	public native static int ProfileInit();
+
+	
+	/** Free all native memory allocated in ProfileInit().
+	 *  <br>Call this when done using the jRAPL utilities to clean up resources allocated.
+	*/
+	public native static void ProfileDealloc();
+
+	
 	static {
 		try {
 			Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");

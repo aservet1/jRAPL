@@ -155,7 +155,7 @@ public class RuntimeTestUtils extends JRAPL
 
 		if(args[0].equals("--time-java-calls")){ //Java function timing
 			timeMethodMultipleIterations(EnergyCheckUtils::ProfileInit, "ProfileInit()", iterations);
-			timeMethodMultipleIterations(EnergyCheckUtils::GetSocketNum, "GetSocketNum()", iterations);
+			timeMethodMultipleIterations(ArchSpec::GetSocketNum, "GetSocketNum()", iterations);
 			timeMethodMultipleIterations(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck()", iterations);
 			timeMethodMultipleIterations(EnergyCheckUtils::ProfileDealloc, "ProfileDealloc()", iterations);
 		}
@@ -166,7 +166,7 @@ public class RuntimeTestUtils extends JRAPL
 			StartTimeLogs(iterations, timingFunctionCalls, timingMsrReadings);
 			for (int i = 0; i < iterations; i++) {
 				EnergyCheckUtils.ProfileInit();
-				EnergyCheckUtils.GetSocketNum();
+				ArchSpec.GetSocketNum();
 				EnergyCheckUtils.EnergyStatCheck();
 				EnergyCheckUtils.ProfileDealloc();
 			}

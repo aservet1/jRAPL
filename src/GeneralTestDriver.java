@@ -8,7 +8,7 @@ public class GeneralTestDriver
 	
 	public static void main(String[] args)
 	{
-		EnergyCheckUtils.ProfileInit();
+		JRAPL.ProfileInit();
 
 		EnergyReadingCollector ec = new EnergyReadingCollector();
 
@@ -18,7 +18,7 @@ public class GeneralTestDriver
 
 		System.out.println(ec);
 
-		EnergyCheckUtils.ProfileDealloc();
+		JRAPL.ProfileDealloc();
 	}
 
 }

@@ -19,12 +19,20 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	private int delay; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
+	private String powerDomain1;
 
 	/** Initializes with a default delay setting of 10 milliseconds */
 	public EnergyReadingCollector()
 	{
 		delay = 10;
 		readings = new ArrayList<double[]>();
+		switch (ArchSpec.DramOrGpu()) {
+			case 1: powerDomain1 = "dram"; break;
+			case 2: powerDomain1 = "gpu"; break;
+			default:
+				System.out.println("ERROR: Your CPU model is not supported!");
+				System.exit(1);
+		}
 	}
 
 	/**
@@ -35,6 +43,13 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	{
 		delay = d;
 		readings = new ArrayList<double[]>();
+		switch (ArchSpec.DramOrGpu()) {
+			case 1: powerDomain1 = "dram"; break;
+			case 2: powerDomain1 = "gpu"; break;
+			default:
+				System.out.println("ERROR: Your CPU model is not supported!");
+				System.exit(1);
+		}
 	}
 
 	private double[] readOverDelay()
@@ -51,7 +66,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 
 	private String labelledReading(double[] reading)
 	{
-		return "dram: " + reading[0] + "\tcore: " + reading[1] + "\tpkg: " + reading[2];
+		return powerDomain1 + " " + reading[0] + "\tcore: " + reading[1] + "\tpkg: " + reading[2];
 	}
 
 
