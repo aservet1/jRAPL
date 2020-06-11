@@ -17,7 +17,7 @@ public class RuntimeTestUtils extends JRAPL
 	public native static void StartTimeLogs(int logLength, boolean timingFunctionCalls, boolean timingMsrReadings);
 	public native static void FinalizeTimeLogs();
 
-	private RunTimeTestUtils() {} // private constructor -- never initialized
+	//public RunTimeTestUtils() {} // private constructor -- never initialized
 
 	/**
 	*	Times a method call, returns time in microseconds
@@ -137,7 +137,7 @@ public class RuntimeTestUtils extends JRAPL
 	*/
 	public static void main(String[] args)
 	{
-		new RuntimeTestUtils(); // get static block initialization out of the way in JRAPL super class so it doesnt interfere with runtime measurements
+		new JRAPL(); // get static block initialization out of the way in JRAPL super class so it doesnt interfere with runtime measurements
 		int iterations;
 		if(args.length != 2){
 			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");

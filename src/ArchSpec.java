@@ -5,7 +5,7 @@ package jrapl;
 */
 public class ArchSpec extends JRAPL {
 
-	private ArchSpec() {} // private constructor -- never initialized
+//	private ArchSpec() {} // private constructor -- never initialized
 
 	/** Reports number of CPU sockets for the current system
 	 *  @return number of CPU sockets

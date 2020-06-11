@@ -11,7 +11,7 @@ import java.util.Map;
 */
 public class JRAPL {
 
-	private JRAPL() {} // private constructor -- never initialized
+	public JRAPL() {} // private constructor -- never initialized
 	
 	/** Call this before doing any JRAPL operations. 
 	 *  <br>Initializes data about the system and allocates the proper

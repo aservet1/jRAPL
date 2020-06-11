@@ -10,7 +10,7 @@ import java.util.Arrays;
 */
 public class EnergyControlUtils extends JRAPL {
 
-	private EnergyControlUtils() {} // private constructor -- never initialized
+//	private EnergyControlUtils() {} // private constructor -- never initialized
 
 	/** Defined in <a href='https://github.com/kliu20/EnergyAwareJVM/blob/master/energy/CScaler.c'>CScaler.c</a> for Kenan's EnergyAwareJVM project */
 	public native static int scale(int freq);

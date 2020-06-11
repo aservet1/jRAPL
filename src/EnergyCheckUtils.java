@@ -5,7 +5,7 @@ package jrapl;
 */
 public class EnergyCheckUtils extends JRAPL {
 
-	private EnergyCheckUtils() {} // private constructor -- never initialized
+//	private EnergyCheckUtils() {} // private constructor -- never initialized
 	
 	/**	Rapl Energy Conversion unit, fixed with (1/unit) to make a small value to prevent integer overflow.
 	 *	I still don't fully understnand the concept behind this or how to use it. No current examples I can find anywhere
