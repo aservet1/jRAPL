@@ -136,7 +136,7 @@ JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_GetSocketNum(JNIEnv *env, jclass jcls
 	return (jint)socketNum; 
 }
 
-JNIEXPORT jint JNICALL Java_jral_ArchSpec_DramOrGPU(JNIEnv * env, jclass jcls) {
+JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_DramOrGpu(JNIEnv * env, jclass jcls) {
 	//@TODO -- set up timing utils, here and in CPUScaler_TimingUtils.c
 	return get_architecture_category(get_cpu_model());
 
