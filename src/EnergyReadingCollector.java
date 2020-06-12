@@ -189,7 +189,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	public String toString()
 	{
 		String s = "";
-		s += "delay: " + delay + " milliseconds";
+		s += "delay: " + delay + " milliseconds\n";
 		for (double[] reading : readings)
 			s += labelledReading(reading) + "\n";
 		return s;
@@ -209,7 +209,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 
 	private String labelledReading(double[] reading)
 	{
-		return powerDomain1 + " " + reading[0] + "\tcore: " + reading[1] + "\tpkg: " + reading[2];
+		return powerDomain1 + ": " + reading[0] + "\tcore: " + reading[1] + "\tpkg: " + reading[2];
 	}
 
 }

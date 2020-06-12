@@ -14,7 +14,7 @@ public class GeneralTestDriver
 
 		ec.startReading();
 		//while (ec.getNumReadings() < 100);
-		try { Thread.sleep(1000); } catch (Exception e) {}
+		try { Thread.sleep(10000); } catch (Exception e) {}
 		ec.stopReading();
 
 		System.out.println(ec);
