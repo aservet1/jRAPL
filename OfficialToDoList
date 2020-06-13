@@ -6,8 +6,8 @@ make the overleaf document better
 use pthread.join()
 look up channel passing
 make C side do numbers instead of string to gather energy readings
-make ArchSpec.java
 make data collection collect datasets and display graphs with outliers removed via TwoSD or Grubbs Test
+make sure you're consistent with socket naming convention -- 0 indexed or 1 indexed?
 
 get copy-to-string thing to work as one function (i think if we pass in the entire 2-D array it'll work fine)
 
