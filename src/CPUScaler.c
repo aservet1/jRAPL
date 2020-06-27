@@ -90,7 +90,6 @@ rapl_msr_unit get_rapl_unit()
  *  initializes the rapl unit (stuff holding the conversions to translate msr data sections into meaningful 'human-readable' stuff)
  */
 JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls) {
-//	if (timingFunctionCalls) gettimeofday(&start, NULL);
 	START_TIMESTAMP_FUNCTIONCALLS;
 
 	int i;
@@ -118,13 +117,8 @@ JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls) {
 	rapl_unit = get_rapl_unit();
 	wraparound_energy = get_wraparound_energy(rapl_unit.energy);
 
-	STOP_TIMESTAMP_FUNCTIONCALLS( ProfileInit() );
-//	if (timingFunctionCalls) {
-//		gettimeofday(&end,NULL); 
-//		timeval_subtract(&diff, &end, &start);
-//		logTime("ProfileInit()", diff.tv_sec*1000 + diff.tv_usec);
-//	}
 
+	STOP_TIMESTAMP_FUNCTIONCALLS( ProfileInit() );
 	return wraparound_energy;
 }
 
@@ -135,17 +129,11 @@ JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls) {
  */
 JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_GetSocketNum(JNIEnv *env, jclass jcls) {
 
-	//if (timingFunctionCalls) gettimeofday(&start, NULL);
 	START_TIMESTAMP_FUNCTIONCALLS;
 
 	int socketNum = getSocketNum();
 
 	STOP_TIMESTAMP_FUNCTIONCALLS( GetSocketNum() );
-	//if (timingFunctionCalls) {
-	//	gettimeofday(&end,NULL); 
-	//	timeval_subtract(&diff, &end, &start);
-	//	logTime("GetSocketNum()", diff.tv_sec*1000 + diff.tv_usec);
-	//}
 
 	return (jint)socketNum; 
 }
@@ -252,7 +240,6 @@ void initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_p
  * The third entry is: Package energy
  */
 JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *env, jclass jcls) {
-	//if (timingFunctionCalls) gettimeofday(&start, NULL);
 	START_TIMESTAMP_FUNCTIONCALLS;
 
 	jstring ener_string;
@@ -334,15 +321,9 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 		}
 	}
 
-	/// hmm why would be turn it into a string just to turn it back into an array in java's getEnergyStats()?
 	ener_string = (*env)->NewStringUTF(env, ener_info);
 
 	STOP_TIMESTAMP_FUNCTIONCALLS( EnergyStatCheck() );
-	//if (timingFunctionCalls) {
-	//	gettimeofday(&end,NULL);
-	//	timeval_subtract(&diff, &end, &start);
-	//	logTime("EnergyStatCheck()", diff.tv_sec*1000 + diff.tv_usec);
-	//}
 
   return ener_string;
 
@@ -352,16 +333,10 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
  * Free memory allocated by profile init function
  */
 JNIEXPORT void JNICALL Java_jrapl_JRAPL_ProfileDealloc(JNIEnv * env, jclass jcls) {
-	//if (timingFunctionCalls) gettimeofday(&start, NULL);
 	START_TIMESTAMP_FUNCTIONCALLS;
 
 	free(fd);
 	free(parameters);
 
 	STOP_TIMESTAMP_FUNCTIONCALLS( ProfileDealloc() );
-	//if (timingFunctionCalls) {
-	//	gettimeofday(&end,NULL);
-	//	timeval_subtract(&diff, &end, &start);
-	//	logTime("ProfileDealloc()", diff.tv_sec*1000 + diff.tv_usec);
-	//}
 }
