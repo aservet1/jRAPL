@@ -27,7 +27,7 @@ void start_collecting(readingCollector *collector){
     char ener_info[512];
     float dram, package, core;
     reading *currentReading = NULL;
-    while(1){
+    while(collector->keepReading){
         EnergyStatCheck_C(ener_info);
         sscanf(ener_info, "%f#%f#%f", &dram, &package, &core);
         if(currentReading){
@@ -44,7 +44,7 @@ void start_collecting(readingCollector *collector){
 }
 
 void stop_collecting(readingCollector *collector){
-    pthread_cancel(*(collector->thread));
+    collector->
     reading *currentReading = collector->readings;
     printf("DRAM   CORE   PACKAGE\n");
     while(currentReading){

@@ -15,6 +15,7 @@ typedef struct {
     pthread_t *thread;
     int delay;
     reading *readings;
+    char keepReading;
 } readingCollector;
 
 void start_collecting(readingCollector *collector);
