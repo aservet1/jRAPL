@@ -1,6 +1,12 @@
 
 #include "CPUScalerShared.h"
 
+/** <Alejandro's Interpretation>
+ *  Takes the energy info and packages it into a formatted string... # delimits the 3 energy attribs and @ delimits multiple package readings (1 pkg = 3 energy attribs)
+ *	Sets offset to the end of the string by the end of this
+ *	I belive the i is an iterator to see how many packages have been put into the string
+ *	If more than 1 pkg, puts a @ at the end of the string because there's going to be another set of package info after that
+ */
 void copy_to_string(char *ener_info, char uncore_buffer[60], int uncore_num, char cpu_buffer[60], int cpu_num, char package_buffer[60], int package_num, int i, int *offset)
 {
 	memcpy(ener_info + *offset, &uncore_buffer, uncore_num);
@@ -26,6 +32,14 @@ rapl_msr_unit get_rapl_unit()
 	return rapl_unit;
 }
 
+
+/** <Alejandro's Interpretation>
+ *  In short, fills up the energy info buffers appropriately.
+ *	Pass in gpu, dram, cpu, and package buffers. There are num_pkg buffers per type of computer thing. One buffer per package that the computer has.
+ *	Filling up the buffers. The for loop is so you get a different reading for all the packages. Reads the msr for that package with fd[i]
+ *  Based on the CPU model, it either adds dram info or gpu info. I guess that certain models use gpus and others drams?
+ *  Interpret/process MSR reading for dram differently based on CPU model before storing it in the buffer.......................
+ */
 void initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][60], char cpu_buffer[num_pkg][60], char package_buffer[num_pkg][60])
 {
 	uint32_t cpu_model = get_cpu_model();
