@@ -22,8 +22,6 @@
 
 static rapl_msr_parameter *parameters;
 
-
-
 JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
 {
 	timingFunctionCalls = _timingFunctionCalls;
@@ -34,14 +32,6 @@ JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_FinalizeTimeLogs(JNIEnv *env,
 {
 	finalizeAllLogs();
 }
-
-/** <Alejandro's Interpretation>
- *  Takes the energy info and packages it into a formatted string... # delimits the 3 energy attribs and @ delimits multiple package readings (1 pkg = 3 energy attribs)
- *	Sets offset to the end of the string by the end of this
- *	I belive the i is an iterator to see how many packages have been put into the string
- *	If more than 1 pkg, puts a @ at the end of the string because there's going to be another set of package info after that
- */
-
 
 /** <Alejandro's Interpretation>
  *	Sets up an an energy profile. (*?)What exactly is an energy profile? A bunch of data stored about the current energy state...
@@ -86,8 +76,6 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_ProfileInit(JNIEnv *env, jcla
 	return wraparound_energy;
 }
 
-
-
 /** <Alejandro's Interpretation>
  * Gets num of cpu sockets but casts it as a jint for the java end of things
  */
@@ -105,17 +93,6 @@ JNIEXPORT jint JNICALL Java_jrapl_EnergyCheckUtils_GetSocketNum(JNIEnv *env, jcl
 
 	return (jint)socketNum; 
 }
-
-
-
-/** <Alejandro's Interpretation>
- *  In short, fills up the energy info buffers appropriately.
- *	Pass in gpu, dram, cpu, and package buffers. There are num_pkg buffers per type of computer thing. One buffer per package that the computer has.
- *	Filling up the buffers. The for loop is so you get a different reading for all the packages. Reads the msr for that package with fd[i]
- *  Based on the CPU model, it either adds dram info or gpu info. I guess that certain models use gpus and others drams?
- *  Interpret/process MSR reading for dram differently based on CPU model before storing it in the buffer.......................
- */
-
 
 /** <Alejandro's Interpretation>
  * Makes a string from the energy info. Initializes energy info with that function above and
