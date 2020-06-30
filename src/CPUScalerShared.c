@@ -1,4 +1,4 @@
-
+/*
 #include "CPUScalerShared.h"
 
 
@@ -26,7 +26,7 @@ char* EnergyStatCheck_C(char *ener_info){
 		switch(architecture_catergory) {
 			case READ_FROM_DRAM:
 
-				/*Insert socket number*/
+				// Insert socket number //
 				dram_num = strlen(dram_buffer[i]);
 				cpu_num = strlen(cpu_buffer[i]);
 				package_num = strlen(package_buffer[i]);
@@ -82,3 +82,4 @@ char* EnergyStatCheck_C(char *ener_info){
 	}
 
 }
+*/

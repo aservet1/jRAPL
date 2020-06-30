@@ -1,3 +1,5 @@
+/*
+
 #ifndef _CPU_SCALER_SHARED_H
 #define _CPU_SCALER_SHARED_H
 
@@ -27,3 +29,5 @@ void initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_p
 char* EnergyStatCheck_C(char *ener_info);
 
 #endif
+
+*/

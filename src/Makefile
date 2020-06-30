@@ -1,6 +1,6 @@
 TARGET = libCPUScaler.so $(OFILES)
 
-CFILES = CPUScaler_TimingUtils.c CPUScaler.c arch_spec.c msr.c dvfs.c
+CFILES = EnergyReadingCollector.c CPUScaler_TimingUtils.c CPUScaler.c arch_spec.c msr.c dvfs.c
 OFILES = $(CFILES:.c=.o) 
 
 CFLAGS = -fPIC -g -c -Wall

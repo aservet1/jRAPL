@@ -32,6 +32,8 @@ static bool timingMsrReadings = false;
 
 static struct timeval start, end, diff;
 
+//@TODO - undo this embedded timing monstrosity, just have your own native-interface file designated to calling these from the outside
+
 #define START_TIMESTAMP_FUNCTIONCALLS	\
 	if (timingFunctionCalls) gettimeofday(&start,NULL);
 
@@ -42,6 +44,16 @@ static struct timeval start, end, diff;
 		logTime( #name , diff.tv_sec*1000 + diff.tv_usec);	\
 	}	
 
+JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
+{
+	timingFunctionCalls = _timingFunctionCalls;
+	timingMsrReadings = _timingMsrReadings;
+	initAllLogs(logSize);
+}
+JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls)
+{
+	finalizeAllLogs();
+}
 
 /** <Alejandro's Interpretation>
  *  Takes the energy info and packages it into a formatted string... # delimits the 3 energy attribs and @ delimits multiple package readings (1 pkg = 3 energy attribs)
@@ -162,27 +174,8 @@ void initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_p
 }
 
 
-
-JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
+int ProfileInit()
 {
-	timingFunctionCalls = _timingFunctionCalls;
-	timingMsrReadings = _timingMsrReadings;
-	initAllLogs(logSize);
-}
-JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls)
-{
-	finalizeAllLogs();
-}
-
-/** <Alejandro's Interpretation>
- *	Sets up an an energy profile. (*?)What exactly is an energy profile? A bunch of data stored about the current energy state...
- *	reads and stores CPU model, socketnum. calculates wraparound energy.
- *  the 'fd' array is an array of which msr regs. num msr regs is number of packages the computer has
- *  initializes the rapl unit (stuff holding the conversions to translate msr data sections into meaningful 'human-readable' stuff)
- */
-JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls) {
-	START_TIMESTAMP_FUNCTIONCALLS;
-
 	int i;
 	char msr_filename[BUFSIZ];
 	int core = 0;
@@ -207,7 +200,19 @@ JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls) {
 
 	rapl_unit = get_rapl_unit();
 	wraparound_energy = get_wraparound_energy(rapl_unit.energy);
+	return wraparound_energy;
+}
 
+/** <Alejandro's Interpretation>
+ *	Sets up an an energy profile.
+ *	reads and stores CPU model, socketnum. calculates wraparound energy.
+ *  the 'fd' array is an array of which msr regs. num msr regs is number of packages the computer has
+ *  initializes the rapl unit (stuff holding the conversions to translate msr data sections into meaningful 'human-readable' stuff)
+ */
+JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls) {
+	START_TIMESTAMP_FUNCTIONCALLS;
+
+	int wraparound_energy = ProfileInit();
 
 	STOP_TIMESTAMP_FUNCTIONCALLS( ProfileInit() );
 	return wraparound_energy;
@@ -220,7 +225,7 @@ JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_GetSocketNum(JNIEnv *env, jclass jcls
 
 	START_TIMESTAMP_FUNCTIONCALLS;
 
-	int socketNum = getSocketNum();
+	int socketNum = getSocketNum(); // in arch_spec.c
 
 	STOP_TIMESTAMP_FUNCTIONCALLS( GetSocketNum() );
 
@@ -228,26 +233,13 @@ JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_GetSocketNum(JNIEnv *env, jclass jcls
 }
 
 JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_DramOrGpu(JNIEnv * env, jclass jcls) {
-	//@TODO -- set up timing utils, here and in CPUScaler_TimingUtils.c
+	//@TODO -- set up timing utils, here and in CPUScaler_TimingUtils.c . also, change function name from architecture_category
 	return get_architecture_category(get_cpu_model());
 
 }
 
-/** <Alejandro's Interpretation>
- * Makes a string from the energy info. Initializes energy info with that function above and
- *
- * The first entry is: Dram/uncore gpu energy (depends on the cpu architecture)
- * The second entry is: CPU energy
- * The third entry is: Package energy
- */
-JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(char ener_info[512], JNIEnv *env, jclass jcls) {
-	
-	START_TIMESTAMP_FUNCTIONCALLS;
-	
-	jstring ener_string;
-	//char ener_info[512];
-	//EnergyStatCheck_C(ener_info);
-	
+void EnergyStatCheck(char ener_info[512])
+{
 	char gpu_buffer[num_pkg][60];
 	char dram_buffer[num_pkg][60];
 	char cpu_buffer[num_pkg][60];
@@ -258,11 +250,8 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(char ener_
 
 	int package_num = 0L;
 	int gpu_num = 0L;
-	//construct a string
-	//ener_info[511] = '\0';
 	int i;
 	int offset = 0;
-
 
   	bzero(ener_info, 512);
 	initialize_energy_info(gpu_buffer, dram_buffer, cpu_buffer, package_buffer);
@@ -325,14 +314,34 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(char ener_
 
 		}
 	}
+}
 
-	if (env != NULL)
-		ener_string = (*env)->NewStringUTF(env, ener_info);
+/** <Alejandro's Interpretation>
+ * Makes a string from the energy info. Initializes energy info with that function above and
+ *
+ * The first entry is: Dram/uncore gpu energy (depends on the cpu architecture)
+ * The second entry is: CPU energy
+ * The third entry is: Package energy
+ */
+JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *env, jclass jcls) {
+	
+	START_TIMESTAMP_FUNCTIONCALLS;
+	
+	jstring ener_string;
+	char ener_info[512];
+	EnergyStatCheck(ener_info);
+	ener_string = (*env)->NewStringUTF(env, ener_info);
   	
 	STOP_TIMESTAMP_FUNCTIONCALLS( EnergyStatCheck() );
 	
 	return ener_string;
 
+}
+
+void ProfileDealloc()
+{
+	free(fd);
+	free(parameters);
 }
 
 /** <Alejandro's Interpretation>
@@ -341,8 +350,7 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(char ener_
 JNIEXPORT void JNICALL Java_jrapl_JRAPL_ProfileDealloc(JNIEnv * env, jclass jcls) {
 	START_TIMESTAMP_FUNCTIONCALLS;
 
-	free(fd);
-	free(parameters);
+	ProfileDealloc();
 
 	STOP_TIMESTAMP_FUNCTIONCALLS( ProfileDealloc() );
 }

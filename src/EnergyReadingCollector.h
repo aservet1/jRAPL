@@ -4,8 +4,8 @@
 #include <pthread.h>
 
 
-typedef struct{
-    reading *nextReading;
+typedef struct reading {
+    struct reading *nextReading;
     float dram; // or gpu
     float core;
     float package;
@@ -19,6 +19,6 @@ typedef struct {
 } readingCollector;
 
 void start_collecting(readingCollector *collector);
-void stop_collection(readingCollector *collector);
+void stop_collecting(readingCollector *collector);
 
 #endif

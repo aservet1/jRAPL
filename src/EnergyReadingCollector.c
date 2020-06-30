@@ -1,7 +1,8 @@
 #include<stdio.h>
 #include <time.h>
-#include "CPUScalerShared.h"
+//#include "CPUScalerShared.h"
 #include "EnergyReadingCollector.h"
+#include "CPUScaler.h"
 
 int msleep(long msec){
     struct timespec ts;
@@ -28,7 +29,7 @@ void start_collecting(readingCollector *collector){
     float dram, package, core;
     reading *currentReading = NULL;
     while(collector->keepReading){
-        EnergyStatCheck_C(ener_info);
+        EnergyStatCheck(ener_info);
         sscanf(ener_info, "%f#%f#%f", &dram, &package, &core);
         if(currentReading){
             currentReading = currentReading->nextReading = malloc(sizeof(reading));
