@@ -11,8 +11,6 @@
 #include <sys/types.h>
 #include <stdbool.h>
 
-#include "cdriver.h"
-
 #include "CPUScaler.h"
 #include "arch_spec.h"
 #include "msr.h"
@@ -30,21 +28,9 @@ static uint64_t num_pkg;
 static bool timingFunctionCalls = false;
 static bool timingMsrReadings = false;
 
-static struct timeval start, end, diff;
 
-//@TODO - undo this embedded timing monstrosity, just have your own native-interface file designated to calling these from the outside
 
-#define START_TIMESTAMP_FUNCTIONCALLS	\
-	if (timingFunctionCalls) gettimeofday(&start,NULL);
-
-#define STOP_TIMESTAMP_FUNCTIONCALLS(name)	\
-	if (timingFunctionCalls) {	\
-		gettimeofday(&end,NULL);	\
-		timeval_subtract(&diff, &end, &start);	\
-		logTime( #name , diff.tv_sec*1000 + diff.tv_usec);	\
-	}	
-
-JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
+/*JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
 {
 	timingFunctionCalls = _timingFunctionCalls;
 	timingMsrReadings = _timingMsrReadings;
@@ -53,7 +39,7 @@ JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_StartTimeLogs(JNIEnv *env, jc
 JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls)
 {
 	finalizeAllLogs();
-}
+}*/
 
 /** <Alejandro's Interpretation>
  *  Takes the energy info and packages it into a formatted string... # delimits the 3 energy attribs and @ delimits multiple package readings (1 pkg = 3 energy attribs)
@@ -107,36 +93,36 @@ void initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_p
 	rapl_msr_unit rapl_unit = get_rapl_unit();
 	for (; i < num_pkg; i++) {
 
-		if (timingMsrReadings) gettimeofday(&start, NULL);
+		//if (timingMsrReadings) gettimeofday(&start, NULL);
 		result = read_msr(fd[i], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
 		package[i] = (double) result * rapl_unit.energy;
-		if (timingMsrReadings) {
+		/*if (timingMsrReadings) {
 			gettimeofday(&end,NULL);
 			timeval_subtract(&diff, &end, &start);
 			logTime("PACKAGE Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
-		}
+		}*/
 
-		if (timingMsrReadings)gettimeofday(&start, NULL);
+		//if (timingMsrReadings)gettimeofday(&start, NULL);
 		result = read_msr(fd[i], MSR_PP0_ENERGY_STATUS);
 		pp0[i] = (double) result * rapl_unit.energy;
-		if (timingMsrReadings) {
+		/*if (timingMsrReadings) {
 			gettimeofday(&end,NULL);
 			timeval_subtract(&diff, &end, &start);
 			logTime("CORE Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
-		}
+		}*/
 
 		sprintf(package_buffer[i], "%f", package[i]);
 		sprintf(cpu_buffer[i], "%f", pp0[i]);
 		int architecture_category = get_architecture_category(cpu_model);
 		switch(architecture_category) {
 			case READ_FROM_DRAM:
-				if (timingMsrReadings) gettimeofday(&start, NULL);
+				//if (timingMsrReadings) gettimeofday(&start, NULL);
 				result = read_msr(fd[i],MSR_DRAM_ENERGY_STATUS);
-				if (timingMsrReadings) {
+				/*if (timingMsrReadings) {
 					gettimeofday(&end,NULL);
 					timeval_subtract(&diff, &end, &start);
 					logTime("DRAM Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
-				}
+				}*/
 				if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
 					dram[i] =(double)result*MSR_DRAM_ENERGY_UNIT;
 				} else {
@@ -151,13 +137,13 @@ void initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_p
 
 				break;
 			case READ_FROM_GPU:
-				if (timingMsrReadings) gettimeofday(&start, NULL);
+				//if (timingMsrReadings) gettimeofday(&start, NULL);
 				result = read_msr(fd[i],MSR_PP1_ENERGY_STATUS);
-				if (timingMsrReadings) {
+				/*if (timingMsrReadings) {
 					gettimeofday(&end,NULL);
 					timeval_subtract(&diff, &end, &start);
 					logTime("GPU Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
-				}
+				}*/
 				pp1[i] = (double) result *rapl_unit.energy;
 
 				sprintf(gpu_buffer[i], "%f", pp1[i]);
@@ -210,11 +196,11 @@ int ProfileInit()
  *  initializes the rapl unit (stuff holding the conversions to translate msr data sections into meaningful 'human-readable' stuff)
  */
 JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls) {
-	START_TIMESTAMP_FUNCTIONCALLS;
+	//START_TIMESTAMP_FUNCTIONCALLS;
 
 	int wraparound_energy = ProfileInit();
 
-	STOP_TIMESTAMP_FUNCTIONCALLS( ProfileInit() );
+	//STOP_TIMESTAMP_FUNCTIONCALLS( ProfileInit() );
 	return wraparound_energy;
 }
 
@@ -223,11 +209,11 @@ JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls) {
  */
 JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_GetSocketNum(JNIEnv *env, jclass jcls) {
 
-	START_TIMESTAMP_FUNCTIONCALLS;
+	//START_TIMESTAMP_FUNCTIONCALLS;
 
 	int socketNum = getSocketNum(); // in arch_spec.c
 
-	STOP_TIMESTAMP_FUNCTIONCALLS( GetSocketNum() );
+	//STOP_TIMESTAMP_FUNCTIONCALLS( GetSocketNum() );
 
 	return (jint)socketNum; 
 }
@@ -325,14 +311,14 @@ void EnergyStatCheck(char ener_info[512])
  */
 JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *env, jclass jcls) {
 	
-	START_TIMESTAMP_FUNCTIONCALLS;
+	//START_TIMESTAMP_FUNCTIONCALLS;
 	
 	jstring ener_string;
 	char ener_info[512];
 	EnergyStatCheck(ener_info);
 	ener_string = (*env)->NewStringUTF(env, ener_info);
   	
-	STOP_TIMESTAMP_FUNCTIONCALLS( EnergyStatCheck() );
+	//STOP_TIMESTAMP_FUNCTIONCALLS( EnergyStatCheck() );
 	
 	return ener_string;
 
@@ -348,9 +334,9 @@ void ProfileDealloc()
  * Free memory allocated by profile init function
  */
 JNIEXPORT void JNICALL Java_jrapl_JRAPL_ProfileDealloc(JNIEnv * env, jclass jcls) {
-	START_TIMESTAMP_FUNCTIONCALLS;
+	//START_TIMESTAMP_FUNCTIONCALLS;
 
 	ProfileDealloc();
 
-	STOP_TIMESTAMP_FUNCTIONCALLS( ProfileDealloc() );
+	//STOP_TIMESTAMP_FUNCTIONCALLS( ProfileDealloc() );
 }

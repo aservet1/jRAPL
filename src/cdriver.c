@@ -1,20 +1,21 @@
 #include <stdio.h>
 #include <unistd.h> // for sleep()
+#include <stdlib.h>
 #include "CPUScaler.h"
-
+#include "CPUScaler_TimingUtils.h"
 #define filler NULL, NULL
 
 int main(int argc, char* argv[])
 {
-	printf("hello world\n");
+	int iterations = atoi(argv[1]);
 
 	ProfileInit();
-	char ener_info[512];
-	for (int i = 0; i < 100; i++) {
-		EnergyStatCheck(ener_info);
-		sleep(1);
-		printf("%s\n",ener_info);
-	}
+
+	initAllLogs(iterations);
+	Java_jrapl_RuntimeTestUtils_CSideTimeProfileInit(filler, iterations);
+	finalizeAllLogs();
+
 	ProfileDealloc();
+
 
 }

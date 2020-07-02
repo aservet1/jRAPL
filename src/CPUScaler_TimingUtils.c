@@ -3,8 +3,9 @@
 #include<assert.h>
 #include<stdbool.h>
 #include<string.h>
-
+#include<jni.h>
 #include "CPUScaler_TimingUtils.h"
+#include "CPUScaler.h"
 
 //@TODO document all of this
 
@@ -25,7 +26,17 @@ static TimeLog* coreSocket1Log = NULL;
 static TimeLog* gpuSocket1Log = NULL;
 
 
-int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval *y)
+static struct timeval start, end, diff;
+
+#define START_TIMESTAMP			\
+	gettimeofday(&start,NULL);
+
+#define STOP_TIMESTAMP(name)	\
+		gettimeofday(&end,NULL);	\
+		timeval_subtract(&diff, &end, &start);	\
+		logTime( #name , diff.tv_sec*1000 + diff.tv_usec);
+
+static int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval *y)
 {
   /// Perform the carry for the later subtraction by updating y.
   if (x->tv_usec < y->tv_usec) {
@@ -46,6 +57,22 @@ int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval 
   // Return 1 if result is negative.
   return x->tv_sec < y->tv_sec;
 }
+
+
+JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_CSideTimeProfileInit(JNIEnv *env, jclass jcls, jint iterations)
+{
+	for (int i = 0; i < iterations; i++) {
+		START_TIMESTAMP
+
+		Java_jrapl_JRAPL_ProfileInit(NULL, NULL);
+
+		STOP_TIMESTAMP( ProfileInit() )
+	}
+
+}
+
+
+
 
 static TimeLog* initTimeLog(const int length, const char* name)
 {
@@ -108,7 +135,7 @@ void finalizeAllLogs()
 }
 
 
-void logTime(const char* name, int item)
+static void logTime(const char* name, int item)
 {
 	TimeLog* tl;
 	if 		(!strcmp(name,"ProfileInit()")) tl = ProfileInitLog;

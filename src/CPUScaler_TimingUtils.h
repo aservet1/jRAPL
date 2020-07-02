@@ -10,12 +10,14 @@ typedef struct {
 	int* array;
 } TimeLog;
 
-int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval *y);
+static int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval *y);
 
 void initAllLogs(int length);
 
 void finalizeAllLogs();
 
-void logTime(const char* name, int item);
+static void logTime(const char* name, int item);
+
+void Java_jrapl_RuntimeTestUtils_CSideTimeProfileInit(JNIEnv *env, jclass jcls, jint iterations);
 
 #endif //CPUSCALER_TIMINGUTILS_H
