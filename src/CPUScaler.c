@@ -17,7 +17,6 @@
 #include "arch_spec.h"
 #include "msr.h"
 #include "CPUScaler_TimingUtils.h"
-//#include "CPUScalerShared.h"
 
 /// Comments starting with '///' are my (Alejandro's) notes to self.
 /// None of this is official documentation.

@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include <time.h>
-//#include "CPUScalerShared.h"
 #include "EnergyReadingCollector.h"
 #include "CPUScaler.h"
 
