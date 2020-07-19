@@ -1,20 +1,29 @@
 #include <stdio.h>
-#include <unistd.h> // for sleep()
+#include <unistd.h> 
 #include "CPUScaler.h"
+#include "EnergyReadingCollector.h"
 
-#define filler NULL, NULL
+
+void sleep_print(int n)
+{
+	for (int i = 0; i < n; i++){
+		sleep(1);
+		printf("%d",i);
+	}
+}
 
 int main(int argc, char* argv[])
 {
 	printf("hello world\n");
 
 	ProfileInit();
-	char ener_info[512];
-	for (int i = 0; i < 100; i++) {
-		EnergyStatCheck(ener_info);
-		sleep(1);
-		printf("%s\n",ener_info);
-	}
-	ProfileDealloc();
 
+	pthread_t* thread;	
+	ReadingCollector* collector = newReadingCollector(1,thread);
+	start_collecting(collector);
+	sleep(3);
+	stop_collecting(collector);
+	fileDump(collector,"extra/dump.test");
+
+	ProfileDealloc();
 }

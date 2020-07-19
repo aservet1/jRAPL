@@ -11,8 +11,6 @@
 #include <sys/types.h>
 #include <stdbool.h>
 
-#include "cdriver.h"
-
 #include "CPUScaler.h"
 #include "arch_spec.h"
 #include "msr.h"
