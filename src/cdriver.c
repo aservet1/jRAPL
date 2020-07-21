@@ -3,6 +3,11 @@
 #include "CPUScaler.h"
 #include "EnergyReadingCollector.h"
 
+int fib(int n)
+{
+	if (n <= 1) return 1;
+	else return fib(n-1) + fib(n-2);
+}
 
 void sleep_print(int n)
 {
@@ -12,18 +17,19 @@ void sleep_print(int n)
 	}
 }
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
 	printf("hello world\n");
 
 	ProfileInit();
 
 	pthread_t* thread;	
-	ReadingCollector* collector = newReadingCollector(1,thread);
+	ReadingCollector* collector = newReadingCollector(10,thread);
 	start_collecting(collector);
-	sleep(3);
+	fib(42); //take up some time
 	stop_collecting(collector);
-	fileDump(collector,"extra/dump.test");
+	fileDump(collector,argv[1]);
+	freeReadingCollector(collector);
 
 	ProfileDealloc();
 }

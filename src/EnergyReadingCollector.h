@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 typedef struct Reading { //make each entry an array
-	double dram; // or gpu
+	double dram_or_gpu; // or gpu
 	double core;
 	double package;
 	// store timestamp, socket number, and reading
@@ -13,8 +13,8 @@ typedef struct Reading { //make each entry an array
 
 typedef struct ReadingList {
 	Reading* items;
-	int capacity;
-	int nItems;
+	unsigned long long capacity;
+	unsigned long long nItems;
 } ReadingList;
 
 typedef struct {
