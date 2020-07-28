@@ -37,7 +37,7 @@ public class JRAPL {
 		} catch (Exception e) { }
 
 		try {
-			NativeUtils.loadLibraryFromJar("/home/alejandro/jRAPL/jRaplSourceCode/libCPUScaler.so");
+			NativeUtils.loadLibraryFromJar("/home/alejandro/jRAPL/src/libCPUScaler.so");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
