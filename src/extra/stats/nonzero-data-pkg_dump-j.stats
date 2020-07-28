@@ -1,16 +1,16 @@
 success
 Zero Intervals:
-  mean: 19.7211838006
-  stdev: 12.3209002993
+  mean: 19.9524959742
+  stdev: 15.9098395394
   mode: 10
-  min: 2
-  max: 101
-  num zero readings: 2568
+  min: 0
+  max: 130
+  num zero readings: 2484
 Nonzero Readings (joules):
-  mean: 0.00365502492208
-  stdev: 0.000916393974664
-  mode: 0.00335700000142
-  min: 0.00250199999937
-  max: 0.0182490000007
-  num nonzero readings: 2568
-Sample Size: 53218
+  mean: 0.00346549315628
+  stdev: 0.00204712760101
+  mode: 0.0029910000012
+  min: 0.00231899999926
+  max: 0.0651240000007
+  num nonzero readings: 2484
+Sample Size: 52047
