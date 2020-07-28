@@ -24,11 +24,12 @@ int main(int argc, const char* argv[])
 	ProfileInit();
 
 	pthread_t* thread;	
-	ReadingCollector* collector = newReadingCollector(10, thread);
+	ReadingCollector* collector = newReadingCollector(0, thread);
 	start_collecting(collector);
-	fib(42); //take up some time
+	//fib(42); //take up some time
+	sleep(5);
 	stop_collecting(collector);
-	fileDump(collector,argv[1]);
+	fileDump(collector, (argc>1)?argv[1]:NULL );
 	freeReadingCollector(collector);
 
 	ProfileDealloc();
