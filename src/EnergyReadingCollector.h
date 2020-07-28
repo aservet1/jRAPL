@@ -29,7 +29,6 @@ ReadingCollector* newReadingCollector(int delay, pthread_t* thread);
 void start_collecting(ReadingCollector *collector);
 void stop_collecting(ReadingCollector *collector);
 void freeReadingCollector(ReadingCollector* collector);
-void fileDump(ReadingCollector *collector, const char* filepath); //@TODO -- write to file
-//void* run();
+void fileDump(ReadingCollector *collector, const char* filepath);
 
 #endif

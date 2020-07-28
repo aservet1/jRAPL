@@ -24,7 +24,7 @@ int main(int argc, const char* argv[])
 	ProfileInit();
 
 	pthread_t* thread;	
-	ReadingCollector* collector = newReadingCollector(10,thread);
+	ReadingCollector* collector = newReadingCollector(10, thread);
 	start_collecting(collector);
 	fib(42); //take up some time
 	stop_collecting(collector);

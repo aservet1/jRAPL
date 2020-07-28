@@ -4,7 +4,8 @@ CFILES = EnergyReadingCollector.c CPUScaler_TimingUtils.c CPUScaler.c arch_spec.
 OFILES = $(CFILES:.c=.o) 
 
 CFLAGS = -fPIC -g -c -Wall
-JAVAHOME=${JAVA_HOME}
+#JAVAHOME=${JAVA_HOME}
+JAVAHOME = /usr/lib/jvm/java-11-openjdk-amd64
 JAVA_INCLUDE = $(JAVAHOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 

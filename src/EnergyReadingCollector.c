@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <errno.h>
+#include <jni.h>
 #include "EnergyReadingCollector.h"
 #include "CPUScaler.h"
 #include "arch_spec.h"
@@ -93,6 +94,7 @@ static Reading parseReading(char* ener_info)
 	return current;
 }
 
+/*
 // for debugging
 static void printReadingList(ReadingList* readings)
 {
@@ -112,6 +114,7 @@ static void printCollector(ReadingCollector* collector)
 	printf("delay: %d\n",collector->delay);
 	printReadingList(collector->readings);
 }
+*/
 
 void* run(void* collector_param){
 	ReadingCollector* collector = (ReadingCollector*)collector_param;
@@ -148,13 +151,14 @@ void reset(ReadingCollector* collector){
 
 void fileDump(ReadingCollector *collector, const char* filepath){
 	int dram_or_gpu = get_architecture_category(get_cpu_model());
+	const char* dram_or_gpu_str = (dram_or_gpu == 1 || dram_or_gpu == 2) ? (dram_or_gpu == 1 ? "dram" : "gpu") : "undefined";
 	FILE * outfile= fopen(filepath,"w");
 	Reading* items = collector->readings->items;
 	int nItems = collector->readings->nItems;
 	Reading currentReading;
 	for (int i = 0; i < nItems; i++) {
 		currentReading = items[i];
-		fprintf(outfile,"%s: %f\tcore: %f\tpackage: %f\n", (dram_or_gpu == 1 ? "dram" : "gpu"), currentReading.dram_or_gpu, currentReading.core, currentReading.package);
+		fprintf(outfile,"%s: %f\tcore: %f\tpackage: %f\n", dram_or_gpu_str, currentReading.dram_or_gpu, currentReading.core, currentReading.package);
 	}
 	printf("\n -- why does it have 0.000000 some times??? --\n\n");
 	fclose(outfile);

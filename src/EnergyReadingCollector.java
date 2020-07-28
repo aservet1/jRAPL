@@ -198,7 +198,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	private double[] readOverDelay()
 	{
 		double[] before = EnergyCheckUtils.getEnergyStats();
-		try { Thread.sleep(delay); } catch (Exception e) {}
+		try { Thread.sleep(delay); } catch (Exception e) {} //park support or lock support
 		double[] after  = EnergyCheckUtils.getEnergyStats();
 		double[] reading = new double[3];
 		for (int i = 0; i < reading.length; i++){
