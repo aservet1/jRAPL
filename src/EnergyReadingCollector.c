@@ -118,15 +118,15 @@ static void printCollector(ReadingCollector* collector)
 
 void* run(void* collector_param){
 	ReadingCollector* collector = (ReadingCollector*)collector_param;
-	char ener_info[512];
+	char before_buffer[512];
+	char after_buffer[512];
 	while (!collector->exit) {
-		EnergyStatCheck(ener_info);
-		Reading before = parseReading(ener_info);
-		
+		EnergyStatCheck(before_buffer);		
 		sleep_millisecond(collector->delay);
-		
-		EnergyStatCheck(ener_info);
-		Reading after = parseReading(ener_info);
+		EnergyStatCheck(after_buffer);
+
+		Reading before = parseReading(before_buffer);
+		Reading after = parseReading(after_buffer);
 		
 		Reading diff = subtract_readings(before, after);
 		addReading(collector, diff);
@@ -152,10 +152,11 @@ void reset(ReadingCollector* collector){
 void fileDump(ReadingCollector *collector, const char* filepath){
 	int dram_or_gpu = get_architecture_category(get_cpu_model());
 	const char* dram_or_gpu_str = (dram_or_gpu == 1 || dram_or_gpu == 2) ? (dram_or_gpu == 1 ? "dram" : "gpu") : "undefined";
-	FILE * outfile= fopen(filepath,"w");
+	FILE * outfile = (filepath) ? fopen(filepath,"w") : stdout;
 	Reading* items = collector->readings->items;
 	int nItems = collector->readings->nItems;
 	Reading currentReading;
+	fprintf(outfile,"delay: %d milliseconds\n",collector->delay);	
 	for (int i = 0; i < nItems; i++) {
 		currentReading = items[i];
 		fprintf(outfile,"%s: %f\tcore: %f\tpackage: %f\n", dram_or_gpu_str, currentReading.dram_or_gpu, currentReading.core, currentReading.package);
@@ -164,7 +165,10 @@ void fileDump(ReadingCollector *collector, const char* filepath){
 	fclose(outfile);
 }
 
+JNIEXPORT void Java_jrapl_GeneralTestDriver_Start(JNIEnv* env, jclass jcls)
+{
 
+}
 
 
 

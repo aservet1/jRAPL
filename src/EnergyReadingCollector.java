@@ -18,20 +18,24 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	private int delay; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
-	private String powerDomain1;
+	private String dram_or_gpu;
 
 	/** Initializes reading collector with a default delay setting of 10 milliseconds */
 	public EnergyReadingCollector()
 	{
 		delay = 10;
 		readings = new ArrayList<double[]>();
-		switch (ArchSpec.DramOrGpu()) {
-			case 1: powerDomain1 = "dram"; break;
-			case 2: powerDomain1 = "gpu"; break;
+		int d_or_g = ArchSpec.DramOrGpu();		
+		dram_or_gpu = (d_or_g == 1 || d_or_g == 2)
+				? (d_or_g == 1 ? "dram" : "gpu") 
+				: "undefined power domain 1 msr";
+		/*switch (ArchSpec.DramOrGpu()) {
+			case 1: dram_or_gpu = "dram"; break;
+			case 2: dram_or_gpu = "gpu"; break;
 			default:
 				System.out.println("ERROR: Your CPU model is not supported!");
 				System.exit(1);
-		}
+		}*/
 	}
 
 	/**
@@ -42,13 +46,17 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	{
 		delay = d;
 		readings = new ArrayList<double[]>();
-		switch (ArchSpec.DramOrGpu()) {
-			case 1: powerDomain1 = "dram"; break;
-			case 2: powerDomain1 = "gpu"; break;
+		int d_or_g = ArchSpec.DramOrGpu();
+		dram_or_gpu = (d_or_g == 1 || d_or_g == 2)
+				? (d_or_g == 1 ? "dram" : "gpu") 
+				: "undefined power domain 1 msr";
+		/*switch (ArchSpec.DramOrGpu()) {
+			case 1: dram_or_gpu = "dram"; break;
+			case 2: dram_or_gpu = "gpu"; break;
 			default:
 				System.out.println("ERROR: Your CPU model is not supported!");
 				System.exit(1);
-		}
+		}*/
 	}
 
 	/**
@@ -160,7 +168,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	*	
 	*	@param fileName name of file to write to
 	*/
-	public void writeReadingsToFile(String fileName)
+	public void writeToFile(String fileName)
 	{
 		FileWriter writer = null;
 		try {
@@ -209,7 +217,7 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 
 	private String labelledReading(double[] reading)
 	{
-		return powerDomain1 + ": " + reading[0] + "\tcore: " + reading[1] + "\tpkg: " + reading[2];
+		return dram_or_gpu + ": " + reading[0] + "\tcore: " + reading[1] + "\tpkg: " + reading[2];
 	}
 
 }
