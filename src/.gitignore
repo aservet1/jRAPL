@@ -33,3 +33,5 @@ cdriver
 *.class
 
 src/Makefile
+
+*.swp
