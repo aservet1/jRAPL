@@ -22,7 +22,7 @@ mkdir -p $outputdir
 
 cd ../src
 
-sudo java jrapl.RuntimeTestUtils $flag $trials > ../RuntimeTests/$outputdir/MajorOutput.data
+sudo java jrapl_testing.RuntimeTestUtils $flag $trials > ../RuntimeTests/$outputdir/MajorOutput.data
 cd ../RuntimeTests/$outputdir
 
 

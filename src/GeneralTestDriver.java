@@ -1,7 +1,8 @@
-package jrapl;
+package jrapl_testing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import jrapl.*;
 
 public class GeneralTestDriver
 {
