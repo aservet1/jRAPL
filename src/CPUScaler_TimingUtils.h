@@ -4,19 +4,25 @@
 #include<sys/time.h>
 
 typedef struct {
-	int length;
-	int nItems;
 	const char* name;
-	int* array;
+	int time;	
+} TimeStamp;
+
+typedef struct {
+	TimeStamp* array;
+	int capacity;
+	int nItems;
 } TimeLog;
 
 static int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval *y);
 
-void initAllLogs(int length);
+static TimeLog* newTimeLog(int initialCapacity);
 
-void finalizeAllLogs();
+static void freeTimeLog(TimeLog* t);
 
-static void logTime(const char* name, int item);
+static void logTime(TimeLog* log, int time, const char* name);
+
+void printTimeLog(TimeLog* log);
 
 void Java_jrapl_RuntimeTestUtils_CSideTimeProfileInit(JNIEnv *env, jclass jcls, jint iterations);
 
