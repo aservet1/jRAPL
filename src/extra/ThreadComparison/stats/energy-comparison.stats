@@ -1,0 +1,18 @@
+Nonzero energy sample picked up by thread (joules): C // Java
+  mean: 	0.00025155004004481947 // 0.00025155004004481947
+  stdev:	3.927265343718734e-05 // 3.927265343718734e-05
+cdata[0] sample size: 2498
+jdata[0] sample size: 2498
+-------------------------------
+Nonzero energy sample picked up by thread (joules): C // Java
+  mean: 	0.0022940984787833698 // 0.0022940984787833698
+  stdev:	0.001156806291503761 // 0.001156806291503761
+cdata[1] sample size: 2498
+jdata[1] sample size: 2498
+-------------------------------
+Nonzero energy sample picked up by thread (joules): C // Java
+  mean: 	0.0027315076061483114 // 0.0027315076061483114
+  stdev:	0.001655633904434018 // 0.001655633904434018
+cdata[2] sample size: 2498
+jdata[2] sample size: 2498
+-------------------------------
