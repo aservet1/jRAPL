@@ -198,8 +198,9 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 	{
 		String s = "";
 		s += "delay: " + delay + " milliseconds\n";
+		s += dram_or_gpu + "\tcore\tpkg\n";
 		for (double[] reading : readings)
-			s += labelledReading(reading) + "\n";
+			s += readingString(reading) + "\n";
 		return s;
 	}
 	
@@ -215,9 +216,13 @@ public class EnergyReadingCollector extends JRAPL implements Runnable
 		return reading;
 	}
 
-	private String labelledReading(double[] reading)
+	private String readingString(double[] reading)
 	{
-		return dram_or_gpu + ": " + reading[0] + "\tcore: " + reading[1] + "\tpkg: " + reading[2];
+		String s = "";
+		for (int i = 0; i < reading.length-1; i++)
+			s += reading[i] + "\t";
+		s += reading[reading.length-1];
+		return s;
 	}
 
 }
