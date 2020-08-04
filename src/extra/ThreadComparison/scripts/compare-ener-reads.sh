@@ -21,25 +21,20 @@ function parseDumpFile()
 }
 #################################################################
 
-if [ -z $1 ]
+if [ -z $1 ] || [ -z $2 ]
 then
-    echo "usage: $0 output-file"
+    echo "usage: $0 c-data-file java-data-file"
     exit
 fi
 
 cd ~/jRAPL/src/extra/ThreadComparison
 
-echo -n '' > $1
+cdump=$1
+jdump=$2
 
-cdump="c.dump"
-jdump="java.dump"
-
-echo $(	                       \
-        parseDumpFile $cdump; \
-	    echo '@@@@@';          \
-	    parseDumpFile $jdump  \ 
-      ) | python3 scripts/compare-ener-reads.py  >>  $1
-
+parseDumpFile $cdump
+echo '@@@@@'
+parseDumpFile $jdump
 
 
 
