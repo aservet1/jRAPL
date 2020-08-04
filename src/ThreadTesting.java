@@ -1,26 +1,64 @@
-package jrapl_testing; // TODO make a jrapl_testutils package for diagnostics as opposed to user work
+package jrapl_testing;
 
 import jrapl.*;
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
 
-class ThreadTesting
+class ThreadTesting //extends JRAPL
 {
 	//TODO better way to keep thread alive than sleeping?
 
 	// insert all native calls here...
 
-	private static void writeToFile(String filePath)
+	private static void writeToFile(String data, String filePath)
 	{
 		System.out.println("writing to "+filePath);
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter(filePath);
+			writer.write(data+"\n");
+            writer.close();
+		} catch (Exception e) {
+			System.out.println("error writing to "+filePath);
+		}
 	}
 
-	public static void runJavaVersion()
+	public static String runJavaVersion()
 	{
 		System.out.println("running java");
+		String sourceFile = "./extra/dump-j.tmp";
+		Scanner fileScan = null;
+		String data = "";
+		try {
+			fileScan = new Scanner(new File(sourceFile));
+			while (fileScan.hasNextLine()) {
+				String line = fileScan.nextLine();
+				data += line + "\n";
+			}
+            fileScan.close();
+		} catch(Exception e) {
+			System.out.println(sourceFile+" not found or something");
+		}
+		return data;
 	}
 
-	public static void runCVersion()
+	public static String runCVersion()
 	{
 		System.out.println("running c");
+		String sourceFile = "./extra/dump-j.tmp";
+		Scanner fileScan = null;
+		String data = "";
+		try {
+			fileScan = new Scanner(new File(sourceFile));
+			while (fileScan.hasNextLine()) {
+				String line = fileScan.nextLine();
+				data += line + "\n";
+			}
+		} catch(Exception e) {
+			System.out.println(sourceFile+" not found or something");
+		}
+		return data;
 	}
 
 	public static void main(String[] args)
@@ -31,15 +69,17 @@ class ThreadTesting
 		}
 		if (args[0].equalsIgnoreCase("java"))
 		{
-			runJavaVersion();
+			String data = runJavaVersion();
+			//System.out.println(data);
 			String javaFile = "./extra/java.dump";
-			writeToFile(javaFile);
+			writeToFile(data, javaFile);
 		}
 		if (args[0].equalsIgnoreCase("c"))
 		{
-			runCVersion();
+			String data = runCVersion();
+			//System.out.println(data);
 			String cFile = "./extra/c.dump";
-			writeToFile(cFile);
+			writeToFile(data, cFile);
 		}
 	}
 }
