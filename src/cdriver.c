@@ -28,8 +28,6 @@ void run_cthread(int argc, const char* argv[])
 {
 	printf("hello world\n");
 
-	ProfileInit();
-
 	pthread_t thread;	
 	ReadingCollector* collector = newReadingCollector(0, thread);
 	start_collecting(collector);
@@ -39,11 +37,15 @@ void run_cthread(int argc, const char* argv[])
 	fileDump(collector, (argc>1)?argv[1]:NULL );
 	freeReadingCollector(collector);
 
-	ProfileDealloc();
 }
 /////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 int main(int argc, const char* argv[])
 {
+
+	ProfileInit();
+
 	run_cthread(argc,argv);
+
+	ProfileDealloc();
 }
