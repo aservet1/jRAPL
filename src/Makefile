@@ -1,10 +1,11 @@
 TARGET = libCPUScaler.so $(OFILES)
 
-CFILES = EnergyReadingCollector.c CPUScaler_TimingUtils.c CPUScaler.c arch_spec.c msr.c dvfs.c
+CFILES = AsyncEnergyMonitorCSide.c CPUScaler_TimingUtils.c CPUScaler.c arch_spec.c msr.c dvfs.c
 OFILES = $(CFILES:.c=.o) 
 
 JAVA_TESTFILES = GeneralTestDriver.java RuntimeTestUtils.java ThreadTesting.java
-JAVA_USERFILES = ArchSpec.java EnergyCheckUtils.java EnergyControlUtils.java EnergyReadingCollector.java JRAPL.java NativeUtil.java PerfCheckUtils.java
+JAVA_USERFILES = ArchSpec.java EnergyCheckUtils.java EnergyControlUtils.java AsyncEnergyMonitorCSide.java \
+			AsyncEnergyMonitorJavaSide.java JRAPL.java NativeUtil.java PerfCheckUtils.java
 
 
 CFLAGS = -fPIC -g -c -Wall

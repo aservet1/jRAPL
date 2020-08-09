@@ -17,7 +17,7 @@ public class GeneralTestDriver
 	{
 		JRAPL.ProfileInit();
 
-		EnergyReadingCollector ec = new EnergyReadingCollector(0);
+		AsyncEnergyMonitorJavaSide ec = new AsyncEnergyMonitorJavaSide(0);
 
 		ec.startReading();
 		//while (ec.getNumReadings() < 100);

@@ -29,49 +29,75 @@ def make_histogram_list(zero_intervals):
 		histogram[n] += 1
 	return histogram
 '''---------------------------------------------------------------'''
-def make_histogram_graph(histogram_list): # this is a super janky function my dude
-	intervals = list(range(len(histogram_list)))
-	
+def make_histogram(data,title): # data[0]: cdata // data[1] jdata 
 	plt.xlabel("zero intervals")
 	plt.ylabel("frequency")
-	plt.title("Freqency of consecutive zero readings")
+	plt.title(title)
+	plt.legend(["a simple line"])
 
-	plt.bar(intervals,histogram_list)
-	plt.savefig("temp")
+	plt.hist(data,10)
+	
+	parts = title.split(); category = parts[len(parts)-1]
+	plt.savefig("zero-intervals_"+category)
+	plt.clf()
 '''---------------------------------------------------------------'''
 def print_stats(data,title):
     print(f"{title}:")
-    print("  mean: "+str(mean(zero_intervals)))
-    print("  stdev: "+str(stdev(zero_intervals)))
-    print("  mode: "+str(mode(zero_intervals)))
-    print("  min: "+str(min(zero_intervals)))
-    print("  max: "+str(max(zero_intervals)))
-    print("  num zero readings: "+str(len(zero_intervals)))
+    print("  mean: "+str(mean(data)))
+    print("  stdev: "+str(stdev(data)))
+    print("  mode: "+str(mode(data)))
+    print("  min: "+str(min(data)))
+    print("  max: "+str(max(data)))
+    print("  num zero readings: "+str(len(data)))
 '''---------------------------------------------------------------'''
-stdin_data = stdin.readlines()
 
-data = [float(d.strip()) for d in stdin_data]
-sample_size = len(data)
+def read_file_to_string(filename):
+    fh = open(filename)
+    data = fh.read()
+    fh.close()
+    return data
 
-zero_intervals = get_zero_intervals(data)
+def make_numeric_array(data):
+    data = data.split("\n")
+    data = data[2:len(data)] #remove headers
+    data = list(filter(lambda x : x != '', data))
+    data = [line.split("\t") for line in data]
+    data = [[float(item) for item in line] for line in data]
+    return data
 
-histogram_list = make_histogram_list(zero_intervals)
+def group_by_column(data):
+    columns = list()
+    for i in range(len(data[0])):
+        columns.append([line[i] for line in data])
+    return columns
 
-make_histogram_graph(histogram_list)
+# zero readings just mean the next reading hasn't been updated in
+# the register so they are irrelevant to comparing the actual energy
+# level reported assumed already grouped by column
+def remove_zeroes(data):
+    return list(filter(lambda x: x != 0,data))
+'''-----------------------------------------------'''
+if len(argv) != 3:
+    print(f"usage: python3 {argv[0]} cdata javadata")
+    exit(1)
 
-print_stats(zero_intervals,title="Zero Interval Stats")
+cdata = read_file_to_string(argv[1])
+jdata = read_file_to_string(argv[2])
 
-'''
-nonzero_data = filter(lambda d: d != 0,data)
-#print(nonzero_data)
+cdata = group_by_column(make_numeric_array(cdata))
+jdata = group_by_column(make_numeric_array(jdata))
 
-print("Nonzero Readings (joules):")
-print("  mean: "+str(mean(nonzero_data)))
-print("  stdev: "+str(stdev(nonzero_data)))
-print("  mode: "+str(mode(nonzero_data)))
-print("  min: "+str(min(nonzero_data)))
-print("  max: "+str(max(nonzero_data)))
-print("  num nonzero readings: "+str(len(nonzero_data)))
+categories=("DRAM","CORE","PKG")
+for i in range(3):
+	c_zero_intervals = get_zero_intervals(cdata[i])
+	j_zero_intervals = get_zero_intervals(jdata[i])
 
-print("Sample Size: "+str(sample_size))
-'''
+	make_histogram([c_zero_intervals,j_zero_intervals],"C vs Java Zero Intervals "+categories[i])
+
+	print_stats(c_zero_intervals,title=f"C Zero Interval Stats {categories[i]}")
+	print("  -------------------------------------  ")
+	print_stats(j_zero_intervals,title=f"Java Zero Interval Stats {categories[i]}")
+	print("==========================================")
+print(f"Total C readings:\t{len(cdata[0])}")
+print(f"Total Java readings:\t{len(jdata[0])}")
+

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <unistd.h> 
 #include "CPUScaler.h"
-#include "EnergyReadingCollector.h"
+#include "AsyncEnergyMonitorCSide.h"
 
 int fib(int n)
 {
