@@ -5,7 +5,7 @@ OFILES = $(CFILES:.c=.o)
 
 JAVA_TESTFILES = GeneralTestDriver.java RuntimeTestUtils.java ThreadTesting.java
 JAVA_USERFILES = ArchSpec.java EnergyCheckUtils.java EnergyControlUtils.java AsyncEnergyMonitorCSide.java \
-			AsyncEnergyMonitorJavaSide.java JRAPL.java NativeUtil.java PerfCheckUtils.java
+			AsyncEnergyMonitorJavaSide.java JRAPL.java NativeUtils.java PerfCheckUtils.java
 
 
 CFLAGS = -fPIC -g -c -Wall
@@ -32,7 +32,7 @@ javafiles:
 	cp libCPUScaler.so jrapl_testing/
 
 user-api: *.java
-	javadoc JRAPL.java ArchSpec.java EnergyControlUtils.java EnergyCheckUtils.java EnergyReadingCollector.java -d ../UserAPI
+	javadoc $(JAVA_USERFILES) -d ../UserAPI
 
 clean:
 	rm -f lib_share_CPUScaler $(TARGET) cdriver *.class

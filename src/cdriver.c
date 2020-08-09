@@ -29,13 +29,13 @@ void run_cthread(int argc, const char* argv[])
 	printf("hello world\n");
 
 	pthread_t thread;	
-	ReadingCollector* collector = newReadingCollector(0, thread);
-	start_collecting(collector);
+	AsyncEnergyMonitor* collector = newAsyncEnergyMonitor(100, thread);
+	start(collector);
 	//fib(42); //take up some time
 	sleep(5);
-	stop_collecting(collector);
-	fileDump(collector, (argc>1)?argv[1]:NULL );
-	freeReadingCollector(collector);
+	stop(collector);
+	writeToFile(collector, (argc>1)?argv[1]:NULL );
+	freeAsyncEnergyMonitor(collector);
 
 }
 /////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

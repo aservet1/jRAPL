@@ -4,31 +4,32 @@
 #include <pthread.h>
 #include <stdbool.h>
 
-typedef struct Reading { //make each entry an array
+typedef struct EnergySample { //make each entry an array
 	double dram_or_gpu; // or gpu
 	double core;
 	double package;
 	// store timestamp, socket number, and reading
-} Reading;
+} EnergySample;
 
-typedef struct ReadingList {
-	Reading* items;
+typedef struct EnergySampleList {
+	EnergySample* items;
 	unsigned long long capacity;
 	unsigned long long nItems;
-} ReadingList;
+} EnergySampleList;
 
 typedef struct {
 	pthread_t thread;
-	int delay;
-	ReadingList* readings;
+	int samplingRate;
+	EnergySampleList* samples;
 	bool exit;
-} ReadingCollector;
+} AsyncEnergyMonitor;
 
 
-ReadingCollector* newReadingCollector(int delay, pthread_t thread);
-void start_collecting(ReadingCollector *collector);
-void stop_collecting(ReadingCollector *collector);
-void freeReadingCollector(ReadingCollector* collector);
-void fileDump(ReadingCollector *collector, const char* filepath);
+AsyncEnergyMonitor* newAsyncEnergyMonitor(int delay, pthread_t thread);
+void start(AsyncEnergyMonitor *collector);
+void stop(AsyncEnergyMonitor *collector);
+void freeAsyncEnergyMonitor(AsyncEnergyMonitor* collector);
+void writeToFile(AsyncEnergyMonitor *collector, const char* filepath);
+
 
 #endif //_ASYNC_ENERGY_MONITOR_C_SIDE_H
