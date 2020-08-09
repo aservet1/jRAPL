@@ -17,13 +17,20 @@ void sleep_print(int n)
 	}
 }
 
-int main(int argc, const char* argv[])
+//////////////////////\\\\\\\\\\\\\\\\\\\\
+//// DO NOT DELETE WHAT IS IN THIS     \\\\
+ //// COMMENT SECTION SAVE IT TO THE    \\\\
+  //// JAVA THREAD TEST DRIVER FILE WHEN \\\\
+   //// YOU GET THE OPPORTUNITY           \\\\
+   ///////////////////////\\\\\\\\\\\\\\\\\\\\\
+
+void run_cthread(int argc, const char* argv[])
 {
 	printf("hello world\n");
 
 	ProfileInit();
 
-	pthread_t* thread;	
+	pthread_t thread;	
 	ReadingCollector* collector = newReadingCollector(0, thread);
 	start_collecting(collector);
 	//fib(42); //take up some time
@@ -33,4 +40,10 @@ int main(int argc, const char* argv[])
 	freeReadingCollector(collector);
 
 	ProfileDealloc();
+}
+/////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+int main(int argc, const char* argv[])
+{
+	run_cthread(argc,argv);
 }

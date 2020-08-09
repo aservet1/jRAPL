@@ -39,7 +39,7 @@ static ReadingList* newReadingList(unsigned long long capacity)
 	return list;
 }
 
-ReadingCollector* newReadingCollector(int delay, pthread_t* thread)
+ReadingCollector* newReadingCollector(int delay, pthread_t thread)
 {
 	ReadingCollector* collector = (ReadingCollector*)malloc(sizeof(ReadingCollector));
 	collector->thread = thread;
@@ -135,13 +135,13 @@ void* run(void* collector_param){
 }
 
 void start_collecting(ReadingCollector *collector){
-	pthread_create(collector->thread, NULL, run, collector);
+	pthread_create(&(collector->thread), NULL, run, collector);
 	//printf("started\n");
 }
 
 void stop_collecting(ReadingCollector *collector){
 	collector->exit = true;
-	pthread_join(*collector->thread,NULL);
+	pthread_join(collector->thread,NULL);
 }
 
 void reset(ReadingCollector* collector){
@@ -167,7 +167,7 @@ void fileDump(ReadingCollector *collector, const char* filepath){
 }
 
 /////////// JNI Calls Down Here /////////////
-
+/*
 static ReadingCollector* jniCollector; //managed by JNI function calls
 static pthread_t* thread;
 
@@ -193,3 +193,4 @@ JNIEXPORT void Java_jrapl_AsyncEnergyMonitorCSide_writeToFile(JNIEnv* env, jclas
 {
 	fileDump(jniCollector, (const char*)filePath);
 }
+*/
