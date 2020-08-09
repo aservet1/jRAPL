@@ -185,7 +185,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	*	CSV format of all data collected. First two lines are the sampling rate and a header describing which power domain
 	*	each column's energy samples represent
 	*	<br>Format:
-	*	<br>  Sampling Rate: xxx (ms)
+	*	<br>  samplingRate: xxx (ms)
 	*	<br>  dram/gpu,core,pkg
 	*	<br>  xxx,xxx,xxx
 	*	<br>  xxx,xxx,xxx
@@ -199,7 +199,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	public String toString()
 	{
 		String s = "";
-		s += "Sampling Rate: " + samplingRate + " milliseconds\n";
+		s += "samplingRate: " + samplingRate + " milliseconds\n";
 		s += dram_or_gpu + ",core,pkg\n";
 		for (double[] sample : samples)
 			s += sampleString(sample) + "\n";
