@@ -1,5 +1,5 @@
-#ifndef _ENERGY_READING_COLLECTOR_H
-#define _ENERGY_READING_COLLECTOR_H
+#ifndef _ASYNC_ENERGY_MONITOR_C_SIDE_H
+#define _ASYNC_ENERGY_MONITOR_C_SIDE_H
 
 #include <pthread.h>
 #include <stdbool.h>
@@ -18,17 +18,17 @@ typedef struct ReadingList {
 } ReadingList;
 
 typedef struct {
-	pthread_t* thread;
+	pthread_t thread;
 	int delay;
 	ReadingList* readings;
 	bool exit;
 } ReadingCollector;
 
 
-ReadingCollector* newReadingCollector(int delay, pthread_t* thread);
+ReadingCollector* newReadingCollector(int delay, pthread_t thread);
 void start_collecting(ReadingCollector *collector);
 void stop_collecting(ReadingCollector *collector);
 void freeReadingCollector(ReadingCollector* collector);
 void fileDump(ReadingCollector *collector, const char* filepath);
 
-#endif
+#endif //_ASYNC_ENERGY_MONITOR_C_SIDE_H
