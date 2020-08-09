@@ -8,23 +8,23 @@ import java.io.FileWriter;
 /**
 *	Reads and stores sytem energy consumption in a background thread.
 *	<br>Meant to record the progression of energy consumption of a program run in the main thread.
-*	<br>Spawns a therad between <code>this.startReading()</code> and <code>this.stopReading()</code>.
-*	<br>Every individual energy reading is the energy consumed (joules) over the course of a set millisecond delay
+*	<br>Spawns a therad between <code>this.start()</code> and <code>this.stop()</code>.
+*	<br>Every individual energy sample is the energy consumed (joules) over the course of a set millisecond sampling rate
 *	<br>Energy read from three power domains: DRAM or GPU (depending on CPU model), CPU core, CPU package
 */
 public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 {
-	private ArrayList<double[]> readings; 
-	private int delay; // milliseconds
+	private ArrayList<double[]> samples; 
+	private int samplingRate; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
 	private String dram_or_gpu;
 
-	/** Initializes reading collector with a default delay setting of 10 milliseconds */
+	/** Initializes sample collector with a default sampling rate setting of 10 milliseconds */
 	public AsyncEnergyMonitorJavaSide()
 	{
-		delay = 10;
-		readings = new ArrayList<double[]>();
+		samplingRate = 10;
+		samples = new ArrayList<double[]>();
 		int d_or_g = ArchSpec.DramOrGpu();		
 		dram_or_gpu = (d_or_g == 1 || d_or_g == 2)
 				? (d_or_g == 1 ? "dram" : "gpu") 
@@ -39,13 +39,13 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	}
 
 	/**
-	*	Initializes reading collector with the delay interval passed as paramter
-	*	@param d The delay interval over which to take readings (in milliseconds)
+	*	Initializes sample collector with the sampling rate passed as paramter
+	*	@param s The sampling rate over which to take samples (in milliseconds)
 	*/
-	public AsyncEnergyMonitorJavaSide(int d)
+	public AsyncEnergyMonitorJavaSide(int s)
 	{
-		delay = d;
-		readings = new ArrayList<double[]>();
+		samplingRate = s;
+		samples = new ArrayList<double[]>();
 		int d_or_g = ArchSpec.DramOrGpu();
 		dram_or_gpu = (d_or_g == 1 || d_or_g == 2)
 				? (d_or_g == 1 ? "dram" : "gpu") 
@@ -61,34 +61,34 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 
 	/**
 	*	Do not call this directly from the main thread. 
-	*	It is called and run internally by the Thread class via <code>this.startReading()</code>.
+	*	It is called and run internally by the Thread class via <code>this.start()</code>.
 	*	Runs a loop, continually reading energy consumption over 
-	*	the delay interval and stores the reading. Loop is controlled by an internal boolean,
-	*	which is set to stop once the main thread calls <code>this.stopReading()</code>
+	*	the samplingRate and stores the sample. Loop is controlled by an internal boolean,
+	*	which is set to stop once the main thread calls <code>this.stop()</code>
 	*/	
 	public void run()
 	{
 		while (!exit)
 		{
-			double[] reading = readOverDelay();
-			readings.add(reading);
+			double[] sample = readSample();
+			samples.add(sample);
 		}
 	}
 
 	/**
-	*	Starts collecting and storing energy readings in a separate thread. Continually takes and stores energy readings
-	*	in the background while main thread runs. Will run until main thread calls <code>this.stopReading()</code>.
+	*	Starts collecting and storing energy samples in a separate thread. Continually takes and stores energy samples
+	*	in the background while main thread runs. Will run until main thread calls <code>this.stop()</code>.
 	*/
-	public void startReading()
+	public void start()
 	{
 		t = new Thread(this);
 		t.start();
 	}
 
 	/**
-	*	Stops collecting and storing energy readings.
+	*	Stops collecting and storing energy samples.
 	*/
-	public void stopReading()
+	public void stop()
 	{
 		exit = true;
 		try {
@@ -103,67 +103,67 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	/**
 	*	Resets the object for reuse.
 	*	<br>Call this if you intend to reuse the same object for energy collection after already using it.
-	*	<br>Clears out the current list of readings stored in the object.
+	*	<br>Clears out the current list of samples stored in the object.
 	*/
 	public void reInit()
 	{
 		exit = false;
-		readings.clear();
+		samples.clear();
 	}
 
 	/**
-	*	Returns K most recent stored readings. Each readings is a double[] of the form
+	*	Returns K most recent stored samples. Each samples is a double[] of the form
 	*	<br>[dram/gpu energy, core energy, package energy].
-	*	<br>If K is greater than the amount of readings, returns all readings
-	*	@param k Number of most recent readings
-	*	@return An array of the K most recent readings.
+	*	<br>If K is greater than the amount of samples, returns all samples
+	*	@param k Number of most recent samples
+	*	@return An array of the K most recent samples.
 	*/
-	public double[][] getLastKReadings(int k)
+	public double[][] getLastKSamples(int k)
 	{
-		int start = readings.size() - k;
+		int start = samples.size() - k;
 		int array_index = 0;
 
 		if (start < 0) {
 			start = 0;
-			k = readings.size();
+			k = samples.size();
 		}
 		
-		double[][] readings_array = new double[k][];
+		double[][] samples_array = new double[k][];
 
-		for (int i = start; i < readings.size(); i++)
-			readings_array[array_index++] = readings.get(i);
-		return readings_array;
+		for (int i = start; i < samples.size(); i++)
+			samples_array[array_index++] = samples.get(i);
+		return samples_array;
 	}
 	
 	/**
-	*	Gets the delay interval over which the object takes readings.
-	*	@return The delay interval (in milliseconds)
+	*	Gets the sampling rate for the thread to collect samples.
+	*	@return The sampling rate (in milliseconds)
 	*/
-	public int getDelay()
+	public int getSamplingRate()
 	{
-		return delay;
+		return samplingRate;
 	}
 
 	/**
-	*	Sets the delay interval over which to take readings
-	*	@param d delay interval (in milliseconds)
+	*	Sets the sampling rate over which to take samples
+	*	@param s sampling rate (in milliseconds)
 	*/
-	public void setDelay(int d)
+	public void setSamplingRate(int s)
 	{
-		delay = d;
+		samplingRate = s;
 	}
 
 	/**
-	*	Gets the number of readings the object has currently collected
-	*	@return number of readings collected so far
+	*	Gets the number of samples the object has currently collected
+	*	@return number of samples collected so far
 	*/
 	public int getNumReadings()
 	{
-		return readings.size();
+		return samples.size();
 	}
 
 	/**
-	*	Dumps all readings to file, along with the delay between readings.
+	*	Dumps all samples to file, along with the sampling rate.
 	*	Same format as <code>this.toString()</code>
 	*	
 	*	@param fileName name of file to write to
@@ -182,13 +182,15 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	}
 
 	/**
-	*	Human readable format of all data collected, as well all the delay interval over which the data was read.
+	*	CSV format of all data collected. First two lines are the sampling rate and a header describing which power domain
+	*	each column's energy samples represent
 	*	<br>Format:
-	*	<br>  delay: (ms)
-	*	<br>  dram/gpu: (joules)	core: (joules)	pkg: (joules)
-	*	<br>  dram/gpu: (joules)	core: (joules)	pkg: (joules)
-	*	<br>  dram/gpu: (joules)	core: (joules)	pkg: (joules)
-	*	<br>  dram/gpu: (joules)	core: (joules)	pkg: (joules)
+	*	<br>  Sampling Rate: xxx (ms)
+	*	<br>  dram/gpu,core,pkg
+	*	<br>  xxx,xxx,xxx
+	*	<br>  xxx,xxx,xxx
+	*	<br>  xxx,xxx,xxx
+	*	<br>  xxx,xxx,xxx
 	*	<br>	... et cetera ...
 	*	<br>  note that only one of "dram" and "gpu" will be listed for the first column, depending on your CPU model
 		<br>  each entry per line is tab delimited
@@ -197,31 +199,31 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	public String toString()
 	{
 		String s = "";
-		s += "delay: " + delay + " milliseconds\n";
-		s += dram_or_gpu + "\tcore\tpkg\n";
-		for (double[] reading : readings)
-			s += readingString(reading) + "\n";
+		s += "Sampling Rate: " + samplingRate + " milliseconds\n";
+		s += dram_or_gpu + ",core,pkg\n";
+		for (double[] sample : samples)
+			s += sampleString(sample) + "\n";
 		return s;
 	}
 	
-	private double[] readOverDelay()
+	private double[] readSample()
 	{
 		double[] before = EnergyCheckUtils.getEnergyStats();
-		try { Thread.sleep(delay); } catch (Exception e) {} //park support or lock support
+		try { Thread.sleep(samplingRate); } catch (Exception e) {} //park support or lock support
 		double[] after  = EnergyCheckUtils.getEnergyStats();
-		double[] reading = new double[3];
-		for (int i = 0; i < reading.length; i++){
-			reading[i] = after[i]-before[i];
+		double[] sample = new double[3];
+		for (int i = 0; i < sample.length; i++){
+			sample[i] = after[i]-before[i];
 		}
-		return reading;
+		return sample;
 	}
 
-	private String readingString(double[] reading)
+	private String sampleString(double[] sample)
 	{
 		String s = "";
-		for (int i = 0; i < reading.length-1; i++)
-			s += reading[i] + "\t";
-		s += reading[reading.length-1];
+		for (int i = 0; i < sample.length-1; i++)
+			s += sample[i] + ",";
+		s += sample[sample.length-1];
 		return s;
 	}
 

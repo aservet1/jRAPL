@@ -157,10 +157,10 @@ void fileDump(ReadingCollector *collector, const char* filepath){
 	int nItems = collector->readings->nItems;
 	Reading currentReading;
 	fprintf(outfile,"delay: %d milliseconds\n",collector->delay);
-	fprintf(outfile,"%s\tcore\tpkg\n", dram_or_gpu_str);
+	fprintf(outfile,"%s,core,pkg\n", dram_or_gpu_str);
 	for (int i = 0; i < nItems; i++) {
 		currentReading = items[i];
-		fprintf(outfile,"%f\t%f\t%f\n", currentReading.dram_or_gpu, currentReading.core, currentReading.package);
+		fprintf(outfile,"%f,%f,%f\n", currentReading.dram_or_gpu, currentReading.core, currentReading.package);
 	}
 	printf("\n -- why does it have 0.000000 some times??? --\n\n");
 	fclose(outfile);

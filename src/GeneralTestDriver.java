@@ -17,13 +17,13 @@ public class GeneralTestDriver
 	{
 		JRAPL.ProfileInit();
 
-		AsyncEnergyMonitorJavaSide ec = new AsyncEnergyMonitorJavaSide(0);
+		AsyncEnergyMonitorJavaSide ec = new AsyncEnergyMonitorJavaSide(100);
 
-		ec.startReading();
-		//while (ec.getNumReadings() < 100);
+		ec.start();
+		//while (ec.getNumSamples() < 100);
 		try { Thread.sleep(5000); } catch (Exception e) {}
 		//fib(42);
-		ec.stopReading();
+		ec.stop();
 
 		if (args.length == 0) System.out.println(ec);
 		else ec.writeToFile(args[0]);

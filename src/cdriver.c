@@ -29,7 +29,7 @@ void run_cthread(int argc, const char* argv[])
 	printf("hello world\n");
 
 	pthread_t thread;	
-	ReadingCollector* collector = newReadingCollector(0, thread);
+	ReadingCollector* collector = newReadingCollector(100, thread);
 	start_collecting(collector);
 	//fib(42); //take up some time
 	sleep(5);
