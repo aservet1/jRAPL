@@ -8,7 +8,8 @@ typedef struct EnergySample { //make each entry an array
 	double dram_or_gpu; // or gpu
 	double core;
 	double package;
-	// store timestamp, socket number, and reading
+	long timestamp; // in microseconds
+	// store, socket number, and reading
 } EnergySample;
 
 typedef struct EnergySampleList {

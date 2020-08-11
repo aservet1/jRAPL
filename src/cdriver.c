@@ -29,7 +29,7 @@ void run_cthread(int argc, const char* argv[])
 	printf("hello world\n");
 
 	pthread_t thread;	
-	AsyncEnergyMonitor* collector = newAsyncEnergyMonitor(100, thread);
+	AsyncEnergyMonitor* collector = newAsyncEnergyMonitor(0, thread);
 	start(collector);
 	//fib(42); //take up some time
 	sleep(5);

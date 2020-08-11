@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <jni.h>
+#include <sys/time.h>
 #include "AsyncEnergyMonitorCSide.h"
 #include "CPUScaler.h"
 #include "arch_spec.h"
@@ -118,19 +119,29 @@ static void printCollector(AsyncEnergyMonitor* collector)
 */
 
 void* run(void* collector_param){
+	struct timeval before_stamp, after_stamp, diff_stamp; //before, after, and difference timestamps
 	AsyncEnergyMonitor* collector = (AsyncEnergyMonitor*)collector_param;
 	char before_buffer[512];
 	char after_buffer[512];
-	while (!collector->exit) {
-		EnergyStatCheck(before_buffer);		
+	//struct timeval t;
+	gettimeofday(&before_stamp,NULL); //start timestamp	
+	while (!collector->exit)
+	{
+		EnergyStatCheck(before_buffer); //@TODO make energystatcheck return an EnergySample struct instead of filling up a char buffer??		
 		sleep_millisecond(collector->samplingRate);
 		EnergyStatCheck(after_buffer);
 
-		EnergySample before = parseEnergySample(before_buffer);
-		EnergySample after = parseEnergySample(after_buffer);
+		EnergySample before_sample = parseEnergySample(before_buffer);
+		EnergySample after_sample = parseEnergySample(after_buffer);
 		
-		EnergySample diff = subtract_samples(before, after);
-		addEnergySample(collector, diff);
+		EnergySample diff_sample = subtract_samples(before_sample, after_sample);
+
+		gettimeofday(&after_stamp,NULL); //stop timestamp
+		timersub(&after_stamp,&before_stamp, &diff_stamp); //-- is it before after, or after before??
+		before_stamp = after_stamp;
+		//printf("%ld ,,, ",diff_stamp.tv_usec);
+		diff_sample.timestamp = diff_stamp.tv_usec;
+		addEnergySample(collector, diff_sample);
 	}
 	return NULL;
 }
@@ -152,17 +163,19 @@ void reset(AsyncEnergyMonitor* collector){
 }
 
 void writeToFile(AsyncEnergyMonitor *collector, const char* filepath){
+	FILE * outfile = (filepath) ? fopen(filepath,"w") : stdout;
+	
 	int dram_or_gpu = get_architecture_category(get_cpu_model());
 	const char* dram_or_gpu_str = (dram_or_gpu == 1 || dram_or_gpu == 2) ? (dram_or_gpu == 1 ? "dram" : "gpu") : "undefined";
-	FILE * outfile = (filepath) ? fopen(filepath,"w") : stdout;
+
 	EnergySample* items = collector->samples->items;
 	int nItems = collector->samples->nItems;
-	EnergySample currentEnergySample;
+	EnergySample current;
 	fprintf(outfile,"samplingRate: %d milliseconds\n",collector->samplingRate);
-	fprintf(outfile,"%s,core,pkg\n", dram_or_gpu_str);
+	fprintf(outfile,"%s,core,pkg,timestamp\n", dram_or_gpu_str);
 	for (int i = 0; i < nItems; i++) {
-		currentEnergySample = items[i];
-		fprintf(outfile,"%f,%f,%f\n", currentEnergySample.dram_or_gpu, currentEnergySample.core, currentEnergySample.package);
+		current = items[i];
+		fprintf(outfile,"%f,%f,%f,%ld\n", current.dram_or_gpu, current.core, current.package,current.timestamp);
 	}
 	printf("\n -- why does it have 0.000000 some times??? --\n\n");
 	fclose(outfile);
