@@ -21,6 +21,8 @@
 
 #define MSR_DRAM_ENERGY_UNIT 0.000015
 
+static int architecture_category;
+static uint32_t cpu_model;
 static rapl_msr_unit rapl_unit;
 static rapl_msr_parameter *parameters;
 static int *fd;
@@ -94,17 +96,15 @@ rapl_msr_unit get_rapl_unit()
  */
 void initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][60], char cpu_buffer[num_pkg][60], char package_buffer[num_pkg][60])
 {
-	uint32_t cpu_model = get_cpu_model();
+	//uint32_t cpu_model = get_cpu_model();
 	double package[num_pkg];
 	double pp0[num_pkg];
 	double pp1[num_pkg];
 	double dram[num_pkg];
 	double result = 0.0;
 	int info_size = 0;
-	int i = 0;
-	//rapl_msr_unit rapl_unit = get_rapl_unit();
-	for (; i < num_pkg; i++) {
 
+	for (int i = 0; i < num_pkg; i++) {
 		//if (timingMsrReadings) gettimeofday(&start, NULL);
 		result = read_msr(fd[i], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
 		package[i] = (double) result * rapl_unit.energy;
@@ -125,7 +125,7 @@ void initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_p
 
 		sprintf(package_buffer[i], "%f", package[i]);
 		sprintf(cpu_buffer[i], "%f", pp0[i]);
-		int architecture_category = get_architecture_category(cpu_model);
+		//int architecture_category = get_architecture_category(cpu_model);
 		switch(architecture_category) {
 			case READ_FROM_DRAM:
 				//if (timingMsrReadings) gettimeofday(&start, NULL);
@@ -184,10 +184,11 @@ int ProfileInit()
 	int i;
 	char msr_filename[BUFSIZ];
 	int core = 0;
-	//rapl_msr_unit rapl_unit;
 	int wraparound_energy;
 
 	num_pkg = getSocketNum();
+	cpu_model = get_cpu_model();
+	architecture_category = get_architecture_category(cpu_model);
 	uint64_t num_pkg_thread = get_num_pkg_thread();
 
 	/*only two domains are supported for parameters check*/
@@ -250,7 +251,7 @@ void EnergyStatCheck(char ener_info[512])
 	char package_buffer[num_pkg][60];
 	int dram_num = 0L;	///  dram_num is the id number of that component
 	int cpu_num = 0L;	///  same applies to the other x_num varaibles (num is id number)
-	uint32_t cpu_model = get_cpu_model();
+	//uint32_t cpu_model = get_cpu_model();
 
 	int package_num = 0L;
 	int gpu_num = 0L;
@@ -259,9 +260,9 @@ void EnergyStatCheck(char ener_info[512])
 
   	bzero(ener_info, 512);
 	initialize_energy_info(gpu_buffer, dram_buffer, cpu_buffer, package_buffer);
-	int architecture_catergory = get_architecture_category(cpu_model);
+	//int architecture_catergory = get_architecture_category(cpu_model);
 	for(i = 0; i < num_pkg; i++) {
-		switch(architecture_catergory) {
+		switch(architecture_category) {
 			case READ_FROM_DRAM:
 
 				/*Insert socket number*/
@@ -271,8 +272,7 @@ void EnergyStatCheck(char ener_info[512])
 
 				//copy_to_string(ener_info, dram_buffer, dram_num, cpu_buffer, cpu_num, package_buffer, package_num, i, &offset);
 				memcpy(ener_info + offset, &dram_buffer[i], dram_num);
-				//split sign
-				ener_info[offset + dram_num] = '#';
+				ener_info[offset + dram_num] = '#'; //split sign
 				memcpy(ener_info + offset + dram_num + 1, &cpu_buffer[i], cpu_num);
 				ener_info[offset + dram_num + cpu_num + 1] = '#';
 				if(i < num_pkg - 1) {
