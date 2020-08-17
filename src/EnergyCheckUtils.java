@@ -7,17 +7,6 @@ public class EnergyCheckUtils extends JRAPL {
 
 //	private EnergyCheckUtils() {} // private constructor -- never initialized
 	
-	/*	Rapl Energy Conversion unit, fixed with (1/unit) to make a small value to prevent integer overflow.
-	 *	I still don't fully understnand the concept behind this or how to use it. No current examples I can find anywhere
-	 *	(No current implementation actually initializes or makes use of this variable).
-	*/
-	//public static int wrapAroundValue;
-	
-	/*	Number of CPU sockets the current system has.
-	 *	(No current implementation actually initializes or makes use of this variable).
-	*/
-	//public static int socketNum;
-
 	/** Returns a string with current total energy consumption reported in MSR registers.
 	 *	<br>Formatted " 1stSocketInfo @ 2ndSocketInfo @ ... @ NthSocketInfo " with @ delimiters
 	 *	<br>Each NthSocketInfo subsection formatted " dram_energy # cpu_energy # package_energy " with # delimieters
@@ -70,11 +59,19 @@ public class EnergyCheckUtils extends JRAPL {
 		}
 	}
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) throws Exception
+	{		
+		while(true){
+			double[] before = getEnergyStats();
+			Thread.sleep(40);
+			double[] after = getEnergyStats();
+			double[] diff = {after[0]-before[0], after[1]-before[1], after[2]-before[2]};
+			System.out.println(String.join(", ",
+				"DRAM: " + String.format("%.4f", diff[0]),
+				"Core: " + String.format("%.4f", diff[1]),
+				"Package: " + String.format("%.4f", diff[2])));
 
-		System.out.println("hello w0rld");
-
+		}
 	}
 
 }
