@@ -177,7 +177,6 @@ void writeToFile(AsyncEnergyMonitor *collector, const char* filepath){
 		current = items[i];
 		fprintf(outfile,"%f,%f,%f,%ld\n", current.dram_or_gpu, current.core, current.package,current.timestamp);
 	}
-	printf("\n -- why does it have 0.000000 some times??? --\n\n");
 	fclose(outfile);
 }
 
