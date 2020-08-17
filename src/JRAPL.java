@@ -12,7 +12,7 @@ import java.util.Map;
 */
 public class JRAPL {
 
-	public JRAPL() {} // private constructor -- never initialized
+	//public JRAPL() {} // private constructor -- never initialized
 	
 	/** Call this before doing any JRAPL operations. 
 	 *  <br>Initializes data about the system and allocates the proper
@@ -26,6 +26,19 @@ public class JRAPL {
 	*/
 	public native static void ProfileDealloc();
 
+
+	/** Gets the wraparound energy value that I still don't e n t i r e l y understand
+	*/
+	public native static int GetWrapAroundEnergy();	
+
+
+	/** Number of CPU sockets the current system has
+	*/
+	public static final int NUM_SOCKETS;
+
+	/** Energy wrap around value (I think it's for if an energy sample is taken over the MSR overflow/reset)
+	*/
+	public static final int ENERGY_WRAP_AROUND;
 	
 	static {
 		try {
@@ -42,5 +55,7 @@ public class JRAPL {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		NUM_SOCKETS = ArchSpec.GetSocketNum();
+		ENERGY_WRAP_AROUND = ProfileInit();
 	}
 }

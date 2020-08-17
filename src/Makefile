@@ -29,7 +29,7 @@ cdriver: $(CFILES) cdriver.c
 javafiles:
 	javac *.java -d .
 	cp libCPUScaler.so jrapl/
-	cp libCPUScaler.so jrapl_testing/
+	cp libCPUScaler.so jrapltesting/
 
 user-api: *.java
 	javadoc $(JAVA_USERFILES) -d ../UserAPI

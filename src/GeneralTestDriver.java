@@ -1,4 +1,4 @@
-package jrapl_testing;
+package jrapltesting;
 
 import java.util.ArrayList;
 import java.util.Arrays;

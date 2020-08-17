@@ -1,4 +1,4 @@
-package jrapl_testing;
+package jrapltesting;
 
 import jrapl.*;
 import java.util.Scanner;

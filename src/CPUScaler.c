@@ -21,6 +21,7 @@
 
 #define MSR_DRAM_ENERGY_UNIT 0.000015
 
+static rapl_msr_unit rapl_unit;
 static rapl_msr_parameter *parameters;
 static int *fd;
 static uint64_t num_pkg;
@@ -41,13 +42,13 @@ static struct timeval start, end, diff;
 		logTime( #name , diff.tv_sec*1000 + diff.tv_usec);	\
 	}	
 
-JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
+JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_StartTimeLogs(JNIEnv *env, jclass jcls, jint logSize, jboolean _timingFunctionCalls, jboolean _timingMsrReadings)
 {
 	timingFunctionCalls = _timingFunctionCalls;
 	timingMsrReadings = _timingMsrReadings;
 	initAllLogs(logSize);
 }
-JNIEXPORT void JNICALL Java_jrapl_RuntimeTestUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls)
+JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls)
 {
 	finalizeAllLogs();
 }
@@ -101,7 +102,7 @@ void initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_p
 	double result = 0.0;
 	int info_size = 0;
 	int i = 0;
-	rapl_msr_unit rapl_unit = get_rapl_unit();
+	//rapl_msr_unit rapl_unit = get_rapl_unit();
 	for (; i < num_pkg; i++) {
 
 		if (timingMsrReadings) gettimeofday(&start, NULL);
@@ -170,18 +171,24 @@ void initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_p
 
 }
 
+//JNIEXPORT jint JNICALL Java_jrapl_JRAPL_GetWrapAroundEnergy(JNIEnv* env, jclass jclss)
+//{
+//	printf("you are here\n");
+//	rapl_msr_unit u = get_rapl_unit();
+//	printf("now you're here\n");
+//	return get_wraparound_energy(u.energy);
+//}
 
 int ProfileInit()
 {
 	int i;
 	char msr_filename[BUFSIZ];
 	int core = 0;
-	rapl_msr_unit rapl_unit;
+	//rapl_msr_unit rapl_unit;
+	int wraparound_energy;
 
 	num_pkg = getSocketNum();
 	uint64_t num_pkg_thread = get_num_pkg_thread();
-
-	jint wraparound_energy;
 
 	/*only two domains are supported for parameters check*/
 	parameters = (rapl_msr_parameter *)malloc(2 * sizeof(rapl_msr_parameter));
