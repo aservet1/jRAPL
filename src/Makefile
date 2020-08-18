@@ -14,7 +14,7 @@ JAVAHOME = /usr/lib/jvm/java-11-openjdk-amd64
 JAVA_INCLUDE = $(JAVAHOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
-all: lib_shared_CPUScaler javafiles
+all: cdriver lib_shared_CPUScaler javafiles
 
 common:
 	echo $(JAVA_HOME)
