@@ -1,4 +1,5 @@
 package jrapl;
+import java.util.Arrays;
 
 /**
 *	Functions around getting energy reading of the system
@@ -28,50 +29,40 @@ public class EnergyCheckUtils extends JRAPL {
 	 * @return an array of current energy information.
 	*/
 	public static double[] getEnergyStats() {
-		int socketNum = ArchSpec.GetSocketNum(); //@TODO -- is this redundant? can we just assume that it was already set during the sstatic block?
 		String EnergyInfo = EnergyStatCheck();
-		/*One Socket*/
-		if(socketNum == 1) {
-			double[] stats = new double[3]; // 3 stats per socket
-			String[] energy = EnergyInfo.split("#");
+		
+		String[] perSockEner = EnergyInfo.split("@");
+		double[] stats = new double[4*NUM_SOCKETS]; // 4 stats per socket
+		int count = 0;
 
-			stats[0] = Double.parseDouble(energy[0]);
-			stats[1] = Double.parseDouble(energy[1]);
-			stats[2] = Double.parseDouble(energy[2]);
-
-			return stats;
-
-		} else {
-		/*Multiple sockets*/
-			String[] perSockEner = EnergyInfo.split("@");
-			double[] stats = new double[3*socketNum]; // 3 stats per socket
-			int count = 0;
-
-
-			for(int i = 0; i < perSockEner.length; i++) {
-				String[] energy = perSockEner[i].split("#");
-				for(int j = 0; j < energy.length; j++) {
-					count = i * 3 + j;	//accumulative count
-					stats[count] = Double.parseDouble(energy[j]);
-				}
+		for(int i = 0; i < perSockEner.length; i++) {
+			String[] energy = perSockEner[i].split("#");
+			for(int j = 0; j < energy.length; j++) {
+				count = i * 4 + j;	//accumulative count
+				stats[count] = Double.parseDouble(energy[j]);
 			}
-			return stats;
 		}
+		return stats;
 	}
 
 	public static void main(String[] args) throws Exception
-	{		
-		while(true){
+	{
+		for (int x = 0; x < 100; x++){
+			System.out.println(EnergyStatCheck());
+			Thread.sleep(100);
+		}
+		/*for(int x = 0; x < 100; x++){
 			double[] before = getEnergyStats();
 			Thread.sleep(40);
 			double[] after = getEnergyStats();
-			double[] diff = {after[0]-before[0], after[1]-before[1], after[2]-before[2]};
+			double[] diff = {after[0]-before[0], after[1]-before[1], after[2]-before[2], after[3]-before[3]};
 			System.out.println(String.join(", ",
 				"DRAM: " + String.format("%.4f", diff[0]),
-				"Core: " + String.format("%.4f", diff[1]),
-				"Package: " + String.format("%.4f", diff[2])));
+				"GPU: " + String.format("%.4f", diff[1]),
+				"Core: " + String.format("%.4f", diff[2]),
+				"Package: " + String.format("%.4f", diff[3])));
 
-		}
+		}*/
 	}
 
 }

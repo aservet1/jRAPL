@@ -1,6 +1,6 @@
 TARGET = libCPUScaler.so $(OFILES)
 
-CFILES = AsyncEnergyMonitorCSide.c CPUScaler_TimingUtils.c CPUScaler.c arch_spec.c msr.c dvfs.c
+CFILES = EnergyStats.c AsyncEnergyMonitorCSide.c CPUScaler_TimingUtils.c CPUScaler.c arch_spec.c msr.c dvfs.c
 OFILES = $(CFILES:.c=.o) 
 
 JAVA_TESTFILES = GeneralTestDriver.java RuntimeTestUtils.java ThreadTesting.java
@@ -16,7 +16,7 @@ JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
 all: lib_shared_CPUScaler javafiles
 
-common:
+common: $(CFILES)
 	echo $(JAVA_HOME)
 	gcc $(CFLAGS) -I $(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES)
 lib_shared_CPUScaler: common
@@ -36,4 +36,4 @@ user-api: *.java
 
 clean:
 	rm -f lib_share_CPUScaler $(TARGET) cdriver *.class
-	rm -rf jrapl/ jrapl_testing
+	rm -rf jrapl/ jrapltesting

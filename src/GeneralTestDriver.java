@@ -6,7 +6,6 @@ import jrapl.*;
 
 public class GeneralTestDriver
 {
-
 	private static int fib(int n)
 	{
 		if (n <= 1) return 1;
@@ -25,6 +24,7 @@ public class GeneralTestDriver
 		//fib(42);
 		ec.stop();
 
+		System.out.println("hello w0rld");
 		if (args.length == 0) System.out.println(ec);
 		else ec.writeToFile(args[0]);
 

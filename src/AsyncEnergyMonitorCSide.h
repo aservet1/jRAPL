@@ -1,24 +1,18 @@
-#ifndef _ASYNC_ENERGY_MONITOR_C_SIDE_H
-#define _ASYNC_ENERGY_MONITOR_C_SIDE_H
+#ifndef _ASYNC_ENERGY_MONITOR_CSIDE_H
+#define _ASYNC_ENERGY_MONITOR_CSIDE_H
 
 #include <pthread.h>
 #include <stdbool.h>
 
-typedef struct EnergySample { //make each entry an array
-	double dram_or_gpu; // or gpu
-	double core;
-	double package;
-	long timestamp; // in microseconds
-	// store, socket number, and reading
-} EnergySample;
+#include "EnergyStats.h"
 
 typedef struct EnergySampleList {
-	EnergySample* items;
+	EnergyStats* items;
 	unsigned long long capacity;
 	unsigned long long nItems;
 } EnergySampleList;
 
-typedef struct {
+typedef struct AsyncEnergyMonitor {
 	pthread_t thread;
 	int samplingRate;
 	EnergySampleList* samples;
@@ -33,4 +27,4 @@ void freeAsyncEnergyMonitor(AsyncEnergyMonitor* collector);
 void writeToFile(AsyncEnergyMonitor *collector, const char* filepath);
 
 
-#endif //_ASYNC_ENERGY_MONITOR_C_SIDE_H
+#endif //_ASYNC_ENERGY_MONITOR_CSIDE_H

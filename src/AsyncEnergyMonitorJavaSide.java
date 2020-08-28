@@ -14,28 +14,16 @@ import java.io.FileWriter;
 */
 public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 {
-	private ArrayList<double[]> samples; 
+	private ArrayList<EnergyDiff> samples; 
 	private int samplingRate; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
-	private String dram_or_gpu;
 
 	/** Initializes sample collector with a default sampling rate setting of 10 milliseconds */
 	public AsyncEnergyMonitorJavaSide()
 	{
 		samplingRate = 10;
-		samples = new ArrayList<double[]>();
-		int d_or_g = ArchSpec.DramOrGpu();		
-		dram_or_gpu = (d_or_g == 1 || d_or_g == 2)
-				? (d_or_g == 1 ? "dram" : "gpu") 
-				: "undefined power domain 1 msr";
-		/*switch (ArchSpec.DramOrGpu()) {
-			case 1: dram_or_gpu = "dram"; break;
-			case 2: dram_or_gpu = "gpu"; break;
-			default:
-				System.out.println("ERROR: Your CPU model is not supported!");
-				System.exit(1);
-		}*/
+		samples = new ArrayList<EnergyDiff>();
 	}
 
 	/**
@@ -45,18 +33,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	public AsyncEnergyMonitorJavaSide(int s)
 	{
 		samplingRate = s;
-		samples = new ArrayList<double[]>();
-		int d_or_g = ArchSpec.DramOrGpu();
-		dram_or_gpu = (d_or_g == 1 || d_or_g == 2)
-				? (d_or_g == 1 ? "dram" : "gpu") 
-				: "undefined power domain 1 msr";
-		/*switch (ArchSpec.DramOrGpu()) {
-			case 1: dram_or_gpu = "dram"; break;
-			case 2: dram_or_gpu = "gpu"; break;
-			default:
-				System.out.println("ERROR: Your CPU model is not supported!");
-				System.exit(1);
-		}*/
+		samples = new ArrayList<EnergyDiff>();
 	}
 
 	/**
@@ -70,8 +47,9 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	{
 		while (!exit)
 		{
-			double[] sample = readSample();
-			samples.add(sample);
+			EnergyDiff[] diffs = readSample();
+			for (EnergyDiff d : diffs)
+				samples.add(d);
 		}
 	}
 
@@ -118,7 +96,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	*	@param k Number of most recent samples
 	*	@return An array of the K most recent samples.
 	*/
-	public double[][] getLastKSamples(int k)
+	public EnergyDiff[] getLastKSamples(int k)
 	{
 		int start = samples.size() - k;
 		int array_index = 0;
@@ -128,7 +106,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 			k = samples.size();
 		}
 		
-		double[][] samples_array = new double[k][];
+		EnergyDiff[] samples_array = new EnergyDiff[k];
 
 		for (int i = start; i < samples.size(); i++)
 			samples_array[array_index++] = samples.get(i);
@@ -186,11 +164,11 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	*	each column's energy samples represent
 	*	<br>Format:
 	*	<br>  samplingRate: xxx (ms)
-	*	<br>  dram/gpu,core,pkg
-	*	<br>  xxx,xxx,xxx
-	*	<br>  xxx,xxx,xxx
-	*	<br>  xxx,xxx,xxx
-	*	<br>  xxx,xxx,xxx
+	*	<br>  socket,dram,gpu,cpu,pkg
+	*	<br>  x,xxx,xxx,xxx,xxx
+	*	<br>  x,xxx,xxx,xxx,xxx
+	*	<br>  x,xxx,xxx,xxx,xxx
+	*	<br>  x,xxx,xxx,xxx,xxx
 	*	<br>	... et cetera ...
 	*	<br>  note that only one of "dram" and "gpu" will be listed for the first column, depending on your CPU model
 		<br>  each entry per line is tab delimited
@@ -200,31 +178,22 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	{
 		String s = "";
 		s += "samplingRate: " + samplingRate + " milliseconds\n";
-		s += dram_or_gpu + ",core,pkg\n";
-		for (double[] sample : samples)
-			s += sampleString(sample) + "\n";
+		s += "socket,dram,gpu,cpu,pkg,timestamp,elapsed-time\n";
+		for (EnergyDiff d : samples)
+			s += d.commaSeparated() + "\n";
 		return s;
 	}
 	
-	private double[] readSample()
+	private EnergyDiff[] readSample()
 	{
-		double[] before = EnergyCheckUtils.getEnergyStats();
+		EnergyStats[] before = EnergyStats.get();
 		try { Thread.sleep(samplingRate); } catch (Exception e) {} //park support or lock support
-		double[] after  = EnergyCheckUtils.getEnergyStats();
-		double[] sample = new double[3];
+		EnergyStats[] after  = EnergyStats.get();
+		EnergyDiff[] sample = new EnergyDiff[NUM_SOCKETS];
 		for (int i = 0; i < sample.length; i++){
-			sample[i] = after[i]-before[i];
+			sample[i] = after[i].difference(before[i]);
 		}
 		return sample;
-	}
-
-	private String sampleString(double[] sample)
-	{
-		String s = "";
-		for (int i = 0; i < sample.length-1; i++)
-			s += sample[i] + ",";
-		s += sample[sample.length-1];
-		return s;
 	}
 
 }

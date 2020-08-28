@@ -7,9 +7,11 @@
 #include <errno.h>
 #include <jni.h>
 #include <sys/time.h>
+#include "EnergyStats.h"
 #include "AsyncEnergyMonitorCSide.h"
 #include "CPUScaler.h"
 #include "arch_spec.h"
+
 
 int sleep_millisecond(long msec){
 	struct timespec ts;
@@ -36,7 +38,7 @@ static EnergySampleList* newEnergySampleList(unsigned long long capacity)
 	EnergySampleList* list = (EnergySampleList*)malloc(sizeof(EnergySampleList));
 	list->capacity = capacity;
 	list->nItems = 0;
-	list->items = (EnergySample*)malloc(sizeof(EnergySample)*capacity);
+	list->items = (EnergyStats*)malloc(sizeof(EnergyStats)*capacity);
 	return list;
 }
 
@@ -63,85 +65,35 @@ void freeAsyncEnergyMonitor(AsyncEnergyMonitor* collector)
 	free(collector);
 }
 
-static void addEnergySample(AsyncEnergyMonitor *collector, EnergySample r)
+static void storeEnergySample(AsyncEnergyMonitor *collector, EnergyStats stats)
 {
 	EnergySampleList *samples = collector->samples;
 	if (samples->nItems >= samples->capacity)
 	{
 		samples->capacity *= 2;
-		samples->items = realloc(samples->items, samples->capacity*sizeof(EnergySample));
+		samples->items = realloc(samples->items, samples->capacity*sizeof(EnergyStats));
 		assert(samples->items != NULL);
-		//printf("new capacity: %lld\n",samples->capacity);
 	}
-	samples->items[samples->nItems++] = r;
+	samples->items[samples->nItems++] = stats;
 }
-
-static EnergySample subtract_samples(EnergySample before, EnergySample after)
-{
-	EnergySample result;
-	result.dram_or_gpu = after.dram_or_gpu - before.dram_or_gpu;
-	result.core = after.core - before.core;
-	result.package = after.package - before.package;
-	return result;
-}
-
-static EnergySample parseEnergySample(char* ener_info)
-{
-	EnergySample current;
-	float dram_or_gpu, core, package;
-	sscanf(ener_info, "%f#%f#%f", &dram_or_gpu, &core, &package);
-	current.dram_or_gpu = dram_or_gpu;
-	current.core = core;
-	current.package = package;
-	return current;
-}
-
-/*
-// for debugging
-static void printEnergySampleList(EnergySampleList* samples)
-{
-	printf("%lld || ",samples->nItems);
-	for (int i = 0; i < samples->nItems; i++)
-	{
-		EnergySample current = samples->items[i];
-		printf("%f %f %f // ",current.dram_or_gpu,current.core,current.package);
-	}
-	printf("\n");
-}
-
-// for debugging
-static void printCollector(AsyncEnergyMonitor* collector)
-{
-	printf("threadptr: %p\n",collector->thread);
-	printf("samplingRate: %d\n",collector->samplingRate);
-	printEnergySampleList(collector->samples);
-}
-*/
 
 void* run(void* collector_param){
-	struct timeval before_stamp, after_stamp, diff_stamp; //before, after, and difference timestamps
 	AsyncEnergyMonitor* collector = (AsyncEnergyMonitor*)collector_param;
-	char before_buffer[512];
-	char after_buffer[512];
-	//struct timeval t;
-	gettimeofday(&before_stamp,NULL); //start timestamp	
+
+	int sockets = getSocketNum();
+	EnergyStats before_stats[sockets];
+	EnergyStats after_stats[sockets];
+
 	while (!collector->exit)
 	{
-		EnergyStatCheck(before_buffer); //@TODO make energystatcheck return an EnergySample struct instead of filling up a char buffer??		
+		EnergyStatCheck(before_stats); 
 		sleep_millisecond(collector->samplingRate);
-		EnergyStatCheck(after_buffer);
+		EnergyStatCheck(after_stats);
 
-		EnergySample before_sample = parseEnergySample(before_buffer);
-		EnergySample after_sample = parseEnergySample(after_buffer);
-		
-		EnergySample diff_sample = subtract_samples(before_sample, after_sample);
-
-		gettimeofday(&after_stamp,NULL); //stop timestamp
-		timersub(&after_stamp,&before_stamp, &diff_stamp); //-- is it before after, or after before??
-		before_stamp = after_stamp;
-		//printf("%ld ,,, ",diff_stamp.tv_usec);
-		diff_sample.timestamp = diff_stamp.tv_usec;
-		addEnergySample(collector, diff_sample);
+		for (int i = 0; i < sockets; i++) {
+			EnergyStats diff = energyStatsSubtract(after_stats[i], before_stats[i]);
+			storeEnergySample(collector,diff);
+		}
 	}
 	return NULL;
 }
@@ -149,7 +101,6 @@ void* run(void* collector_param){
 
 void start(AsyncEnergyMonitor *collector){
 	pthread_create(&(collector->thread), NULL, run, collector);
-	//printf("started\n");
 }
 
 void stop(AsyncEnergyMonitor *collector){
@@ -165,20 +116,18 @@ void reset(AsyncEnergyMonitor* collector){
 void writeToFile(AsyncEnergyMonitor *collector, const char* filepath){
 	FILE * outfile = (filepath) ? fopen(filepath,"w") : stdout;
 	
-	int dram_or_gpu = get_architecture_category(get_cpu_model());
-	const char* dram_or_gpu_str = (dram_or_gpu == 1 || dram_or_gpu == 2) ? (dram_or_gpu == 1 ? "dram" : "gpu") : "undefined";
-
-	EnergySample* items = collector->samples->items;
+	EnergyStats* items = collector->samples->items;
 	int nItems = collector->samples->nItems;
-	EnergySample current;
+	EnergyStats current;
 	fprintf(outfile,"samplingRate: %d milliseconds\n",collector->samplingRate);
-	fprintf(outfile,"%s,core,pkg,timestamp\n", dram_or_gpu_str);
+	fprintf(outfile,"socket,dram,gpu,cpu,pkg,timestamp seconds/microseconds\n");
 	for (int i = 0; i < nItems; i++) {
 		current = items[i];
-		fprintf(outfile,"%f,%f,%f,%ld\n", current.dram_or_gpu, current.core, current.package,current.timestamp);
+		fprintf(outfile,"%d,%f,%f,%f,%f,%ld/%ld\n", current.socket, current.dram, 
+				current.gpu, current.cpu, current.pkg, 
+				current.timestamp.tv_sec, current.timestamp.tv_usec);
 	}
-	printf("\n -- why does it have 0.000000 some times??? --\n\n");
-	fclose(outfile);
+	if (filepath) fclose(outfile);
 }
 
 /////////// JNI Calls Down Here /////////////
