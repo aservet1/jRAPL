@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
 
-/**
+/** <h1> DOCUMENTATION OUT OF DATE </h1>
 *	Reads and stores sytem energy consumption in a background thread.
 *	<br>Meant to record the progression of energy consumption of a program run in the main thread.
 *	<br>Spawns a therad between <code>this.start()</code> and <code>this.stop()</code>.
@@ -19,14 +19,14 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	private volatile boolean exit = false;
 	private Thread t = null;
 
-	/** Initializes sample collector with a default sampling rate setting of 10 milliseconds */
+	/** <h1> DOCUMENTATION OUT OF DATE </h1> Initializes sample collector with a default sampling rate setting of 10 milliseconds */
 	public AsyncEnergyMonitorJavaSide()
 	{
 		samplingRate = 10;
 		samples = new ArrayList<EnergyDiff>();
 	}
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Initializes sample collector with the sampling rate passed as paramter
 	*	@param s The sampling rate over which to take samples (in milliseconds)
 	*/
@@ -36,7 +36,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 		samples = new ArrayList<EnergyDiff>();
 	}
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Do not call this directly from the main thread. 
 	*	It is called and run internally by the Thread class via <code>this.start()</code>.
 	*	Runs a loop, continually reading energy consumption over 
@@ -53,7 +53,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 		}
 	}
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Starts collecting and storing energy samples in a separate thread. Continually takes and stores energy samples
 	*	in the background while main thread runs. Will run until main thread calls <code>this.stop()</code>.
 	*/
@@ -63,7 +63,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 		t.start();
 	}
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Stops collecting and storing energy samples.
 	*/
 	public void stop()
@@ -78,7 +78,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 		t = null;
 	}
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Resets the object for reuse.
 	*	<br>Call this if you intend to reuse the same object for energy collection after already using it.
 	*	<br>Clears out the current list of samples stored in the object.
@@ -89,7 +89,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 		samples.clear();
 	}
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Returns K most recent stored samples. Each samples is a double[] of the form
 	*	<br>[dram/gpu energy, core energy, package energy].
 	*	<br>If K is greater than the amount of samples, returns all samples
@@ -113,7 +113,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 		return samples_array;
 	}
 	
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Gets the sampling rate for the thread to collect samples.
 	*	@return The sampling rate (in milliseconds)
 	*/
@@ -122,7 +122,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 		return samplingRate;
 	}
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Sets the sampling rate over which to take samples
 	*	@param s sampling rate (in milliseconds)
 	*/
@@ -131,7 +131,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 		samplingRate = s;
 	}
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Gets the number of samples the object has currently collected
 	*	@return number of samples collected so far
 	*/
@@ -140,7 +140,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 		return samples.size();
 	}
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Dumps all samples to file, along with the sampling rate.
 	*	Same format as <code>this.toString()</code>
 	*	
@@ -159,7 +159,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 		}
 	}
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	CSV format of all data collected. First two lines are the sampling rate and a header describing which power domain
 	*	each column's energy samples represent
 	*	<br>Format:

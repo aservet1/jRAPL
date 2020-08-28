@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
 
-/**
+/** <h1> DOCUMENTATION OUT OF DATE </h1>
 *	Utilities for assessing runtime of (currently) a few things in C and Java. Can be used for performance diagnostics
 *	on a particular system. These methods are accessed externally through a shell script that runs "java RuntimeTestUtils"
 *	followed by command line arguments that tell the program which of these methods to use and how. Their output is then
@@ -21,7 +21,7 @@ public class RuntimeTestUtils extends JRAPL
 
 	//public RunTimeTestUtils() {} // private constructor -- never initialized
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Times a method call, returns time in microseconds
 	*	@param method The equivalent of a function pointer in C/C++
 	*	@return the time it took to run the method, in microseconds
@@ -36,7 +36,7 @@ public class RuntimeTestUtils extends JRAPL
 		return elapsed;
 	}
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Times a method multiple times. Stores runtime and then prints all
 	*	readings to standard output, labelled by the method name.
 	*/
@@ -126,7 +126,7 @@ public class RuntimeTestUtils extends JRAPL
 	}
 
 
-	/**
+	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Reads command line argument and decides which of these methods to call.
 	*	@param args Array of command line arguments. Format:
 	*		OPTION NUM_ITERATIONS
