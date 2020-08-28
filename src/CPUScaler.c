@@ -144,34 +144,34 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 		pkg[i] = -1; pp0[i] = -1; pp1[i] = -1; dram[i] = -1; //sentintel values for no energy read into them bc we only read one of dram or gpu
 
 
-		/*if (timingMsrReadings) gettimeofday(&start, NULL);*/
+		if (timingMsrReadings) gettimeofday(&start, NULL);
 		result = read_msr(fd[i], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
 		pkg[i] = (double) result * rapl_unit.energy;
-		/*if (timingMsrReadings) {
+		if (timingMsrReadings) {
 			gettimeofday(&end,NULL);
 			timeval_subtract(&diff, &end, &start);
 			logTime("PACKAGE Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
-		}*/
+		}
 
-		/*if (timingMsrReadings)gettimeofday(&start, NULL);*/
+		if (timingMsrReadings)gettimeofday(&start, NULL);
 		result = read_msr(fd[i], MSR_PP0_ENERGY_STATUS);
 		pp0[i] = (double) result * rapl_unit.energy;
-		/*if (timingMsrReadings) {
+		if (timingMsrReadings) {
 			gettimeofday(&end,NULL);
 			timeval_subtract(&diff, &end, &start);
 			logTime("CORE Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
-		}*/
+		}
 
 
 		switch(architecture_category) {
 			case READ_FROM_DRAM:
-				/*if (timingMsrReadings) gettimeofday(&start, NULL);*/
+				if (timingMsrReadings) gettimeofday(&start, NULL);
 				result = read_msr(fd[i],MSR_DRAM_ENERGY_STATUS);
-				/*if (timingMsrReadings) {
+				if (timingMsrReadings) {
 					gettimeofday(&end,NULL);
 					timeval_subtract(&diff, &end, &start);
 					logTime("DRAM Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
-				}*/
+				}
 				if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
 					dram[i] =(double)result*MSR_DRAM_ENERGY_UNIT;
 				} else {
@@ -182,13 +182,13 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 
 				break;
 			case READ_FROM_GPU:
-				/*if (timingMsrReadings) gettimeofday(&start, NULL);*/
+				if (timingMsrReadings) gettimeofday(&start, NULL);
 				result = read_msr(fd[i],MSR_PP1_ENERGY_STATUS);
-				/*if (timingMsrReadings) {
+				if (timingMsrReadings) {
 					gettimeofday(&end,NULL);
 					timeval_subtract(&diff, &end, &start);
 					logTime("GPU Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
-				}*/
+				}
 				pp1[i] = (double) result *rapl_unit.energy;
 
 
