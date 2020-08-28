@@ -15,13 +15,11 @@
 #include "arch_spec.h"
 #include "msr.h"
 #include "CPUScaler_TimingUtils.h"
-
-/// Comments starting with '///' are my (Alejandro's) notes to self.
-/// None of this is official documentation.
+#include "EnergyStats.h"
 
 #define MSR_DRAM_ENERGY_UNIT 0.000015
 
-static int architecture_category;
+static int architecture_category; //TODO - get better name for this variable
 static uint32_t cpu_model;
 static rapl_msr_unit rapl_unit;
 static rapl_msr_parameter *parameters;
@@ -55,28 +53,6 @@ JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_FinalizeTimeLogs(JNIEn
 	finalizeAllLogs();
 }
 
-/** <Alejandro's Interpretation>
- *  Takes the energy info and packages it into a formatted string... # delimits the 3 energy attribs and @ delimits multiple package readings (1 pkg = 3 energy attribs)
- *	Sets offset to the end of the string by the end of this
- *	I belive the i is an iterator to see how many packages have been put into the string
- *	If more than 1 pkg, puts a @ at the end of the string because there's going to be another set of package info after that
- */
-void copy_to_string(char *ener_info, char uncore_buffer[60], int uncore_num, char cpu_buffer[60], int cpu_num, char package_buffer[60], int package_num, int i, int *offset)
-{
-	memcpy(ener_info + *offset, &uncore_buffer, uncore_num);
-	ener_info[*offset + uncore_num] = '#';
-	memcpy(ener_info + *offset + uncore_num + 1, &cpu_buffer, cpu_num);
-	ener_info[*offset + uncore_num + cpu_num + 1] = '#';
-	if(i < num_pkg - 1) {
-		memcpy(ener_info + *offset + uncore_num + cpu_num + 2, &package_buffer, package_num);
-		*offset += uncore_num + cpu_num + package_num + 2;
-		if(num_pkg > 1) {
-			ener_info[*offset++] = '@';
-		}
-	} else {
-		memcpy(ener_info + *offset + uncore_num + cpu_num + 2, &package_buffer, package_num + 1);
-	}
-}
 
 rapl_msr_unit get_rapl_unit()
 {
@@ -86,98 +62,6 @@ rapl_msr_unit get_rapl_unit()
 	return rapl_unit;
 }
 
-
-/** <Alejandro's Interpretation>
- *  In short, fills up the energy info buffers appropriately.
- *	Pass in gpu, dram, cpu, and package buffers. There are num_pkg buffers per type of computer thing. One buffer per package that the computer has.
- *	Filling up the buffers. The for loop is so you get a different reading for all the packages. Reads the msr for that package with fd[i]
- *  Based on the CPU model, it either adds dram info or gpu info. I guess that certain models use gpus and others drams?
- *  Interpret/process MSR reading for dram differently based on CPU model before storing it in the buffer.......................
- */
-void initialize_energy_info(char gpu_buffer[num_pkg][60], char dram_buffer[num_pkg][60], char cpu_buffer[num_pkg][60], char package_buffer[num_pkg][60])
-{
-	//uint32_t cpu_model = get_cpu_model();
-	double package[num_pkg];
-	double pp0[num_pkg];
-	double pp1[num_pkg];
-	double dram[num_pkg];
-	double result = 0.0;
-	int info_size = 0;
-
-	for (int i = 0; i < num_pkg; i++) {
-		//if (timingMsrReadings) gettimeofday(&start, NULL);
-		result = read_msr(fd[i], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
-		package[i] = (double) result * rapl_unit.energy;
-		//if (timingMsrReadings) {
-		//	gettimeofday(&end,NULL);
-		//	timeval_subtract(&diff, &end, &start);
-		//	logTime("PACKAGE Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
-		//}
-
-		//if (timingMsrReadings)gettimeofday(&start, NULL);
-		result = read_msr(fd[i], MSR_PP0_ENERGY_STATUS);
-		pp0[i] = (double) result * rapl_unit.energy;
-		//if (timingMsrReadings) {
-		//	gettimeofday(&end,NULL);
-		//	timeval_subtract(&diff, &end, &start);
-		//	logTime("CORE Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
-		//}
-
-		sprintf(package_buffer[i], "%f", package[i]);
-		sprintf(cpu_buffer[i], "%f", pp0[i]);
-		//int architecture_category = get_architecture_category(cpu_model);
-		switch(architecture_category) {
-			case READ_FROM_DRAM:
-				//if (timingMsrReadings) gettimeofday(&start, NULL);
-				result = read_msr(fd[i],MSR_DRAM_ENERGY_STATUS);
-				//if (timingMsrReadings) {
-				//	gettimeofday(&end,NULL);
-				//	timeval_subtract(&diff, &end, &start);
-				//	logTime("DRAM Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
-				//}
-				if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
-					dram[i] =(double)result*MSR_DRAM_ENERGY_UNIT;
-				} else {
-					dram[i] =(double)result*rapl_unit.energy;
-				}
-
-				sprintf(dram_buffer[i], "%f", dram[i]);
-
-				info_size += strlen(package_buffer[i]) + strlen(dram_buffer[i]) + strlen(cpu_buffer[i]) + 4;
-
-				/*Insert socket number*/
-
-				break;
-			case READ_FROM_GPU:
-				//if (timingMsrReadings) gettimeofday(&start, NULL);
-				result = read_msr(fd[i],MSR_PP1_ENERGY_STATUS);
-				//if (timingMsrReadings) {
-				//	gettimeofday(&end,NULL);
-				//	timeval_subtract(&diff, &end, &start);
-				//	logTime("GPU Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
-				//}
-				pp1[i] = (double) result *rapl_unit.energy;
-
-				sprintf(gpu_buffer[i], "%f", pp1[i]);
-
-				info_size += strlen(package_buffer[i]) + strlen(gpu_buffer[i]) + strlen(cpu_buffer[i]) + 4;
-				break;
-			case UNDEFINED_ARCHITECTURE:
-				printf("Architecture not found\n");
-				break;
-
-		}
-	}
-
-}
-
-//JNIEXPORT jint JNICALL Java_jrapl_JRAPL_GetWrapAroundEnergy(JNIEnv* env, jclass jclss)
-//{
-//	printf("you are here\n");
-//	rapl_msr_unit u = get_rapl_unit();
-//	printf("now you're here\n");
-//	return get_wraparound_energy(u.energy);
-//}
 
 int ProfileInit()
 {
@@ -224,7 +108,7 @@ JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls) {
 }
 
 /** <Alejandro's Interpretation>
- * Gets num of cpu sockets but casts it as a jint for the java end of things
+ *	Return number of CPU sockets
  */
 JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_GetSocketNum(JNIEnv *env, jclass jcls) {
 
@@ -243,98 +127,129 @@ JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_DramOrGpu(JNIEnv * env, jclass jcls) 
 
 }
 
-void EnergyStatCheck(char ener_info[512])
+
+/** <Alejandro's Interpretation>
+ *	Reads energy info from MSRs into EnergyStats structs. Fills an array of structs, one per socket 
+ */
+void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 {
-	char gpu_buffer[num_pkg][60];
-	char dram_buffer[num_pkg][60];
-	char cpu_buffer[num_pkg][60];
-	char package_buffer[num_pkg][60];
-	int dram_num = 0L;	///  dram_num is the id number of that component
-	int cpu_num = 0L;	///  same applies to the other x_num varaibles (num is id number)
-	//uint32_t cpu_model = get_cpu_model();
+	struct timeval timestamp;
+	double pkg[num_pkg];
+	double pp0[num_pkg]; //cpu
+	double pp1[num_pkg]; //gpu
+	double dram[num_pkg];
+	double result = 0.0;
 
-	int package_num = 0L;
-	int gpu_num = 0L;
-	int i;
-	int offset = 0;
+	for (int i = 0; i < num_pkg; i++) {
+		pkg[i] = -1; pp0[i] = -1; pp1[i] = -1; dram[i] = -1; //sentintel values for no energy read into them bc we only read one of dram or gpu
 
-  	bzero(ener_info, 512);
-	initialize_energy_info(gpu_buffer, dram_buffer, cpu_buffer, package_buffer);
-	//int architecture_catergory = get_architecture_category(cpu_model);
-	for(i = 0; i < num_pkg; i++) {
+
+		/*if (timingMsrReadings) gettimeofday(&start, NULL);*/
+		result = read_msr(fd[i], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
+		pkg[i] = (double) result * rapl_unit.energy;
+		/*if (timingMsrReadings) {
+			gettimeofday(&end,NULL);
+			timeval_subtract(&diff, &end, &start);
+			logTime("PACKAGE Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
+		}*/
+
+		/*if (timingMsrReadings)gettimeofday(&start, NULL);*/
+		result = read_msr(fd[i], MSR_PP0_ENERGY_STATUS);
+		pp0[i] = (double) result * rapl_unit.energy;
+		/*if (timingMsrReadings) {
+			gettimeofday(&end,NULL);
+			timeval_subtract(&diff, &end, &start);
+			logTime("CORE Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
+		}*/
+
+
 		switch(architecture_category) {
 			case READ_FROM_DRAM:
+				/*if (timingMsrReadings) gettimeofday(&start, NULL);*/
+				result = read_msr(fd[i],MSR_DRAM_ENERGY_STATUS);
+				/*if (timingMsrReadings) {
+					gettimeofday(&end,NULL);
+					timeval_subtract(&diff, &end, &start);
+					logTime("DRAM Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
+				}*/
+				if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
+					dram[i] =(double)result*MSR_DRAM_ENERGY_UNIT;
+				} else {
+					dram[i] =(double)result*rapl_unit.energy;
+				}
 
 				/*Insert socket number*/
-				dram_num = strlen(dram_buffer[i]);
-				cpu_num = strlen(cpu_buffer[i]);
-				package_num = strlen(package_buffer[i]);
-
-				//copy_to_string(ener_info, dram_buffer, dram_num, cpu_buffer, cpu_num, package_buffer, package_num, i, &offset);
-				memcpy(ener_info + offset, &dram_buffer[i], dram_num);
-				ener_info[offset + dram_num] = '#'; //split sign
-				memcpy(ener_info + offset + dram_num + 1, &cpu_buffer[i], cpu_num);
-				ener_info[offset + dram_num + cpu_num + 1] = '#';
-				if(i < num_pkg - 1) {
-					memcpy(ener_info + offset + dram_num + cpu_num + 2, &package_buffer[i], package_num);
-					offset += dram_num + cpu_num + package_num + 2;
-					if(num_pkg > 1) {
-						ener_info[offset] = '@';
-						offset++;
-					}
-				} else {
-					memcpy(ener_info + offset + dram_num + cpu_num + 2, &package_buffer[i], package_num + 1);
-				}
 
 				break;
 			case READ_FROM_GPU:
+				/*if (timingMsrReadings) gettimeofday(&start, NULL);*/
+				result = read_msr(fd[i],MSR_PP1_ENERGY_STATUS);
+				/*if (timingMsrReadings) {
+					gettimeofday(&end,NULL);
+					timeval_subtract(&diff, &end, &start);
+					logTime("GPU Socket 0", diff.tv_sec*1000 + diff.tv_usec); //@TODO it should be "Socket (i)" but I didn't want to deal with string building in C and our copmuters only have 1 socket, but this definitely needs to be changed to scale up to 2 socket machines (jRAPL currently only works for 2 socket machines)
+				}*/
+				pp1[i] = (double) result *rapl_unit.energy;
 
-				gpu_num = strlen(gpu_buffer[i]);
-				cpu_num = strlen(cpu_buffer[i]);
-				package_num = strlen(package_buffer[i]);
-
-				//copy_to_string(ener_info, gpu_buffer, gpu_num, cpu_buffer, cpu_num, package_buffer, package_num, i, &offset);
-				memcpy(ener_info + offset, &gpu_buffer[i], gpu_num);
-				//split sign
-				ener_info[offset + gpu_num] = '#';
-				memcpy(ener_info + offset + gpu_num + 1, &cpu_buffer[i], cpu_num);
-				ener_info[offset + gpu_num + cpu_num + 1] = '#';
-				if(i < num_pkg - 1) {
-					memcpy(ener_info + offset + gpu_num + cpu_num + 2, &package_buffer[i], package_num);
-					offset += gpu_num + cpu_num + package_num + 2;
-					if(num_pkg > 1) {
-						ener_info[offset] = '@';
-						offset++;
-					}
-				} else {
-					memcpy(ener_info + offset + gpu_num + cpu_num + 2, &package_buffer[i],
-							package_num + 1);
-				}
 
 				break;
-		case UNDEFINED_ARCHITECTURE:
+			case UNDEFINED_ARCHITECTURE:
 				printf("Architecture not found\n");
 				break;
 
 		}
+
+		stats_per_socket[i].socket = i + 1;
+		stats_per_socket[i].pkg = pkg[i];
+		stats_per_socket[i].cpu = pp0[i];
+		stats_per_socket[i].gpu = pp1[i];
+		stats_per_socket[i].dram = dram[i];
+		gettimeofday(&timestamp,NULL);
+		stats_per_socket[i].timestamp = timestamp;
+	}
+
+}
+
+/** <Alejandro's Interpretation>
+ *  Takes the energy info and packages it into a formatted string to pass to Java
+ *    dram#gpu#cpu#pkg@
+ *  Each socket will have the above format, multi socket machines will look like
+ *    socket1@socket2@socket3@ etc
+ *  Excludes the timestamp because Java will do its own timestamp upon receiving this information
+ */
+void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info[512])
+{
+  	bzero(ener_info, 512);
+	int offset = 0;
+
+	char buffer[100];
+	int buffer_len;
+
+	for(int i = 0; i < num_pkg; i++){
+		EnergyStats stats = stats_per_socket[i];
+		bzero(buffer, 100);
+		sprintf(buffer, "%f#%f#%f#%f@", stats.dram, stats.gpu, stats.cpu, stats.pkg);
+		buffer_len = strlen(buffer);
+		memcpy(ener_info + offset, buffer, buffer_len);
+		offset += buffer_len;
 	}
 }
 
 /** <Alejandro's Interpretation>
- * Makes a string from the energy info. Initializes energy info with that function above and
- *
- * The first entry is: Dram/uncore gpu energy (depends on the cpu architecture)
- * The second entry is: CPU energy
- * The third entry is: Package energy
+ * Read EnergyStats into EnergyStats struct (one struct per socket) and convert the structs
+ * you have into a string to pass up to Java
  */
 JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *env, jclass jcls) {
 	
 	START_TIMESTAMP_FUNCTIONCALLS;
 	
-	jstring ener_string;
 	char ener_info[512];
-	EnergyStatCheck(ener_info);
-	ener_string = (*env)->NewStringUTF(env, ener_info);
+	EnergyStats stats_per_socket[num_pkg];
+
+	EnergyStatCheck(stats_per_socket);
+	copy_to_string(stats_per_socket, ener_info);
+
+	jstring ener_string = (*env)->NewStringUTF(env, ener_info);
   	
 	STOP_TIMESTAMP_FUNCTIONCALLS( EnergyStatCheck() );
 	

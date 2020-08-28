@@ -10,12 +10,12 @@
  ///  YOU GET THE OPPORTUNITY           \\\ |
 /////////////////////// \\\\\\\\\\\\\\\\\\\\|
 
-void run_cthread(int argc, const char* argv[])
+void run_cthread(int samplingRate, int argc, const char* argv[])
 {
 	printf("hello world\n");
 
 	pthread_t thread;	
-	AsyncEnergyMonitor* collector = newAsyncEnergyMonitor(0, thread);
+	AsyncEnergyMonitor* collector = newAsyncEnergyMonitor(samplingRate, thread);
 	start(collector);
 	sleep(5);
 	stop(collector);
@@ -29,7 +29,7 @@ int main(int argc, const char* argv[])
 {
 	ProfileInit();
 
-	run_cthread(argc,argv);
+	run_cthread(100,argc,argv);
 
 	ProfileDealloc();
 }
