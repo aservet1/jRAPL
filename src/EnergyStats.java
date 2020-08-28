@@ -85,7 +85,7 @@ public final class EnergyStats extends EnergySample
 		}
 		return stats;
 	}
-
+	
 	public EnergyStats(int socket, double dram, double gpu, double cpu, double pkg) {
 		super(socket, dram, gpu, cpu, pkg);
 	}
