@@ -1,0 +1,18 @@
+Nonzero energy sample picked up by thread (joules): C // Java
+  mean: 	2.1799419227382002e-05 // 1.4107821344285726e-05
+  stdev:	7.426695409133528e-05 // 5.823036224432397e-05
+cdata[DRAM] sample size: 42013
+jdata[DRAM] sample size: 43637
+-------------------------------
+Nonzero energy sample picked up by thread (joules): C // Java
+  mean: 	8.7445623973532e-05 // 0.00016993106767188658
+  stdev:	0.00032047433859855323 // 0.0007162094157012459
+cdata[CORE] sample size: 42013
+jdata[CORE] sample size: 43637
+-------------------------------
+Nonzero energy sample picked up by thread (joules): C // Java
+  mean: 	0.000259781543807869 // 0.00024414100419436693
+  stdev:	0.0009101195207813273 // 0.0010249301004138546
+cdata[PKG] sample size: 42013
+jdata[PKG] sample size: 43637
+-------------------------------

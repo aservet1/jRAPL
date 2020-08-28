@@ -18,7 +18,7 @@ mkdir -p $outputdir
 cd ../src
 
 # we're assuming that this is set up for C side timing of each core reading
-sudo java jrapl.RuntimeTestUtils --time-msr-readings $trials > ../RuntimeTests/$outputdir/MajorOutput.temp-data
+sudo java jrapl_testing.RuntimeTestUtils --time-msr-readings $trials > ../RuntimeTests/$outputdir/MajorOutput.temp-data
 
 cd ../RuntimeTests/$outputdir
 

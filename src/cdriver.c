@@ -1,21 +1,33 @@
 #include <stdio.h>
-#include <unistd.h> // for sleep()
-#include <stdlib.h>
+#include <unistd.h> 
 #include "CPUScaler.h"
-#include "CPUScaler_TimingUtils.h"
-#define filler NULL, NULL
+#include "AsyncEnergyMonitorCSide.h"
 
-int main(int argc, char* argv[])
+/////////////////////// \\\\\\\\\\\\\\\\\\\\|
+ ///  DO NOT DELETE WHAT IS IN THIS     \\\ |
+ ///  COMMENT SECTION SAVE IT TO THE    \\\ |
+ ///  JAVA THREAD TEST DRIVER FILE WHEN \\\ |
+ ///  YOU GET THE OPPORTUNITY           \\\ |
+/////////////////////// \\\\\\\\\\\\\\\\\\\\|
+
+void run_cthread(int samplingRate, int argc, const char* argv[])
 {
 	int iterations = atoi(argv[1]);
 
+	pthread_t thread;	
+	AsyncEnergyMonitor* collector = newAsyncEnergyMonitor(samplingRate, thread);
+	start(collector);
+	sleep(5);
+	stop(collector);
+	writeToFile(collector, (argc>1)?argv[1]:NULL );
+	freeAsyncEnergyMonitor(collector);
+
+}
+/////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+int main(int argc, const char* argv[])
+{
 	ProfileInit();
-
-	initAllLogs(iterations);
-	Java_jrapl_RuntimeTestUtils_CSideTimeProfileInit(filler, iterations);
-	finalizeAllLogs();
-
+	run_cthread(100,argc,argv);
 	ProfileDealloc();
-
-
 }

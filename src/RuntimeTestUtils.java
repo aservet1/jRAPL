@@ -1,4 +1,6 @@
-package jrapl;
+package jrapltesting;
+
+import jrapl.*;
 
 import java.util.Arrays;
 import java.text.ParseException;
