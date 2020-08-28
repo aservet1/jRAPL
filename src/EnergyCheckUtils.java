@@ -1,14 +1,14 @@
 package jrapl;
 import java.util.Arrays;
 
-/**
+/** <h1> DOCUMENTATION OUT OF DATE </h1>
 *	Functions around getting energy reading of the system
 */
 public class EnergyCheckUtils extends JRAPL {
 
 //	private EnergyCheckUtils() {} // private constructor -- never initialized
 	
-	/** Returns a string with current total energy consumption reported in MSR registers.
+	/** <h1> DOCUMENTATION OUT OF DATE </h1> Returns a string with current total energy consumption reported in MSR registers.
 	 *	<br>Formatted " 1stSocketInfo @ 2ndSocketInfo @ ... @ NthSocketInfo " with @ delimiters
 	 *	<br>Each NthSocketInfo subsection formatted " dram_energy # cpu_energy # package_energy " with # delimieters
 	 *	<br>This string gets parsed into an array in getEnergyStats().
@@ -18,7 +18,7 @@ public class EnergyCheckUtils extends JRAPL {
 	public native static String EnergyStatCheck();
 
 
-	/** Parses string generated from the native EnergyStatCheck() method into an array of doubles.
+	/** <h1> DOCUMENTATION OUT OF DATE </h1> Parses string generated from the native EnergyStatCheck() method into an array of doubles.
 	 *  <br>Array will be size (3 * socketnum). There will be three entries per socket
 	 *  <br>The first entry is: Dram/uncore gpu energy (depends on the cpu architecture)
 	 *  <br>The second entry is: CPU energy

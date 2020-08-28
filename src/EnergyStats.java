@@ -68,10 +68,10 @@ abstract class EnergySample extends JRAPL
 
 }
 
-/** High-level representation of jrapl's energy stats. */
+/** <h1> DOCUMENTATION OUT OF DATE </h1> High-level representation of jrapl's energy stats. */
 public final class EnergyStats extends EnergySample
 {
-	/** Returns the energy stats for each socket. */
+	/** <h1> DOCUMENTATION OUT OF DATE </h1> Returns the energy stats for each socket. */
 	public static EnergyStats[] get() {
 		EnergyStats[] stats = new EnergyStats[NUM_SOCKETS];
 		double[] energy = EnergyCheckUtils.getEnergyStats();
@@ -85,7 +85,7 @@ public final class EnergyStats extends EnergySample
 		}
 		return stats;
 	}
-
+	
 	public EnergyStats(int socket, double dram, double gpu, double cpu, double pkg) {
 		super(socket, dram, gpu, cpu, pkg);
 	}
