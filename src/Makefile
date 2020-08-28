@@ -1,6 +1,6 @@
 TARGET = libCPUScaler.so $(OFILES)
 
-CFILES = EnergyStats.c AsyncEnergyMonitorCSide.c CPUScaler_TimingUtils.c CPUScaler.c arch_spec.c msr.c dvfs.c
+CFILES = EnergyStats.c AsyncEnergyMonitorCSide.c CPUScaler.c arch_spec.c msr.c dvfs.c RuntimeTestUtils.c #CPUScaler_TimingUtils.c
 OFILES = $(CFILES:.c=.o) 
 
 JAVA_TESTFILES = GeneralTestDriver.java RuntimeTestUtils.java ThreadTesting.java

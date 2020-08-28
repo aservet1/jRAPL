@@ -2,16 +2,13 @@
 #ifndef CPUSCALER_H
 #define CPUSCALER_H
 
+#include <jni.h>
 #include "EnergyStats.h"
 
 int ProfileInit();
-
 void EnergyStatCheck(EnergyStats stats_per_socket[]);
-
 void ProfileDealloc();
 
-
-void Java_jrapl_RuntimeTestUtils_FinalizeTimeLogs(JNIEnv *env, jclass jcls);
 jint Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls);
 jint Java_jrapl_ArchSpec_GetSocketNum(JNIEnv *env, jclass jcls);
 jint Java_jrapl_ArchSpec_DramOrGpu(JNIEnv * env, jclass jcls);

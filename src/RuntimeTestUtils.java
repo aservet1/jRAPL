@@ -125,6 +125,7 @@ public class RuntimeTestUtils extends JRAPL
 		JRAPL.ProfileDealloc();
 	}
 
+	public native static void timeProfileInit();
 
 	/**
 	*	Reads command line argument and decides which of these methods to call.
@@ -139,7 +140,10 @@ public class RuntimeTestUtils extends JRAPL
 	*/
 	public static void main(String[] args)
 	{
-		new JRAPL(); // get static block initialization out of the way in JRAPL super class so it doesnt interfere with runtime measurements
+
+		timeProfileInit();
+
+	/*	new JRAPL(); // get static block initialization out of the way in JRAPL super class so it doesnt interfere with runtime measurements
 		int iterations;
 		if(args.length != 2){
 			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");
@@ -176,6 +180,6 @@ public class RuntimeTestUtils extends JRAPL
 		}
 		else 
 			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");
-
+	*/
 	}
 }

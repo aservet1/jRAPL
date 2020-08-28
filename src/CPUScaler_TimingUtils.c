@@ -4,7 +4,6 @@
 #include<stdbool.h>
 #include<string.h>
 #include<jni.h>
-#include "CPUScaler_TimingUtils.h"
 #include "CPUScaler.h"
 
 static TimeLog* newTimeLog(int initialCapacity)
