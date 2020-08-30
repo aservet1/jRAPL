@@ -196,6 +196,48 @@ public class RuntimeTestUtils extends JRAPL
 		System.exit(2);
 	}
 
+	public static void timeAllCFunctions(int iterations) {
+		long[] profileInitTimes = new long[iterations];
+		long[] getSocketTimes = new long[iterations];
+		long[] energyStatTimes = new long[iterations];
+		long[] profileDeallocTimes = new long[iterations];
+		int profInitIndex = 0, getSocketIndex = 0, energyStatIndex = 0, profDeallocIndex = 0;
+		for (int n = 0; n < iterations; n++) profileInitTimes[profInitIndex++] = usecTimeProfileInit();
+		for (int n = 0; n < iterations; n++) getSocketTimes[getSocketIndex++] = usecTimeGetSocketNum();
+		for (int n = 0; n < iterations; n++) energyStatTimes[energyStatIndex++] = usecTimeEnergyStatCheck();
+		for (int n = 0; n < iterations; n++) {
+			JRAPL.ProfileInit(); // make sure memory is alloc'd first to prevent 'double free' errors
+			profileDeallocTimes[profDeallocIndex++] = usecTimeProfileDealloc();
+		}
+		printFunctionTimeRecord(profileInitTimes,"ProfileInit()");
+		printFunctionTimeRecord(getSocketTimes,"GetSocketNum()");
+		printFunctionTimeRecord(energyStatTimes,"EnergyStatCheck()");
+		printFunctionTimeRecord(profileDeallocTimes,"ProfileDealloc()");
+
+	}
+
+	private static void printFunctionTimeRecord(long[] record, String name) {
+		for (int i = 0; i < record.length; i++)
+			System.out.println(name+": "+record[i]);
+	}
+	private static void printMSRReadTimeRecord(long[][] record, String name) {
+		for (int i = 0; i < record.length; i++)
+			for (int s = 0; s < record[i].length; s++)
+				System.out.println(name + " Socket" + (s+1) + ": " + record[i][s]);
+	}
+
+	private static void usage_message_abort() {
+		System.out.println(
+				"\nusage: sudo java jrapltesting.RuntimeTestUtils <options> <number of iterations>" +
+				"\n  options:" +
+				"\n    --time-java-calls" +
+				"\n    --time-native-calls" +
+				"\n    --time-msr-readings" +
+				"\n    --read-energy-values"
+			);
+		System.exit(2);
+	}
+
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Reads command line argument and decides which of these methods to call.
 	*	@param args Array of command line arguments. Format:
