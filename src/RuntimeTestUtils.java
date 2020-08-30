@@ -15,10 +15,6 @@ import java.time.Instant;
 */
 public class RuntimeTestUtils extends JRAPL
 {
-	//Native calls to set up C side timing
-	public native static void StartTimeLogs(int logLength, boolean timingFunctionCalls, boolean timingMsrReadings);
-	public native static void FinalizeTimeLogs();
-
 	//public RunTimeTestUtils() {} // private constructor -- never initialized
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
@@ -50,16 +46,16 @@ public class RuntimeTestUtils extends JRAPL
 			results[i++] = time;
 		}
 		
-		//Arrays.sort(results);
 		for (i = 0; i < results.length; i++)
 			System.out.println(name + ": " + results[i]);
 	}
 
 	/* Runs all the native calls x amount of times. Assumes they're being timed
-		 and are printing results on the C side of things */
-// index can be 0 (DRAM), 2 (CORE), 3 (PACKAGE) -- index from getenergyStats()
-// name should store the identifier for each line
-// iters is the number of iterations
+		and are printing results on the C side of things
+	*/
+	// index can be 0 (DRAM), 2 (CORE), 3 (PACKAGE) -- index from getenergyStats()
+	// name should store the identifier for each line
+	// iters is the number of iterations
 	public static class EnergyReadings{
 		public double[][] energyStats;
 		public Instant times[];
@@ -125,6 +121,80 @@ public class RuntimeTestUtils extends JRAPL
 		JRAPL.ProfileDealloc();
 	}
 
+	/** Allocs relevant C side memory and sets up variables */
+	public native static void InitCSideTiming();
+	/** Deallocs relevant C side memory */
+	public native static void DeallocCSideTiming();
+	
+	//Runs each function once and returns microseconds
+	public native static long usecTimeProfileInit();
+	public native static long usecTimeGetSocketNum();
+	public native static long usecTimeEnergyStatCheck();
+	public native static long usecTimeProfileDealloc();
+	public native static long[] usecTimeMSRRead(int powerDomain);
+
+	// @TODO -- NOTE TO SELF: look into why the first MSR read from takes 5-10 long readings (84 ish)
+	// some times and if that's something you can do anything about and if it matters
+	public static void timeAllMSRReads(int iterations) {
+		int DRAM  = 1, GPU = 2, CPU = 3, PKG = 4;
+		long[][] dramTimes = new long[iterations][JRAPL.NUM_SOCKETS];
+		long[][] gpuTimes = new long[iterations][JRAPL.NUM_SOCKETS];
+		long[][] cpuTimes = new long[iterations][JRAPL.NUM_SOCKETS];
+		long[][] pkgTimes = new long[iterations][JRAPL.NUM_SOCKETS];
+		
+		int dramIndex = 0, gpuIndex = 0, cpuIndex = 0, pkgIndex = 0;
+		for (int n = 0; n < iterations; n++) cpuTimes[cpuIndex++] = usecTimeMSRRead(CPU);
+		for (int n = 0; n < iterations; n++) gpuTimes[gpuIndex++] = usecTimeMSRRead(GPU);
+		for (int n = 0; n < iterations; n++) dramTimes[dramIndex++] = usecTimeMSRRead(DRAM);
+		for (int n = 0; n < iterations; n++) pkgTimes[pkgIndex++] = usecTimeMSRRead(PKG);
+
+		printMSRReadTimeRecord(dramTimes, "DRAM");
+		printMSRReadTimeRecord(gpuTimes, "GPU");
+		printMSRReadTimeRecord(cpuTimes, "CPU");
+		printMSRReadTimeRecord(pkgTimes, "PKG");
+	}
+
+	public static void timeAllCFunctions(int iterations) {
+		long[] profileInitTimes = new long[iterations];
+		long[] getSocketTimes = new long[iterations];
+		long[] energyStatTimes = new long[iterations];
+		long[] profileDeallocTimes = new long[iterations];
+		int profInitIndex = 0, getSocketIndex = 0, energyStatIndex = 0, profDeallocIndex = 0;
+		for (int n = 0; n < iterations; n++) profileInitTimes[profInitIndex++] = usecTimeProfileInit();
+		for (int n = 0; n < iterations; n++) getSocketTimes[getSocketIndex++] = usecTimeGetSocketNum();
+		for (int n = 0; n < iterations; n++) energyStatTimes[energyStatIndex++] = usecTimeEnergyStatCheck();
+		for (int n = 0; n < iterations; n++) {
+			JRAPL.ProfileInit(); // make sure memory is alloc'd first to prevent 'double free' errors
+			profileDeallocTimes[profDeallocIndex++] = usecTimeProfileDealloc();
+		}
+		printFunctionTimeRecord(profileInitTimes,"ProfileInit()");
+		printFunctionTimeRecord(getSocketTimes,"GetSocketNum()");
+		printFunctionTimeRecord(energyStatTimes,"EnergyStatCheck()");
+		printFunctionTimeRecord(profileDeallocTimes,"ProfileDealloc()");
+
+	}
+
+	private static void printFunctionTimeRecord(long[] record, String name) {
+		for (int i = 0; i < record.length; i++)
+			System.out.println(name+": "+record[i]);
+	}
+	private static void printMSRReadTimeRecord(long[][] record, String name) {
+		for (int i = 0; i < record.length; i++)
+			for (int s = 0; s < record[i].length; s++)
+				System.out.println(name + " Socket" + (s+1) + ": " + record[i][s]);
+	}
+
+	private static void usage_message_abort() {
+		System.out.println(
+				"\nusage: sudo java jrapltesting.RuntimeTestUtils <options> <number of iterations>" +
+				"\n  options:" +
+				"\n    --time-java-calls" +
+				"\n    --time-native-calls" +
+				"\n    --time-msr-readings" +
+				"\n    --read-energy-values"
+			);
+		System.exit(2);
+	}
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Reads command line argument and decides which of these methods to call.
@@ -139,18 +209,14 @@ public class RuntimeTestUtils extends JRAPL
 	*/
 	public static void main(String[] args)
 	{
-		new JRAPL(); // get static block initialization out of the way in JRAPL super class so it doesnt interfere with runtime measurements
+		new JRAPL(); // get static block initialization out of the way so it doesnt interfere with runtime measurements
 		int iterations;
-		if(args.length != 2){
-			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");
-			return;
+		if(args.length != 2) {
+			usage_message_abort();
 		}
-		//System.out.println(args[0]);
-		boolean timingFunctionCalls = (args[0].equals("--time-native-calls")), timingMsrReadings = (args[0].equals("--time-msr-readings"));
-		try{
+		try {
 			iterations = Integer.parseInt(args[1]);
-		}
-		catch(NumberFormatException e){
+		} catch(NumberFormatException e){
 			System.out.println("Illegal value for NUM_ITERATIONS");
 			return;
 		}
@@ -164,18 +230,18 @@ public class RuntimeTestUtils extends JRAPL
 		else if(args[0].equals("--read-energy-values")){ //Timing and reading energy register
 			DramCorePackageStats(iterations);
 		}
-		else if(timingFunctionCalls || timingMsrReadings){
-			StartTimeLogs(iterations, timingFunctionCalls, timingMsrReadings);
-			for (int i = 0; i < iterations; i++) {
-				JRAPL.ProfileInit();
-				ArchSpec.GetSocketNum();
-				EnergyCheckUtils.EnergyStatCheck();
-				JRAPL.ProfileDealloc();
-			}
-			FinalizeTimeLogs();
+		else if(args[0].equals("--time-native-calls")){
+			InitCSideTiming();
+			timeAllCFunctions(iterations);
+			DeallocCSideTiming();
 		}
-		else 
-			System.out.println("\n\nFORMAT: java jrapl.RuntimeTestUtils [OPTIONS [NUM_ITERATIONS]]\nOPTIONS\n\t--time-java-calls\n\t--time-native-calls\n\t--time-msr-readings\n\t--read-energy-values");
-
+		else if (args[0].equals("--time-msr-readings")){
+			InitCSideTiming();
+			timeAllMSRReads(iterations);
+			DeallocCSideTiming();
+		}
+		else {
+			usage_message_abort();
+		}
 	}
 }

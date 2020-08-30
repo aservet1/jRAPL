@@ -12,7 +12,7 @@
 
 void run_cthread(int samplingRate, int argc, const char* argv[])
 {
-	printf("hello world\n");
+	int iterations = atoi(argv[1]);
 
 	pthread_t thread;	
 	AsyncEnergyMonitor* collector = newAsyncEnergyMonitor(samplingRate, thread);
@@ -28,8 +28,6 @@ void run_cthread(int samplingRate, int argc, const char* argv[])
 int main(int argc, const char* argv[])
 {
 	ProfileInit();
-
 	run_cthread(100,argc,argv);
-
 	ProfileDealloc();
 }
