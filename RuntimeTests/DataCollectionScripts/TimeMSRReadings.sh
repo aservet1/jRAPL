@@ -17,8 +17,7 @@ mkdir -p $outputdir
 
 cd ../src
 
-# we're assuming that this is set up for C side timing of each core reading
-sudo java jrapl_testing.RuntimeTestUtils --time-msr-readings $trials > ../RuntimeTests/$outputdir/MajorOutput.temp-data
+sudo java jrapltesting.RuntimeTestUtils --time-msr-readings $trials > ../RuntimeTests/$outputdir/MajorOutput.temp-data
 
 cd ../RuntimeTests/$outputdir
 
@@ -26,20 +25,19 @@ socket_num=$(../../DataCollectionScripts/get_socket_num)
 
 for (( n=0; n<$socket_num; n++ ))
 do
-	socket="Socket"$n
+	socket="Socket"$(( n+1 ))
 	mkdir $socket
 	cd $socket
 	overall_output=$socket.overall-data
 	grep $socket ../MajorOutput.temp-data > $overall_output
 	
-	functions='DRAM CORE PACKAGE'
+	power_domains='DRAM GPU CPU PKG'
 
-
-	for f in $functions
+	for p in $power_domains
 	do
-		#echo $f.data
-		file=$f.data
-		grep $f $overall_output > $file
+		#echo $p.data
+		file=$p.data
+		grep $p $overall_output > $file
 		#echo $file
 		#tail -10 $file
 	done
