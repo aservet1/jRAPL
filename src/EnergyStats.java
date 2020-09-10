@@ -5,25 +5,25 @@ import java.time.Duration;
 
 abstract class EnergySample extends JRAPL
 {
-	protected final int socket;
+//	protected final int socket;
 	protected final double dram;
 	protected final double gpu;
 	protected final double cpu;
 	protected final double pkg;
-	protected final Instant timestamp;
+//	protected final Instant timestamp;
 
-	public EnergySample(int socket, double dram, double gpu, double cpu, double pkg){
-		this.socket = socket;	
+	public EnergySample(/*int socket,*/ double dram, double gpu, double cpu, double pkg){
+//		this.socket = socket;	
 		this.dram = dram;
 		this.gpu = gpu;
 		this.cpu = cpu;
 		this.pkg = pkg;
-		this.timestamp = Instant.now();
+//		this.timestamp = Instant.now();
 	}
 
-	public int getSocket() {
-		return socket;
-	}
+//	public int getSocket() {
+//		return socket;
+//	}
 
 	public double getCpu() {
 		return cpu;
@@ -44,12 +44,12 @@ abstract class EnergySample extends JRAPL
 	public String commaSeparated() {
 		return String.join(
 			",",
-			String.format("%d", socket),
+//			String.format("%d", socket),
 			String.format("%.4f", dram),
 			String.format("%.4f", gpu),
 			String.format("%.4f", cpu),
-			String.format("%.4f",pkg),
-			timestamp.toString()
+			String.format("%.4f",pkg)//,
+//			timestamp.toString()
 		);
 	}
 	
@@ -57,12 +57,12 @@ abstract class EnergySample extends JRAPL
 	public String toString() {
 		return String.join(
 			", ",
-			"Socket: " + String.format("%d", socket),
+//			"Socket: " + String.format("%d", socket),
 			"CPU: " + String.format("%.4f", cpu),
 			"Package: " + String.format("%.4f", pkg),
 			"DRAM: " + String.format("%.4f", dram),
-			"GPU: " + String.format("%.4f",gpu),
-			"Timestamp: " + timestamp.toString()
+			"GPU: " + String.format("%.4f",gpu)//,
+//			"Timestamp: " + timestamp.toString()
 			);
 	}
 
@@ -76,18 +76,18 @@ public final class EnergyStats extends EnergySample
 		EnergyStats[] stats = new EnergyStats[NUM_SOCKETS];
 		double[] energy = EnergyCheckUtils.getEnergyStats();
 		for (int i = 0; i < NUM_SOCKETS; ++i) {
-			int socket = i + 1;
+//			int socket = i + 1;
 			double dram = energy[4 * i];
 			double gpu = energy[4 * i + 1];
 			double cpu = energy[4 * i + 2];
 			double pkg = energy[4 * i + 3];
-			stats[i] = new EnergyStats(socket, dram, gpu, cpu, pkg);
+			stats[i] = new EnergyStats(/*socket,*/ dram, gpu, cpu, pkg);
 		}
 		return stats;
 	}
 	
-	public EnergyStats(int socket, double dram, double gpu, double cpu, double pkg) {
-		super(socket, dram, gpu, cpu, pkg);
+	public EnergyStats(/*int socket,*/ double dram, double gpu, double cpu, double pkg) {
+		super(/*socket,*/ dram, gpu, cpu, pkg);
 	}
 
 
@@ -96,7 +96,7 @@ public final class EnergyStats extends EnergySample
 	}
 
 	public EnergyDiff difference(EnergyStats other) {
-		assert ( this.getSocket() == other.getSocket() );
+		//assert ( this.getSocket() == other.getSocket() );
 
 		double cpu, pkg, dram, gpu;
 
@@ -118,9 +118,9 @@ public final class EnergyStats extends EnergySample
 			if (gpu < 0) gpu += ENERGY_WRAP_AROUND;
 		}
 
-		Duration elapsedTime = Duration.between(this.timestamp, other.timestamp);
+//		Duration elapsedTime = Duration.between(this.timestamp, other.timestamp);
 
-		return new EnergyDiff(this.getSocket(), dram, gpu, cpu, pkg, elapsedTime);
+		return new EnergyDiff(/*this.getSocket(),*/ dram, gpu, cpu, pkg/*, elapsedTime*/);
 	}
 
 	@Override
@@ -150,22 +150,22 @@ public final class EnergyStats extends EnergySample
 
 final class EnergyDiff extends EnergySample
 {
-	private final Duration elapsedTime; //time between the two EnergyStamps
+	//private final Duration elapsedTime; //time between the two EnergyStamps
 
-	public EnergyDiff(int socket, double dram, double gpu, double cpu, double pkg, Duration elapsed) {
-		super(socket, dram, gpu, cpu, pkg);
-		this.elapsedTime = elapsed;
+	public EnergyDiff(/*int socket,*/ double dram, double gpu, double cpu, double pkg/*, Duration elapsed*/) {
+		super(/*socket,*/ dram, gpu, cpu, pkg);
+		//this.elapsedTime = elapsed;
 	}
 
-	public Duration getElapsedTime() {
-		return this.elapsedTime;
-	}
+	//public Duration getElapsedTime() {
+	//	return this.elapsedTime;
+	//}
 
 	public String commaSeparated() {
 		return String.join(
 			",",
-			super.commaSeparated(),
-			this.elapsedTime.toString()
+			super.commaSeparated()//,
+			//this.elapsedTime.toString()
 		);
 	}
 
@@ -173,8 +173,8 @@ final class EnergyDiff extends EnergySample
 	public String toString() {
 		return String.join(
 			", ",
-			super.toString(),
-			"Duration: " + this.elapsedTime.toString()
+			super.toString()//,
+			//"Duration: " + this.elapsedTime.toString()
 		);	
 	}
 

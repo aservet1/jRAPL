@@ -6,27 +6,51 @@ import jrapl.*;
 
 public class GeneralTestDriver
 {
-	private static int fib(int n)
-	{
-		if (n <= 1) return 1;
-		else return fib(n-1) + fib(n-2);
-	}
-	
 	public static void main(String[] args)
+	{
+		memoryThing("Object");
+		memoryThing("Array");
+	}
+
+	private static void memoryThing(String representation)
+	{
+		AsyncMemoryMonitor memmon = new AsyncMemoryMonitor();
+		if (representation.equals("Object")) {
+			AsyncEnergyMonitorJavaSide_ObjectSamples emonn = new AsyncEnergyMonitorJavaSide_ObjectSamples();
+			memmon.start();
+			emonn.start();
+			try{ Thread.sleep(5000); } catch (Exception e) {}
+			emonn.stop();
+			memmon.stop();
+			System.out.println(memmon);
+		} else if (representation.equals("Array")) {
+			AsyncEnergyMonitorJavaSide_ArraySamples emonn = new AsyncEnergyMonitorJavaSide_ArraySamples();
+			memmon.start();
+			emonn.start();
+			try{ Thread.sleep(5000); } catch (Exception e) {}
+			emonn.stop();
+			memmon.stop();
+			System.out.println(memmon);
+		} else { 
+			System.out.println("invalid representation choice: " + representation);
+			System.exit(1);
+		}
+
+	}
+
+	private static void threadThing(String[] args)
 	{
 		JRAPL.ProfileInit();
 
-		AsyncEnergyMonitorJavaSide ec = new AsyncEnergyMonitorJavaSide(100);
+		AsyncEnergyMonitorJavaSide_ObjectSamples emonn = new AsyncEnergyMonitorJavaSide_ObjectSamples(100);
 
-		ec.start();
-		//while (ec.getNumSamples() < 100);
+		emonn.start();
 		try { Thread.sleep(5000); } catch (Exception e) {}
-		//fib(42);
-		ec.stop();
+		emonn.stop();
 
 		System.out.println("hello w0rld");
-		if (args.length == 0) System.out.println(ec);
-		else ec.writeToFile(args[0]);
+		if (args.length == 0) System.out.println(emonn);
+		else emonn.writeToFile(args[0]);
 
 		JRAPL.ProfileDealloc();
 	}

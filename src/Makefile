@@ -1,20 +1,32 @@
 TARGET = libCPUScaler.so $(OFILES)
 
-CFILES = EnergyStats.c AsyncEnergyMonitorCSide.c CPUScaler.c arch_spec.c msr.c dvfs.c RuntimeTestUtils.c 
+CFILES =	CPUScaler.c			\
+		arch_spec.c			\
+		msr.c				\
+		dvfs.c				\
+ 		EnergyStats.c 			\
+		AsyncEnergyMonitorCSide.c	\
+		RuntimeTestUtils.c		\
+
 OFILES = $(CFILES:.c=.o) 
 
 JAVA_TESTFILES = 	GeneralTestDriver.java	\
 			RuntimeTestUtils.java	\
 			ThreadTesting.java	\
+			MemoryTestUtils.java	\
 
-JAVA_USERFILES =	ArchSpec.java 			\
-			EnergyCheckUtils.java		\
-			EnergyControlUtils.java		\
-			AsyncEnergyMonitorCSide.java	\
-			AsyncEnergyMonitorJavaSide.java	\
-			JRAPL.java			\
-			NativeUtils.java		\
-			PerfCheckUtils.java		\
+JAVA_USERFILES =	ArchSpec.java 					\
+			EnergyCheckUtils.java				\
+			EnergyControlUtils.java				\
+			AsyncEnergyMonitorCSide.java			\
+			AsyncEnergyMonitorJavaSide_ArraySamples.java	\
+			AsyncEnergyMonitorJavaSide_ObjectSamples.java	\
+			AsyncMemoryMonitor.java				\
+			AsyncMonitor.java				\
+			JRAPL.java					\
+			NativeUtils.java				\
+			PerfCheckUtils.java				\
+			
 
 
 CFLAGS = -fPIC -g -c -Wall
@@ -35,7 +47,12 @@ cdriver: $(CFILES) cdriver.c
 	#gcc -g -fsanitize=address -fno-omit-frame-pointer -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) CPUScaler.c arch_spec.c msr.c dvfs.c cdriver.c -o cdriver -lm
 	gcc -g -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES) cdriver.c -o cdriver -lm -lpthread
 
-javafiles:
+	      
+	      
+j: $(JAVA_TESTFILES) $(JAVA_USERFILES)
+	javafiles
+
+javafiles: $(JAVA_TESTFILES) $(JAVA_USERFILES)
 	javac *.java -d .
 	cp libCPUScaler.so jrapl/
 	cp libCPUScaler.so jrapltesting/
