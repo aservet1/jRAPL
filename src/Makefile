@@ -26,7 +26,9 @@ JAVA_USERFILES =	ArchSpec.java 					\
 			JRAPL.java					\
 			NativeUtils.java				\
 			PerfCheckUtils.java				\
-			
+			EnergyManager_Array.java\
+			EnergyManager_EStatObj.java\
+			EnergyManager.java\
 
 
 CFLAGS = -fPIC -g -c -Wall
@@ -49,11 +51,10 @@ cdriver: $(CFILES) cdriver.c
 
 	      
 	      
-j: $(JAVA_TESTFILES) $(JAVA_USERFILES)
-	javafiles
+j: javafiles
 
 javafiles: $(JAVA_TESTFILES) $(JAVA_USERFILES)
-	javac *.java -d .
+	javac	$(JAVA_TESTFILES) $(JAVA_USERFILES) -d .
 	cp libCPUScaler.so jrapl/
 	cp libCPUScaler.so jrapltesting/
 
