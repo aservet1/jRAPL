@@ -5,28 +5,32 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
 
-public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncMonitor
+public class AsyncEnergyMonitorJavaSide<E> extends JRAPL implements Runnable,AsyncMonitor
 {
-	private ArrayList<double[]> samples; 
+	private ArrayList<E> samples; 
 	private int samplingRate; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
+	private EnergyManager energyManager;
+
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Initializes sample collector with a default sampling rate setting of 10 milliseconds */
 	public AsyncEnergyMonitorJavaSide()
 	{
+		energyManager = new EnergyManager_Array();
 		samplingRate = 10;
-		samples = new ArrayList<double[]>();
+		samples = new ArrayList<E>();
 	}
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Initializes sample collector with the sampling rate passed as paramter
 	*	@param s The sampling rate over which to take samples (in milliseconds)
 	*/
-	public AsyncEnergyMonitorJavaSide(int s)
+	public AsyncEnergyMonitorJavaSide(EnergyManager eman, int s)
 	{
+		energyManager = eman; // TODO make this a deep copy!
 		samplingRate = s;
-		samples = new ArrayList<double[]>();
+		samples = new ArrayList<E>();
 	}
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
@@ -40,8 +44,9 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncM
 	{
 		while (!exit)
 		{
-			double[] stats = EnergyCheckUtils.getEnergyStats();
+			E stats = energyManager.getSample();
 			samples.add(stats);
+
 			try { Thread.sleep(samplingRate); }
 			catch (Exception e) {} //park support or lock support
 		}
@@ -90,7 +95,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncM
 	*	@param k Number of most recent samples
 	*	@return An array of the K most recent samples.
 	*/
-	public double[][] getLastKSamples(int k)
+	public E[] getLastKSamples(int k)
 	{
 		int start = samples.size() - k;
 		int array_index = 0;
@@ -100,7 +105,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncM
 			k = samples.size();
 		}
 		
-		double[][] samples_array = new double[k][];
+		E[] samples_array = new E[k];
 
 		for (int i = start; i < samples.size(); i++)
 			samples_array[array_index++] = samples.get(i);
@@ -173,8 +178,12 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncM
 		String s = "";
 		s += "samplingRate: " + samplingRate + " milliseconds\n";
 		s += "socket,dram,gpu,cpu,pkg,timestamp,elapsed-time\n"; //this header is almost /definitely/ incorrect
-		for (double[] sample : samples)
-			s += commaSeparated(sample) + "\n";
+		
+		boolean arrayType = false; // get the class somehow
+		for (E sample : samples) {
+			if (arrayType) s += commaSeparated(sample) + "\n";
+			else s += sample.commaSeparated() + "\n" ;
+		}
 		return s;
 	}
 	
@@ -190,7 +199,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncM
 	/*private double[] readSample()
 	{
 		double[] before = EnergyCheckUtils.getEnergyStats();
-		try { double[]hread.sleep(samplingRate); } catch (Exception e) {} //park support or lock support
+		try { Thread.sleep(samplingRate); } catch (Exception e) {} //park support or lock support
 		double[] after  = EnergyCheckUtils.getEnergyStats();
 		double[] sample = new double[after.length];
 		for (int i = 0; i < sample.length; i++){

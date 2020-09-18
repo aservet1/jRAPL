@@ -19,16 +19,17 @@ JAVA_USERFILES =	ArchSpec.java 					\
 			EnergyCheckUtils.java				\
 			EnergyControlUtils.java				\
 			AsyncEnergyMonitorCSide.java			\
-			AsyncEnergyMonitorJavaSide_ArraySamples.java	\
-			AsyncEnergyMonitorJavaSide_ObjectSamples.java	\
+			AsyncEnergyMonitorJavaSide.java			\
 			AsyncMemoryMonitor.java				\
 			AsyncMonitor.java				\
 			JRAPL.java					\
 			NativeUtils.java				\
 			PerfCheckUtils.java				\
-			EnergyManager_Array.java\
-			EnergyManager_EStatObj.java\
-			EnergyManager.java\
+			EnergyManager_Array.java			\
+			EnergyManager_EStatObj.java			\
+			EnergyManager.java				\
+			#AsyncEnergyMonitorJavaSide_ArraySamples.java	\
+			#AsyncEnergyMonitorJavaSide_ObjectSamples.java	\
 
 
 CFLAGS = -fPIC -g -c -Wall
