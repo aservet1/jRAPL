@@ -7,30 +7,30 @@ import java.io.FileWriter;
 
 public class AsyncEnergyMonitorJavaSide<E> extends JRAPL implements Runnable,AsyncMonitor
 {
-	private ArrayList<E> samples; 
+	private final ArrayList<E> samples; 
 	private int samplingRate; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
-	private EnergyManager energyManager;
+	private EnergyManager<E> energyManager;
 
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Initializes sample collector with a default sampling rate setting of 10 milliseconds */
-	public AsyncEnergyMonitorJavaSide()
+	/*public AsyncEnergyMonitorJavaSide()
 	{
 		energyManager = new EnergyManager_Array();
 		samplingRate = 10;
 		samples = new ArrayList<E>();
-	}
+	}*/
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Initializes sample collector with the sampling rate passed as paramter
 	*	@param s The sampling rate over which to take samples (in milliseconds)
 	*/
-	public AsyncEnergyMonitorJavaSide(EnergyManager eman, int s)
+	public AsyncEnergyMonitorJavaSide(EnergyManager<E> eman, int s)
 	{
-		energyManager = eman; // TODO make this a deep copy!
+		energyManager = eman;
 		samplingRate = s;
-		samples = new ArrayList<E>();
+		samples = new ArrayList<>();
 	}
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>

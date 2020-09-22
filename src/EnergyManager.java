@@ -5,7 +5,7 @@ package jrapl;
 public abstract class EnergyManager<T>
 {
 
-	public void init()
+	public void init() //get a better name
 	{
 		JRAPL.ProfileInit();
 	}
