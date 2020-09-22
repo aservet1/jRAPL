@@ -21,7 +21,17 @@ publics = [ p.split()[1:] for p in publics ]
 
 package = [ d for d in data if d.startswith('package')][0].replace(';','')
 
+privates = list(filter(lambda l: l.startswith('private'), data))
+privates = [ regexsub('\(.*\)','()',p) for p in privates ]
+privates = [ p.split()[1:] for p in privates ]
+
 print(f"{{ {package} }}")
+for pri in privates:
+	if len(pri) == 1:
+		print("WOAH: "+' '.join(pri))
+	else:
+		print(f"-{pri[1]}: {pri[0]}")
+print('------------------------------------------------------------------------------')
 for pub in publics:
 	if len(pub) == 1: #most likely a constructor
 		print(f"+{pub[0]}")
