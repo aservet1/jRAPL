@@ -5,53 +5,53 @@ import java.lang.reflect.Field;
 public class PerfCheckUtils {
 
     
-    /** <h1> DOCUMENTATION OUT OF DATE </h1> 
+    /**  
      *
      * @param
      * @param
      */	
     public native static void perfInit(int numEvents, int isSet);       ///need to doc -- see perfCheck.c
-    /** <h1> DOCUMENTATION OUT OF DATE </h1> 
+    /**  
      *
      * @param
      */	
     public native static void singlePerfEventCheck(String eventNames);  ///need to doc -- see perfCheck.c
-    /** <h1> DOCUMENTATION OUT OF DATE </h1> 
+    /**  
      *
      * @param
      */	
 	public native static void groupPerfEventsCheck(String eventNames);  ///need to doc -- see perfCheck.c
-    /** <h1> DOCUMENTATION OUT OF DATE </h1> 
+    /**  
      *
      */		
     public native static void perfEnable();                             ///need to doc -- see perfCheck.c
-    /** <h1> DOCUMENTATION OUT OF DATE </h1> 
+    /**  
      *
      */	
 	public native static void perfDisable();                            ///need to doc -- see perfCheck.c
-    /** <h1> DOCUMENTATION OUT OF DATE </h1> 
+    /**  
      *
      * @param
      * @param
      */	
 	public native static void perfSingleRead(int id, long[] buffer);    ///need to doc -- see perfCheck.c
-    /** <h1> DOCUMENTATION OUT OF DATE </h1> 
+    /**  
      *
      * @param
      */	
 	public native static void perfMultRead(long[] buffer);              ///need to doc -- see perfCheck.c
-    /** <h1> DOCUMENTATION OUT OF DATE </h1> 
+    /**  
      *
      * @param
      */	
 	public native static long processSingleValue(long[] buffer);        ///need to doc -- see perfCheck.c
-    /** <h1> DOCUMENTATION OUT OF DATE </h1> 
+    /**  
      *
      * @param
      */	
 	public native static long[] processMultiValue(long[] buffer);       ///need to doc -- see perfCheck.c
 
-    /** <h1> DOCUMENTATION OUT OF DATE </h1> Number of events detected from singlePerfEventsCheck() or groupPerfEventsCheck()
+    /**  Number of events detected from singlePerfEventsCheck() or groupPerfEventsCheck()
     */
 	public static int eventNum = 0;
 	//For testing, Make the variable not be optimized as static
@@ -68,7 +68,7 @@ public class PerfCheckUtils {
 		System.loadLibrary("perfCheck");
 	}
 
-	/** <h1> DOCUMENTATION OUT OF DATE </h1>
+	/** 
 	 * Initialize perf check utilities
 	 *
 	 * @param eventNames String names of hardware counters to be checked
@@ -91,7 +91,7 @@ public class PerfCheckUtils {
 		perfEnable();
 	}
 
-	/** <h1> DOCUMENTATION OUT OF DATE </h1>
+	/** 
 	 * Get multiple perf counter values with single read
 	 */
 	public static long[] getMultiPerfCounter() {
@@ -109,7 +109,7 @@ public class PerfCheckUtils {
 		return results;
 	}
 
-	/** <h1> DOCUMENTATION OUT OF DATE </h1>
+	/** 
 	 * Get one perf counter value a time
 	 */
 	public static long[] getSinglePerfCounter() {
