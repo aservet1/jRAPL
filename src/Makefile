@@ -8,41 +8,42 @@ CFILES =	CPUScaler.c			\
 		AsyncEnergyMonitorCSide.c	\
 		RuntimeTestUtils.c		\
 
-OFILES = $(CFILES:.c=.o) 
+OFILES = $(CFILES:.c=.o)
 
 JAVA_TESTFILES = 	RuntimeTestUtils.java	\
+			GeneralTestDriver.java	\
 			ThreadTesting.java	\
-			#GeneralTestDriver.java	\
 			MemoryTestUtils.java	\
 
 JAVA_USERFILES =	ArchSpec.java 					\
 			EnergyCheckUtils.java				\
+			JRAPL.java					\
+			EnergySample.java				\
+			EnergyStats.java				\
+			EnergyDiff.java					\
 			EnergyControlUtils.java				\
 			AsyncEnergyMonitorCSide.java			\
 			AsyncEnergyMonitorJavaSide.java			\
 			AsyncMemoryMonitor.java				\
 			AsyncMonitor.java				\
-			JRAPL.java					\
 			NativeUtils.java				\
 			PerfCheckUtils.java				\
 			EnergyManager.java				\
 			#EnergyManager_Array.java			\
 			#EnergyManager_EStatObj.java			\
-									\
 			#AsyncEnergyMonitorJavaSide_ArraySamples.java	\
 			#AsyncEnergyMonitorJavaSide_ObjectSamples.java	\
 
 
+
 CFLAGS = -fPIC -g -c -Wall
-#JAVAHOME=${JAVA_HOME}
-JAVAHOME = /usr/lib/jvm/java-11-openjdk-amd64
-JAVA_INCLUDE = $(JAVAHOME)/include
+JAVA_HOME = /usr/lib/jvm/java-11-openjdk-amd64
+JAVA_INCLUDE = $(JAVA_HOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
 all: lib_shared_CPUScaler javafiles
 
 common: $(CFILES)
-	echo $(JAVA_HOME)
 	gcc $(CFLAGS) -I $(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES)
 lib_shared_CPUScaler: common
 	gcc -g -Wall -I $(JAVA_INCLUDE) -I $(JAVA_INCLUDE_LINUX) -shared -Wl,-soname,libCPUScaler.so -o $(TARGET) -lc
@@ -51,12 +52,8 @@ cdriver: $(CFILES) cdriver.c
 	#gcc -g -fsanitize=address -fno-omit-frame-pointer -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) CPUScaler.c arch_spec.c msr.c dvfs.c cdriver.c -o cdriver -lm
 	gcc -g -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES) cdriver.c -o cdriver -lm -lpthread
 
-	      
-	      
-j: javafiles
-
 javafiles: $(JAVA_TESTFILES) $(JAVA_USERFILES)
-	javac	$(JAVA_TESTFILES) $(JAVA_USERFILES) -d .
+	javac $(JAVA_TESTFILES) $(JAVA_USERFILES) -d .
 	cp libCPUScaler.so jrapl/
 	cp libCPUScaler.so jrapltesting/
 

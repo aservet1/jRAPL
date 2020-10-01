@@ -68,10 +68,9 @@ int ProfileInit()
  *  the 'fd' array is an array of which msr regs. num msr regs is number of packages the computer has
  *  initializes the rapl unit (stuff holding the conversions to translate msr data sections into meaningful 'human-readable' stuff)
  */
-JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls) {
-
+JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls)
+{	
 	int wraparound_energy = ProfileInit();
-
 	return wraparound_energy;
 }
 
@@ -86,6 +85,31 @@ JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_DramOrGpu(JNIEnv * env, jclass jcls) 
 	return get_architecture_category(get_cpu_model());
 }
 
+static inline double read_Package(int socket)
+{
+	double result = read_msr(fd[socket], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
+	return (double) result * rapl_unit.energy;
+}
+static inline double read_Cpu(int socket)
+{
+	double result = read_msr(fd[socket], MSR_PP0_ENERGY_STATUS);
+	return (double) result * rapl_unit.energy;
+}
+static inline double read_Gpu(int socket)
+{
+	double result = read_msr(fd[socket],MSR_PP1_ENERGY_STATUS);
+	return (double) result * rapl_unit.energy;
+}
+static inline double read_Dram(int socket)
+{
+	double result = read_msr(fd[socket],MSR_DRAM_ENERGY_STATUS);
+	if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
+		return (double) result * MSR_DRAM_ENERGY_UNIT;
+	} else {
+		return (double) result * rapl_unit.energy;
+	}
+}
+
 
 /** <Alejandro's Interpretation>
  *	Reads energy info from MSRs into EnergyStats structs. Fills an array of structs, one per socket 
@@ -97,36 +121,28 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 	double pp0[num_pkg]; //cpu
 	double pp1[num_pkg]; //gpu
 	double dram[num_pkg];
-	double result = 0.0;
 
-	for (int i = 0; i < num_pkg; i++) {
-		pkg[i] = -1; pp0[i] = -1; pp1[i] = -1; dram[i] = -1; //sentintel values for no energy read into them bc we only read one of dram or gpu
-
-		result = read_msr(fd[i], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
-		pkg[i] = (double) result * rapl_unit.energy;
-
-		result = read_msr(fd[i], MSR_PP0_ENERGY_STATUS);
-		pp0[i] = (double) result * rapl_unit.energy;
-
+	for (int i = 0; i < num_pkg; i++)
+	{
+		pkg[i] = read_Package(i);
+		pp0[i] = read_Cpu(i);
 
 		switch(architecture_category) {
+			case READ_FROM_DRAM_AND_GPU:
+				dram[i] = read_Dram(i);
+				pp1[i] = read_Gpu(i);
+				break;
+
 			case READ_FROM_DRAM:
-				result = read_msr(fd[i],MSR_DRAM_ENERGY_STATUS);
-				if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
-					dram[i] =(double)result*MSR_DRAM_ENERGY_UNIT;
-				} else {
-					dram[i] =(double)result*rapl_unit.energy;
-				}
-
-				/*Insert socket number*/
-
+				dram[i] = read_Dram(i);
+				pp1[i] = -1;
 				break;
+
 			case READ_FROM_GPU:
-				result = read_msr(fd[i],MSR_PP1_ENERGY_STATUS);
-				pp1[i] = (double) result *rapl_unit.energy;
-
-
+				dram[i] = -1;
+				pp1[i] = read_Gpu(i);
 				break;
+
 			case UNDEFINED_ARCHITECTURE:
 				printf("Architecture not found\n");
 				break;

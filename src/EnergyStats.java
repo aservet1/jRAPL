@@ -56,7 +56,7 @@ public final class EnergyStats extends EnergySample
 
 		Duration elapsedTime = Duration.between(this.timestamp, other.timestamp);
 
-		return new EnergyDiff(/*this.getSocket(),*/ dram, gpu, cpu, pkg/*, elapsedTime*/);
+		return new EnergyDiff(this.getSocket(), dram, gpu, cpu, pkg/*, elapsedTime*/);
 	}
 
 	@Override
@@ -73,7 +73,15 @@ public final class EnergyStats extends EnergySample
 				System.out.println(last[i]);
 				System.out.println(diff);
 				System.out.println();
-				if (diff.getCpu() < 0 || diff.getPackage() < 0 || diff.getDram() < 0) {
+				double[] vals = {diff.getGpu(), diff.getCpu(), diff.getPackage(), diff.getDram()};
+				for (double val : vals) {
+					if ( val != -1 && val < 0) {
+						System.out.println(diff);
+						throw new RuntimeException("got a negative value!");
+					}
+				}
+				if (diff.getGpu() < 0 || diff.getCpu() < 0 || diff.getPackage() < 0 || diff.getDram() < 0) {
+					System.out.println(diff);
 					throw new RuntimeException("got a negative value!");
 				} 
 			}
