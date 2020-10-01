@@ -41,19 +41,21 @@ public class JRAPL {
 	public static final int ENERGY_WRAP_AROUND;
 	
 	static {
-		try {
+		/*try {
 			Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
 			fieldSysPath.setAccessible(true);
 			fieldSysPath.set(null, null);
-			/*MethodHandles.Lookup cl = MethodHandles.privateLookupIn(ClassLoader.class, MethodHandles.lookup());
-			VarHandle sys_paths = cl.findStaticVarHandle(ClassLoader.class, "sys_paths", String[].class);
-			sys_paths.set(null);*/
-		} catch (Exception e) { }
+			//MethodHandles.Lookup cl = MethodHandles.privateLookupIn(ClassLoader.class, MethodHandles.lookup());
+			//VarHandle sys_paths = cl.findStaticVarHandle(ClassLoader.class, "sys_paths", String[].class);
+			//sys_paths.set(null);
+		} catch (Exception e) { }*/
 
 		try {
-			NativeUtils.loadLibraryFromJar("/home/alejandro/jRAPL/src/libCPUScaler.so");
+			//NativeUtils.loadLibraryFromJar("/home/alejandro/jRAPL/src/libCPUScaler.so");
+			System.load("/home/alejandro/jRAPL/src/libCPUScaler.so");
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.exit(1);
 		}
 		NUM_SOCKETS = ArchSpec.GetSocketNum();
 		ENERGY_WRAP_AROUND = ProfileInit();

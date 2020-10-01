@@ -8,8 +8,9 @@ public class GeneralTestDriver
 {
 	public static void main(String[] args)
 	{
-		memoryThing("Object");
-		memoryThing("Array");
+		threadThing(args);
+		//memoryThing("Object");
+		//memoryThing("Array");
 	}
 
 	private static void memoryThing(String representation)

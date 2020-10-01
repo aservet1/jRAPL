@@ -143,21 +143,35 @@ uint64_t getSocketNum() {
 	return num_pkg;
 }
 
-int get_architecture_category(uint32_t cpu_model){
-  switch (cpu_model) {
-  			case SANDYBRIDGE_EP:		case HASWELL1:		case HASWELL2:
-  			case HASWELL3:				case HASWELL_EP:	case SKYLAKE1:
-  			case SKYLAKE2: 				case BROADWELL:		case BROADWELL2:
-  			case APOLLOLAKE:			case COFFEELAKE2:
-  				
-				return READ_FROM_DRAM;
+int get_architecture_category(uint32_t cpu_model) {
+		
+	switch (cpu_model) {
 
-  		case SANDYBRIDGE:	case IVYBRIDGE:	case KABYLAKE:
-  			
-				return READ_FROM_GPU;
+		case KABYLAKE:
+		case BROADWELL:
 
-  		default:
-  			
-				return UNDEFINED_ARCHITECTURE;
-  }
+			return READ_FROM_DRAM_AND_GPU;
+
+
+		case SANDYBRIDGE_EP:			case HASWELL1:		case HASWELL2:
+		case HASWELL3:				case HASWELL_EP:	case SKYLAKE1:
+		case SKYLAKE2: 				case BROADWELL2:
+		case APOLLOLAKE:			case COFFEELAKE2:
+			
+			return READ_FROM_DRAM;
+
+		case SANDYBRIDGE:
+		case IVYBRIDGE:
+		
+			return READ_FROM_GPU;
+
+		default:
+
+			return UNDEFINED_ARCHITECTURE;
+	}
+
 }
+
+
+
+
