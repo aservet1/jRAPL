@@ -1,0 +1,19 @@
+- samples: ArrayList<Long> 
+- samplingRate: int 
+- exit: volatile boolean 
+- runtime: static final Runtime 
+- t: Thread 
+- birth: Instant 
+- death: Instant 
+- lifetime: Duration 
+
++ AsyncMemoryMonitor()
+- memoryUsed(): long 
++ run(): void 
++ start(): void 
++ stop(): void 
++ getLifetime(): Duration 
++ reInit(): void 
++ average(): double 
++ stdev(): double 
++ toString(): String 

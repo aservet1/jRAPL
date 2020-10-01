@@ -4,33 +4,35 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
+import java.time.Instant;
 
-public class AsyncEnergyMonitorJavaSide<E> extends JRAPL implements Runnable,AsyncMonitor
+public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncMonitor
 {
-	private final ArrayList<E> samples; 
+	protected final ArrayList<double[]> samples; 
 	private int samplingRate; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
-	private EnergyManager<E> energyManager;
+
+	protected final ArrayList<Instant> timestamps;
 
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Initializes sample collector with a default sampling rate setting of 10 milliseconds */
-	/*public AsyncEnergyMonitorJavaSide()
+	public AsyncEnergyMonitorJavaSide()
 	{
-		energyManager = new EnergyManager_Array();
 		samplingRate = 10;
-		samples = new ArrayList<E>();
-	}*/
+		samples = new ArrayList<double[]>();
+		timestamps = new ArrayList<Instant>();
+	}
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Initializes sample collector with the sampling rate passed as paramter
 	*	@param s The sampling rate over which to take samples (in milliseconds)
 	*/
-	public AsyncEnergyMonitorJavaSide(EnergyManager<E> eman, int s)
+	public AsyncEnergyMonitorJavaSide(int s)
 	{
-		energyManager = eman;
 		samplingRate = s;
 		samples = new ArrayList<>();
+		timestamps = new ArrayList<Instant>();
 	}
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
@@ -44,8 +46,9 @@ public class AsyncEnergyMonitorJavaSide<E> extends JRAPL implements Runnable,Asy
 	{
 		while (!exit)
 		{
-			E stats = energyManager.getSample();
+			double[] stats = EnergyCheckUtils.getEnergyStats();
 			samples.add(stats);
+			timestamps.add(Instant.now());
 
 			try { Thread.sleep(samplingRate); }
 			catch (Exception e) {} //park support or lock support
@@ -86,31 +89,9 @@ public class AsyncEnergyMonitorJavaSide<E> extends JRAPL implements Runnable,Asy
 	{
 		exit = false;
 		samples.clear();
+		timestamps.clear();
 	}
 
-	/** <h1> DOCUMENTATION OUT OF DATE </h1>
-	*	Returns K most recent stored samples. Each samples is a T of the form
-	*	<br>[dram/gpu energy, core energy, package energy].
-	*	<br>If K is greater than the amount of samples, returns all samples
-	*	@param k Number of most recent samples
-	*	@return An array of the K most recent samples.
-	*/
-	public E[] getLastKSamples(int k)
-	{
-		int start = samples.size() - k;
-		int array_index = 0;
-
-		if (start < 0) {
-			start = 0;
-			k = samples.size();
-		}
-		
-		E[] samples_array = new E[k];
-
-		for (int i = start; i < samples.size(); i++)
-			samples_array[array_index++] = samples.get(i);
-		return samples_array;
-	}
 	
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Gets the sampling rate for the thread to collect samples.
@@ -145,8 +126,7 @@ public class AsyncEnergyMonitorJavaSide<E> extends JRAPL implements Runnable,Asy
 	*	
 	*	@param fileName name of file to write to
 	*/
-	public void writeToFile(String fileName)
-	{
+	public void writeToFile(String fileName) {
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(new File(fileName));
@@ -177,18 +157,17 @@ public class AsyncEnergyMonitorJavaSide<E> extends JRAPL implements Runnable,Asy
 	{
 		String s = "";
 		s += "samplingRate: " + samplingRate + " milliseconds\n";
-		s += "socket,dram,gpu,cpu,pkg,timestamp,elapsed-time\n"; //this header is almost /definitely/ incorrect
+		s += "dram,gpu,cpu,pkg,timestamp\n"; //this header is almost /definitely/ incorrect
 		
 		boolean arrayType = false; // get the class somehow
-		for (E sample : samples) {
+		for (double[] sample : samples) {
 			if (arrayType) s += commaSeparated(sample) + "\n";
-			else s += sample.commaSeparated() + "\n" ;
+			else s += commaSeparated(sample) + "\n" ;
 		}
 		return s;
 	}
 	
-	private String commaSeparated(double[] sample)
-	{
+	private String commaSeparated(double[] sample) {
 		String s = new String();
 		for (int i = 0; i < sample.length-1; i++)
 			s += String.format("%.4f", sample[i]) + ",";
@@ -196,16 +175,51 @@ public class AsyncEnergyMonitorJavaSide<E> extends JRAPL implements Runnable,Asy
 		return s;
 	}
 
-	/*private double[] readSample()
-	{
-		double[] before = EnergyCheckUtils.getEnergyStats();
-		try { Thread.sleep(samplingRate); } catch (Exception e) {} //park support or lock support
-		double[] after  = EnergyCheckUtils.getEnergyStats();
-		double[] sample = new double[after.length];
-		for (int i = 0; i < sample.length; i++){
-			sample[i] = after[i] - before[i];
-		}
-		return sample;
-	}*/
-
 }
+	
+class AsyncEnergyMonitorJavaSide_Raw extends AsyncEnergyMonitorJavaSide
+{
+
+	public double[][] getLastKSamples(int k)
+	{
+		int start = samples.size() - k;
+		int array_index = 0;
+
+		if (start < 0) {
+			start = 0;
+			k = samples.size();
+		}
+		
+		double[][] samples_array = new double[k][];
+
+		for (int i = start; i < samples.size(); i++)
+			samples_array[array_index++] = samples.get(i);
+		return samples_array;
+	}
+}
+
+
+class AsyncEnergyMonitorJavaSide_Elaborate extends AsyncEnergyMonitorJavaSide
+{
+
+	public EnergyStats[] getLastKSamples(int k)
+	{
+		int start = samples.size() - k;
+		int array_index = 0;
+
+		if (start < 0) {
+			start = 0;
+			k = samples.size();
+		}
+		
+		EnergyStats[] samples_array = new EnergyStats[k];
+
+		for (int i = start; i < samples.size(); i++){
+			samples_array[array_index++] = samples.get(i);
+		}
+		return samples_array;
+	}
+}
+
+
+

@@ -10,9 +10,9 @@ CFILES =	CPUScaler.c			\
 
 OFILES = $(CFILES:.c=.o) 
 
-JAVA_TESTFILES = 	GeneralTestDriver.java	\
-			RuntimeTestUtils.java	\
+JAVA_TESTFILES = 	RuntimeTestUtils.java	\
 			ThreadTesting.java	\
+			#GeneralTestDriver.java	\
 			MemoryTestUtils.java	\
 
 JAVA_USERFILES =	ArchSpec.java 					\
@@ -25,9 +25,10 @@ JAVA_USERFILES =	ArchSpec.java 					\
 			JRAPL.java					\
 			NativeUtils.java				\
 			PerfCheckUtils.java				\
-			EnergyManager_Array.java			\
-			EnergyManager_EStatObj.java			\
 			EnergyManager.java				\
+			#EnergyManager_Array.java			\
+			#EnergyManager_EStatObj.java			\
+									\
 			#AsyncEnergyMonitorJavaSide_ArraySamples.java	\
 			#AsyncEnergyMonitorJavaSide_ObjectSamples.java	\
 

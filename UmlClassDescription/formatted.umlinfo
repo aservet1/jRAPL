@@ -11,19 +11,15 @@
 <<class AsyncEnergyMonitorCSide extends JRAPL>>
 +startCollecting(): native_static_void
 +stopCollecting(): native_static_void
-+main(): static_void
 
 ========================../src/AsyncEnergyMonitorJavaSide_ArraySamples.java==========================
 { package jrapl }
+<<class AsyncEnergyMonitorJavaSide_ArraySamples extends JRAPL implements Runnable,AsyncMonitor>>
 -samples: ArrayList<double[]>
 -samplingRate: int
 -boolean: volatile
 -t: Thread
--commaSeparated(): String
--readSample(): double[]
 ------------------------------------------------------------------------------
-<<class AsyncEnergyMonitorJavaSide_ArraySamples extends JRAPL implements Runnable,AsyncMonitor>>
-+AsyncEnergyMonitorJavaSide_ArraySamples()
 +AsyncEnergyMonitorJavaSide_ArraySamples()
 +run(): void
 +start(): void
@@ -38,14 +34,12 @@
 
 ========================../src/AsyncEnergyMonitorJavaSide.java==========================
 { package jrapl }
+<<class AsyncEnergyMonitorJavaSide<E> extends JRAPL implements Runnable,AsyncMonitor>>
 -samples: final_ArrayList<E>
 -samplingRate: int
 -boolean: volatile
 -t: Thread
--energyManager: EnergyManager<E>
--commaSeparated(): String
 ------------------------------------------------------------------------------
-<<class AsyncEnergyMonitorJavaSide<E> extends JRAPL implements Runnable,AsyncMonitor>>
 +AsyncEnergyMonitorJavaSide()
 +run(): void
 +start(): void
@@ -60,14 +54,12 @@
 
 ========================../src/AsyncEnergyMonitorJavaSide_ObjectSamples.java==========================
 { package jrapl }
+<<class AsyncEnergyMonitorJavaSide_ObjectSamples extends JRAPL implements Runnable,AsyncMonitor>>
 -samples: ArrayList<EnergyDiff>
 -samplingRate: int
 -boolean: volatile
 -t: Thread
--readSample(): EnergyDiff[]
 ------------------------------------------------------------------------------
-<<class AsyncEnergyMonitorJavaSide_ObjectSamples extends JRAPL implements Runnable,AsyncMonitor>>
-+AsyncEnergyMonitorJavaSide_ObjectSamples()
 +AsyncEnergyMonitorJavaSide_ObjectSamples()
 +run(): void
 +start(): void
@@ -82,6 +74,7 @@
 
 ========================../src/AsyncMemoryMonitor.java==========================
 { package jrapltesting }
+<<class AsyncMemoryMonitor implements Runnable,AsyncMonitor>>
 -samples: ArrayList<Long>
 -samplingRate: int
 -boolean: volatile
@@ -90,9 +83,7 @@
 -birth: Instant
 -death: Instant
 -lifetime: Duration
--memoryUsed(): long
 ------------------------------------------------------------------------------
-<<class AsyncMemoryMonitor implements Runnable,AsyncMonitor>>
 +AsyncMemoryMonitor()
 +run(): void
 +start(): void
@@ -105,8 +96,8 @@
 
 ========================../src/AsyncMonitor.java==========================
 { package jrapl }
-------------------------------------------------------------------------------
 <<interface AsyncMonitor>>
+------------------------------------------------------------------------------
 +start(): abstract_void
 +stop(): abstract_void
 +toString(): abstract_String
@@ -114,11 +105,10 @@
 
 ========================../src/EnergyCheckUtils.java==========================
 { package jrapl }
-------------------------------------------------------------------------------
 <<class EnergyCheckUtils extends JRAPL>>
+------------------------------------------------------------------------------
 +EnergyStatCheck(): native_static_String
 +getEnergyStats(): static_double[]
-+main(): static_void
 
 ========================../src/EnergyControlUtils.java==========================
 { package jrapl }
@@ -134,31 +124,39 @@
 +SetPowerLimit(): native_static_void
 
 ========================../src/EnergyDiff.java==========================
-
+{ package jrapl }
+<<final_class EnergyDiff extends EnergySample>>
+------------------------------------------------------------------------------
++EnergyDiff()
++commaSeparated(): String
++getCpu(): double
++getGpu(): double
++getPackage(): double
++getDram(): double
++toString(): String
 ========================../src/EnergyManager_Array.java==========================
 { package jrapl }
-------------------------------------------------------------------------------
 <<class EnergyManager_Array extends EnergyManager<double[]>>>
+------------------------------------------------------------------------------
 +getSample(): double[]
-+main(): static_void
 
 ========================../src/EnergyManager_EStatObj.java==========================
 { package jrapl }
-------------------------------------------------------------------------------
 <<class EnergyManager_EStatObj extends EnergyManager<EnergyStats[]>>>
+------------------------------------------------------------------------------
 +getSample(): EnergyStats[]
-+main(): static_void
 
 ========================../src/EnergyManager.java==========================
 { package jrapl }
-------------------------------------------------------------------------------
 <<abstract_class EnergyManager<T>>>
+------------------------------------------------------------------------------
 +init(): void
 +getSample(): abstract_T
 +cleanup(): void
 
 ========================../src/EnergyStats.java==========================
 { package jrapl }
+<<final_class EnergyStats extends EnergySample>>
 ------------------------------------------------------------------------------
 +EnergySample()
 +getCpu(): double
@@ -167,52 +165,38 @@
 +getDram(): double
 +commaSeparated(): String
 +toString(): String
-<<final_class EnergyStats extends EnergySample>>
 +get(): static_EnergyStats[]
 +EnergyStats()
 +commaSeparated(): String
 +difference(): EnergyDiff
 +toString(): String
-+main(): static_void
-
-========================../src/GeneralTestDriver.java==========================
-{ package jrapltesting }
--bothMemoryThings(): static_void
--memoryThing(): static_void
--threadThing(): static_void
-------------------------------------------------------------------------------
-<<class GeneralTestDriver>>
-+main(): static_void
 
 ========================../src/JRAPL.java==========================
 { package jrapl }
-------------------------------------------------------------------------------
 <<class JRAPL>>
+------------------------------------------------------------------------------
++NUM_SOCKETS: static_final_int
++ENERGY_WRAP_AROUND: static_final_int
 +ProfileInit(): native_static_int
 +ProfileDealloc(): native_static_void
 +GetWrapAroundEnergy(): native_static_int
-+NUM_SOCKETS: static_final_int
-+ENERGY_WRAP_AROUND: static_final_int
 
 ========================../src/MemoryTestUtils.java==========================
 { package jrapltesting }
--usage_abort(): static_void
--memoryThing(): static_void
-------------------------------------------------------------------------------
 <<class MemoryTestUtils>>
+------------------------------------------------------------------------------
 +main(): static_void
 
 ========================../src/NativeUtils.java==========================
 { package jrapl }
-WOAH: NativeUtils()
 ------------------------------------------------------------------------------
 <<class NativeUtils>>
 +loadLibraryFromJar(): static_void
 
 ========================../src/PerfCheckUtils.java==========================
 { package jrapl }
-------------------------------------------------------------------------------
 <<class PerfCheckUtils>>
+------------------------------------------------------------------------------
 +perfInit(): native_static_void
 +singlePerfEventCheck(): native_static_void
 +groupPerfEventsCheck(): native_static_void
@@ -230,20 +214,10 @@ WOAH: NativeUtils()
 
 ========================../src/RuntimeTestUtils.java==========================
 { package jrapltesting }
--printFunctionTimeRecord(): static_void
--printMSRReadTimeRecord(): static_void
--usage_message_abort(): static_void
 ------------------------------------------------------------------------------
 <<class RuntimeTestUtils extends JRAPL>>
 +timeMethod(): static_long
 +timeMethodMultipleIterations(): static_void
-<<static_class EnergyReadings>>
-+energyStats: double[][]
-+times[]: Instant
-+EnergyReadings()
-+printDiffs(): static_void
-+getReadings(): static_EnergyReadings
-+DramCorePackageStats(): static_void
 +InitCSideTiming(): native_static_void
 +DeallocCSideTiming(): native_static_void
 +usecTimeProfileInit(): native_static_long
@@ -257,9 +231,7 @@ WOAH: NativeUtils()
 
 ========================../src/ThreadTesting.java==========================
 { package jrapltesting }
--writeToFile(): static_void
 ------------------------------------------------------------------------------
 +runJavaVersion(): static_String
 +runCVersion(): static_String
 +main(): static_void
-

@@ -17,5 +17,7 @@ public abstract class EnergyManager<T>
 		JRAPL.ProfileDealloc();
 	}
 
+	public abstract AsyncEnergyMonitorJavaSide asyncMonitor();
+
 }
 
