@@ -22,7 +22,7 @@ static rapl_msr_unit rapl_unit;
 static rapl_msr_parameter *parameters;
 static int *fd;
 static uint64_t num_pkg;
-
+static int wraparound_energy = -1;
 
 rapl_msr_unit get_rapl_unit()
 {
@@ -38,7 +38,7 @@ int ProfileInit()
 	int i;
 	char msr_filename[BUFSIZ];
 	int core = 0;
-	int wraparound_energy;
+//	int wraparound_energy;
 
 	num_pkg = getSocketNum();
 	cpu_model = get_cpu_model();

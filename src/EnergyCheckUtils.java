@@ -47,9 +47,9 @@ public class EnergyCheckUtils extends JRAPL {
 
 	public static void main(String[] args) throws Exception
 	{
-		for (int x = 0; x < 100; x++){
+		for (int x = 0; true; x++){
 			System.out.println(EnergyStatCheck());
-			Thread.sleep(100);
+			Thread.sleep(40);
 		}
 		/*for(int x = 0; x < 100; x++){
 			double[] before = getEnergyStats();

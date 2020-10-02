@@ -18,9 +18,6 @@ JAVA_TESTFILES = 	RuntimeTestUtils.java	\
 JAVA_USERFILES =	ArchSpec.java 					\
 			EnergyCheckUtils.java				\
 			JRAPL.java					\
-			EnergySample.java				\
-			EnergyStats.java				\
-			EnergyDiff.java					\
 			EnergyControlUtils.java				\
 			AsyncEnergyMonitorCSide.java			\
 			AsyncEnergyMonitorJavaSide_ArraySamples.java	\
@@ -29,6 +26,9 @@ JAVA_USERFILES =	ArchSpec.java 					\
 			AsyncMonitor.java				\
 			NativeUtils.java				\
 			PerfCheckUtils.java				\
+			#EnergySample.java				\
+			EnergyStats.java				\
+			EnergyDiff.java					\
 
 
 
