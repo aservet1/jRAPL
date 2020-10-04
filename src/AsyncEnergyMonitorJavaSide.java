@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
 
+import java.time.Instant;
+
 public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncMonitor
 {
 	private ArrayList<String> samples; 
