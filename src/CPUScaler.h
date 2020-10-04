@@ -9,7 +9,7 @@ int ProfileInit();
 void EnergyStatCheck(EnergyStats stats_per_socket[]);
 void ProfileDealloc();
 
-jint Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls);
+void Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls);
 jint Java_jrapl_ArchitectureSpecifications_GetSocketNum(JNIEnv *env, jclass jcls);
 jint Java_jrapl_ArchitectureSpecifications_DramOrGpu(JNIEnv * env, jclass jcls);
 jstring Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *env, jclass jcls);

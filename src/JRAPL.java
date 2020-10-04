@@ -16,7 +16,7 @@ public class JRAPL {
 	 *  <br>Initializes data about the system and allocates the proper
 	 *  data structures in order to to facilitate the jRAPL interface
 	*/
-	public native static int ProfileInit();
+	public native static void ProfileInit();
 	
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Free all native memory allocated in ProfileInit().
 	 *  <br>Call this when done using the jRAPL utilities to clean up resources allocated.

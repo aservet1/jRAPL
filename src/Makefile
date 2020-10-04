@@ -56,8 +56,8 @@ cdriver: $(CFILES) cdriver.c
 
 javafiles: $(JAVA_TESTFILES) $(JAVA_USERFILES)
 	javac $(JAVA_TESTFILES) $(JAVA_USERFILES) -d .
-	cp libCPUScaler.so jrapl/
-	cp libCPUScaler.so jrapltesting/
+	#cp libCPUScaler.so jrapl/
+	#cp libCPUScaler.so jrapltesting/
 
 user-api: *.java
 	javadoc $(JAVA_USERFILES) -d ../UserAPI
