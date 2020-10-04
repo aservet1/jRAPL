@@ -4,24 +4,23 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
-import java.time.Instant;
 
 public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncMonitor
 {
-	protected final ArrayList<double[]> samples; 
+	private ArrayList<String> samples; 
 	private int samplingRate; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
 
-	protected final ArrayList<Instant> timestamps;
+	protected final ArrayList<Instant> timestamps; //TODO -- decide if you want to have a boolean that enables whether or not you do want to collect timestamps
 
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Initializes sample collector with a default sampling rate setting of 10 milliseconds */
 	public AsyncEnergyMonitorJavaSide()
 	{
 		samplingRate = 10;
-		samples = new ArrayList<double[]>();
 		timestamps = new ArrayList<Instant>();
+		samples = new ArrayList<String>();
 	}
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
@@ -31,8 +30,8 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncM
 	public AsyncEnergyMonitorJavaSide(int s)
 	{
 		samplingRate = s;
-		samples = new ArrayList<>();
 		timestamps = new ArrayList<Instant>();
+		samples = new ArrayList<String>();
 	}
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
@@ -44,14 +43,11 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncM
 	*/	
 	public void run()
 	{
-		while (!exit)
-		{
-			double[] stats = EnergyCheckUtils.getEnergyStats();
-			samples.add(stats);
+		while (!exit) {
+			String energyString = EnergyCheckUtils.EnergyStatCheck();
+			samples.add(energyString);
 			timestamps.add(Instant.now());
-
-			try { Thread.sleep(samplingRate); }
-			catch (Exception e) {} //park support or lock support
+			try { Thread.sleep(samplingRate); } catch (Exception e) {}
 		}
 	}
 
@@ -92,7 +88,40 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncM
 		timestamps.clear();
 	}
 
+
+
+
+	////////////////////////////////////////////////////////////// do these with the parse_ener_string function /////////////////////////////////////////////////////////
+	public EnergyStats[] getLastKSamples_Objects(int k)
+	{
+		return null;
+	}
+	public double[] getLastKSamples_Arrays(int k)
+	{
+		return null;
+	}
+	public String[] getLastKSamples_RawString(int k)
+	{
+		int start = samples.size() - k;
+		int array_index = 0;
+
+		if (start < 0) {
+			start = 0;
+			k = samples.size();
+		}
+		
+		String[] samples_array = new String[k];
+
+		for (int i = start; i < samples.size(); i++)
+			samples_array[array_index++] = samples.get(i);
+		return samples_array;
+	}
+	////////////////////////////////////////////////////////////// do these with the parse_ener_string function /////////////////////////////////////////////////////////
+
+
 	
+
+
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Gets the sampling rate for the thread to collect samples.
 	*	@return The sampling rate (in milliseconds)
@@ -126,7 +155,8 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncM
 	*	
 	*	@param fileName name of file to write to
 	*/
-	public void writeToFile(String fileName) {
+	public void writeToFile(String fileName)
+	{
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(new File(fileName));
@@ -142,84 +172,42 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncM
 	*	CSV format of all data collected. First two lines are the sampling rate and a header describing which power domain
 	*	each column's energy samples represent
 	*	<br>Format:
-	*	<br>  samplingRate: xxx (ms)
+	*	<br>  samplingRate: xxx milliseconds
 	*	<br>  socket,dram,gpu,cpu,pkg
 	*	<br>  x,xxx,xxx,xxx,xxx
-	*	<br>  x,xxx,xxx,xxx,xxx
-	*	<br>  x,xxx,xxx,xxx,xxx
-	*	<br>  x,xxx,xxx,xxx,xxx
-	*	<br>	... et cetera ...
-	*	<br>  note that only one of "dram" and "gpu" will be listed for the first column, depending on your CPU model
-		<br>  each entry per line is tab delimited
-	*	@return Human readable interpretation of the data stored in the object
+	*	@return CSV version of the data stored in the object
 	*/
 	public String toString()
 	{
 		String s = "";
 		s += "samplingRate: " + samplingRate + " milliseconds\n";
-		s += "dram,gpu,cpu,pkg,timestamp\n"; //this header is almost /definitely/ incorrect
-		
-		boolean arrayType = false; // get the class somehow
-		for (double[] sample : samples) {
-			if (arrayType) s += commaSeparated(sample) + "\n";
-			else s += commaSeparated(sample) + "\n" ;
+		s += "socket,dram,gpu,cpu,pkg,timestamp,elapsed-time ______ INACCURATE HEADER\n";
+		for (String sampleString : samples) {
+			String[] perSocketStrings = sampleString.split("@");
+			for (int i = 0; i < perSocketStrings.length; i++) {
+				int socket = i+1;
+				s += Integer.toString(socket) + "," + perSocketStrings[i] + "\n";
+			}
+
+			//s += sample + "\n";
 		}
 		return s;
 	}
-	
-	private String commaSeparated(double[] sample) {
-		String s = new String();
-		for (int i = 0; i < sample.length-1; i++)
-			s += String.format("%.4f", sample[i]) + ",";
-		s += String.format("%.4f", sample[sample.length-1]);
-		return s;
-	}
 
-}
-	
-class AsyncEnergyMonitorJavaSide_Raw extends AsyncEnergyMonitorJavaSide
-{
-
-	public double[][] getLastKSamples(int k)
+	public static void main(String[] args) throws InterruptedException
 	{
-		int start = samples.size() - k;
-		int array_index = 0;
+		JRAPL.ProfileInit();
 
-		if (start < 0) {
-			start = 0;
-			k = samples.size();
-		}
+		int rate = (args.length > 0) ? Integer.parseInt(args[0]) : 10;
+		AsyncEnergyMonitorJavaSide aemonj = new AsyncEnergyMonitorJavaSide(rate);
 		
-		double[][] samples_array = new double[k][];
+		aemonj.start();
+		Thread.sleep(3000);
+		aemonj.stop();
 
-		for (int i = start; i < samples.size(); i++)
-			samples_array[array_index++] = samples.get(i);
-		return samples_array;
+		System.out.println(aemonj);
+
+		JRAPL.ProfileDealloc();
 	}
+	
 }
-
-
-class AsyncEnergyMonitorJavaSide_Elaborate extends AsyncEnergyMonitorJavaSide
-{
-
-	public EnergyStats[] getLastKSamples(int k)
-	{
-		int start = samples.size() - k;
-		int array_index = 0;
-
-		if (start < 0) {
-			start = 0;
-			k = samples.size();
-		}
-		
-		EnergyStats[] samples_array = new EnergyStats[k];
-
-		for (int i = start; i < samples.size(); i++){
-			samples_array[array_index++] = samples.get(i);
-		}
-		return samples_array;
-	}
-}
-
-
-

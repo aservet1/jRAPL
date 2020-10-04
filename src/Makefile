@@ -15,24 +15,23 @@ JAVA_TESTFILES = 	RuntimeTestUtils.java	\
 			ThreadTesting.java	\
 			MemoryTestUtils.java	\
 
-JAVA_USERFILES =	ArchSpec.java 					\
+JAVA_USERFILES =	ArchitectureSpecifications.java 		\
 			EnergyCheckUtils.java				\
+			AsyncMemoryMonitor.java				\
 			JRAPL.java					\
-			EnergySample.java				\
-			EnergyStats.java				\
-			EnergyDiff.java					\
 			EnergyControlUtils.java				\
 			AsyncEnergyMonitorCSide.java			\
 			AsyncEnergyMonitorJavaSide.java			\
+			AsyncEnergyMonitorJavaSide_ArraySamples.java	\
+			AsyncEnergyMonitorJavaSide_ObjectSamples.java	\
 			AsyncMemoryMonitor.java				\
 			AsyncMonitor.java				\
 			NativeUtils.java				\
 			PerfCheckUtils.java				\
 			EnergyManager.java				\
-			#EnergyManager_Array.java			\
-			#EnergyManager_EStatObj.java			\
-			#AsyncEnergyMonitorJavaSide_ArraySamples.java	\
-			#AsyncEnergyMonitorJavaSide_ObjectSamples.java	\
+			EnergySample.java				\
+			EnergyStats.java				\
+			EnergyDiff.java					\
 
 
 

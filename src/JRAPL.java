@@ -11,34 +11,18 @@ import java.util.Map;
 *	the JRAPL interface.
 */
 public class JRAPL {
-
-	//public JRAPL() {} // private constructor -- never initialized
 	
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Call this before doing any JRAPL operations. 
 	 *  <br>Initializes data about the system and allocates the proper
 	 *  data structures in order to to facilitate the jRAPL interface
 	*/
 	public native static int ProfileInit();
-
 	
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Free all native memory allocated in ProfileInit().
 	 *  <br>Call this when done using the jRAPL utilities to clean up resources allocated.
 	*/
 	public native static void ProfileDealloc();
 
-
-	/** <h1> DOCUMENTATION OUT OF DATE </h1> Gets the wraparound energy value that I still don't e n t i r e l y understand
-	*/
-	public native static int GetWrapAroundEnergy();	
-
-
-	/** <h1> DOCUMENTATION OUT OF DATE </h1> Number of CPU sockets the current system has
-	*/
-	public static final int NUM_SOCKETS;
-
-	/** <h1> DOCUMENTATION OUT OF DATE </h1> Energy wrap around value (I think it's for if an energy sample is taken over the MSR overflow/reset)
-	*/
-	public static final int ENERGY_WRAP_AROUND;
 	
 	static {
 		/*try {
@@ -50,14 +34,15 @@ public class JRAPL {
 			//sys_paths.set(null);
 		} catch (Exception e) { }*/
 
+		String nativelib = "/home/alejandro/jRAPL/src/libCPUScaler.so";
 		try {
-			//NativeUtils.loadLibraryFromJar("/home/alejandro/jRAPL/src/libCPUScaler.so");
-			System.load("/home/alejandro/jRAPL/src/libCPUScaler.so");
+			//NativeUtils.loadLibraryFromJar("libCPUScaler.so");
+			System.load(nativelib);
 		} catch (Exception e) {
+			System.err.println("ERROR LOADING LIBRARY " + nativelib);
 			e.printStackTrace();
 			System.exit(1);
 		}
-		NUM_SOCKETS = ArchSpec.GetSocketNum();
-		ENERGY_WRAP_AROUND = ProfileInit();
+		//ProfileInit();
 	}
 }

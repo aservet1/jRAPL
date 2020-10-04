@@ -22,7 +22,7 @@ static rapl_msr_unit rapl_unit;
 static rapl_msr_parameter *parameters;
 static int *fd;
 static uint64_t num_pkg;
-
+static int wraparound_energy = -1;
 
 rapl_msr_unit get_rapl_unit()
 {
@@ -32,13 +32,20 @@ rapl_msr_unit get_rapl_unit()
 	return rapl_unit;
 }
 
+//assumes profile has already been inited
+JNIEXPORT jint JNICALL Java_jrapl_ArchitectureSpecifications_GetWraparoundEnergy(JNIEnv* env, jclass jcls)
+{
+	//printf("PRINTING IN C: this is the wraparound energy: %d\n", wraparound_energy);
+	return (jint)wraparound_energy;
+}
+
+
 
 int ProfileInit()
 {
 	int i;
 	char msr_filename[BUFSIZ];
 	int core = 0;
-	int wraparound_energy;
 
 	num_pkg = getSocketNum();
 	cpu_model = get_cpu_model();
@@ -77,11 +84,11 @@ JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls)
 /** <Alejandro's Interpretation>
  *	Return number of CPU sockets
  */
-JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_GetSocketNum(JNIEnv *env, jclass jcls) {
+JNIEXPORT jint JNICALL Java_jrapl_ArchitectureSpecifications_GetSocketNum(JNIEnv *env, jclass jcls) {
 	return (jint)getSocketNum(); 
 }
 
-JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_DramOrGpu(JNIEnv * env, jclass jcls) {
+JNIEXPORT jint JNICALL Java_jrapl_ArchitectureSpecifications_DramOrGpu(JNIEnv * env, jclass jcls) {
 	return get_architecture_category(get_cpu_model());
 }
 
@@ -162,7 +169,7 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 
 /** <Alejandro's Interpretation>
  *  Takes the energy info and packages it into a formatted string to pass to Java
- *    dram#gpu#cpu#pkg@
+ *    dram,gpu,cpu,pkg@
  *  Each socket will have the above format, multi socket machines will look like
  *    socket1@socket2@socket3@ etc
  *  Excludes the timestamp because Java will do its own timestamp upon receiving this information
@@ -178,7 +185,7 @@ static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info
 	for(int i = 0; i < num_pkg; i++){
 		EnergyStats stats = stats_per_socket[i];
 		bzero(buffer, 100);
-		sprintf(buffer, "%f#%f#%f#%f@", stats.dram, stats.gpu, stats.cpu, stats.pkg);
+		sprintf(buffer, "%f,%f,%f,%f@", stats.dram, stats.gpu, stats.cpu, stats.pkg);
 		buffer_len = strlen(buffer);
 		memcpy(ener_info + offset, buffer, buffer_len);
 		offset += buffer_len;

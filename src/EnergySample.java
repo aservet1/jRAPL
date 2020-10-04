@@ -60,7 +60,7 @@ public abstract class EnergySample extends JRAPL
 			"CPU: " + String.format("%.4f", cpu),
 			"Package: " + String.format("%.4f", pkg),
 			"DRAM: " + String.format("%.4f", dram),
-			"GPU: " + String.format("%.4f",gpu)//,
+			"GPU: " + String.format("%.4f",gpu),
 			"Timestamp: " + timestamp.toString()
 			);
 	}

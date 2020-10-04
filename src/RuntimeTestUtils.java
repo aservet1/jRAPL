@@ -137,10 +137,10 @@ public class RuntimeTestUtils extends JRAPL
 	// some times and if that's something you can do anything about and if it matters
 	public static void timeAllMSRReads(int iterations) {
 		int DRAM  = 1, GPU = 2, CPU = 3, PKG = 4;
-		long[][] dramTimes = new long[iterations][JRAPL.NUM_SOCKETS];
-		long[][] gpuTimes = new long[iterations][JRAPL.NUM_SOCKETS];
-		long[][] cpuTimes = new long[iterations][JRAPL.NUM_SOCKETS];
-		long[][] pkgTimes = new long[iterations][JRAPL.NUM_SOCKETS];
+		long[][] dramTimes = new long[iterations][ArchitectureSpecifications.NUM_SOCKETS];
+		long[][] gpuTimes = new long[iterations][ArchitectureSpecifications.NUM_SOCKETS];
+		long[][] cpuTimes = new long[iterations][ArchitectureSpecifications.NUM_SOCKETS];
+		long[][] pkgTimes = new long[iterations][ArchitectureSpecifications.NUM_SOCKETS];
 		
 		int dramIndex = 0, gpuIndex = 0, cpuIndex = 0, pkgIndex = 0;
 		for (int n = 0; n < iterations; n++) cpuTimes[cpuIndex++] = usecTimeMSRRead(CPU);
@@ -224,7 +224,7 @@ public class RuntimeTestUtils extends JRAPL
 
 		if(args[0].equals("--time-java-calls")){ //Java function timing
 			timeMethodMultipleIterations(JRAPL::ProfileInit, "ProfileInit()", iterations);
-			timeMethodMultipleIterations(ArchSpec::GetSocketNum, "GetSocketNum()", iterations);
+			//timeMethodMultipleIterations(ArchitectureSpecifications::GetSocketNum, "GetSocketNum()", iterations);
 			timeMethodMultipleIterations(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck()", iterations);
 			timeMethodMultipleIterations(JRAPL::ProfileDealloc, "ProfileDealloc()", iterations);
 		}

@@ -52,7 +52,7 @@ public class GeneralTestDriver
 	{
 		JRAPL.ProfileInit();
 
-		AsyncEnergyMonitorJavaSide_ObjectSamples emonn = new AsyncEnergyMonitorJavaSide_ObjectSamples(100);
+		AsyncEnergyMonitorJavaSide_ArraySamples emonn = new AsyncEnergyMonitorJavaSide_ArraySamples(100);
 
 		emonn.start();
 		try { Thread.sleep(5000); } catch (Exception e) {}
