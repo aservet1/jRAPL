@@ -137,10 +137,10 @@ public class RuntimeTestUtils extends JRAPL
 	// some times and if that's something you can do anything about and if it matters
 	public static void timeAllMSRReads(int iterations) {
 		int DRAM  = 1, GPU = 2, CPU = 3, PKG = 4;
-		long[][] dramTimes = new long[iterations][JRAPL.NUM_SOCKETS];
-		long[][] gpuTimes = new long[iterations][JRAPL.NUM_SOCKETS];
-		long[][] cpuTimes = new long[iterations][JRAPL.NUM_SOCKETS];
-		long[][] pkgTimes = new long[iterations][JRAPL.NUM_SOCKETS];
+		long[][] dramTimes = new long[iterations][ArchitectureSpecifications.NUM_SOCKETS];
+		long[][] gpuTimes = new long[iterations][ArchitectureSpecifications.NUM_SOCKETS];
+		long[][] cpuTimes = new long[iterations][ArchitectureSpecifications.NUM_SOCKETS];
+		long[][] pkgTimes = new long[iterations][ArchitectureSpecifications.NUM_SOCKETS];
 		
 		int dramIndex = 0, gpuIndex = 0, cpuIndex = 0, pkgIndex = 0;
 		for (int n = 0; n < iterations; n++) cpuTimes[cpuIndex++] = usecTimeMSRRead(CPU);

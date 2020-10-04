@@ -17,26 +17,12 @@ public class JRAPL {
 	 *  data structures in order to to facilitate the jRAPL interface
 	*/
 	public native static int ProfileInit();
-
 	
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Free all native memory allocated in ProfileInit().
 	 *  <br>Call this when done using the jRAPL utilities to clean up resources allocated.
 	*/
 	public native static void ProfileDealloc();
 
-
-	/** <h1> DOCUMENTATION OUT OF DATE </h1> Gets the wraparound energy value that I still don't e n t i r e l y understand
-	*/
-	//public native static int GetWrapAroundEnergy();	
-
-
-	/** <h1> DOCUMENTATION OUT OF DATE </h1> Number of CPU sockets the current system has
-	*/
-	public static final int NUM_SOCKETS;
-
-	/** <h1> DOCUMENTATION OUT OF DATE </h1> Energy wrap around value (I think it's for if an energy sample is taken over the MSR overflow/reset)
-	*/
-	public static final int ENERGY_WRAP_AROUND;
 	
 	static {
 		/*try {
@@ -57,7 +43,6 @@ public class JRAPL {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		NUM_SOCKETS = ArchitectureSpecifications.GetSocketNum();
-		ENERGY_WRAP_AROUND = ProfileInit();
+		//ProfileInit();
 	}
 }

@@ -32,13 +32,15 @@ public class EnergyCheckUtils extends JRAPL {
 		String EnergyInfo = EnergyStatCheck();
 		
 		String[] perSockEner = EnergyInfo.split("@");
-		double[] stats = new double[4*NUM_SOCKETS]; // 4 stats per socket
+		double[] stats = new double[4*ArchitectureSpecifications.NUM_SOCKETS]; // 4 stats per socket
 		int count = 0;
 
 		for(int i = 0; i < perSockEner.length; i++) {
 			String[] energy = perSockEner[i].split(",");
 			for(int j = 0; j < energy.length; j++) {
 				count = i * 4 + j;	//accumulative count
+		
+				System.out.println("j: "+j+", energy: "+Arrays.toString(energy));
 				stats[count] = Double.parseDouble(energy[j]);
 			}
 		}
@@ -48,7 +50,7 @@ public class EnergyCheckUtils extends JRAPL {
 	public static void main(String[] args) throws Exception
 	{
 		for (int x = 0; true; x++){
-			System.out.println(EnergyStatCheck());
+			System.out.println(Arrays.toString(getEnergyStats()));
 			Thread.sleep(40);
 		}
 		/*for(int x = 0; x < 100; x++){

@@ -189,7 +189,7 @@ public class AsyncEnergyMonitorJavaSide_ObjectSamples extends JRAPL implements R
 		EnergyStats[] before = EnergyStats.get();
 		try { Thread.sleep(samplingRate); } catch (Exception e) {} //park support or lock support
 		EnergyStats[] after  = EnergyStats.get();
-		EnergyDiff[] sample = new EnergyDiff[NUM_SOCKETS];
+		EnergyDiff[] sample = new EnergyDiff[ArchitectureSpecifications.NUM_SOCKETS];
 		for (int i = 0; i < sample.length; i++){
 			sample[i] = after[i].difference(before[i]);
 		}

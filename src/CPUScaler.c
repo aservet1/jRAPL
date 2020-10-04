@@ -32,14 +32,20 @@ rapl_msr_unit get_rapl_unit()
 	return rapl_unit;
 }
 
-//JNIEXPORT jint JNICALL Java_jrapl_ArchitectureSpecifications_GetWraparoundEnergy(JNIEnv* env, jclass jcls)
+//assumes profile has already been inited
+JNIEXPORT jint JNICALL Java_jrapl_ArchitectureSpecifications_GetWraparoundEnergy(JNIEnv* env, jclass jcls)
+{
+	//printf("PRINTING IN C: this is the wraparound energy: %d\n", wraparound_energy);
+	return (jint)wraparound_energy;
+}
+
+
 
 int ProfileInit()
 {
 	int i;
 	char msr_filename[BUFSIZ];
 	int core = 0;
-//	int wraparound_energy;
 
 	num_pkg = getSocketNum();
 	cpu_model = get_cpu_model();
