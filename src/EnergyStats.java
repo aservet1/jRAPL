@@ -17,7 +17,7 @@ public final class EnergyStats extends EnergySample
 			double gpu = energy[4 * i + 1];
 			double cpu = energy[4 * i + 2];
 			double pkg = energy[4 * i + 3];
-			stats[i] = new EnergyStats(/*socket,*/ dram, gpu, cpu, pkg);
+			stats[i] = new EnergyStats(socket, dram, gpu, cpu, pkg);
 		}
 		return stats;
 	}
@@ -33,30 +33,34 @@ public final class EnergyStats extends EnergySample
 
 	public EnergyDiff difference(EnergyStats other) {
 		assert ( this.getSocket() == other.getSocket() );
+		
+		int _socket = this.getSocket();
+		double _dram, _gpu, _cpu, _pkg;
+		Duration _elapsedTime;
 
-		double cpu, pkg, dram, gpu;
+		_cpu = this.getCpu() - other.getCpu();
+		if (_cpu < 0) _cpu += ENERGY_WRAP_AROUND;
 
-		cpu = this.getCpu() - other.getCpu();
-		if (cpu < 0) cpu += ENERGY_WRAP_AROUND;
+		_pkg = this.getPackage() - other.getPackage();
+		if (_pkg < 0) _pkg += ENERGY_WRAP_AROUND;
 
-		pkg = this.getPackage() - other.getPackage();
-		if (pkg < 0) pkg += ENERGY_WRAP_AROUND;
-
-		dram = -1;
 		if (this.getDram() != -1) {
-			dram = this.getDram() - other.getDram();
-			if (dram < 0) dram += ENERGY_WRAP_AROUND;
+			_dram = this.getDram() - other.getDram();
+			if (_dram < 0) _dram += ENERGY_WRAP_AROUND;
+		} else {
+			_dram = -1;
 		}
 
-		gpu  = -1;
 		if (this.getGpu() != -1) {
-			gpu = this.getGpu() - other.getGpu();
-			if (gpu < 0) gpu += ENERGY_WRAP_AROUND;
+			_gpu = this.getGpu() - other.getGpu();
+			if (_gpu < 0) _gpu += ENERGY_WRAP_AROUND;
+		} else {
+			_gpu = -1;
 		}
 
-		Duration elapsedTime = Duration.between(this.timestamp, other.timestamp);
+		_elapsedTime = Duration.between(this.timestamp, other.timestamp);
 
-		return new EnergyDiff(this.getSocket(), dram, gpu, cpu, pkg/*, elapsedTime*/);
+		return new EnergyDiff(_socket, _dram, _gpu, _cpu, _pkg, _elapsedTime);
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public class EnergyCheckUtils extends JRAPL {
 		int count = 0;
 
 		for(int i = 0; i < perSockEner.length; i++) {
-			String[] energy = perSockEner[i].split("#");
+			String[] energy = perSockEner[i].split(",");
 			for(int j = 0; j < energy.length; j++) {
 				count = i * 4 + j;	//accumulative count
 				stats[count] = Double.parseDouble(energy[j]);

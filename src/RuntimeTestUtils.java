@@ -224,7 +224,7 @@ public class RuntimeTestUtils extends JRAPL
 
 		if(args[0].equals("--time-java-calls")){ //Java function timing
 			timeMethodMultipleIterations(JRAPL::ProfileInit, "ProfileInit()", iterations);
-			timeMethodMultipleIterations(ArchSpec::GetSocketNum, "GetSocketNum()", iterations);
+			//timeMethodMultipleIterations(ArchitectureSpecifications::GetSocketNum, "GetSocketNum()", iterations);
 			timeMethodMultipleIterations(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck()", iterations);
 			timeMethodMultipleIterations(JRAPL::ProfileDealloc, "ProfileDealloc()", iterations);
 		}

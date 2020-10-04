@@ -7,7 +7,7 @@ import jrapl.*;
 public class MemoryTestUtils {
 
 	public static void main(String[] args) {
-		if (args.length == 0) usage_abort();
+		if (args.length == 0 || args.length == 1) usage_abort();
 
 		String representation = args[0];
 		long millisecondDelay = Long.parseLong(args[1]);
@@ -31,8 +31,9 @@ public class MemoryTestUtils {
 		memmon.start(); {
 			AsyncMonitor emonn = null;
 			if (representation.equals("Object")) emonn = new AsyncEnergyMonitorJavaSide_ObjectSamples();
-			if (representation.equals("Array"))  emonn = new AsyncEnergyMonitorJavaSide_ArraySamples();
-		
+			else if (representation.equals("Array"))  emonn = new AsyncEnergyMonitorJavaSide_ArraySamples();
+			else usage_abort();		
+
 			emonn.start();
 			try{ Thread.sleep(millisecondDelay); } catch (Exception e) {}
 			emonn.stop();
