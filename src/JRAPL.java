@@ -57,7 +57,7 @@ public class JRAPL {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		NUM_SOCKETS = ArchSpec.GetSocketNum();
+		NUM_SOCKETS = 1; //TODO //ArchitectureSpecifications.GetSocketNum();
 		ENERGY_WRAP_AROUND = ProfileInit();
 	}
 }

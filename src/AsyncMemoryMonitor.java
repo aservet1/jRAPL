@@ -42,7 +42,7 @@ public class AsyncMemoryMonitor implements Runnable,AsyncMonitor {
 	public void run() {
 		while(!exit) {
 			samples.add(memoryUsed());
-			try {
+			if (!exit) try {
 				Thread.sleep(samplingRate);
 			} catch (Exception e) { }
 			//System.out.print(".");

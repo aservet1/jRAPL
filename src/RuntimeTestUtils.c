@@ -42,7 +42,7 @@ JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeProfileInit(J
 JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeGetSocketNum(JNIEnv* env, jclass jcls){
 
 	STARTSTAMP;
-	Java_jrapl_ArchSpec_GetSocketNum(env, jcls);
+	Java_jrapl_ArchitectureSpecifications_GetSocketNum(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
