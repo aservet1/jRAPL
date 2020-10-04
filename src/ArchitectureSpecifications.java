@@ -9,9 +9,9 @@ public final class ArchitectureSpecifications {
 
 	private int numberOfPowerDomainsSupported;
 
-	private native static int GetWrapAroundEnergy();
-	private native static int GetSocketNum();
-	private native static int DramOrGpu();
+	public native static int GetWrapAroundEnergy();
+	public native static int GetSocketNum();
+	public native static int DramOrGpu();
 
 
 }
