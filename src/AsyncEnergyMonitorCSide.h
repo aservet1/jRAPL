@@ -20,7 +20,7 @@ typedef struct AsyncEnergyMonitor {
 } AsyncEnergyMonitor;
 
 
-AsyncEnergyMonitor* newAsyncEnergyMonitor(int delay, pthread_t thread);
+AsyncEnergyMonitor* newAsyncEnergyMonitor(int delay);
 void start(AsyncEnergyMonitor *collector);
 void stop(AsyncEnergyMonitor *collector);
 void freeAsyncEnergyMonitor(AsyncEnergyMonitor* collector);

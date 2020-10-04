@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <unistd.h> 
+#include <stdlib.h>
+
 #include "CPUScaler.h"
 #include "AsyncEnergyMonitorCSide.h"
 
@@ -12,10 +14,7 @@
 
 void run_cthread(int samplingRate, int argc, const char* argv[])
 {
-	int iterations = atoi(argv[1]);
-
-	pthread_t thread;	
-	AsyncEnergyMonitor* collector = newAsyncEnergyMonitor(samplingRate, thread);
+	AsyncEnergyMonitor* collector = newAsyncEnergyMonitor(samplingRate);
 	start(collector);
 	sleep(5);
 	stop(collector);

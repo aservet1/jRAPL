@@ -43,9 +43,11 @@ static EnergySampleList* newEnergySampleList(unsigned long long capacity)
 }
 
 
-AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, pthread_t thread)
+AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate)
 {
 	AsyncEnergyMonitor* collector = (AsyncEnergyMonitor*)malloc(sizeof(AsyncEnergyMonitor));
+	
+	pthread_t thread;
 	collector->thread = thread;
 	collector->exit = false;
 	collector->samplingRate = samplingRate;
@@ -81,19 +83,17 @@ void* run(void* collector_param){
 	AsyncEnergyMonitor* collector = (AsyncEnergyMonitor*)collector_param;
 
 	int sockets = getSocketNum();
-	EnergyStats before_stats[sockets];
-	EnergyStats after_stats[sockets];
+	EnergyStats stats[sockets];
 
 	while (!collector->exit)
 	{
-		EnergyStatCheck(before_stats); 
-		sleep_millisecond(collector->samplingRate);
-		EnergyStatCheck(after_stats);
+		EnergyStatCheck(stats); 
 
 		for (int i = 0; i < sockets; i++) {
-			EnergyStats diff = energyStatsSubtract(after_stats[i], before_stats[i]);
-			storeEnergySample(collector,diff);
+			storeEnergySample(collector,stats[i]);
 		}
+		
+		sleep_millisecond(collector->samplingRate);
 	}
 	return NULL;
 }
@@ -130,31 +130,35 @@ void writeToFile(AsyncEnergyMonitor *collector, const char* filepath){
 	if (filepath) fclose(outfile);
 }
 
-/////////// JNI Calls Down Here /////////////
-/*
-static AsyncEnergyMonitor* jniCollector; //managed by JNI function calls
-static pthread_t* thread;
+/////////////////////////////////// JNI Calls Down Here ////////////////////////////////////////////////
+
+static AsyncEnergyMonitor* jniCollector = NULL; //managed by JNI function calls
+
+JNIEXPORT void Java_jrapl_AsyncEnergyMonitorCSide_initCollector(JNIEnv* env, jclass jcls, jint samplingRate)
+{
+	jniCollector = newAsyncEnergyMonitor((int)samplingRate);
+}
 
 JNIEXPORT void Java_jrapl_AsyncEnergyMonitorCSide_freeCollector(JNIEnv* env, jclass jcls)
 {
 	freeAsyncEnergyMonitor(jniCollector);
+	jniCollector = NULL;
 }
 
-JNIEXPORT void Java_jrapl_AsyncEnergyMonitorCSide_startCollecting(JNIEnv* env, jclass jcls, jint samplingRate)
+JNIEXPORT void Java_jrapl_AsyncEnergyMonitorCSide_startCollecting(JNIEnv* env, jclass jcls)
 {
-	printf("hello w0rld\n");
-	jniCollector = newAsyncEnergyMonitor(samplingRate, thread);
+	printf("hello w0rld -- startCollecting\n");
 	start(jniCollector);
 }
 
 JNIEXPORT void Java_jrapl_AsyncEnergyMonitorCSide_stopCollecting(JNIEnv* env, jclass jcls)
 {
 	stop(jniCollector);
-	printf("goodbye w0rld\n");
+	printf("goodbye w0rld -- stopCollecting\n");
 }
 
 JNIEXPORT void Java_jrapl_AsyncEnergyMonitorCSide_writeToFile(JNIEnv* env, jclass jcls, jstring filePath)
 {
 	writeToFile(jniCollector, (const char*)filePath);
 }
-*/
+
