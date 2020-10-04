@@ -40,14 +40,13 @@ JNIEXPORT jint JNICALL Java_jrapl_ArchitectureSpecifications_GetWraparoundEnergy
 }
 
 
-
-int ProfileInit()
+void ProfileInit()
 {
 	int i;
 	char msr_filename[BUFSIZ];
 	int core = 0;
 
-	num_pkg = getSocketNum();
+	num_pkg = getSocketNum(); 
 	cpu_model = get_cpu_model();
 	architecture_category = get_architecture_category(cpu_model);
 	uint64_t num_pkg_thread = get_num_pkg_thread();
@@ -66,7 +65,6 @@ int ProfileInit()
 
 	rapl_unit = get_rapl_unit();
 	wraparound_energy = get_wraparound_energy(rapl_unit.energy);
-	return wraparound_energy;
 }
 
 /** <Alejandro's Interpretation>
@@ -75,10 +73,9 @@ int ProfileInit()
  *  the 'fd' array is an array of which msr regs. num msr regs is number of packages the computer has
  *  initializes the rapl unit (stuff holding the conversions to translate msr data sections into meaningful 'human-readable' stuff)
  */
-JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls)
+JNIEXPORT void JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls)
 {	
-	int wraparound_energy = ProfileInit();
-	return wraparound_energy;
+	ProfileInit();
 }
 
 /** <Alejandro's Interpretation>
@@ -163,6 +160,7 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 		stats_per_socket[i].dram = dram[i];
 		gettimeofday(&timestamp,NULL);
 		stats_per_socket[i].timestamp = timestamp;
+
 	}
 
 }
@@ -203,7 +201,8 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 
 	EnergyStatCheck(stats_per_socket);
 	copy_to_string(stats_per_socket, ener_info);
-
+	
+	
 	jstring ener_string = (*env)->NewStringUTF(env, ener_info);
   	
 	return ener_string;

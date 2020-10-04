@@ -40,7 +40,6 @@ public class EnergyCheckUtils extends JRAPL {
 			for(int j = 0; j < energy.length; j++) {
 				count = i * 4 + j;	//accumulative count
 		
-				System.out.println("j: "+j+", energy: "+Arrays.toString(energy));
 				stats[count] = Double.parseDouble(energy[j]);
 			}
 		}
@@ -49,6 +48,7 @@ public class EnergyCheckUtils extends JRAPL {
 
 	public static void main(String[] args) throws Exception
 	{
+		JRAPL.ProfileInit();
 		for (int x = 0; true; x++){
 			System.out.println(Arrays.toString(getEnergyStats()));
 			Thread.sleep(40);
