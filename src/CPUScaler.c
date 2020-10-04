@@ -40,7 +40,7 @@ JNIEXPORT jint JNICALL Java_jrapl_ArchitectureSpecifications_GetWraparoundEnergy
 }
 
 
-int ProfileInit()
+void ProfileInit()
 {
 	int i;
 	char msr_filename[BUFSIZ];
@@ -65,7 +65,6 @@ int ProfileInit()
 
 	rapl_unit = get_rapl_unit();
 	wraparound_energy = get_wraparound_energy(rapl_unit.energy);
-	return wraparound_energy;
 }
 
 /** <Alejandro's Interpretation>

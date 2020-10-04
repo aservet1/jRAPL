@@ -5,7 +5,7 @@
 #include <jni.h>
 #include "EnergyStats.h"
 
-int ProfileInit();
+void ProfileInit();
 void EnergyStatCheck(EnergyStats stats_per_socket[]);
 void ProfileDealloc();
 
