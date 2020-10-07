@@ -44,7 +44,4 @@ public class JRAPL {
 		}
 	}
 
-	static {
-		//loadLibrary();
-	}
 }

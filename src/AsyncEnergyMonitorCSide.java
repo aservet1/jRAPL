@@ -1,6 +1,6 @@
 package jrapl;
 
-public class AsyncEnergyMonitorCSide extends JRAPL
+public class AsyncEnergyMonitorCSide /*extends JRAPL*/
 {
 	public native static void startCollecting(int delay);
 
@@ -11,9 +11,9 @@ public class AsyncEnergyMonitorCSide extends JRAPL
 		JRAPL.loadLibrary();
 		JRAPL.ProfileInit();
 
-		startCollecting(0);
+//		startCollecting(0);
 		try{ Thread.sleep(5000);} catch(Exception e){}
-		stopCollecting();
+//		stopCollecting();
 
 		JRAPL.ProfileDealloc();
 	}

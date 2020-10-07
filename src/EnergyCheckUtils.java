@@ -4,7 +4,7 @@ import java.util.Arrays;
 /** <h1> DOCUMENTATION OUT OF DATE </h1>
 *	Functions around getting energy reading of the system
 */
-public class EnergyCheckUtils extends JRAPL {
+public class EnergyCheckUtils /*extends JRAPL*/ {
 
 //	private EnergyCheckUtils() {} // private constructor -- never initialized
 	
