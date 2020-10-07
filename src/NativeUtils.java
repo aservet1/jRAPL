@@ -25,7 +25,7 @@ package jrapl;
 
 import java.io.*;
 
-/** <h1> DOCUMENTATION OUT OF DATE </h1>
+/** 
  * A simple library class which helps with loading dynamic libraries stored in the
  * JAR archive. These libraries usualy contain implementation of some methods in
  * native code (using JNI - Java Native Interface).
@@ -36,13 +36,13 @@ import java.io.*;
  */
 public class NativeUtils {
 
-    /** <h1> DOCUMENTATION OUT OF DATE </h1>
+    /** 
      * Private constructor - this class will never be instanced
      */
     private NativeUtils() {
     }
 
-    /** <h1> DOCUMENTATION OUT OF DATE </h1>
+    /** 
      * Loads library from current JAR archive
      *
      * The file from JAR is copied into system temporary directory and then loaded. The temporary file is deleted after exiting.

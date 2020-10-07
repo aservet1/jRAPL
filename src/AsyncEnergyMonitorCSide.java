@@ -1,6 +1,6 @@
 package jrapl;
 
-public class AsyncEnergyMonitorCSide extends JRAPL implements AsyncMonitor
+public class AsyncEnergyMonitorCSide /*extends JRAPL*/ implements AsyncMonitor
 {
 	private native static void slightsetup();
 
@@ -57,6 +57,7 @@ public class AsyncEnergyMonitorCSide extends JRAPL implements AsyncMonitor
 
 	public static void main(String[] args)
 	{
+		JRAPL.loadLibrary();
 		JRAPL.ProfileInit();
 
 		AsyncEnergyMonitorCSide a = new AsyncEnergyMonitorCSide(10);

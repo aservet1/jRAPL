@@ -13,7 +13,7 @@ import java.time.Instant;
 *	followed by command line arguments that tell the program which of these methods to use and how. Their output is then
 *	picked back up and processed by the shell script that called it initially.
 */
-public class RuntimeTestUtils extends JRAPL
+public class RuntimeTestUtils /*extends JRAPL*/
 {
 	//public RunTimeTestUtils() {} // private constructor -- never initialized
 
@@ -210,7 +210,8 @@ public class RuntimeTestUtils extends JRAPL
 	*/
 	public static void main(String[] args)
 	{
-		new JRAPL(); // get static block initialization out of the way so it doesnt interfere with runtime measurements
+		JRAPL.loadLibrary();
+		JRAPL.ProfileInit();
 		int iterations;
 		if(args.length != 2) {
 			usage_message_abort();

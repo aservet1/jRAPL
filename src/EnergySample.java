@@ -2,7 +2,7 @@ package jrapl;
 
 import java.time.Instant;
 
-public abstract class EnergySample extends JRAPL
+public abstract class EnergySample /*extends JRAPL*/
 {
 	protected final int socket;
 	protected final double dram;

@@ -8,7 +8,7 @@ import java.util.Arrays;
 *	have only skimmed over their C side definitions. The API for this class will change a lot as
 *	I actually start making use of these functions and understanding them and their place better.
 */
-public class EnergyControlUtils extends JRAPL {
+public class EnergyControlUtils /*extends JRAPL*/ {
 
 //	private EnergyControlUtils() {} // private constructor -- never initialized
 

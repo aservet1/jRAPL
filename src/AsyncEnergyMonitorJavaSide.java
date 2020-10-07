@@ -7,7 +7,7 @@ import java.io.FileWriter;
 
 import java.time.Instant;
 
-public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncMonitor
+public class AsyncEnergyMonitorJavaSide /*extends JRAPL*/ implements Runnable,AsyncMonitor
 {
 	private ArrayList<String> samples; 
 	private int samplingRate; // milliseconds
@@ -198,6 +198,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncM
 
 	public static void main(String[] args) throws InterruptedException
 	{
+		JRAPL.loadLibrary();
 		JRAPL.ProfileInit();
 
 		int rate = (args.length > 0) ? Integer.parseInt(args[0]) : 10;

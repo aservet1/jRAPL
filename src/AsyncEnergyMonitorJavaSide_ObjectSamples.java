@@ -12,7 +12,7 @@ import java.io.FileWriter;
 *	<br>Every individual energy sample is the energy consumed (joules) over the course of a set millisecond sampling rate
 *	<br>Energy read from three power domains: DRAM or GPU (depending on CPU model), CPU core, CPU package
 */
-public class AsyncEnergyMonitorJavaSide_ObjectSamples extends JRAPL implements Runnable,AsyncMonitor
+public class AsyncEnergyMonitorJavaSide_ObjectSamples /*extends JRAPL*/ implements Runnable,AsyncMonitor
 {
 	private ArrayList<EnergyDiff> samples; 
 	private int samplingRate; // milliseconds
