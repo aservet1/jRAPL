@@ -69,6 +69,7 @@ public final class EnergyStats extends EnergySample
 	}
 
 	public static void main(String[] args) throws Exception {
+		JRAPL.loadLibrary();
 		JRAPL.ProfileInit();
 
 		EnergyStats[] last = EnergyStats.get();

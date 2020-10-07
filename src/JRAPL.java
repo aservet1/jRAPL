@@ -23,8 +23,7 @@ public class JRAPL {
 	*/
 	public native static void ProfileDealloc();
 
-	
-	static {
+	public static void loadLibrary() { // do NOT delete this commented sections in this !! it's going to be useful when i actually need to load library from jar
 		/*try {
 			Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
 			fieldSysPath.setAccessible(true);
@@ -32,7 +31,7 @@ public class JRAPL {
 			//MethodHandles.Lookup cl = MethodHandles.privateLookupIn(ClassLoader.class, MethodHandles.lookup());
 			//VarHandle sys_paths = cl.findStaticVarHandle(ClassLoader.class, "sys_paths", String[].class);
 			//sys_paths.set(null);
-		} catch (Exception e) { }*/
+		} catch (Exception e) { }*/	
 
 		String nativelib = "/home/alejandro/jRAPL/src/libCPUScaler.so";
 		try {
@@ -43,6 +42,9 @@ public class JRAPL {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		//ProfileInit();
+	}
+
+	static {
+		//loadLibrary();
 	}
 }

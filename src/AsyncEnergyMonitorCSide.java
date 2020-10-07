@@ -8,6 +8,7 @@ public class AsyncEnergyMonitorCSide extends JRAPL
 
 	public static void main(String[] args)
 	{
+		JRAPL.loadLibrary();
 		JRAPL.ProfileInit();
 
 		startCollecting(0);

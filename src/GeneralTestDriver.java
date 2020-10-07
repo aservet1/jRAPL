@@ -41,6 +41,7 @@ public class GeneralTestDriver
 
 	private static void threadThing(String[] args)
 	{
+		JRAPL.loadLibrary();
 		JRAPL.ProfileInit();
 
 		AsyncEnergyMonitorJavaSide_ArraySamples emonn = new AsyncEnergyMonitorJavaSide_ArraySamples(100);

@@ -48,6 +48,7 @@ public class EnergyCheckUtils extends JRAPL {
 
 	public static void main(String[] args) throws Exception
 	{
+		JRAPL.loadLibrary();
 		JRAPL.ProfileInit();
 		for (int x = 0; true; x++){
 			System.out.println(Arrays.toString(getEnergyStats()));

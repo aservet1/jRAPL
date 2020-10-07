@@ -187,6 +187,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable,AsyncM
 
 	public static void main(String[] args) throws InterruptedException
 	{
+		JRAPL.loadLibrary();
 		JRAPL.ProfileInit();
 
 		int rate = (args.length > 0) ? Integer.parseInt(args[0]) : 10;

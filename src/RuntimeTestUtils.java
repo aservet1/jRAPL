@@ -210,7 +210,8 @@ public class RuntimeTestUtils extends JRAPL
 	*/
 	public static void main(String[] args)
 	{
-		new JRAPL(); // get static block initialization out of the way so it doesnt interfere with runtime measurements
+		JRAPL.loadLibrary();
+		JRAPL.ProfileInit();
 		int iterations;
 		if(args.length != 2) {
 			usage_message_abort();
