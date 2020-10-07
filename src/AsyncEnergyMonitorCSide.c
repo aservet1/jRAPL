@@ -120,7 +120,7 @@ void writeToFile(AsyncEnergyMonitor *collector, const char* filepath){
 	int nItems = collector->samples->nItems;
 	EnergyStats current;
 	fprintf(outfile,"samplingRate: %d milliseconds\n",collector->samplingRate);
-	fprintf(outfile,"socket,dram,gpu,cpu,pkg,timestamp seconds/microseconds\n");
+	fprintf(outfile,"socket,dram,gpu,cpu,pkg,timestamp,seconds/microseconds\n");
 	for (int i = 0; i < nItems; i++) {
 		current = items[i];
 		fprintf(outfile,"%d,%f,%f,%f,%f,%ld/%ld\n", current.socket, current.dram, 
@@ -130,7 +130,17 @@ void writeToFile(AsyncEnergyMonitor *collector, const char* filepath){
 	if (filepath) fclose(outfile);
 }
 
+void lastKSamples(int k, AsyncEnergyMonitor* collector, EnergyStats return_array[]) {
+	int i = collector->samples->nItems-1; //start from the last one
+	while ( k > 0 && i > 0) {
+		//printf("loop ");
+		return_array[k--] = collector->samples->items[i--];
+	} 
+}
+
 /////////////////////////////////// JNI Calls Down Here ////////////////////////////////////////////////
+
+/*
 
 static AsyncEnergyMonitor* jniCollector = NULL; //managed by JNI function calls
 
@@ -162,3 +172,4 @@ JNIEXPORT void Java_jrapl_AsyncEnergyMonitorCSide_writeToFile(JNIEnv* env, jclas
 	writeToFile(jniCollector, (const char*)filePath);
 }
 
+*/

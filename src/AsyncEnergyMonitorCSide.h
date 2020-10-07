@@ -25,6 +25,6 @@ void start(AsyncEnergyMonitor *collector);
 void stop(AsyncEnergyMonitor *collector);
 void freeAsyncEnergyMonitor(AsyncEnergyMonitor* collector);
 void writeToFile(AsyncEnergyMonitor *collector, const char* filepath);
-
+void lastKSamples(int k, AsyncEnergyMonitor* collector, EnergyStats return_array[k]);
 
 #endif //_ASYNC_ENERGY_MONITOR_CSIDE_H

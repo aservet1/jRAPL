@@ -6,6 +6,7 @@ CFILES =	CPUScaler.c			\
 		dvfs.c				\
  		EnergyStats.c 			\
 		AsyncEnergyMonitorCSide.c	\
+		AsyncEnergyMonitorCSide_JNI.c	\
 		RuntimeTestUtils.c		\
 
 OFILES = $(CFILES:.c=.o)
