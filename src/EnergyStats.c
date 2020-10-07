@@ -3,7 +3,8 @@
 #include <sys/time.h>
 #include "EnergyStats.h"
 
-EnergyStats energyStatsSubtract(EnergyStats x, EnergyStats y){ //@TODO -- implement the wraparound for negative values
+EnergyStats
+energy_stats_subtract(EnergyStats x, EnergyStats y){ //@TODO -- implement the wraparound for negative values
 	assert(x.socket == y.socket);
 	EnergyStats diff;
 	diff.socket = x.socket;
@@ -13,4 +14,11 @@ EnergyStats energyStatsSubtract(EnergyStats x, EnergyStats y){ //@TODO -- implem
 	diff.pkg = x.pkg - y.pkg;
 	gettimeofday(&diff.timestamp,NULL);
 	return diff;
+}
+
+
+void
+energy_stats_to_string(EnergyStats estats, char ener_string[512])
+{
+	sprintf(ener_string, "%f,%f,%f,%f@", estats.dram, estats.gpu, estats.cpu, estats.pkg);
 }

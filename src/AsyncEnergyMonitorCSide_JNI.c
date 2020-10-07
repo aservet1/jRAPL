@@ -1,16 +1,16 @@
-
-#include <stdio.h>
 #include <jni.h>
+#include <stdio.h>
+#include <string.h>
 #include <assert.h>
-#include "AsyncEnergyMonitorCSide.h"
 #include "EnergyStats.h"
+#include "AsyncEnergyMonitorCSide.h"
 
 //TODO -- more eloquent error handling
 #define assert_valid_id(id)	\
-	assert(id >= 0 && id < capacity);
+	assert(id >= 0 && id < CAPACITY);
 
-static const int capacity = 2;
-static AsyncEnergyMonitor* monitors[2];
+#define CAPACITY 2
+static AsyncEnergyMonitor* monitors[CAPACITY];
 
 JNIEXPORT void JNICALL
 Java_jrapl_AsyncEnergyMonitorCSide_allocMonitor(JNIEnv* env, jclass jcls, int id, int samplingRate)
@@ -31,7 +31,6 @@ Java_jrapl_AsyncEnergyMonitorCSide_deallocMonitor(JNIEnv* env, jclass jcls, int 
 
 JNIEXPORT void JNICALL
 Java_jrapl_AsyncEnergyMonitorCSide_startCollecting(JNIEnv* env, jclass jcls, int id) {
-	//printf(" -- id:%d -- cap:%d -- ptr:%p\n",id,capacity,monitors[id]);
 	assert_valid_id(id);
 	start(monitors[id]);
 }
@@ -49,37 +48,36 @@ Java_jrapl_AsyncEnergyMonitorCSide_writeToFile(JNIEnv* env, jclass jcls, int id,
 
 JNIEXPORT void JNICALL
 Java_jrapl_AsyncEnergyMonitorCSide_slightsetup(JNIEnv* env, jclass jcls) {
-	for ( int id = 0; id < capacity; id++) {
+	for ( int id = 0; id < CAPACITY; id++) {
 		monitors[id] = NULL;
 	}
 }
 
 
 JNIEXPORT jstring JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int id, int k) {
-	/*
-	printf("k: %d ; nItems: %lld\n",k,monitors[id]->samples->nItems);
-
+Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int id, int k)
+{
 	assert( k < monitors[id]->samples->nItems );
 
-	//	printf("k1:%d|",k);
 	EnergyStats samples[k];
-	//	printf("k2:%d|",k);
 	lastKSamples(k, monitors[id], samples);
-	//	printf("k3:%d\n",k);
 
-	for (int i = 0; i < 3; i++) {
-		printf("loop (%d,%d). ",i,k);
-		printf("%d{%f{%f ", samples[i].socket, samples[i].dram, samples[i].gpu);
+	char sample_strings[150*k];
+
+	int offset = 0;
+	for (int i = 0; i < k; i++) {
+		EnergyStats e = samples[i];
+		char string[150];
+		energy_stats_to_string(e,string);
+		sprintf(string,"%s_", string);
+		
+		int string_len = strlen(string);
+		memcpy(sample_strings + offset, string, string_len);
+		offset += string_len;
 	}
-	*/
-	const char* message = "hello mo0n";
-	return (*env)->NewStringUTF(env, message);	
+
+	return (*env)->NewStringUTF(env, sample_strings);	
 }
-
-
-
-
 
 
 

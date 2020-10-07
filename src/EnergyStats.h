@@ -12,19 +12,7 @@ typedef struct {
 	struct timeval timestamp;
 } EnergyStats;
 
-EnergyStats energyStatsSubtract(EnergyStats a, EnergyStats b);
-
-
-
-
-
-
-
-
-
-
-
-
-
+EnergyStats energy_stats_subtract(EnergyStats a, EnergyStats b);
+void energy_stats_to_string(EnergyStats estats, char ener_string[512]);
 
 #endif //ENERGY_STATS_H

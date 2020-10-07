@@ -131,11 +131,11 @@ void writeToFile(AsyncEnergyMonitor *collector, const char* filepath){
 }
 
 void lastKSamples(int k, AsyncEnergyMonitor* collector, EnergyStats return_array[]) {
-	int i = collector->samples->nItems-1; //start from the last one
-	while ( k > 0 && i > 0) {
-		//printf("loop ");
-		return_array[k--] = collector->samples->items[i--];
-	} 
+	int sample_i = collector->samples->nItems-1; //start from the last one
+	int return_i = k-1;
+	do { // :)
+		return_array[return_i] = collector->samples->items[sample_i];
+	} while ( --return_i >= 0 && --sample_i > 0);
 }
 
 /////////////////////////////////// JNI Calls Down Here ////////////////////////////////////////////////
