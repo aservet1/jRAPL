@@ -18,6 +18,8 @@ public final class ArchitectureSpecifications {
 
 
 	static {
+		cpuModelName = null;
+		cpuModel = -1;
 		// base bwlo 2 off of output or DramOrGpu()
 		readingDRAM = false;
 		readingGPU = false;
