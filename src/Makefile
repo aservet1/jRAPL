@@ -18,18 +18,23 @@ JAVA_TESTFILES = 	RuntimeTestUtils.java	\
 
 JAVA_USERFILES =	ArchitectureSpecifications.java 		\
 			EnergyCheckUtils.java				\
-			AsyncMemoryMonitor.java				\
 			JRAPL.java					\
 			EnergyControlUtils.java				\
+									\
+			AsyncMonitor.java				\
+			AsyncMemoryMonitor.java				\
 			AsyncEnergyMonitorCSide.java			\
 			AsyncEnergyMonitorJavaSide.java			\
 			AsyncEnergyMonitorJavaSide_ArraySamples.java	\
 			AsyncEnergyMonitorJavaSide_ObjectSamples.java	\
 			AsyncMemoryMonitor.java				\
-			AsyncMonitor.java				\
 			NativeUtils.java				\
 			PerfCheckUtils.java				\
+									\
 			EnergyManager.java				\
+			AsyncEnergyManager.java				\
+			SyncEnergyManager.java				\
+									\
 			EnergySample.java				\
 			EnergyStats.java				\
 			EnergyDiff.java					\
