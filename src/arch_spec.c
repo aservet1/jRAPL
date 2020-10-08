@@ -1,5 +1,5 @@
 #include <stdio.h>
-//#include <jni.h>
+#include <jni.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -7,8 +7,6 @@
 #include <stdint.h>
 #include <string.h>
 #include "arch_spec.h"
-//#include <sys/time.h> 	// should confirm before removing, but i think these two commented out #include statements were from
-//#include <sys/types.h>	// when we were doing timing inside these functions, but now we aren't so we can remove?
 
 /** <Alejandro's Interpretation>
  *	- (?) Direct  CPUID  access  through  this  device
@@ -172,6 +170,43 @@ int get_architecture_category(uint32_t cpu_model) {
 
 }
 
+//TODO -- for organization, see if you can do the wraparound energy calculation here
+//	instead of CPUScaler
 
+JNIEXPORT jint JNICALL
+Java_jrapl_ArchitectureSpecifications_DramOrGpu(JNIEnv * env, jclass jcls) {
+	return get_architecture_category(get_cpu_model());
+}
 
+JNIEXPORT jint JNICALL
+Java_jrapl_ArchitectureSpecifications_GetSocketNum(JNIEnv *env, jclass jcls) {
+	return (jint)getSocketNum(); 
+}
 
+JNIEXPORT jint JNICALL
+Java_jrapl_ArchitectureSpecifications_GetCpuModel(JNIEnv* env, jclass jcls) {
+	return get_cpu_model();
+}
+
+JNIEXPORT jstring JNICALL
+Java_jrapl_ArchitectureSpecifications_GetCpuModelName(JNIEnv* env, jclass jcls) {
+	const char* name;
+	switch(get_cpu_model()) {
+		case KABYLAKE:		name = "KABYLAKE";	break;
+		case BROADWELL:		name = "BROADWELL";	break;
+		case SANDYBRIDGE_EP:	name = "SANDYBRIDGE_EP";break;
+		case HASWELL3:		name = "HASWELL3";	break;
+		case SKYLAKE2:		name = "SKYLAKE2";	break;
+		case APOLLOLAKE:	name = "APOLLOLAKE";	break;
+		case SANDYBRIDGE:	name = "SANDYBRIDGE";	break;
+		case IVYBRIDGE:		name = "IVYBRIDGE";	break;
+		case HASWELL1:		name = "HASWELL1";	break;		
+		case HASWELL_EP:	name = "HASWELL_EP";	break;	
+		case COFFEELAKE2:	name = "COFFEELAKE2";	break;
+		case BROADWELL2:	name = "BROADWELL2";	break;
+		case HASWELL2:		name = "HASWELL2";	break;
+		case SKYLAKE1:		name = "SKYLAKE1";	break;
+		default: name = "UNDEFINED_ARCHITECTURE";
+	}
+	return (*env)->NewStringUTF(env, name);
+}

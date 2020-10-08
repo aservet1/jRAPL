@@ -5,6 +5,14 @@ public class GeneralTestDriver
 {
 	public static void main(String[] args)
 	{
+		JRAPL.loadLibrary();
+		JRAPL.ProfileInit();
+		System.out.println(ArchitectureSpecifications.infoString());
+		JRAPL.ProfileDealloc();
+	}
+
+	private static void threadThing()
+	{
 		AsyncEnergyMonitorJavaSide aemonj = new AsyncEnergyMonitorJavaSide();
 		aemonj.start();
 		try { Thread.sleep(5000); }
@@ -13,9 +21,5 @@ public class GeneralTestDriver
 		System.out.println(aemonj);
 	}
 
-	private static void bothMemoryThings()
-	{
-		memoryThing("Object");
-		memoryThing("Array");
-	}
+
 }

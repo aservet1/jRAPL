@@ -78,16 +78,7 @@ JNIEXPORT void JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls)
 	ProfileInit();
 }
 
-/** <Alejandro's Interpretation>
- *	Return number of CPU sockets
- */
-JNIEXPORT jint JNICALL Java_jrapl_ArchitectureSpecifications_GetSocketNum(JNIEnv *env, jclass jcls) {
-	return (jint)getSocketNum(); 
-}
 
-JNIEXPORT jint JNICALL Java_jrapl_ArchitectureSpecifications_DramOrGpu(JNIEnv * env, jclass jcls) {
-	return get_architecture_category(get_cpu_model());
-}
 
 static inline double read_Package(int socket)
 {
