@@ -3,30 +3,15 @@
 #include <stdlib.h>
 
 #include "CPUScaler.h"
-#include "AsyncEnergyMonitorCSide.h"
-
-/////////////////////// \\\\\\\\\\\\\\\\\\\\|
- ///  DO NOT DELETE WHAT IS IN THIS     \\\ |
- ///  COMMENT SECTION SAVE IT TO THE    \\\ |
- ///  JAVA THREAD TEST DRIVER FILE WHEN \\\ |
- ///  YOU GET THE OPPORTUNITY           \\\ |
-/////////////////////// \\\\\\\\\\\\\\\\\\\\|
-
-void run_cthread(int samplingRate, int argc, const char* argv[])
-{
-	AsyncEnergyMonitor* collector = newAsyncEnergyMonitor(samplingRate);
-	start(collector);
-	sleep(5);
-	stop(collector);
-	writeToFile(collector, (argc>1)?argv[1]:NULL );
-	freeAsyncEnergyMonitor(collector);
-
-}
-/////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+#include "EnergyStats.h"
 
 int main(int argc, const char* argv[])
 {
 	ProfileInit();
-	run_cthread(100,argc,argv);
+	EnergyStats e[1];
+	EnergyStatCheck(e);
+	char ener_string[100];
+	energy_stats_to_string(e[0],ener_string);
+	printf("%s\n", ener_string);
 	ProfileDealloc();
 }
