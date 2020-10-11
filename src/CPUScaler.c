@@ -32,12 +32,6 @@ rapl_msr_unit get_rapl_unit()
 	return rapl_unit;
 }
 
-//assumes profile has already been inited
-JNIEXPORT jint JNICALL Java_jrapl_ArchitectureSpecifications_GetWraparoundEnergy(JNIEnv* env, jclass jcls)
-{
-	//printf("PRINTING IN C: this is the wraparound energy: %d\n", wraparound_energy);
-	return (jint)wraparound_energy;
-}
 
 
 void ProfileInit()
@@ -67,18 +61,6 @@ void ProfileInit()
 	wraparound_energy = get_wraparound_energy(rapl_unit.energy);
 }
 
-/** <Alejandro's Interpretation>
- *	Sets up an an energy profile.
- *	reads and stores CPU model, socketnum. calculates wraparound energy.
- *  the 'fd' array is an array of which msr regs. num msr regs is number of packages the computer has
- *  initializes the rapl unit (stuff holding the conversions to translate msr data sections into meaningful 'human-readable' stuff)
- */
-JNIEXPORT void JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls)
-{	
-	ProfileInit();
-}
-
-
 
 static inline double read_Package(int socket)
 {
@@ -106,9 +88,6 @@ static inline double read_Dram(int socket)
 }
 
 
-/** <Alejandro's Interpretation>
- *	Reads energy info from MSRs into EnergyStats structs. Fills an array of structs, one per socket 
- */
 void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 {
 	struct timeval timestamp;
@@ -156,13 +135,6 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 
 }
 
-/** <Alejandro's Interpretation>
- *  Takes the energy info and packages it into a formatted string to pass to Java
- *    dram,gpu,cpu,pkg@
- *  Each socket will have the above format, multi socket machines will look like
- *    socket1@socket2@socket3@ etc
- *  Excludes the timestamp because Java will do its own timestamp upon receiving this information
- */
 static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info[512])
 {
   	bzero(ener_info, 512);
@@ -181,10 +153,25 @@ static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info
 	}
 }
 
-/** <Alejandro's Interpretation>
- * Read EnergyStats into EnergyStats struct (one struct per socket) and convert the structs
- * you have into a string to pass up to Java
- */
+
+void ProfileDealloc()
+{
+	free(fd);
+	free(parameters);
+}
+
+JNIEXPORT void JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls)
+{	
+	ProfileInit();
+}
+
+//assumes profile has already been inited. try to get this to be independent of profileinit and move it into arch_spec.c
+JNIEXPORT jint JNICALL Java_jrapl_ArchitectureSpecifications_GetWraparoundEnergy(JNIEnv* env, jclass jcls)
+{
+	//printf("PRINTING IN C: this is the wraparound energy: %d\n", wraparound_energy);
+	return (jint)wraparound_energy;
+}
+
 JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *env, jclass jcls) {
 	
 	char ener_info[512];
@@ -200,15 +187,6 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *en
 
 }
 
-void ProfileDealloc()
-{
-	free(fd);
-	free(parameters);
-}
-
-/** <Alejandro's Interpretation>
- * Free memory allocated by profile init function
- */
 JNIEXPORT void JNICALL Java_jrapl_JRAPL_ProfileDealloc(JNIEnv * env, jclass jcls) {
 
 	ProfileDealloc();
