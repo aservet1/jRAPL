@@ -32,8 +32,6 @@ rapl_msr_unit get_rapl_unit()
 	return rapl_unit;
 }
 
-
-
 void ProfileInit()
 {
 	int i;
@@ -120,7 +118,6 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 			case UNDEFINED_ARCHITECTURE:
 				printf("Architecture not found\n");
 				break;
-
 		}
 
 		stats_per_socket[i].socket = i + 1;
@@ -130,7 +127,6 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 		stats_per_socket[i].dram = dram[i];
 		gettimeofday(&timestamp,NULL);
 		stats_per_socket[i].timestamp = timestamp;
-
 	}
 
 }
@@ -143,7 +139,7 @@ static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info
 	char buffer[100];
 	int buffer_len;
 
-	for(int i = 0; i < num_pkg; i++){
+	for(int i = 0; i < num_pkg; i++) {
 		EnergyStats stats = stats_per_socket[i];
 		bzero(buffer, 100);
 		sprintf(buffer, "%f,%f,%f,%f@", stats.dram, stats.gpu, stats.cpu, stats.pkg);
@@ -152,7 +148,6 @@ static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info
 		offset += buffer_len;
 	}
 }
-
 
 void ProfileDealloc()
 {

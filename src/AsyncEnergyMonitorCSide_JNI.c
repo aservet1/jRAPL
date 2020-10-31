@@ -13,10 +13,10 @@
 static AsyncEnergyMonitor* monitors[CAPACITY];
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_allocMonitor(JNIEnv* env, jclass jcls, int id, int samplingRate)
+Java_jrapl_AsyncEnergyMonitorCSide_allocMonitor(JNIEnv* env, jclass jcls, jint id, jint samplingRate, jint storageType)
 {
 	assert_valid_id(id);
-	monitors[id] = newAsyncEnergyMonitor(samplingRate);
+	monitors[id] = newAsyncEnergyMonitor(samplingRate, storageType);
 }
 
 JNIEXPORT void JNICALL
@@ -57,7 +57,7 @@ Java_jrapl_AsyncEnergyMonitorCSide_slightsetup(JNIEnv* env, jclass jcls) {
 JNIEXPORT jstring JNICALL
 Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int id, int k)
 {
-	assert( k < monitors[id]->samples->nItems );
+	assert( k < monitors[id]->samples_dynarr->nItems );
 
 	EnergyStats samples[k];
 	lastKSamples(k, monitors[id], samples);

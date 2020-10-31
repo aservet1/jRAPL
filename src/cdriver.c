@@ -1,17 +1,29 @@
 #include <stdio.h>
-#include <unistd.h> 
-#include <stdlib.h>
+#include <unistd.h>
 
 #include "CPUScaler.h"
-#include "EnergyStats.h"
+#include "AsyncEnergyMonitorCSide.h"
+
+void sleep_print(int seconds)
+{
+	for (int s = 1; s <= seconds; s++) {
+		printf("%d\n",s);
+		sleep(1);
+	}
+}
 
 int main(int argc, const char* argv[])
 {
 	ProfileInit();
-	EnergyStats e[1];
-	EnergyStatCheck(e);
-	char ener_string[100];
-	energy_stats_to_string(e[0],ener_string);
-	printf("%s\n", ener_string);
+
+	//AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,DYNAMIC_ARRAY_STORAGE);
+	AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,LINKED_LIST_STORAGE);
+	start(m);
+	//sleep_print(3);
+	sleep(5);
+	stop(m);
+	writeToFile(m,NULL);
+	freeAsyncEnergyMonitor(m);
+
 	ProfileDealloc();
 }

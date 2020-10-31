@@ -1,24 +1,14 @@
 
-package jrapl;
-
-public abstract class AsyncEnergyManager {
-
-	//protected AsyncEnergyMonitor[] monitors;
+public interface AsyncEnergyManager {
 	
-	public void init()
-	{
-		JRAPL.ProfileInit();
-	}
+	public abstract void init();
 
-	public void cleanup()
-	{
-		JRAPL.ProfileDealloc();
-	}
+	public abstract void cleanup();
 
-
-	//  something about whether to return individual guys or have a whole
-	//  collection of these guys circling around in here and start/stopping
-	//  whatever many multi threaded operations are going on in here...(should learn more about in what ways one can do multi threading)
-	public abstract AsyncMonitor getMonitor(int samplingRate);
+	public abstract void start();
+	
+	public abstract void stop();
+	
+	public abstract void reInit();
 
 }

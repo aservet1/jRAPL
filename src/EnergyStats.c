@@ -22,3 +22,12 @@ energy_stats_to_string(EnergyStats estats, char ener_string[512])
 {
 	sprintf(ener_string, "%f,%f,%f,%f@", estats.dram, estats.gpu, estats.cpu, estats.pkg);
 }
+
+void
+energy_stats_csv_string(EnergyStats estats, char ener_string[512])
+{
+	sprintf(ener_string, "%d,%f,%f,%f,%f,%ld/%ld",
+		estats.socket,
+		estats.dram, estats.gpu, estats.cpu, estats.pkg, 
+		estats.timestamp.tv_sec, estats.timestamp.tv_usec);
+}
