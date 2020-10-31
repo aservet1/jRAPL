@@ -83,7 +83,7 @@ public class AsyncEnergyMonitorCSide /*extends JRAPL*/ implements AsyncMonitor
 		JRAPL.ProfileInit();
 		slightsetup();
 
-		AsyncEnergyMonitorCSide a = new AsyncEnergyMonitorCSide(10,"LINKED_LIST");
+		AsyncEnergyMonitorCSide a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
 
 		a.start();
 		try{ Thread.sleep(400);} catch(Exception e){}
