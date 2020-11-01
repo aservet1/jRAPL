@@ -141,41 +141,94 @@ uint64_t getSocketNum() {
 	return num_pkg;
 }
 
-int get_architecture_category(uint32_t cpu_model) {
+void multiply_string_by_socket_num(char out_buffer[], char string[]) {
+
+	int socketnum = getSocketNum();
+	int string_len = strlen(string);
+	int offset = 0;
+	for (int i = 0; i < socketnum; i++) {
+		memcpy(out_buffer + offset, string, string_len);
+		offset += string_len;
+	}
+	out_buffer[++offset] = '\0';
+
+}
+
+
+#define GET_POWER_DOMAIN_STRING(string)		\
+	if (power_domain_string_buffer != NULL) {	\
+		bzero(power_domain_string_buffer, 512);	\
+		multiply_string_by_socket_num(power_domain_string_buffer,#string);	\
+	}	\
+
+int get_power_domains_supported(uint32_t cpu_model, char power_domain_string_buffer[512]) {
 		
 	switch (cpu_model) {
 
 		case KABYLAKE:
 		case BROADWELL:
 
-			return READ_FROM_DRAM_AND_GPU;
+			GET_POWER_DOMAIN_STRING("dram,gpu,cpu,pkg@");
+			//if (power_domain_string_buffer != NULL) {
+			//	bzero(power_domain_string_buffer, 512);
+			//	multiply_string_by_socket_num(power_domain_string_buffer,"dram,gpu,cpu,pkg@");
+			//}
 
+			return READ_FROM_DRAM_AND_GPU;
 
 		case SANDYBRIDGE_EP:			case HASWELL1:		case HASWELL2:
 		case HASWELL3:				case HASWELL_EP:	case SKYLAKE1:
 		case SKYLAKE2: 				case BROADWELL2:
 		case APOLLOLAKE:			case COFFEELAKE2:
-			
+
+			GET_POWER_DOMAIN_STRING("dram,cpu,pkg@");
+			//if (power_domain_string_buffer != NULL) {
+			//	bzero(power_domain_string_buffer, 512);
+			//	multiply_string_by_socket_num(power_domain_string_buffer,"dram,cpu,pkg@");
+			//}
+
 			return READ_FROM_DRAM;
 
 		case SANDYBRIDGE:
 		case IVYBRIDGE:
-		
+
+			GET_POWER_DOMAIN_STRING("gpu,cpu,pkg@");
+			//if (power_domain_string_buffer != NULL) {
+			//	bzero(power_domain_string_buffer,512);
+			//	multiply_string_by_socket_num(power_domain_string_buffer,"gpu,cpu,pkg@");
+			//}
+
 			return READ_FROM_GPU;
 
 		default:
+
+			if (power_domain_string_buffer != NULL) {
+				bzero(power_domain_string_buffer, 512);
+				sprintf(power_domain_string_buffer,"undefined_architecture");
+			}
 
 			return UNDEFINED_ARCHITECTURE;
 	}
 
 }
 
+JNIEXPORT jstring JNICALL
+Java_jrapl_ArchitectureSpecifications_EnergyStatsStringFormat(JNIEnv* env, jclass jcls) {
+	char power_domain_string[512];
+	get_power_domains_supported(get_cpu_model(),power_domain_string);
+	return (*env)->NewStringUTF(env, power_domain_string);
+	
+}
+
+
 //TODO -- for organization, see if you can do the wraparound energy calculation here
-//	instead of CPUScaler
+//	instead of CPUScaler. involves open()-ing up the msr and closing it (if not already open)
+//  and reading directly from it. that would make it so you don't have to do ProfileInit()
+//  if you just want to read the wraparound energy real quick
 
 JNIEXPORT jint JNICALL
-Java_jrapl_ArchitectureSpecifications_DramOrGpu(JNIEnv * env, jclass jcls) {
-	return get_architecture_category(get_cpu_model());
+Java_jrapl_ArchitectureSpecifications_PowerDomainsSupported(JNIEnv * env, jclass jcls) {
+	return get_power_domains_supported(get_cpu_model(),NULL);
 }
 
 JNIEXPORT jint JNICALL
@@ -192,21 +245,33 @@ JNIEXPORT jstring JNICALL
 Java_jrapl_ArchitectureSpecifications_GetCpuModelName(JNIEnv* env, jclass jcls) {
 	const char* name;
 	switch(get_cpu_model()) {
-		case KABYLAKE:		name = "KABYLAKE";	break;
-		case BROADWELL:		name = "BROADWELL";	break;
-		case SANDYBRIDGE_EP:	name = "SANDYBRIDGE_EP";break;
-		case HASWELL3:		name = "HASWELL3";	break;
-		case SKYLAKE2:		name = "SKYLAKE2";	break;
-		case APOLLOLAKE:	name = "APOLLOLAKE";	break;
-		case SANDYBRIDGE:	name = "SANDYBRIDGE";	break;
-		case IVYBRIDGE:		name = "IVYBRIDGE";	break;
-		case HASWELL1:		name = "HASWELL1";	break;		
-		case HASWELL_EP:	name = "HASWELL_EP";	break;	
-		case COFFEELAKE2:	name = "COFFEELAKE2";	break;
-		case BROADWELL2:	name = "BROADWELL2";	break;
-		case HASWELL2:		name = "HASWELL2";	break;
-		case SKYLAKE1:		name = "SKYLAKE1";	break;
+		case KABYLAKE:			name = "KABYLAKE";			break;
+		case BROADWELL:			name = "BROADWELL";			break;
+		case SANDYBRIDGE_EP:	name = "SANDYBRIDGE_EP";	break;
+		case HASWELL3:			name = "HASWELL3";			break;
+		case SKYLAKE2:			name = "SKYLAKE2";			break;
+		case APOLLOLAKE:		name = "APOLLOLAKE";		break;
+		case SANDYBRIDGE:		name = "SANDYBRIDGE";		break;
+		case IVYBRIDGE:			name = "IVYBRIDGE";			break;
+		case HASWELL1:			name = "HASWELL1";			break;		
+		case HASWELL_EP:		name = "HASWELL_EP";		break;	
+		case COFFEELAKE2:		name = "COFFEELAKE2";		break;
+		case BROADWELL2:		name = "BROADWELL2";		break;
+		case HASWELL2:			name = "HASWELL2";			break;
+		case SKYLAKE1:			name = "SKYLAKE1";			break;
 		default: name = "UNDEFINED_ARCHITECTURE";
 	}
 	return (*env)->NewStringUTF(env, name);
 }
+
+
+
+
+
+
+
+
+
+
+
+

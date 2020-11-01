@@ -98,6 +98,6 @@ uint64_t getSocketNum();
 
 rapl_msr_unit get_rapl_unit();
 
-int get_architecture_category(uint32_t cpu_model);
+int get_power_domains_supported(uint32_t cpu_model, char power_domains_string_buffer[]);
 
 #endif

@@ -16,7 +16,7 @@
 
 #define MSR_DRAM_ENERGY_UNIT 0.000015
 
-static int architecture_category; //TODO - get better name for this variable
+static int power_domains_supported; //TODO - get better name for this variable
 static uint32_t cpu_model;
 static rapl_msr_unit rapl_unit;
 static rapl_msr_parameter *parameters;
@@ -40,7 +40,7 @@ void ProfileInit()
 
 	num_pkg = getSocketNum(); 
 	cpu_model = get_cpu_model();
-	architecture_category = get_architecture_category(cpu_model);
+	power_domains_supported = get_power_domains_supported(cpu_model,NULL);
 	uint64_t num_pkg_thread = get_num_pkg_thread();
 
 	/*only two domains are supported for parameters check*/
@@ -99,7 +99,7 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 		pkg[i] = read_Package(i);
 		pp0[i] = read_Cpu(i);
 
-		switch(architecture_category) {
+		switch(power_domains_supported) {
 			case READ_FROM_DRAM_AND_GPU:
 				dram[i] = read_Dram(i);
 				pp1[i] = read_Gpu(i);

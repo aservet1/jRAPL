@@ -10,18 +10,21 @@ public final class ArchitectureSpecifications {
 	public static final String cpuModelName;
 
 
-	public native static int DramOrGpu();
+	public native static int PowerDomainsSupported();
 	public native static int GetSocketNum();
 	public native static int GetWraparoundEnergy();
 	public native static String GetCpuModelName();
 	public native static int GetCpuModel();
 
+	public native static String EnergyStatsStringFormat();
 
 	static {
+		JRAPL.loadLibrary();
+
 		cpuModel = GetCpuModel();
 		cpuModelName = GetCpuModelName();
 
-		int rd = DramOrGpu();
+		int rd = PowerDomainsSupported();
 		if ( rd == 3 ) {
 			readingDRAM = true;
 			readingGPU  = true;
@@ -49,6 +52,13 @@ public final class ArchitectureSpecifications {
 		s += "cpuModel: " + Integer.toHexString(cpuModel) + "\n";
 		s += "cpuModelName: " + cpuModelName;
 		return s;
+	}
+
+	public static void main(String[] args) {
+		JRAPL.loadLibrary();
+		//JRAPL.ProfileInit();
+		System.out.println(EnergyStatsStringFormat());
+		//JRAPL.ProfileDealloc();
 	}
 
 }
