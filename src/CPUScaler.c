@@ -161,7 +161,7 @@ JNIEXPORT void JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls)
 }
 
 //assumes profile has already been inited. try to get this to be independent of profileinit and move it into arch_spec.c
-JNIEXPORT jint JNICALL Java_jrapl_ArchitectureSpecifications_GetWraparoundEnergy(JNIEnv* env, jclass jcls)
+JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_GetWraparoundEnergy(JNIEnv* env, jclass jcls)
 {
 	//printf("PRINTING IN C: this is the wraparound energy: %d\n", wraparound_energy);
 	return (jint)wraparound_energy;

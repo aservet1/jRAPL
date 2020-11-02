@@ -9,9 +9,9 @@ public final class EnergyStats extends EnergySample
 {
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Returns the energy stats for each socket. */
 	public static EnergyStats[] get() {
-		EnergyStats[] stats = new EnergyStats[ArchitectureSpecifications.NUM_SOCKETS];
+		EnergyStats[] stats = new EnergyStats[ArchSpec.NUM_SOCKETS];
 		double[] energy = EnergyCheckUtils.getEnergyStats();
-		for (int i = 0; i < ArchitectureSpecifications.NUM_SOCKETS; ++i) {
+		for (int i = 0; i < ArchSpec.NUM_SOCKETS; ++i) {
 			int socket = i + 1;
 			double dram = energy[4 * i];
 			double gpu = energy[4 * i + 1];
@@ -39,21 +39,21 @@ public final class EnergyStats extends EnergySample
 		Duration _elapsedTime;
 
 		_cpu = this.getCpu() - other.getCpu();
-		if (_cpu < 0) _cpu += ArchitectureSpecifications.ENERGY_WRAP_AROUND;
+		if (_cpu < 0) _cpu += ArchSpec.ENERGY_WRAP_AROUND;
 
 		_pkg = this.getPackage() - other.getPackage();
-		if (_pkg < 0) _pkg += ArchitectureSpecifications.ENERGY_WRAP_AROUND;
+		if (_pkg < 0) _pkg += ArchSpec.ENERGY_WRAP_AROUND;
 
 		if (this.getDram() != -1) {
 			_dram = this.getDram() - other.getDram();
-			if (_dram < 0) _dram += ArchitectureSpecifications.ENERGY_WRAP_AROUND;
+			if (_dram < 0) _dram += ArchSpec.ENERGY_WRAP_AROUND;
 		} else {
 			_dram = -1;
 		}
 
 		if (this.getGpu() != -1) {
 			_gpu = this.getGpu() - other.getGpu();
-			if (_gpu < 0) _gpu += ArchitectureSpecifications.ENERGY_WRAP_AROUND;
+			if (_gpu < 0) _gpu += ArchSpec.ENERGY_WRAP_AROUND;
 		} else {
 			_gpu = -1;
 		}
@@ -75,7 +75,7 @@ public final class EnergyStats extends EnergySample
 		EnergyStats[] last = EnergyStats.get();
 		while(true) {
 			EnergyStats[] next = EnergyStats.get();
-			for (int i = 0; i < ArchitectureSpecifications.NUM_SOCKETS; i++) {
+			for (int i = 0; i < ArchSpec.NUM_SOCKETS; i++) {
 				EnergyDiff diff = next[i].difference(last[i]);
 				System.out.println(last[i]);
 				System.out.println(diff);

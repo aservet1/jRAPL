@@ -7,7 +7,7 @@ public class GeneralTestDriver
 	{
 		JRAPL.loadLibrary();
 		JRAPL.ProfileInit();
-		System.out.println(ArchitectureSpecifications.infoString());
+		System.out.println(ArchSpec.infoString());
 		JRAPL.ProfileDealloc();
 	}
 

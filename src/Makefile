@@ -17,7 +17,7 @@ JAVA_TESTFILES = 	RuntimeTestUtils.java	\
 			ThreadTesting.java	\
 			MemoryTestUtils.java	\
 
-JAVA_USERFILES =	ArchitectureSpecifications.java 		\
+JAVA_USERFILES =	ArchSpec.java 		\
 			EnergyCheckUtils.java				\
 			JRAPL.java					\
 			EnergyControlUtils.java				\

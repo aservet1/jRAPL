@@ -32,7 +32,7 @@ public class EnergyCheckUtils /*extends JRAPL*/ {
 		String EnergyInfo = EnergyStatCheck();
 		
 		String[] perSockEner = EnergyInfo.split("@");
-		double[] stats = new double[4*ArchitectureSpecifications.NUM_SOCKETS]; // 4 stats per socket
+		double[] stats = new double[4*ArchSpec.NUM_SOCKETS]; // 4 stats per socket
 		int count = 0;
 
 		for(int i = 0; i < perSockEner.length; i++) {
