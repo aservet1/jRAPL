@@ -4,6 +4,15 @@ import java.time.Instant;
 
 public abstract class EnergySample /*extends JRAPL*/
 {
+
+	static {
+		int dramIndex
+
+	}
+	private static int dramIndex;
+	private static int 
+
+
 	protected final int socket;
 	protected final double dram;
 	protected final double gpu;

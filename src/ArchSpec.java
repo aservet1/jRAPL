@@ -16,6 +16,13 @@ public final class ArchSpec {
 	public native static String GetCpuModelName();
 	public native static int GetCpuModel();
 
+	// which power domains are supported
+	public native static boolean dramSupported();
+	public native static boolean gpuSupported();
+	public native static boolean cpuSupported();
+	public native static boolean pkgSupported();
+
+
 	public native static String EnergyStatsStringFormat();
 
 	static {

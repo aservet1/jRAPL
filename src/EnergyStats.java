@@ -4,10 +4,10 @@ import java.time.Instant;
 import java.time.Duration;
 
 
-/** <h1> DOCUMENTATION OUT OF DATE </h1> High-level representation of jrapl's energy stats. */
+/** High-level representation of jrapl's energy stats. */
 public final class EnergyStats extends EnergySample
 {
-	/** <h1> DOCUMENTATION OUT OF DATE </h1> Returns the energy stats for each socket. */
+	/** Returns the energy stats for each socket. */
 	public static EnergyStats[] get() {
 		EnergyStats[] stats = new EnergyStats[ArchSpec.NUM_SOCKETS];
 		double[] energy = EnergyCheckUtils.getEnergyStats();

@@ -169,11 +169,6 @@ int get_power_domains_supported(uint32_t cpu_model, char power_domain_string_buf
 		case BROADWELL:
 
 			GET_POWER_DOMAIN_STRING("dram,gpu,cpu,pkg@");
-			//if (power_domain_string_buffer != NULL) {
-			//	bzero(power_domain_string_buffer, 512);
-			//	multiply_string_by_socket_num(power_domain_string_buffer,"dram,gpu,cpu,pkg@");
-			//}
-
 			return READ_FROM_DRAM_AND_GPU;
 
 		case SANDYBRIDGE_EP:			case HASWELL1:		case HASWELL2:
@@ -182,22 +177,12 @@ int get_power_domains_supported(uint32_t cpu_model, char power_domain_string_buf
 		case APOLLOLAKE:			case COFFEELAKE2:
 
 			GET_POWER_DOMAIN_STRING("dram,cpu,pkg@");
-			//if (power_domain_string_buffer != NULL) {
-			//	bzero(power_domain_string_buffer, 512);
-			//	multiply_string_by_socket_num(power_domain_string_buffer,"dram,cpu,pkg@");
-			//}
-
 			return READ_FROM_DRAM;
 
 		case SANDYBRIDGE:
 		case IVYBRIDGE:
 
 			GET_POWER_DOMAIN_STRING("gpu,cpu,pkg@");
-			//if (power_domain_string_buffer != NULL) {
-			//	bzero(power_domain_string_buffer,512);
-			//	multiply_string_by_socket_num(power_domain_string_buffer,"gpu,cpu,pkg@");
-			//}
-
 			return READ_FROM_GPU;
 
 		default:
@@ -219,7 +204,6 @@ Java_jrapl_ArchSpec_EnergyStatsStringFormat(JNIEnv* env, jclass jcls) {
 	return (*env)->NewStringUTF(env, power_domain_string);
 	
 }
-
 
 //TODO -- for organization, see if you can do the wraparound energy calculation here
 //	instead of CPUScaler. involves open()-ing up the msr and closing it (if not already open)
