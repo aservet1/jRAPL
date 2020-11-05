@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
 
-public class AsyncEnergyMonitorJavaSide_ArraySamples /*extends JRAPL*/ implements Runnable,AsyncMonitor
+public class AsyncEnergyMonitorJavaSide_ArraySamples implements Runnable,AsyncMonitor
 {
 	private ArrayList<double[]> samples; 
 	private int samplingRate; // milliseconds

@@ -13,10 +13,8 @@ import java.time.Instant;
 *	followed by command line arguments that tell the program which of these methods to use and how. Their output is then
 *	picked back up and processed by the shell script that called it initially.
 */
-public class RuntimeTestUtils /*extends EnergyManager*/
+public class RuntimeTestUtils
 {
-	//public RunTimeTestUtils() {} // private constructor -- never initialized
-
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Times a method call, returns time in microseconds
 	*	@param method The equivalent of a function pointer in C/C++

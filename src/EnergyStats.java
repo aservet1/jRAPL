@@ -3,7 +3,6 @@ package jrapl;
 import java.time.Instant;
 import java.time.Duration;
 
-
 /** High-level representation of jrapl's energy stats. */
 public final class EnergyStats extends EnergySample
 {
