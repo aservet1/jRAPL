@@ -16,12 +16,12 @@ public class JRAPL {
 	 *  <br>Initializes data about the system and allocates the proper
 	 *  data structures in order to to facilitate the jRAPL interface
 	*/
-	public native static void ProfileInit();
+	public native static void profileInit();
 	
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Free all native memory allocated in ProfileInit().
 	 *  <br>Call this when done using the jRAPL utilities to clean up resources allocated.
 	*/
-	public native static void ProfileDealloc();
+	public native static void profileDealloc();
 
 	public static void loadLibrary() { // do NOT delete this commented sections in this !! it's going to be useful when i actually need to load library from jar
 		/*try {

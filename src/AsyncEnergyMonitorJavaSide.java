@@ -46,7 +46,7 @@ public class AsyncEnergyMonitorJavaSide /*extends JRAPL*/ implements Runnable,As
 	public void run()
 	{
 		while (!exit) {
-			String energyString = EnergyCheckUtils.EnergyStatCheck();
+			String energyString = EnergyCheckUtils.energyStatCheck();
 			samples.add(energyString);
 			timestamps.add(Instant.now());
 			try { Thread.sleep(samplingRate); } catch (Exception e) {}
@@ -199,7 +199,7 @@ public class AsyncEnergyMonitorJavaSide /*extends JRAPL*/ implements Runnable,As
 	public static void main(String[] args) throws InterruptedException
 	{
 		JRAPL.loadLibrary();
-		JRAPL.ProfileInit();
+		JRAPL.profileInit();
 
 		int rate = (args.length > 0) ? Integer.parseInt(args[0]) : 10;
 		AsyncEnergyMonitorJavaSide aemonj = new AsyncEnergyMonitorJavaSide(rate);
@@ -210,7 +210,7 @@ public class AsyncEnergyMonitorJavaSide /*extends JRAPL*/ implements Runnable,As
 
 		System.out.println(aemonj);
 
-		JRAPL.ProfileDealloc();
+		JRAPL.profileDealloc();
 	}
 	
 }

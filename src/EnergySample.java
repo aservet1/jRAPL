@@ -5,12 +5,12 @@ import java.time.Instant;
 public abstract class EnergySample /*extends JRAPL*/
 {
 
-	static {
-		int dramIndex
+//	static {
+//		int dramIndex
 
-	}
-	private static int dramIndex;
-	private static int 
+//	}
+//	private static int dramIndex;
+//	private static int 
 
 
 	protected final int socket;

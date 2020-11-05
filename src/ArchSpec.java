@@ -12,7 +12,7 @@ public final class ArchSpec {
 
 	public native static int PowerDomainsSupported();
 	public native static int GetSocketNum();
-	public native static int GetWraparoundEnergy();
+	public native static int getWraparoundEnergy();
 	public native static String GetCpuModelName();
 	public native static int GetCpuModel();
 
@@ -47,7 +47,7 @@ public final class ArchSpec {
 		}
 
 		NUM_SOCKETS = GetSocketNum();
-		ENERGY_WRAP_AROUND = GetWraparoundEnergy();
+		ENERGY_WRAP_AROUND = getWraparoundEnergy();
 	}
 
 	public static String infoString() {

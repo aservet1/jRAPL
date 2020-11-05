@@ -80,7 +80,7 @@ public class AsyncEnergyMonitorCSide /*extends JRAPL*/ implements AsyncMonitor
 	public static void main(String[] args)
 	{
 		JRAPL.loadLibrary();
-		JRAPL.ProfileInit();
+		JRAPL.profileInit();
 		slightsetup();
 
 		AsyncEnergyMonitorCSide a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
@@ -91,7 +91,7 @@ public class AsyncEnergyMonitorCSide /*extends JRAPL*/ implements AsyncMonitor
 
 		a.writeToFile(null);
 
-		JRAPL.ProfileDealloc();
+		JRAPL.profileDealloc();
 	}
 
 }

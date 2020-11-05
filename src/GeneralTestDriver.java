@@ -6,9 +6,9 @@ public class GeneralTestDriver
 	public static void main(String[] args)
 	{
 		JRAPL.loadLibrary();
-		JRAPL.ProfileInit();
+		JRAPL.profileInit();
 		System.out.println(ArchSpec.infoString());
-		JRAPL.ProfileDealloc();
+		JRAPL.profileDealloc();
 	}
 
 	private static void threadThing()

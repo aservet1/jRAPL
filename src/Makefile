@@ -17,11 +17,12 @@ JAVA_TESTFILES = 	RuntimeTestUtils.java	\
 			ThreadTesting.java	\
 			MemoryTestUtils.java	\
 
-JAVA_USERFILES =	ArchSpec.java 		\
+JAVA_USERFILES =		\
+			EnergyManager.java				\
+										\
 			EnergyCheckUtils.java				\
-			JRAPL.java					\
 			EnergyControlUtils.java				\
-									\
+			ArchSpec.java 							\
 			AsyncMonitor.java				\
 			AsyncMemoryMonitor.java				\
 			AsyncEnergyMonitorCSide.java			\
@@ -32,15 +33,15 @@ JAVA_USERFILES =	ArchSpec.java 		\
 			NativeUtils.java				\
 			PerfCheckUtils.java				\
 									\
-			EnergyManager.java				\
-			AsyncEnergyManager.java				\
-			SyncEnergyManager.java				\
 									\
 			EnergySample.java				\
 			EnergyStats.java				\
 			EnergyDiff.java					\
-
-
+										\
+			AsyncEnergyManager.java				\
+			SyncEnergyManager.java				\
+										\
+			JRAPL.java					\
 
 CFLAGS = -fPIC -g -c -Wall
 JAVA_HOME = /usr/lib/jvm/java-11-openjdk-amd64

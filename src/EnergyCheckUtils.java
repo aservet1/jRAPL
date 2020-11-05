@@ -6,10 +6,10 @@ import java.util.Arrays;
 */
 public class EnergyCheckUtils /*extends JRAPL*/ {
 
-	public native static String EnergyStatCheck();
+	public native static String energyStatCheck();
 
 	public static double[] getEnergyStats() {
-		String EnergyInfo = EnergyStatCheck();
+		String EnergyInfo = energyStatCheck();
 		
 		String[] perSockEner = EnergyInfo.split("@");
 		double[] stats = new double[4*ArchSpec.NUM_SOCKETS]; // 4 stats per socket
@@ -28,9 +28,10 @@ public class EnergyCheckUtils /*extends JRAPL*/ {
 
 	public static void main(String[] args) throws Exception
 	{
-		JRAPL.loadLibrary();
-		JRAPL.ProfileInit();
-		for (int x = 0; true; x++){
+		EnergyManager manager = new EnergyManager();
+		manager.init();
+
+		for (long x = 0; x < 9837427; x++){
 			System.out.println(Arrays.toString(getEnergyStats()));
 			Thread.sleep(40);
 		}
@@ -46,6 +47,8 @@ public class EnergyCheckUtils /*extends JRAPL*/ {
 				"Package: " + String.format("%.4f", diff[3])));
 
 		}*/
+
+		manager.cleanup();
 	}
 
 }

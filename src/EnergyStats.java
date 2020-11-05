@@ -70,7 +70,7 @@ public final class EnergyStats extends EnergySample
 
 	public static void main(String[] args) throws Exception {
 		JRAPL.loadLibrary();
-		JRAPL.ProfileInit();
+		JRAPL.profileInit();
 
 		EnergyStats[] last = EnergyStats.get();
 		while(true) {
@@ -96,7 +96,7 @@ public final class EnergyStats extends EnergySample
 			Thread.sleep(40);
 		} // infinite loop
 		
-		//JRAPL.ProfileDealloc(); -- unreachable
+		//JRAPL.profileDealloc(); -- unreachable
 	}
 }
 

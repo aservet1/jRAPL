@@ -41,7 +41,7 @@ public class RuntimeTestUtils /*extends JRAPL*/
 		int i = 0;
 		long[] results = new long[iterations];
 		for (int x = 0; x < iterations; x++) {
-			if (name == "ProfileDealloc()") JRAPL.ProfileInit(); // prevents a 'double free or corruption' error
+			if (name == "profileDealloc()") JRAPL.profileInit(); // prevents a 'double free or corruption' error
 			long time = timeMethod(method);
 			results[i++] = time;
 		}
@@ -118,7 +118,7 @@ public class RuntimeTestUtils /*extends JRAPL*/
 		printDiffs(data, "DRAM", 0);
 		printDiffs(data, "CORE", 1);
 		printDiffs(data, "PACKAGE", 2);
-		JRAPL.ProfileDealloc();
+		JRAPL.profileDealloc();
 	}
 
 	/** Allocs relevant C side memory and sets up variables */
@@ -164,13 +164,13 @@ public class RuntimeTestUtils /*extends JRAPL*/
 		for (int n = 0; n < iterations; n++) getSocketTimes[getSocketIndex++] = usecTimeGetSocketNum();
 		for (int n = 0; n < iterations; n++) energyStatTimes[energyStatIndex++] = usecTimeEnergyStatCheck();
 		for (int n = 0; n < iterations; n++) {
-			JRAPL.ProfileInit(); // make sure memory is alloc'd first to prevent 'double free' errors
+			JRAPL.profileInit(); // make sure memory is alloc'd first to prevent 'double free' errors
 			profileDeallocTimes[profDeallocIndex++] = usecTimeProfileDealloc();
 		}
-		printFunctionTimeRecord(profileInitTimes,"ProfileInit()");
-		printFunctionTimeRecord(getSocketTimes,"GetSocketNum()");
-		printFunctionTimeRecord(energyStatTimes,"EnergyStatCheck()");
-		printFunctionTimeRecord(profileDeallocTimes,"ProfileDealloc()");
+		printFunctionTimeRecord(profileInitTimes,"profileInit()");
+		printFunctionTimeRecord(getSocketTimes,"getSocketNum()");
+		printFunctionTimeRecord(energyStatTimes,"energyStatCheck()");
+		printFunctionTimeRecord(profileDeallocTimes,"profileDealloc()");
 
 	}
 
@@ -211,7 +211,7 @@ public class RuntimeTestUtils /*extends JRAPL*/
 	public static void main(String[] args)
 	{
 		JRAPL.loadLibrary();
-		JRAPL.ProfileInit();
+		JRAPL.profileInit();
 		int iterations;
 		if(args.length != 2) {
 			usage_message_abort();
@@ -224,10 +224,10 @@ public class RuntimeTestUtils /*extends JRAPL*/
 		}
 
 		if(args[0].equals("--time-java-calls")){ //Java function timing
-			timeMethodMultipleIterations(JRAPL::ProfileInit, "ProfileInit()", iterations);
-			//timeMethodMultipleIterations(ArchSpec::GetSocketNum, "GetSocketNum()", iterations);
-			timeMethodMultipleIterations(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck()", iterations);
-			timeMethodMultipleIterations(JRAPL::ProfileDealloc, "ProfileDealloc()", iterations);
+			timeMethodMultipleIterations(JRAPL::profileInit, "profileInit()", iterations);
+			//timeMethodMultipleIterations(ArchSpec::GetSocketNum, "getSocketNum()", iterations);
+			timeMethodMultipleIterations(EnergyCheckUtils::energyStatCheck, "energyStatCheck()", iterations);
+			timeMethodMultipleIterations(JRAPL::profileDealloc, "profileDealloc()", iterations);
 		}
 		else if(args[0].equals("--read-energy-values")){ //Timing and reading energy register
 			DramCorePackageStats(iterations);
