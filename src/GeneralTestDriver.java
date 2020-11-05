@@ -5,10 +5,10 @@ public class GeneralTestDriver
 {
 	public static void main(String[] args)
 	{
-		JRAPL.loadLibrary();
-		JRAPL.profileInit();
+		EnergyManager manager = new EnergyManager();
+		manager.init();
 		System.out.println(ArchSpec.infoString());
-		JRAPL.profileDealloc();
+		manager.dealloc();
 	}
 
 	private static void threadThing()

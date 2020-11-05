@@ -26,7 +26,11 @@ public final class ArchSpec {
 	public native static String EnergyStatsStringFormat();
 
 	static {
-		JRAPL.loadLibrary();
+
+		// @TODO this is just a temporary solution to get the library loaded while testing out this
+		// stuff directly by calling 'java jrapl.ArchSpec' to run main(), honestly these utilities
+		// won't ever be used outside of an EnergyManger being inited and dealloc'd
+		new EnergyManager().init();
 
 		cpuModel = GetCpuModel();
 		cpuModelName = GetCpuModelName();
@@ -62,10 +66,10 @@ public final class ArchSpec {
 	}
 
 	public static void main(String[] args) {
-		JRAPL.loadLibrary();
-		//JRAPL.ProfileInit();
+		EnergyManager manager = new EnergyManager();
+		manager.init();
 		System.out.println(EnergyStatsStringFormat());
-		//JRAPL.ProfileDealloc();
+		manager.dealloc();
 	}
 
 }

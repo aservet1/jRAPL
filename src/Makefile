@@ -41,7 +41,8 @@ JAVA_USERFILES =		\
 			AsyncEnergyManager.java				\
 			SyncEnergyManager.java				\
 										\
-			JRAPL.java					\
+			#JRAPL.java					\
+
 
 CFLAGS = -fPIC -g -c -Wall
 JAVA_HOME = /usr/lib/jvm/java-11-openjdk-amd64

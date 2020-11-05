@@ -26,7 +26,6 @@ public final class EnergyStats extends EnergySample
 		super(socket, dram, gpu, cpu, pkg);
 	}
 
-
 	public String commaSeparated() {
 		return super.commaSeparated();
 	}
@@ -69,8 +68,9 @@ public final class EnergyStats extends EnergySample
 	}
 
 	public static void main(String[] args) throws Exception {
-		JRAPL.loadLibrary();
-		JRAPL.profileInit();
+
+		EnergyManager manager = new EnergyManager();
+		manager.init();
 
 		EnergyStats[] last = EnergyStats.get();
 		while(true) {
@@ -96,7 +96,7 @@ public final class EnergyStats extends EnergySample
 			Thread.sleep(40);
 		} // infinite loop
 		
-		//JRAPL.profileDealloc(); -- unreachable
+		//manager.cleanup(); -- unreachable
 	}
 }
 

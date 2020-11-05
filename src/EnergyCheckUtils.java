@@ -48,7 +48,7 @@ public class EnergyCheckUtils /*extends JRAPL*/ {
 
 		}*/
 
-		manager.cleanup();
+		manager.dealloc();
 	}
 
 }

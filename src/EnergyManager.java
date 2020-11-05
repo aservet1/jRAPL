@@ -4,10 +4,13 @@ package jrapl;
 public class EnergyManager
 {
 
-	private native static void profileInit();
-	private native static void profileDealloc();
+	//@TODO these should eventually be private methods
+	public native static void profileInit();
+	public native static void profileDealloc();
+	private static void loadLibrary() {
 
-	private static void loadLibrary() { // do NOT delete this commented sections in this !! it's going to be useful when i actually need to load library from jar
+		// do NOT delete this commented sections in this !! it's going to be useful when i actually need to load library from jar
+		
 		/*try {
 			Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
 			fieldSysPath.setAccessible(true);
@@ -33,7 +36,7 @@ public class EnergyManager
 		profileInit();
 	}
 
-	public void cleanup()
+	public void dealloc()
 	{
 		profileDealloc();
 	}

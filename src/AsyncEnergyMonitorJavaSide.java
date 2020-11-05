@@ -16,7 +16,6 @@ public class AsyncEnergyMonitorJavaSide /*extends JRAPL*/ implements Runnable,As
 
 	protected final ArrayList<Instant> timestamps; //TODO -- decide if you want to have a boolean that enables whether or not you do want to collect timestamps
 
-
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Initializes sample collector with a default sampling rate setting of 10 milliseconds */
 	public AsyncEnergyMonitorJavaSide()
 	{
@@ -198,8 +197,7 @@ public class AsyncEnergyMonitorJavaSide /*extends JRAPL*/ implements Runnable,As
 
 	public static void main(String[] args) throws InterruptedException
 	{
-		JRAPL.loadLibrary();
-		JRAPL.profileInit();
+		EnergyManager manager = new EnergyManager();
 
 		int rate = (args.length > 0) ? Integer.parseInt(args[0]) : 10;
 		AsyncEnergyMonitorJavaSide aemonj = new AsyncEnergyMonitorJavaSide(rate);
@@ -210,7 +208,7 @@ public class AsyncEnergyMonitorJavaSide /*extends JRAPL*/ implements Runnable,As
 
 		System.out.println(aemonj);
 
-		JRAPL.profileDealloc();
+		manager.init();
 	}
 	
 }

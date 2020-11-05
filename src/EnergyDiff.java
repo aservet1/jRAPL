@@ -35,7 +35,9 @@ public final class EnergyDiff extends EnergySample
 	}
 
 	public static void main(String[] args) throws Exception {
-		JRAPL.profileInit();
+
+		EnergyManager manager = new EnergyManager();
+		manager.init();
 	
 		while (true) {
 			EnergyStats before = EnergyStats.get()[0];
@@ -44,7 +46,7 @@ public final class EnergyDiff extends EnergySample
 			System.out.println(after.difference(before));
 		}
 
-		//JRAPL.profileDealloc(); -- unreachable
+		//manager.dealloc(); -- unreachable
 	}
 }
 
