@@ -34,6 +34,7 @@ public class EnergyManager
 	{
 		loadLibrary();
 		profileInit();
+		ArchSpec.init(); // there's definitely a better way of doing this
 	}
 
 	public void dealloc()

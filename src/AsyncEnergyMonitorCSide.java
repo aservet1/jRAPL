@@ -1,6 +1,6 @@
 package jrapl;
 
-public class AsyncEnergyMonitorCSide /*extends JRAPL*/ implements AsyncMonitor
+public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor 
 {
 	private native static void slightsetup();
 
@@ -16,25 +16,39 @@ public class AsyncEnergyMonitorCSide /*extends JRAPL*/ implements AsyncMonitor
 	
 	private int id;
 	private int samplingRate;
-	
+	private int storageType;
+
 	//TODO -- consider tracking the lifetime of the monitor. timestamp between start and stop, already did it for AsynEnergyManager
 
 	//constants to define energy sample storage method on the C side
 	private static final int DYNAMIC_ARRAY_STORAGE = 1;
 	private static final int LINKED_LIST_STORAGE = 2;
 
+	@Override //from EnergyManager
+	public void init()
+	{
+		super.init();
+		id = nextAvailableId++;
+		slightsetup();
+		allocMonitor(id,samplingRate,storageType);
+	}
+
+	@Override //from EnergyManager
+	public void dealloc()
+	{
+		deallocMonitor(id);
+		super.dealloc();
+	}
+
 	public AsyncEnergyMonitorCSide(int s)
 	{
-		id = nextAvailableId++;
 		samplingRate = s;
-		allocMonitor(id,samplingRate,DYNAMIC_ARRAY_STORAGE); // uses dynamic array by default
+		storageType = DYNAMIC_ARRAY_STORAGE; //default
 	}
 
 	public AsyncEnergyMonitorCSide(int s, String storageTypeString)
 	{
-		id = nextAvailableId++;
 		samplingRate = s;
-		int storageType;
 		switch (storageTypeString) {
 			case "DYNAMIC_ARRAY":
 				storageType = DYNAMIC_ARRAY_STORAGE;
@@ -47,7 +61,6 @@ public class AsyncEnergyMonitorCSide /*extends JRAPL*/ implements AsyncMonitor
 				System.err.println("Invalid storage type string: " + storageTypeString);
 				System.exit(1);
 		}
-		allocMonitor(id,samplingRate,storageType);
 	}
 	
 	public void start()
@@ -72,19 +85,20 @@ public class AsyncEnergyMonitorCSide /*extends JRAPL*/ implements AsyncMonitor
 		return lastKString.split("_");
 	}
 
-	public void reInit()
+	public void reset()
 	{
 		System.out.println("Coming soon...");
 	}
 
+	public String toString()
+	{
+		return "Coming soon...";
+	}
+
 	public static void main(String[] args)
 	{
-		EnergyManager manager = new EnergyManager();
-		manager.init();
-
-		slightsetup();
-
-		AsyncEnergyMonitorCSide a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
+		AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
+		a.init();
 
 		a.start();
 		try{ Thread.sleep(400);} catch(Exception e){}
@@ -92,7 +106,7 @@ public class AsyncEnergyMonitorCSide /*extends JRAPL*/ implements AsyncMonitor
 
 		a.writeToFile(null);
 
-		manager.dealloc();
+		a.dealloc();
 	}
 
 }

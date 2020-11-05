@@ -7,7 +7,7 @@ import java.io.FileWriter;
 
 import java.time.Instant;
 
-public class AsyncEnergyMonitorJavaSide /*extends JRAPL*/ implements Runnable,AsyncMonitor
+public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Runnable
 {
 	private ArrayList<String> samples; 
 	private int samplingRate; // milliseconds
@@ -82,7 +82,7 @@ public class AsyncEnergyMonitorJavaSide /*extends JRAPL*/ implements Runnable,As
 	*	<br>Call this if you intend to reuse the same object for energy collection after already using it.
 	*	<br>Clears out the current list of samples stored in the object.
 	*/
-	public void reInit()
+	public void reset()
 	{
 		exit = false;
 		samples.clear();
@@ -201,14 +201,15 @@ public class AsyncEnergyMonitorJavaSide /*extends JRAPL*/ implements Runnable,As
 
 		int rate = (args.length > 0) ? Integer.parseInt(args[0]) : 10;
 		AsyncEnergyMonitorJavaSide aemonj = new AsyncEnergyMonitorJavaSide(rate);
-		
+		aemonj.init();	
+	
 		aemonj.start();
 		Thread.sleep(3000);
 		aemonj.stop();
 
 		System.out.println(aemonj);
 
-		manager.init();
+		aemonj.dealloc();
 	}
 	
 }

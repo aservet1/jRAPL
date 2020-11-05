@@ -1,47 +1,52 @@
+
 TARGET = libCPUScaler.so $(OFILES)
 
-CFILES =	CPUScaler.c			\
-		arch_spec.c			\
-		msr.c				\
-		dvfs.c				\
- 		EnergyStats.c 			\
-		AsyncEnergyMonitorCSide.c	\
+CFILES =								\
+		CPUScaler.c						\
+		arch_spec.c						\
+		msr.c							\
+		dvfs.c							\
+ 		EnergyStats.c 					\
+		AsyncEnergyMonitorCSide.c		\
 		AsyncEnergyMonitorCSide_JNI.c	\
-		RuntimeTestUtils.c		\
-		CSideDataStorage.c		\
+		RuntimeTestUtils.c				\
+		CSideDataStorage.c				\
 
 OFILES = $(CFILES:.c=.o)
 
-JAVA_TESTFILES = 	RuntimeTestUtils.java	\
+JAVA_TESTFILES =					\
+			RuntimeTestUtils.java	\
 			GeneralTestDriver.java	\
-			ThreadTesting.java	\
-			MemoryTestUtils.java	\
+			ThreadTesting.java		\
+			#MemoryTestUtils.java	\
 
-JAVA_USERFILES =		\
+JAVA_USERFILES =							\
+			ArchSpec.java 					\
 			EnergyManager.java				\
-										\
-			EnergyCheckUtils.java				\
-			EnergyControlUtils.java				\
-			ArchSpec.java 							\
+											\
+			EnergyMonitor.java				\
+			SyncEnergyMonitor.java			\
+			AsyncEnergyMonitor.java			\
+			AsyncEnergyMonitorCSide.java	\
+			AsyncEnergyMonitorJavaSide.java	\
+											\
+			EnergyCheckUtils.java			\
+			EnergyControlUtils.java			\
 			AsyncMonitor.java				\
-			AsyncMemoryMonitor.java				\
-			AsyncEnergyMonitorCSide.java			\
-			AsyncEnergyMonitorJavaSide.java			\
-			AsyncEnergyMonitorJavaSide_ArraySamples.java	\
-			AsyncEnergyMonitorJavaSide_ObjectSamples.java	\
-			AsyncMemoryMonitor.java				\
+			AsyncMemoryMonitor.java			\
+											\
 			NativeUtils.java				\
 			PerfCheckUtils.java				\
-									\
-									\
+											\
 			EnergySample.java				\
 			EnergyStats.java				\
 			EnergyDiff.java					\
-										\
-			AsyncEnergyManager.java				\
-			SyncEnergyManager.java				\
-										\
-			#JRAPL.java					\
+											\
+			#								\
+			JRAPL.java						\
+			AsyncMemoryMonitor.java			\
+			AsyncEnergyMonitorJavaSide_ArraySamples.java	\
+			AsyncEnergyMonitorJavaSide_ObjectSamples.java	\
 
 
 CFLAGS = -fPIC -g -c -Wall

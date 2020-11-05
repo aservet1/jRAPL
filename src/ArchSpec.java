@@ -54,6 +54,8 @@ public final class ArchSpec {
 		ENERGY_WRAP_AROUND = getWraparoundEnergy();
 	}
 
+	public static void init() {} // do-nothing function to trigger the static block...probably a better way of doing this
+
 	public static String infoString() {
 		String s = new String();
 		s += "readingDRAM: " + readingDRAM + "\n";
