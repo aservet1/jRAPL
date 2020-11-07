@@ -18,15 +18,38 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 	}
 
 	public EnergyStats getObjectSample(int socket) // for a specific socket
-	{
-		return EnergyStats.get()[socket-1];
+	{ //TODO make a more extensive "target-one-socket-at-a-time" implementation on the C side
+	  // instead of reading all of the sockets and 
+		int lo = socket-1;
+		int hi = lo + ArchSpec.NUM_STATS_PER_SOCKET;
+
+		return new EnergyStats(socket, Arrays.copyOfRange(EnergyCheckUtils.getEnergyStats(), lo,hi));
+		
 	}
 
 	public EnergyStats[] getObjectSample()
 	{
-		return EnergyStats.get();
+		EnergyStats[] stats = new EnergyStats[ArchSpec.NUM_SOCKETS];
+		double[] energy = EnergyCheckUtils.getEnergyStats();
+
+		int lo = 0;
+		int hi = ArchSpec.NUM_STATS_PER_SOCKET;
+
+		for (int i = 0; i < ArchSpec.NUM_SOCKETS; i++) {
+			int socket = i+1;
+			stats[i] = new EnergyStats(socket, Arrays.copyOfRange(energy,lo,hi));
+			lo += ArchSpec.NUM_STATS_PER_SOCKET;
+			hi += ArchSpec.NUM_STATS_PER_SOCKET;
+		}
+
+		return stats;
 	}
 
+	public double[] getPrimitiveSample()
+	{
+		return EnergyCheckUtils.getEnergyStats();
+	}
+	
 	public double[] getPrimitiveSample(int socket)
 	{
 		int lo = socket-1;
@@ -34,18 +57,46 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		return Arrays.copyOfRange(EnergyCheckUtils.getEnergyStats(),lo,hi);
 	}
 
-	public double[] getPrimitiveSample()
-	{
-		return EnergyCheckUtils.getEnergyStats();
-	}
-
 	public static void main(String[] args)
 	{
 		SyncEnergyMonitor monitor = new SyncEnergyMonitor();
 		monitor.init();
-		System.out.println(monitor.getObjectSample(1));
-		System.out.println(Arrays.toString(monitor.getObjectSample()));
+
+		EnergyStats before = monitor.getObjectSample(1);
+		EnergyStats after;
+		EnergyDiff diff;
+		for (int i = 0; i < 1000; i++) {
+			//try { Thread.sleep(40); }
+			//catch (Exception e) { e.printStackTrace(); }
+			after = monitor.getObjectSample(1);
+			diff = EnergyDiff.between(before, after);
+			before = after;
+			System.out.println(diff.dump());
+		}
+
 		monitor.dealloc();
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

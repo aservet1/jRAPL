@@ -8,8 +8,8 @@ public final class EnergyDiff extends EnergySample
 {
 	private final Duration elapsedTime; //time between the two EnergyStamps
 
-	public EnergyDiff(int socket, double dram, double gpu, double cpu, double pkg, Duration elapsedTime) {
-		super(socket, dram, gpu, cpu, pkg);
+	public EnergyDiff(int socket, double[] statsForSocket, Duration elapsedTime) {
+		super(socket, statsForSocket);
 		this.elapsedTime = elapsedTime;
 	}
 
@@ -17,12 +17,26 @@ public final class EnergyDiff extends EnergySample
 		return this.elapsedTime;
 	}
 
-	public String commaSeparated() {
+	@Override
+	public String dump() {
 		return String.join(
 			",",
-			super.commaSeparated(),
-			this.elapsedTime.toString()
+			super.dump(),
+			Long.toString(this.elapsedTime.toNanos())
 		);
+	}
+
+	public static EnergyDiff between(EnergyStats before, EnergyStats after) {
+		assert after.socket == before.socket;
+		assert after.stats.length == before.stats.length;		
+
+		double[] statsDiff = new double[before.stats.length];
+		for (int i = 0; i < after.stats.length; i++) {
+			statsDiff[i] = after.stats[i] - before.stats[i];
+			if (statsDiff[i] < 0) statsDiff[i] += ArchSpec.RAPL_WRAPAROUND;
+		}
+
+		return new EnergyDiff(before.socket, statsDiff, Duration.between(before.timestamp, after.timestamp));
 	}
 
 	@Override
@@ -30,24 +44,10 @@ public final class EnergyDiff extends EnergySample
 		return String.join(
 			", ",
 			super.toString(),
-			"Duration: " + this.elapsedTime.toString()
+			"Duration (nanoseconds): " + this.elapsedTime.toNanos()
 		);	
 	}
 
-	public static void main(String[] args) throws Exception {
-
-		EnergyManager manager = new EnergyManager();
-		manager.init();
-	
-		while (true) {
-			EnergyStats before = EnergyStats.get()[0];
-			Thread.sleep(40);
-			EnergyStats after = EnergyStats.get()[0];
-			System.out.println(after.difference(before));
-		}
-
-		//manager.dealloc(); -- unreachable
-	}
 }
 
 

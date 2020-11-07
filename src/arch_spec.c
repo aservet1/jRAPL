@@ -154,21 +154,20 @@ void multiply_string_by_socket_num(char out_buffer[], char string[]) {
 
 }
 
-
-#define GET_POWER_DOMAIN_STRING(string)		\
-	if (power_domain_string_buffer != NULL) {	\
-		bzero(power_domain_string_buffer, 512);	\
-		multiply_string_by_socket_num(power_domain_string_buffer,#string);	\
-	}	\
-
 int get_power_domains_supported(uint32_t cpu_model, char power_domain_string_buffer[512]) {
+
+	char* string;
 		
 	switch (cpu_model) {
 
 		case KABYLAKE:
 		case BROADWELL:
 
-			GET_POWER_DOMAIN_STRING("dram,gpu,cpu,pkg@");
+			string = "dram,gpu,core,pkg@";
+			if (power_domain_string_buffer != NULL) {
+				bzero(power_domain_string_buffer, 512);
+				multiply_string_by_socket_num(power_domain_string_buffer,string);
+			}
 			return READ_FROM_DRAM_AND_GPU;
 
 		case SANDYBRIDGE_EP:			case HASWELL1:		case HASWELL2:
@@ -176,13 +175,21 @@ int get_power_domains_supported(uint32_t cpu_model, char power_domain_string_buf
 		case SKYLAKE2: 				case BROADWELL2:
 		case APOLLOLAKE:			case COFFEELAKE2:
 
-			GET_POWER_DOMAIN_STRING("dram,cpu,pkg@");
+			string = "dram,core,pkg@";
+			if (power_domain_string_buffer != NULL) {
+				bzero(power_domain_string_buffer, 512);
+				multiply_string_by_socket_num(power_domain_string_buffer,string);
+			}
 			return READ_FROM_DRAM;
 
 		case SANDYBRIDGE:
 		case IVYBRIDGE:
 
-			GET_POWER_DOMAIN_STRING("gpu,cpu,pkg@");
+			string = "gpu,core,pkg@";
+			if (power_domain_string_buffer != NULL) {
+				bzero(power_domain_string_buffer, 512);
+				multiply_string_by_socket_num(power_domain_string_buffer,string);
+			}
 			return READ_FROM_GPU;
 
 		default:

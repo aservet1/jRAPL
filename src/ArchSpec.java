@@ -2,28 +2,27 @@ package jrapl;
 
 public final class ArchSpec {
 
-	public static final boolean readingDRAM;
-	public static final boolean readingGPU;
+	//public static final boolean readingDRAM;
+	//public static final boolean readingGPU;
 	public static final int NUM_SOCKETS;	
-	public static final int ENERGY_WRAP_AROUND;
-	public static final int cpuModel;
-	public static final String cpuModelName;
-
+	public static final int NUM_STATS_PER_SOCKET;
+	public static final int RAPL_WRAPAROUND;
+	public static final int CPU_MODEL;
+	public static final String CPU_MODEL_NAME;
+	public static final String ENERGY_STATS_STRING_FORMAT;
 
 	public native static int PowerDomainsSupported();
 	public native static int GetSocketNum();
 	public native static int getWraparoundEnergy();
 	public native static String GetCpuModelName();
 	public native static int GetCpuModel();
+	public native static String EnergyStatsStringFormat();
 
 	// which power domains are supported
 	public native static boolean dramSupported();
 	public native static boolean gpuSupported();
 	public native static boolean cpuSupported();
 	public native static boolean pkgSupported();
-
-
-	public native static String EnergyStatsStringFormat();
 
 	static {
 
@@ -32,38 +31,42 @@ public final class ArchSpec {
 		// won't ever be used outside of an EnergyManger being inited and dealloc'd
 		new EnergyManager().init();
 
-		cpuModel = GetCpuModel();
-		cpuModelName = GetCpuModelName();
+		CPU_MODEL = GetCpuModel();
+		CPU_MODEL_NAME = GetCpuModelName();
 
 		int rd = PowerDomainsSupported();
 		if ( rd == 3 ) {
-			readingDRAM = true;
-			readingGPU  = true;
+		//	readingDRAM = true;
+		//	readingGPU  = true;
 		} else if ( rd == 1 ) {
-			readingDRAM = true;
-			readingGPU  = false;
+		//	readingDRAM = true;
+		//	readingGPU  = false;
 		} else if ( rd == 2 ) {
-			readingDRAM = false;
-			readingGPU  = true;
+		//	readingDRAM = false;
+		//	readingGPU  = true;
 		} else {
-			readingDRAM = false;
-			readingGPU  = false;
+		//	readingDRAM = false;
+		//	readingGPU  = false;
 		}
 
 		NUM_SOCKETS = GetSocketNum();
-		ENERGY_WRAP_AROUND = getWraparoundEnergy();
+		RAPL_WRAPAROUND = getWraparoundEnergy();
+
+		ENERGY_STATS_STRING_FORMAT = EnergyStatsStringFormat();
+		NUM_STATS_PER_SOCKET = ENERGY_STATS_STRING_FORMAT.split("@")[0].split(",").length;
 	}
 
 	public static void init() {} // do-nothing function to trigger the static block...probably a better way of doing this
 
 	public static String infoString() {
 		String s = new String();
-		s += "readingDRAM: " + readingDRAM + "\n";
-		s += "readingGPU: " + readingGPU + "\n";
+		//s += "readingDRAM: " + readingDRAM + "\n";
+		//s += "readingGPU: " + readingGPU + "\n";
 		s += "NUM_SOCKETS: " + NUM_SOCKETS + "\n";
-		s += "ENERGY_WRAP_AROUND: " + ENERGY_WRAP_AROUND + "\n";
-		s += "cpuModel: " + Integer.toHexString(cpuModel) + "\n";
-		s += "cpuModelName: " + cpuModelName;
+		s += "RAPL_WRAPAROUND: " + RAPL_WRAPAROUND + "\n";
+		s += "CPU_MODEL: " + Integer.toHexString(CPU_MODEL) + "\n";
+		s += "CPU_MODEL_NAME: " + CPU_MODEL_NAME;
+		s += "ENERGY_STATS_STRING_FORMAT: " + ENERGY_STATS_STRING_FORMAT;
 		return s;
 	}
 
@@ -71,6 +74,7 @@ public final class ArchSpec {
 		EnergyManager manager = new EnergyManager();
 		manager.init();
 		System.out.println(EnergyStatsStringFormat());
+		System.out.println(NUM_STATS_PER_SOCKET);
 		manager.dealloc();
 	}
 
