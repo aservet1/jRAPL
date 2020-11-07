@@ -13,10 +13,8 @@ import java.time.Instant;
 *	followed by command line arguments that tell the program which of these methods to use and how. Their output is then
 *	picked back up and processed by the shell script that called it initially.
 */
-public class RuntimeTestUtils extends JRAPL
+public class RuntimeTestUtils
 {
-	//public RunTimeTestUtils() {} // private constructor -- never initialized
-
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Times a method call, returns time in microseconds
 	*	@param method The equivalent of a function pointer in C/C++
@@ -41,7 +39,7 @@ public class RuntimeTestUtils extends JRAPL
 		int i = 0;
 		long[] results = new long[iterations];
 		for (int x = 0; x < iterations; x++) {
-			if (name == "ProfileDealloc()") JRAPL.ProfileInit(); // prevents a 'double free or corruption' error
+			if (name == "profileDealloc()") EnergyManager.profileInit(); // prevents a 'double free or corruption' error
 			long time = timeMethod(method);
 			results[i++] = time;
 		}
@@ -118,7 +116,7 @@ public class RuntimeTestUtils extends JRAPL
 		printDiffs(data, "DRAM", 0);
 		printDiffs(data, "CORE", 1);
 		printDiffs(data, "PACKAGE", 2);
-		JRAPL.ProfileDealloc();
+		EnergyManager.profileDealloc();
 	}
 
 	/** Allocs relevant C side memory and sets up variables */
@@ -137,10 +135,10 @@ public class RuntimeTestUtils extends JRAPL
 	// some times and if that's something you can do anything about and if it matters
 	public static void timeAllMSRReads(int iterations) {
 		int DRAM  = 1, GPU = 2, CPU = 3, PKG = 4;
-		long[][] dramTimes = new long[iterations][JRAPL.NUM_SOCKETS];
-		long[][] gpuTimes = new long[iterations][JRAPL.NUM_SOCKETS];
-		long[][] cpuTimes = new long[iterations][JRAPL.NUM_SOCKETS];
-		long[][] pkgTimes = new long[iterations][JRAPL.NUM_SOCKETS];
+		long[][] dramTimes = new long[iterations][ArchSpec.NUM_SOCKETS];
+		long[][] gpuTimes = new long[iterations][ArchSpec.NUM_SOCKETS];
+		long[][] cpuTimes = new long[iterations][ArchSpec.NUM_SOCKETS];
+		long[][] pkgTimes = new long[iterations][ArchSpec.NUM_SOCKETS];
 		
 		int dramIndex = 0, gpuIndex = 0, cpuIndex = 0, pkgIndex = 0;
 		for (int n = 0; n < iterations; n++) cpuTimes[cpuIndex++] = usecTimeMSRRead(CPU);
@@ -164,13 +162,13 @@ public class RuntimeTestUtils extends JRAPL
 		for (int n = 0; n < iterations; n++) getSocketTimes[getSocketIndex++] = usecTimeGetSocketNum();
 		for (int n = 0; n < iterations; n++) energyStatTimes[energyStatIndex++] = usecTimeEnergyStatCheck();
 		for (int n = 0; n < iterations; n++) {
-			JRAPL.ProfileInit(); // make sure memory is alloc'd first to prevent 'double free' errors
+			EnergyManager.profileInit(); // make sure memory is alloc'd first to prevent 'double free' errors
 			profileDeallocTimes[profDeallocIndex++] = usecTimeProfileDealloc();
 		}
-		printFunctionTimeRecord(profileInitTimes,"ProfileInit()");
-		printFunctionTimeRecord(getSocketTimes,"GetSocketNum()");
-		printFunctionTimeRecord(energyStatTimes,"EnergyStatCheck()");
-		printFunctionTimeRecord(profileDeallocTimes,"ProfileDealloc()");
+		printFunctionTimeRecord(profileInitTimes,"profileInit()");
+		printFunctionTimeRecord(getSocketTimes,"getSocketNum()");
+		printFunctionTimeRecord(energyStatTimes,"energyStatCheck()");
+		printFunctionTimeRecord(profileDeallocTimes,"profileDealloc()");
 
 	}
 
@@ -210,7 +208,9 @@ public class RuntimeTestUtils extends JRAPL
 	*/
 	public static void main(String[] args)
 	{
-		new JRAPL(); // get static block initialization out of the way so it doesnt interfere with runtime measurements
+		EnergyManager manager = new EnergyManager();
+		manager.init();
+
 		int iterations;
 		if(args.length != 2) {
 			usage_message_abort();
@@ -223,10 +223,10 @@ public class RuntimeTestUtils extends JRAPL
 		}
 
 		if(args[0].equals("--time-java-calls")){ //Java function timing
-			timeMethodMultipleIterations(JRAPL::ProfileInit, "ProfileInit()", iterations);
-			timeMethodMultipleIterations(ArchSpec::GetSocketNum, "GetSocketNum()", iterations);
-			timeMethodMultipleIterations(EnergyCheckUtils::EnergyStatCheck, "EnergyStatCheck()", iterations);
-			timeMethodMultipleIterations(JRAPL::ProfileDealloc, "ProfileDealloc()", iterations);
+			timeMethodMultipleIterations(EnergyManager::profileInit, "profileInit()", iterations);
+			//timeMethodMultipleIterations(ArchSpec::GetSocketNum, "getSocketNum()", iterations);
+			timeMethodMultipleIterations(EnergyCheckUtils::energyStatCheck, "energyStatCheck()", iterations);
+			timeMethodMultipleIterations(EnergyManager::profileDealloc, "profileDealloc()", iterations);
 		}
 		else if(args[0].equals("--read-energy-values")){ //Timing and reading energy register
 			DramCorePackageStats(iterations);
@@ -242,7 +242,10 @@ public class RuntimeTestUtils extends JRAPL
 			DeallocCSideTiming();
 		}
 		else {
+			manager.dealloc();
 			usage_message_abort();
 		}
+
+		manager.dealloc();
 	}
 }

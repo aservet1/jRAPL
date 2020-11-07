@@ -1,33 +1,29 @@
 #include <stdio.h>
-#include <unistd.h> 
+#include <unistd.h>
+
 #include "CPUScaler.h"
 #include "AsyncEnergyMonitorCSide.h"
 
-/////////////////////// \\\\\\\\\\\\\\\\\\\\|
- ///  DO NOT DELETE WHAT IS IN THIS     \\\ |
- ///  COMMENT SECTION SAVE IT TO THE    \\\ |
- ///  JAVA THREAD TEST DRIVER FILE WHEN \\\ |
- ///  YOU GET THE OPPORTUNITY           \\\ |
-/////////////////////// \\\\\\\\\\\\\\\\\\\\|
-
-void run_cthread(int samplingRate, int argc, const char* argv[])
+void sleep_print(int seconds)
 {
-	int iterations = atoi(argv[1]);
-
-	pthread_t thread;	
-	AsyncEnergyMonitor* collector = newAsyncEnergyMonitor(samplingRate, thread);
-	start(collector);
-	sleep(5);
-	stop(collector);
-	writeToFile(collector, (argc>1)?argv[1]:NULL );
-	freeAsyncEnergyMonitor(collector);
-
+	for (int s = 1; s <= seconds; s++) {
+		printf("%d\n",s);
+		sleep(1);
+	}
 }
-/////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 int main(int argc, const char* argv[])
 {
 	ProfileInit();
-	run_cthread(100,argc,argv);
+
+	AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,DYNAMIC_ARRAY_STORAGE);
+	//AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,LINKED_LIST_STORAGE);
+	start(m);
+	//sleep_print(3);
+	sleep(5);
+	stop(m);
+	writeToFile(m,NULL);
+	freeAsyncEnergyMonitor(m);
+
 	ProfileDealloc();
 }

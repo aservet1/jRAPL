@@ -27,7 +27,7 @@ int check_write_gov(int cores, char govFile[cores][60], const char *target) {
 	int i;
 	int rc;
 	FILE *f[cores];
-    size_t data_length, data_written;
+	size_t data_length, data_written;
 	char string[cores][25];
 
 	for (i = 0; i < cores; i++) {
@@ -85,8 +85,8 @@ int check_write_gov(int cores, char govFile[cores][60], const char *target) {
 int write_freq_all_cores(int cores, char filename[cores][60], const char *cur_freq, const char *scal_freq, int freq) {
 	int i;
 	FILE *f[cores];
-  int rc;
-  size_t data_length, data_written;
+	int rc;
+	size_t data_length, data_written;
 	int cpu_freq[cores];
 	int scal_cpufreq[cores];
 

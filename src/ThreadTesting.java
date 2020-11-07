@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
 
-class ThreadTesting //extends JRAPL
+class ThreadTesting
 {
 	//TODO better way to keep thread alive than sleeping?
 
