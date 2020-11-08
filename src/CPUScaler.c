@@ -65,7 +65,7 @@ static inline double read_Package(int socket)
 	double result = read_msr(fd[socket], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
 	return (double) result * rapl_unit.energy;
 }
-static inline double read_Cpu(int socket)
+static inline double read_Core(int socket)
 {
 	double result = read_msr(fd[socket], MSR_PP0_ENERGY_STATUS);
 	return (double) result * rapl_unit.energy;
@@ -90,14 +90,14 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 {
 	struct timeval timestamp;
 	double pkg[num_pkg];
-	double pp0[num_pkg]; //cpu
+	double pp0[num_pkg]; //core
 	double pp1[num_pkg]; //gpu
 	double dram[num_pkg];
 
 	for (int i = 0; i < num_pkg; i++)
 	{
 		pkg[i] = read_Package(i);
-		pp0[i] = read_Cpu(i);
+		pp0[i] = read_Core(i);
 
 		switch(power_domains_supported) {
 			case READ_FROM_DRAM_AND_GPU:
@@ -122,7 +122,7 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 
 		stats_per_socket[i].socket = i + 1;
 		stats_per_socket[i].pkg = pkg[i];
-		stats_per_socket[i].cpu = pp0[i];
+		stats_per_socket[i].core = pp0[i];
 		stats_per_socket[i].gpu = pp1[i];
 		stats_per_socket[i].dram = dram[i];
 		gettimeofday(&timestamp,NULL);
@@ -142,7 +142,7 @@ static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info
 	for(int i = 0; i < num_pkg; i++) {
 		EnergyStats stats = stats_per_socket[i];
 		bzero(buffer, 100);
-		sprintf(buffer, "%f,%f,%f,%f@", stats.dram, stats.gpu, stats.cpu, stats.pkg);
+		sprintf(buffer, "%f,%f,%f,%f@", stats.dram, stats.gpu, stats.core, stats.pkg);
 		buffer_len = strlen(buffer);
 		memcpy(ener_info + offset, buffer, buffer_len);
 		offset += buffer_len;
@@ -167,7 +167,7 @@ JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_getWraparoundEnergy(JNIEnv* env, jcla
 	return (jint)wraparound_energy;
 }
 
-JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_energyStatCheck(JNIEnv *env, jclass jcls) {
+JNIEXPORT jstring JNICALL Java_jrapl_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls) {
 	
 	char ener_info[512];
 	EnergyStats stats_per_socket[num_pkg];

@@ -164,7 +164,7 @@ public class AsyncEnergyMonitorJavaSide_ObjectSamples implements Runnable,AsyncM
 	*	each column's energy samples represent
 	*	<br>Format:
 	*	<br>  samplingRate: xxx (ms)
-	*	<br>  socket,dram,gpu,cpu,pkg
+	*	<br>  socket,dram,gpu,core,pkg
 	*	<br>  x,xxx,xxx,xxx,xxx
 	*	<br>  x,xxx,xxx,xxx,xxx
 	*	<br>  x,xxx,xxx,xxx,xxx
@@ -178,7 +178,7 @@ public class AsyncEnergyMonitorJavaSide_ObjectSamples implements Runnable,AsyncM
 	{
 		String s = "";
 		s += "samplingRate: " + samplingRate + " milliseconds\n";
-		s += "socket,dram,gpu,cpu,pkg,timestamp,elapsed-time\n";
+		s += "socket,dram,gpu,core,pkg,timestamp,elapsed-time\n";
 		for (EnergyDiff d : samples)
 			s += d.commaSeparated() + "\n";
 		return s;

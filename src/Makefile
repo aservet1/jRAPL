@@ -30,6 +30,8 @@ JAVA_USERFILES =							\
 			AsyncEnergyMonitorCSide.java	\
 			AsyncEnergyMonitorJavaSide.java	\
 											\
+			EnergyStringParser.java			\
+											\
 			EnergyCheckUtils.java			\
 			EnergyControlUtils.java			\
 			AsyncMonitor.java				\

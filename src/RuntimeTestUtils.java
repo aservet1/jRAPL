@@ -134,21 +134,21 @@ public class RuntimeTestUtils
 	// @TODO -- NOTE TO SELF: look into why the first MSR read from takes 5-10 long readings (84 ish)
 	// some times and if that's something you can do anything about and if it matters
 	public static void timeAllMSRReads(int iterations) {
-		int DRAM  = 1, GPU = 2, CPU = 3, PKG = 4;
+		int DRAM  = 1, GPU = 2, CORE = 3, PKG = 4;
 		long[][] dramTimes = new long[iterations][ArchSpec.NUM_SOCKETS];
 		long[][] gpuTimes = new long[iterations][ArchSpec.NUM_SOCKETS];
-		long[][] cpuTimes = new long[iterations][ArchSpec.NUM_SOCKETS];
+		long[][] coreTimes = new long[iterations][ArchSpec.NUM_SOCKETS];
 		long[][] pkgTimes = new long[iterations][ArchSpec.NUM_SOCKETS];
 		
-		int dramIndex = 0, gpuIndex = 0, cpuIndex = 0, pkgIndex = 0;
-		for (int n = 0; n < iterations; n++) cpuTimes[cpuIndex++] = usecTimeMSRRead(CPU);
+		int dramIndex = 0, gpuIndex = 0, coreIndex = 0, pkgIndex = 0;
+		for (int n = 0; n < iterations; n++) coreTimes[coreIndex++] = usecTimeMSRRead(CORE);
 		for (int n = 0; n < iterations; n++) gpuTimes[gpuIndex++] = usecTimeMSRRead(GPU);
 		for (int n = 0; n < iterations; n++) dramTimes[dramIndex++] = usecTimeMSRRead(DRAM);
 		for (int n = 0; n < iterations; n++) pkgTimes[pkgIndex++] = usecTimeMSRRead(PKG);
 
 		printMSRReadTimeRecord(dramTimes, "DRAM");
 		printMSRReadTimeRecord(gpuTimes, "GPU");
-		printMSRReadTimeRecord(cpuTimes, "CPU");
+		printMSRReadTimeRecord(coreTimes, "CORE");
 		printMSRReadTimeRecord(pkgTimes, "PKG");
 	}
 
@@ -225,7 +225,7 @@ public class RuntimeTestUtils
 		if(args[0].equals("--time-java-calls")){ //Java function timing
 			timeMethodMultipleIterations(EnergyManager::profileInit, "profileInit()", iterations);
 			//timeMethodMultipleIterations(ArchSpec::GetSocketNum, "getSocketNum()", iterations);
-			timeMethodMultipleIterations(EnergyCheckUtils::energyStatCheck, "energyStatCheck()", iterations);
+			timeMethodMultipleIterations(EnergyMonitor::energyStatCheck, "energyStatCheck()", iterations);
 			timeMethodMultipleIterations(EnergyManager::profileDealloc, "profileDealloc()", iterations);
 		}
 		else if(args[0].equals("--read-energy-values")){ //Timing and reading energy register

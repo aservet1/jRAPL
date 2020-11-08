@@ -45,7 +45,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	public void run()
 	{
 		while (!exit) {
-			String energyString = EnergyCheckUtils.energyStatCheck();
+			String energyString = EnergyMonitor.energyStatCheck();
 			samples.add(energyString);
 			timestamps.add(Instant.now());
 			try { Thread.sleep(samplingRate); } catch (Exception e) {}
@@ -93,30 +93,108 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 
 
 	////////////////////////////////////////////////////////////// do these with the parse_ener_string function /////////////////////////////////////////////////////////
-	public EnergyStats[] getLastKSamples_Objects(int k)
-	{
-		return null;
-	}
-	public double[] getLastKSamples_Arrays(int k)
-	{
-		return null;
-	}
-	public String[] getLastKSamples_RawString(int k)
-	{
-		int start = samples.size() - k;
-		int array_index = 0;
+//	private double[] stringToArray(String energyString) {
+//		String[] perSocket = energyString.split("@");
+//		double[] result;
+//		for (String sample : perSocket) {
+//			String[] 
+//		}
+//	}
+//
+//
+//	public EnergyStats[] getLastKSamples(int k, String dataType)
+//	{
+//		int start = samples.size() - k;
+//		int arrayIndex = 0;
+//
+//		if (start < 0) {
+//			start = 0;
+//			k = samples.size();
+//		}
+//
+//		switch (dataType) {
+//			case "STRING":
+//				String[] sampleArray = new String[k];
+//				break;
+//			case "OBJECT":
+//				EnergyStats[] sampleArray = new EnergyStats[k];
+//				break;
+//			case "ARRAY":
+//				double[][] sampleArray = new double[][k];
+//				for (int i = start; i < samples.size(); i++) {
+//					String energyString = samples.get(i);
+//					double[][] perSocketSamples = stringToArrays(energyString);
+//					for (int _i = 0; _i < perSocketEnergy.length; _i++) {
+//						sampleArray[_i++]
+//					}
+//
+//					EnergyStats e = new EnergyStats()
+//				}
+//				break;
+//			default:
+//				System.err.println("error: Invalid dataType requested from getLastKSamples: \'"+dataType+"\'");
+//				System.exit(1);
+//		}
+//		
+//			String[] samples_array = new String[k];
+//
+//			for (int i = start; i < samples.size(); i++)
+//				samplesArray[arrayIndex++] = samples.get(i);
+//
+//		return null;
+//		return samplesArray;
+//	}
+//	public double[] getLastKSamples_Arrays(int k)
+//	{
+//		int start = samples.size() - k;
+//		int arrayIndex = 0;
+//
+//		if (start < 0) {
+//			start = 0;
+//			k = samples.size();
+//		}
+//		
+//		String[] samples_array = new String[k];
+//
+//		for (int i = start; i < samples.size(); i++)
+//			samplesArray[arrayIndex++] = samples.get(i);
+//		return null;
+//		return samplesArray;
+//	}
+//	public String[] getLastKSamples_RawString(int k)
+//	{
+//		int start = samples.size() - k;
+//		int arrayIndex = 0;
+//
+//		if (start < 0) {
+//			start = 0;
+//			k = samples.size();
+//		}
+//		
+//		String[] samples_array = new String[k];
+//
+//		for (int i = start; i < samples.size(); i++)
+//			samplesArray[arrayIndex++] = samples.get(i);
+//		return samplesArray;
+//	}
+//
+//	public Instant[] getLastKTimestamps(int k)
+//	{
+//		int start = timestamps.size() - k;
+//		int arrayIndex = 0;
+//		if (start < 0) {
+//			start = 0;
+//			k = timestamps.size();
+//		}
+//
+//		Instant[] timestampsArray = new Instarnt[k];
+//
+//		for (int i = start; i < timstamps.size(); i++)
+//			timestampsArray[arrayIndex++] = timestamps.get(i);
+//		return timestampsArray;
+//
+//	}
 
-		if (start < 0) {
-			start = 0;
-			k = samples.size();
-		}
-		
-		String[] samples_array = new String[k];
-
-		for (int i = start; i < samples.size(); i++)
-			samples_array[array_index++] = samples.get(i);
-		return samples_array;
-	}
 	////////////////////////////////////////////////////////////// do these with the parse_ener_string function /////////////////////////////////////////////////////////
 
 
@@ -174,7 +252,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*	each column's energy samples represent
 	*	<br>Format:
 	*	<br>  samplingRate: xxx milliseconds
-	*	<br>  socket,dram,gpu,cpu,pkg
+	*	<br>  socket,dram,gpu,core,pkg
 	*	<br>  x,xxx,xxx,xxx,xxx
 	*	@return CSV version of the data stored in the object
 	*/
@@ -182,7 +260,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	{
 		String s = "";
 		s += "samplingRate: " + samplingRate + " milliseconds\n";
-		s += "socket,dram,gpu,cpu,pkg,timestamp,elapsed-time ______ INACCURATE HEADER\n";
+		s += "socket,dram,gpu,core,pkg,timestamp,elapsed-time ______ INACCURATE HEADER\n";
 		for (String sampleString : samples) {
 			String[] perSocketStrings = sampleString.split("@");
 			for (int i = 0; i < perSocketStrings.length; i++) {
@@ -197,8 +275,6 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 
 	public static void main(String[] args) throws InterruptedException
 	{
-		EnergyManager manager = new EnergyManager();
-
 		int rate = (args.length > 0) ? Integer.parseInt(args[0]) : 10;
 		AsyncEnergyMonitorJavaSide aemonj = new AsyncEnergyMonitorJavaSide(rate);
 		aemonj.init();	

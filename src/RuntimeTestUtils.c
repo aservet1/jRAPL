@@ -50,7 +50,7 @@ JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeGetSocketNum(
 JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls){
 
 	STARTSTAMP;
-	Java_jrapl_EnergyCheckUtils_EnergyStatCheck(env, jcls);
+	Java_jrapl_EnergyMonitor_EnergyStatCheck(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
@@ -65,7 +65,7 @@ JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeProfileDeallo
 
 #define DRAM 1
 #define GPU 2
-#define CPU 3
+#define CORE 3
 #define PKG 4
 
 #define RETURN_EMPTY_ARRAY						\
@@ -94,7 +94,7 @@ JNIEXPORT jlongArray JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeMSRRead(
 			}
 			which_msr = MSR_PP1_ENERGY_STATUS;
 			break;
-		case CPU:
+		case CORE:
 			which_msr = MSR_PP0_ENERGY_STATUS;
 			break;
 		case PKG:

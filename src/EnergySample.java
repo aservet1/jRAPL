@@ -48,32 +48,40 @@ public abstract class EnergySample
 	protected final int socket;
 	
 	protected final double[] stats;
-	protected final Instant timestamp;
+	protected Instant timestamp;
 
-	public EnergySample(int socket, double[] statsForSocket){
+	public EnergySample(int socket, double[] statsForSocket, Instant timestamp)
+	{
 		this.socket = socket;
-		stats = statsForSocket;
+		this.stats = statsForSocket;
+		this.timestamp = timestamp;
+	}
+
+	public EnergySample(int socket, double[] statsForSocket)
+	{
+		this.socket = socket;
+		this.stats = statsForSocket;
 		this.timestamp = Instant.now();
 	}
 
 	public int getSocket() {
-		return socket;
+		return this.socket;
 	}
 
 	public double getCore() {
-		return stats[CORE_INDEX];
+		return this.stats[CORE_INDEX];
 	}
 
 	public double getGpu() {
-		return stats[GPU_INDEX];
+		return this.stats[GPU_INDEX];
 	}
 
 	public double getPackage() {
-		return stats[PKG_INDEX];
+		return this.stats[PKG_INDEX];
 	}
 
 	public double getDram() {
-		return stats[DRAM_INDEX];
+		return this.stats[DRAM_INDEX];
 	}
 	
 	public String dump() {
@@ -87,11 +95,25 @@ public abstract class EnergySample
 			",",
 			String.format("%d", socket),
 			joinedStats,
-			Long.toString( Duration.between(Instant.EPOCH, timestamp).toNanos() )
+			(timestamp == null)
+				? "null"
+				: Long.toString(
+					Duration.between(
+							Instant.EPOCH,
+							timestamp
+						).toNanos()
+					)
 		);
 
 	}
-	
+
+	public void setTimestamp(Instant ts)
+	{
+		assert this.timestamp == null;
+		this.timestamp = ts;
+	}
+
+
 	@Override
 	public String toString() {
 		//System.out.println(Arrays.toString(stats));
@@ -102,8 +124,9 @@ public abstract class EnergySample
 		if (CORE_INDEX != -1) labeledStats += "Core: " + String.format("%.4f", stats[CORE_INDEX]) + ", ";
 
 		if (labeledStats.length() == 0) labeledStats = "No power domains supported, ";
+		String timestampString = (timestamp == null) ? ("null") : ("Timestamp (nanoseconds since epoch): " + Duration.between(Instant.EPOCH, timestamp).toMillis());
 
-		return labeledStats + "Timestamp (nanoseconds since epoch): " + Duration.between(Instant.EPOCH, timestamp).toMillis();
+		return String.format("Socket: %d, ", socket) + labeledStats + timestampString; 
 	}
 
 }

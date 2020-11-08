@@ -1,22 +1,8 @@
 package jrapl;
 
-// there's gotta be more to it than this, right?
-public class EnergyMonitor extends EnergyManager {
+public class EnergyStringParser {
 
-	public void init() {
-		super.init();
-	}
-
-	public void dealloc() {
-		super.dealloc();
-	}
-	
-	public native static String energyStatCheck();
-
-	// TODO -- decide if these protected 'energyStringTo...' methods
-	//  should just be part of an EnergyStringParser class or if
-	//  that would just be splitting hairs
-	protected static double[] energyStringToArray(String energyString)
+	public static double[] toPrimitiveArray(String energyString)
 	{
 		String[] perSockEner = energyString.split("@");
 		double[] stats = new double[ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET]; // 4 stats per socket
@@ -29,7 +15,8 @@ public class EnergyMonitor extends EnergyManager {
 		}
 		return stats;
 	}
-	protected static EnergyStats[] energyStringToObject(String energyString)
+
+	public static EnergyStats[] toObjectArray(String energyString)
 	{
 		String[] perSockEner = energyString.split("@");
 		EnergyStats[] stats = new EnergyStats[perSockEner.length];

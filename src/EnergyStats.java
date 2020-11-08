@@ -14,11 +14,15 @@ public final class EnergyStats extends EnergySample
 	//	double[] energy = EnergyCheckUtils.getEnergyStats();
 	//	for (int i = 0; i < ArchSpec.NUM_SOCKETS; ++i) {
 	//		int socket = i + 1;		
-	//		stats[i] = new EnergyStats(socket, dram, gpu, cpu, pkg);
+	//		stats[i] = new EnergyStats(socket, dram, core, cpu, pkg);
 	//	}
 	//	return stats;
 	//}
 	
+	public EnergyStats(int socket, double[] statsForSocket, Instant ts) {
+		super(socket, statsForSocket, ts);
+	}
+
 	public EnergyStats(int socket, double[] statsForSocket) {
 		super(socket, statsForSocket);
 	}

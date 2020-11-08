@@ -21,7 +21,7 @@ public final class ArchSpec {
 	// which power domains are supported
 	public native static boolean dramSupported();
 	public native static boolean gpuSupported();
-	public native static boolean cpuSupported();
+	public native static boolean coreSupported();
 	public native static boolean pkgSupported();
 
 	static {
