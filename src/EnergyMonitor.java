@@ -11,7 +11,7 @@ public class EnergyMonitor extends EnergyManager {
 		super.dealloc();
 	}
 	
-	public native static String energyStatCheck();
+	public native static String energyStatCheck(int whichSocket);
 
 	// TODO -- decide if these protected 'energyStringTo...' methods
 	//  should just be part of an EnergyStringParser class or if
@@ -46,3 +46,16 @@ public class EnergyMonitor extends EnergyManager {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

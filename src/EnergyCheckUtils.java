@@ -13,7 +13,7 @@ public class EnergyCheckUtils {
 	//  that it's been supplanted by whatever other more appropriate methods come in and
 	//  take its place
 	public static double[] getEnergyStats() {
-		return EnergyStringParser.toPrimitiveArray(EnergyMonitor.energyStatCheck());
+		return EnergyStringParser.toPrimitiveArray(EnergyMonitor.energyStatCheck(0)); // this reading from all sockets
 	}
 
 	public static void main(String[] args) throws Exception

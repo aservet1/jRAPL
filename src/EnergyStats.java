@@ -18,6 +18,10 @@ public final class EnergyStats extends EnergySample
 	//	}
 	//	return stats;
 	//}
+
+	public EnergyStats(int socket) {
+		super(socket, EnergyStringParser.toPrimitiveArray(EnergyMonitor.energyStatCheck(socket)));
+	}
 	
 	public EnergyStats(int socket, double[] statsForSocket, Instant ts) {
 		super(socket, statsForSocket, ts);

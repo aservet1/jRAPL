@@ -34,7 +34,7 @@ JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_DeallocCSideTiming(JNI
 JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeProfileInit(JNIEnv* env, jclass jcls){
 
 	STARTSTAMP;
-	Java_jrapl_JRAPL_ProfileInit(env, jcls);
+	Java_jrapl_EnergyManager_profileInit(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
@@ -42,15 +42,15 @@ JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeProfileInit(J
 JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeGetSocketNum(JNIEnv* env, jclass jcls){
 
 	STARTSTAMP;
-	Java_jrapl_ArchSpec_GetSocketNum(env, jcls);
+	Java_jrapl_ArchSpec_getSocketNum(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
 
-JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls){
+JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls, jint whichSocket){
 
 	STARTSTAMP;
-	Java_jrapl_EnergyMonitor_EnergyStatCheck(env, jcls);
+	Java_jrapl_EnergyMonitor_energyStatCheck(env, jcls, whichSocket);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
@@ -58,7 +58,7 @@ JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeEnergyStatChe
 JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeProfileDealloc(JNIEnv* env, jclass jcls){
 
 	STARTSTAMP;
-	Java_jrapl_JRAPL_ProfileDealloc(env, jcls);
+	Java_jrapl_EnergyManager_profileDealloc(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }

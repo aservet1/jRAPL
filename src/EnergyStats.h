@@ -7,8 +7,8 @@ typedef struct {
 	int socket;
 	double pkg;
 	double dram;
-	double gpu;
-	double core;
+	double gpu; //pp1
+	double core;//pp0
 	struct timeval timestamp;
 } EnergyStats;
 

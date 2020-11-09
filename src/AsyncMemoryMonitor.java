@@ -73,7 +73,7 @@ public class AsyncMemoryMonitor implements Runnable,AsyncMonitor {
 		return lifetime;
 	}
 
-	public void reInit() {
+	public void reset() {
 		exit = false;
 		samples.clear();
 	}	

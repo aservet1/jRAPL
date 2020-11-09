@@ -88,9 +88,10 @@ void* run(void* monitor_arg)
 
 	while (!monitor->exit)
 	{
-		EnergyStatCheck(stats); 
+		EnergyStatCheck(stats,ALL_SOCKETS); 
 		for (int i = 0; i < sockets; i++) {
 			storeEnergySample(monitor,stats[i]);
+			//printf("socket:%d\n",stats[i].socket);
 		}
 		
 		sleep_millisecond(monitor->samplingRate);

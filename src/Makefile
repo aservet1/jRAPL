@@ -45,7 +45,6 @@ JAVA_USERFILES =							\
 			EnergyDiff.java					\
 											\
 			#								\
-			JRAPL.java						\
 			AsyncMemoryMonitor.java			\
 			AsyncEnergyMonitorJavaSide_ArraySamples.java	\
 			AsyncEnergyMonitorJavaSide_ObjectSamples.java	\

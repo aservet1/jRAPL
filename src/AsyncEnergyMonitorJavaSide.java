@@ -45,7 +45,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	public void run()
 	{
 		while (!exit) {
-			String energyString = EnergyMonitor.energyStatCheck();
+			String energyString = EnergyMonitor.energyStatCheck(0);
 			samples.add(energyString);
 			timestamps.add(Instant.now());
 			try { Thread.sleep(samplingRate); } catch (Exception e) {}
