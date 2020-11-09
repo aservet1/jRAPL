@@ -53,7 +53,6 @@ Java_jrapl_AsyncEnergyMonitorCSide_slightsetup(JNIEnv* env, jclass jcls) {
 	}
 }
 
-
 JNIEXPORT jstring JNICALL
 Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int id, int k)
 {
@@ -62,22 +61,66 @@ Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int id
 	EnergyStats samples[k];
 	lastKSamples(k, monitors[id], samples);
 
-	char sample_strings[150*k];
+	char sample_strings[512*(k+1)];
+	bzero(sample_strings, 512*(k+1));
 
 	int offset = 0;
 	for (int i = 0; i < k; i++) {
 		EnergyStats e = samples[i];
-		char string[150];
+		char string[512];
 		energy_stats_to_string(e,string);
 		sprintf(string,"%s_", string);
 		
-		int string_len = strlen(string);
+		int string_len = strlen(string); // +1 for the _ added in %s_
 		memcpy(sample_strings + offset, string, string_len);
 		offset += string_len;
+
+		//printf("string: %s | s_s:%s | offset:%d\n",string,sample_strings,offset);
 	}
 
 	return (*env)->NewStringUTF(env, sample_strings);	
 }
+
+JNIEXPORT jlongArray JNICALL
+Java_jrapl_AsyncEnergyMonitorCSide_lastKTimestamps(JNIEnv* env, jclass jcls, int id, int k)
+{
+	assert( k < monitors[id]->samples_dynarr->nItems );
+
+	EnergyStats samples[k];
+	lastKSamples(k, monitors[id], samples);
+
+	long fill[k];
+	for (int i = 0; i < k; i++)
+	{
+		struct timeval ts = samples[i].timestamp;
+		fill[i] = ts.tv_sec * 1000000 + ts.tv_usec;
+	}
+
+	int size = k;
+	jlongArray result = (*env)->NewLongArray(env, size);
+	(*env)->SetLongArrayRegion(env,result,0,size,fill);
+
+	return result;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

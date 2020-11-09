@@ -1,5 +1,9 @@
 package jrapl;
 
+import java.util.Arrays;
+
+import java.time.Instant;
+
 public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor implements AsyncMonitor 
 {
 	private native static void slightsetup();
@@ -11,6 +15,7 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor implements Async
 	private native static void deallocMonitor(int id);
 	private native static void writeToFile(int id, String filePath);
 	private native static String lastKSamples(int id, int k);
+	private native static long[] lastKTimestamps(int id, int k);
 
 	private static int nextAvailableId = 0;
 	
@@ -78,11 +83,18 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor implements Async
 		writeToFile(id, filePath);
 	}
 
-	public String[] lastKSamples(int k)
+	public String[] getLastKSamples(int k)
 	{
-		String lastKString = lastKSamples(id,k);
+		return lastKSamples(id,k).split("_");
+	}
 
-		return lastKString.split("_");
+	public Instant[] getLastKTimestamps(int k)
+	{
+		long[] usecValues = lastKTimestamps(id,k);
+		Instant[] instantValues = new Instant[usecValues.length];
+		for (int i = 0; i < usecValues.length; i++)
+			instantValues[i] = Instant.ofEpochMilli(usecValues[i]/1000);
+		return instantValues;
 	}
 
 	public void reset()
@@ -105,6 +117,11 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor implements Async
 		a.stop();
 
 		a.writeToFile(null);
+		int k = 5;
+		System.out.println(Arrays.deepToString(a.getLastKSamples_Objects(k)));
+		System.out.println();
+		System.out.println(Arrays.toString(a.getLastKTimestamps(k)));
+		System.out.println(Instant.now());
 
 		a.dealloc();
 	}

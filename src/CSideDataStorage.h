@@ -23,6 +23,9 @@ void freeLinkedList(LinkedList* esll);
 void addItem_LinkedList(LinkedList* l, EnergyStats e); // add to tail
 void writeToFile_LinkedList(FILE* outfile, LinkedList* l);
 
+#define LINKLIST_NUM_NODES(list)	\
+	(int)(list->numItems/NODE_CAPACITY)	+	\
+	!!(list->numItems%NODE_CAPACITY)	// ceiling division
 
 typedef struct DynamicArray {
 	EnergyStats* items;

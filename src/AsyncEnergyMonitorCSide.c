@@ -73,9 +73,9 @@ void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor)
 
 static void storeEnergySample(AsyncEnergyMonitor *monitor, EnergyStats stats)
 {
-	if (monitor->storageType == DYNAMIC_ARRAY_STORAGE)
+	if (USING_DYNAMIC_ARRAY)
 		addItem_DynamicArray(monitor->samples_dynarr, stats);
-	if (monitor->storageType == LINKED_LIST_STORAGE)
+	if (USING_LINKED_LIST)
 		addItem_LinkedList(monitor->samples_linklist, stats);
 }
 
@@ -91,9 +91,7 @@ void* run(void* monitor_arg)
 		EnergyStatCheck(stats,ALL_SOCKETS); 
 		for (int i = 0; i < sockets; i++) {
 			storeEnergySample(monitor,stats[i]);
-			//printf("socket:%d\n",stats[i].socket);
 		}
-		
 		sleep_millisecond(monitor->samplingRate);
 	}
 	return NULL;
@@ -136,17 +134,36 @@ void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath){
 
 void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats return_array[]) {
 	if (USING_DYNAMIC_ARRAY) {
-		int sample_i = monitor->samples_dynarr->nItems-1; //start from the last one
-		int return_i = k-1;
-		do {
-			return_array[return_i] = monitor->samples_dynarr->items[sample_i];
-		} while ( --return_i >= 0 && --sample_i > 0);
+		int start = monitor->samples_dynarr->nItems-k;
+		int arrayIndex = 0;
+
+		if (start < 0) {
+			start = 0;
+			k = monitor->samples_dynarr->nItems;
+		}
+
+		for (int i = start; i < monitor->samples_dynarr->nItems; i++)
+			return_array[arrayIndex++] = monitor->samples_dynarr->items[i];
+
+		return;
+
 	}
 	else if (USING_LINKED_LIST) {
-		fprintf(stderr,"YOU HAVEN'T IMPLEMETED LINKED LIST STORAGE IN LASTKSAMPLES\n");
-		exit(12);
+		int numNodes = LINKLIST_NUM_NODES(monitor->samples_linklist);
+
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

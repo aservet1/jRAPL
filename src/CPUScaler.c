@@ -97,17 +97,11 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg], int whichSocket)
 	}
 
 	struct timeval timestamp;
-	//double pkg[num_pkg];
-	//double pp0[num_pkg]; //core
-	//double pp1[num_pkg]; //gpu
-	//double dram[num_pkg];
 
 	int start = whichSocket == ALL_SOCKETS ? 0 : whichSocket-1;
 	for (int i = start; i < num_pkg; i++)
 	{
 		stats_per_socket[i].socket = i+1;
-		//pkg[i] = read_Package(i);
-		//pp0[i] = read_Core(i);
 		stats_per_socket[i].pkg = read_Package(i);
 		stats_per_socket[i].core = read_Core(i);
 
@@ -151,8 +145,7 @@ static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info
 	int start = whichSocket == ALL_SOCKETS ? 0 : whichSocket-1;
 	for (int i = start; i < num_pkg; i++) {
 		EnergyStats stats = stats_per_socket[i];
-		bzero(buffer, 100);
-		sprintf(buffer, "%f,%f,%f,%f@", stats.dram, stats.gpu, stats.core, stats.pkg);
+		energy_stats_to_string(stats, buffer);
 		buffer_len = strlen(buffer);
 		memcpy(ener_info + offset, buffer, buffer_len);
 		offset += buffer_len;

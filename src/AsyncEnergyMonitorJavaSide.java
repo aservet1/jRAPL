@@ -92,56 +92,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		timestamps.clear();
 	}
 
-
-
-
-	////////////////////////////////////////////////////////////// do these with the parse_ener_string function /////////////////////////////////////////////////////////
-
-	/* Returns an array of arrays of EnergyStats objects. Each individual array
-		is a list of the readings for all sockets requested. Even if only one
-		socket was read from, it's still an array of arrays. The single socket
-		reading is just index 0 of a 1-element array, regardless of whether it's
-		just one socket because you asked for a specific socket, or because you
-		were reading all sockets but only had one. */
-	public EnergyStats[][] getLastKSamples_Objects(int k) 
-	{
-		int start = samples.size() - k;
-		int arrayIndex = 0;
-
-		if (start < 0) {
-			start = 0;
-			k = samples.size();
-		}
-
-		EnergyStats[][] samplesArray = new EnergyStats[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
-		for (int i = start; i < samples.size(); i++) {
-			String energyString = samples.get(i);
-			samplesArray[arrayIndex++] = EnergyStringParser.toObjectArray(energyString);
-			//System.out.println(timestamps.get(i));
-		}
-
-		return samplesArray;
-	}
-	public double[][] getLastKSamples_Arrays(int k)
-	{
-		int start = samples.size() - k;
-		int arrayIndex = 0;
-
-		if (start < 0) {
-			start = 0;
-			k = samples.size();
-		}
-
-		double[][] samplesArray = new double[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
-		for (int i = start; i < samples.size(); i++) {
-			String energyString = samples.get(i);
-			samplesArray[arrayIndex++] = EnergyStringParser.toPrimitiveArray(energyString);
-		}
-
-		return samplesArray;
-	
-	}
-	public String[] getLastKSamples_Strings(int k) 
+	public String[] getLastKSamples(int k) 
 	{
 		int start = samples.size() - k;
 		int arrayIndex = 0;
@@ -175,12 +126,6 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		return timestampsArray;
 
 	}
-
-	////////////////////////////////////////////////////////////// do these with the parse_ener_string function /////////////////////////////////////////////////////////
-
-
-	
-
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Gets the sampling rate for the thread to collect samples.
@@ -268,7 +213,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 
 		System.out.println(aemonj);
 		int k = 5;
-		System.out.println(Arrays.deepToString(aemonj.getLastKSamples_Strings(k)));
+		System.out.println(Arrays.deepToString(aemonj.getLastKSamples_Arrays(k)));
 		System.out.println();
 		System.out.println(Arrays.toString(aemonj.getLastKTimestamps(k)));
 
