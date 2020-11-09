@@ -1,11 +1,14 @@
 package jrapl;
 
+import java.util.Arrays;
+
 import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
 
 import java.time.Instant;
+import java.time.Duration;
 
 public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Runnable
 {
@@ -93,107 +96,85 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 
 
 	////////////////////////////////////////////////////////////// do these with the parse_ener_string function /////////////////////////////////////////////////////////
-//	private double[] stringToArray(String energyString) {
-//		String[] perSocket = energyString.split("@");
-//		double[] result;
-//		for (String sample : perSocket) {
-//			String[] 
-//		}
-//	}
-//
-//
-//	public EnergyStats[] getLastKSamples(int k, String dataType)
-//	{
-//		int start = samples.size() - k;
-//		int arrayIndex = 0;
-//
-//		if (start < 0) {
-//			start = 0;
-//			k = samples.size();
-//		}
-//
-//		switch (dataType) {
-//			case "STRING":
-//				String[] sampleArray = new String[k];
-//				break;
-//			case "OBJECT":
-//				EnergyStats[] sampleArray = new EnergyStats[k];
-//				break;
-//			case "ARRAY":
-//				double[][] sampleArray = new double[][k];
-//				for (int i = start; i < samples.size(); i++) {
-//					String energyString = samples.get(i);
-//					double[][] perSocketSamples = stringToArrays(energyString);
-//					for (int _i = 0; _i < perSocketEnergy.length; _i++) {
-//						sampleArray[_i++]
-//					}
-//
-//					EnergyStats e = new EnergyStats()
-//				}
-//				break;
-//			default:
-//				System.err.println("error: Invalid dataType requested from getLastKSamples: \'"+dataType+"\'");
-//				System.exit(1);
-//		}
-//		
-//			String[] samples_array = new String[k];
-//
-//			for (int i = start; i < samples.size(); i++)
-//				samplesArray[arrayIndex++] = samples.get(i);
-//
-//		return null;
-//		return samplesArray;
-//	}
-//	public double[] getLastKSamples_Arrays(int k)
-//	{
-//		int start = samples.size() - k;
-//		int arrayIndex = 0;
-//
-//		if (start < 0) {
-//			start = 0;
-//			k = samples.size();
-//		}
-//		
-//		String[] samples_array = new String[k];
-//
-//		for (int i = start; i < samples.size(); i++)
-//			samplesArray[arrayIndex++] = samples.get(i);
-//		return null;
-//		return samplesArray;
-//	}
-//	public String[] getLastKSamples_RawString(int k)
-//	{
-//		int start = samples.size() - k;
-//		int arrayIndex = 0;
-//
-//		if (start < 0) {
-//			start = 0;
-//			k = samples.size();
-//		}
-//		
-//		String[] samples_array = new String[k];
-//
-//		for (int i = start; i < samples.size(); i++)
-//			samplesArray[arrayIndex++] = samples.get(i);
-//		return samplesArray;
-//	}
-//
-//	public Instant[] getLastKTimestamps(int k)
-//	{
-//		int start = timestamps.size() - k;
-//		int arrayIndex = 0;
-//		if (start < 0) {
-//			start = 0;
-//			k = timestamps.size();
-//		}
-//
-//		Instant[] timestampsArray = new Instarnt[k];
-//
-//		for (int i = start; i < timstamps.size(); i++)
-//			timestampsArray[arrayIndex++] = timestamps.get(i);
-//		return timestampsArray;
-//
-//	}
+
+	/* Returns an array of arrays of EnergyStats objects. Each individual array
+		is a list of the readings for all sockets requested. Even if only one
+		socket was read from, it's still an array of arrays. The single socket
+		reading is just index 0 of a 1-element array, regardless of whether it's
+		just one socket because you asked for a specific socket, or because you
+		were reading all sockets but only had one. */
+	public EnergyStats[][] getLastKSamples_Objects(int k) 
+	{
+		int start = samples.size() - k;
+		int arrayIndex = 0;
+
+		if (start < 0) {
+			start = 0;
+			k = samples.size();
+		}
+
+		EnergyStats[][] samplesArray = new EnergyStats[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
+		for (int i = start; i < samples.size(); i++) {
+			String energyString = samples.get(i);
+			samplesArray[arrayIndex++] = EnergyStringParser.toObjectArray(energyString);
+			//System.out.println(timestamps.get(i));
+		}
+
+		return samplesArray;
+	}
+	public double[][] getLastKSamples_Arrays(int k)
+	{
+		int start = samples.size() - k;
+		int arrayIndex = 0;
+
+		if (start < 0) {
+			start = 0;
+			k = samples.size();
+		}
+
+		double[][] samplesArray = new double[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
+		for (int i = start; i < samples.size(); i++) {
+			String energyString = samples.get(i);
+			samplesArray[arrayIndex++] = EnergyStringParser.toPrimitiveArray(energyString);
+		}
+
+		return samplesArray;
+	
+	}
+	public String[] getLastKSamples_Strings(int k) 
+	{
+		int start = samples.size() - k;
+		int arrayIndex = 0;
+
+		if (start < 0) {
+			start = 0;
+			k = samples.size();
+		}
+		
+		String[] samplesArray = new String[k];
+		for (int i = start; i < samples.size(); i++)
+			samplesArray[arrayIndex++] = samples.get(i);
+		
+		return samplesArray;
+	}
+
+	public Instant[] getLastKTimestamps(int k) 
+	{
+		int start = timestamps.size() - k;
+		int arrayIndex = 0;
+		if (start < 0) {
+			start = 0;
+			k = timestamps.size();
+		}
+
+		Instant[] timestampsArray = new Instant[k];
+
+		for (int i = start; i < timestamps.size(); i++)
+			timestampsArray[arrayIndex++] = timestamps.get(i);
+
+		return timestampsArray;
+
+	}
 
 	////////////////////////////////////////////////////////////// do these with the parse_ener_string function /////////////////////////////////////////////////////////
 
@@ -260,15 +241,17 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	{
 		String s = "";
 		s += "samplingRate: " + samplingRate + " milliseconds\n";
-		s += "socket,dram,gpu,core,pkg,timestamp,elapsed-time ______ INACCURATE HEADER\n";
-		for (String sampleString : samples) {
-			String[] perSocketStrings = sampleString.split("@");
-			for (int i = 0; i < perSocketStrings.length; i++) {
-				int socket = i+1;
-				s += Integer.toString(socket) + "," + perSocketStrings[i] + "\n";
+		s += "socket,"+ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]+",timestamp(usec since epoch)";
+		for (int i = 0; i < samples.size(); i++) {
+			String energyString = samples.get(i);
+			String[] perSocketStrings = energyString.split("@");
+			long usecs = Duration.between(Instant.EPOCH, timestamps.get(i)).toNanos()/1000;
+			for (int _i = 0; _i < perSocketStrings.length; _i++) {
+				int socket = _i+1;
+				s += Integer.toString(socket) + "," 
+					+ perSocketStrings[_i] + "," 
+					+ Long.toString(usecs) + "\n";
 			}
-
-			//s += sample + "\n";
 		}
 		return s;
 	}
@@ -284,6 +267,10 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		aemonj.stop();
 
 		System.out.println(aemonj);
+		int k = 5;
+		System.out.println(Arrays.deepToString(aemonj.getLastKSamples_Strings(k)));
+		System.out.println();
+		System.out.println(Arrays.toString(aemonj.getLastKTimestamps(k)));
 
 		aemonj.dealloc();
 	}
