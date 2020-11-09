@@ -5,61 +5,52 @@
 #include "EnergyStats.h"
 #include "AsyncEnergyMonitorCSide.h"
 
-//TODO -- more eloquent error handling
-#define assert_valid_id(id)	\
-	assert(id >= 0 && id < CAPACITY);
 
-#define CAPACITY 2
-static AsyncEnergyMonitor* monitors[CAPACITY];
+static AsyncEnergyMonitor* monitor;
+
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_allocMonitor(JNIEnv* env, jclass jcls, jint id, jint samplingRate, jint storageType)
+Java_jrapl_AsyncEnergyMonitorCSide_allocMonitor(JNIEnv* env, jclass jcls, jint samplingRate, jint storageType)
 {
-	assert_valid_id(id);
-	monitors[id] = newAsyncEnergyMonitor(samplingRate, storageType);
+	monitor = newAsyncEnergyMonitor(samplingRate, storageType);
 }
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_deallocMonitor(JNIEnv* env, jclass jcls, int id)
+Java_jrapl_AsyncEnergyMonitorCSide_deallocMonitor(JNIEnv* env, jclass jcls)
 {
-	assert_valid_id(id);
-	if (monitors[id] != NULL) {
-		freeAsyncEnergyMonitor(monitors[id]);
-		monitors[id] = NULL;
+	if (monitor != NULL) {
+		freeAsyncEnergyMonitor(monitor);
+		monitor = NULL;
 	}
 }
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_startCollecting(JNIEnv* env, jclass jcls, int id) {
-	assert_valid_id(id);
-	start(monitors[id]);
+Java_jrapl_AsyncEnergyMonitorCSide_startCollecting(JNIEnv* env, jclass jcls) {
+	start(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_stopCollecting(JNIEnv* env, jclass jcls, int id) {
-	assert_valid_id(id);
-	stop(monitors[id]);
+Java_jrapl_AsyncEnergyMonitorCSide_stopCollecting(JNIEnv* env, jclass jcls) {
+	stop(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_writeToFile(JNIEnv* env, jclass jcls, int id, const char* filepath) {
-	writeToFile(monitors[id], filepath);
+Java_jrapl_AsyncEnergyMonitorCSide_cSideReset(JNIEnv* env, jclass jcls) {
+	reset(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_slightsetup(JNIEnv* env, jclass jcls) {
-	for ( int id = 0; id < CAPACITY; id++) {
-		monitors[id] = NULL;
-	}
+Java_jrapl_AsyncEnergyMonitorCSide_writeToFileFromC(JNIEnv* env, jclass jcls, const char* filepath) {
+	writeToFile(monitor, filepath);
 }
 
 JNIEXPORT jstring JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int id, int k)
+Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int k)
 {
-	assert( k < monitors[id]->samples_dynarr->nItems );
+	assert( k < monitor->samples_dynarr->nItems );
 
 	EnergyStats samples[k];
-	lastKSamples(k, monitors[id], samples);
+	lastKSamples(k, monitor, samples);
 
 	char sample_strings[512*(k+1)];
 	bzero(sample_strings, 512*(k+1));
@@ -82,12 +73,10 @@ Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int id
 }
 
 JNIEXPORT jlongArray JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_lastKTimestamps(JNIEnv* env, jclass jcls, int id, int k)
+Java_jrapl_AsyncEnergyMonitorCSide_lastKTimestamps(JNIEnv* env, jclass jcls, int k)
 {
-	assert( k < monitors[id]->samples_dynarr->nItems );
-
 	EnergyStats samples[k];
-	lastKSamples(k, monitors[id], samples);
+	lastKSamples(k, monitor, samples);
 
 	long fill[k];
 	for (int i = 0; i < k; i++)
@@ -103,24 +92,5 @@ Java_jrapl_AsyncEnergyMonitorCSide_lastKTimestamps(JNIEnv* env, jclass jcls, int
 	return result;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

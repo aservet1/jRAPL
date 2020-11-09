@@ -27,10 +27,11 @@ typedef struct AsyncEnergyMonitor {
 
 
 AsyncEnergyMonitor* newAsyncEnergyMonitor(int delay, int storageType);
-void start(AsyncEnergyMonitor *collector);
-void stop(AsyncEnergyMonitor *collector);
-void freeAsyncEnergyMonitor(AsyncEnergyMonitor* collector);
-void writeToFile(AsyncEnergyMonitor *collector, const char* filepath);
-void lastKSamples(int k, AsyncEnergyMonitor* collector, EnergyStats return_array[k]);
+void start(AsyncEnergyMonitor *monitor);
+void stop(AsyncEnergyMonitor *monitor);
+void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor);
+void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath);
+void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats return_array[k]);
+void reset(AsyncEnergyMonitor* monitor);
 
 #endif //_ASYNC_ENERGY_MONITOR_CSIDE_H

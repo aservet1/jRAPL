@@ -87,6 +87,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*/
 	public void reset()
 	{
+		super.reset();
 		exit = false;
 		samples.clear();
 		timestamps.clear();

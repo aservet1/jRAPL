@@ -33,9 +33,12 @@ JAVA_USERFILES =							\
 			EnergyStringParser.java			\
 											\
 			EnergyCheckUtils.java			\
-			EnergyControlUtils.java			\
 			AsyncMonitor.java				\
 			AsyncMemoryMonitor.java			\
+											\
+			EnergyController.java			\
+			DvfsEnergyController.java		\
+			PowercapEnergyController.java	\
 											\
 			NativeUtils.java				\
 			PerfCheckUtils.java				\

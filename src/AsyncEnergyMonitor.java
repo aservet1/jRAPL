@@ -2,8 +2,18 @@
 package jrapl;
 
 import java.time.Instant;
+import java.time.Duration;
 
 public abstract class AsyncEnergyMonitor extends EnergyMonitor {
+
+	protected Instant monitorStartTime = null;
+	protected Instant monitorStopTime = null;
+	public Duration getLifetime()
+	{
+		if (monitorStartTime != null && monitorStopTime != null)
+			return Duration.between(monitorStartTime, monitorStopTime);
+		else return null;
+	}
 
 	public abstract void start();
 
@@ -11,7 +21,11 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 	public abstract String toString();
 
-	public abstract void reset();
+	public void reset()
+	{
+		monitorStartTime = null;
+		monitorStopTime = null;
+	}
 
 	public abstract void writeToFile(String fileName);
 
