@@ -8,17 +8,13 @@
 typedef struct LinkNode {
 	EnergyStats items[NODE_CAPACITY];
 	struct LinkNode* next;
-	//int nElems;
-	//TODO: make a count at the end for 'the last node' instead of one guy per node, since we know that all previous nodes will be at capacity
 } LinkNode;
 
 typedef struct LinkedList {
 	LinkNode* head;
 	LinkNode* tail;
-	//int numItems;
-	int nElemsAtTail;	// by the rules of this list, only tail node can have variable items. all other
-						// ones are full to NODE_CAPACITY
-
+	int nElemsAtTail;
+	// only tail node can have variable items, so only track them. all other ones are full to NODE_CAPACITY
 } LinkedList;
 
 LinkedList* newLinkedList();
