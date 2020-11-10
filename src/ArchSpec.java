@@ -70,14 +70,6 @@ public final class ArchSpec {
 		return s;
 	}
 
-	public static void main(String[] args) {
-		EnergyManager manager = new EnergyManager();
-		manager.init();
-		System.out.println(energyStatsStringFormat());
-		System.out.println(NUM_STATS_PER_SOCKET);
-		manager.dealloc();
-	}
-
 }
 
 

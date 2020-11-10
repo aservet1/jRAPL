@@ -17,8 +17,6 @@ OFILES = $(CFILES:.c=.o)
 JAVA_TESTFILES =					\
 			RuntimeTestUtils.java	\
 			GeneralTestDriver.java	\
-			ThreadTesting.java		\
-			#MemoryTestUtils.java	\
 
 JAVA_USERFILES =							\
 			ArchSpec.java 					\
@@ -33,8 +31,6 @@ JAVA_USERFILES =							\
 			EnergyStringParser.java			\
 											\
 			EnergyCheckUtils.java			\
-			AsyncMonitor.java				\
-			AsyncMemoryMonitor.java			\
 											\
 			EnergyController.java			\
 			DvfsEnergyController.java		\
@@ -46,11 +42,6 @@ JAVA_USERFILES =							\
 			EnergySample.java				\
 			EnergyStats.java				\
 			EnergyDiff.java					\
-											\
-			#								\
-			AsyncMemoryMonitor.java			\
-			AsyncEnergyMonitorJavaSide_ArraySamples.java	\
-			AsyncEnergyMonitorJavaSide_ObjectSamples.java	\
 
 
 CFLAGS = -fPIC -g -c -Wall

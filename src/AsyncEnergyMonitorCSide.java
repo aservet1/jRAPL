@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 
-public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor implements AsyncMonitor 
+public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 {
 	private native static void slightsetup();
 
