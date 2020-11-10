@@ -1,5 +1,6 @@
 package jrapl;
 
+//these two are just for testing in main(), they dont actually help the class
 import java.util.Arrays;
 import java.time.Duration;
 
@@ -9,8 +10,6 @@ import java.time.temporal.ChronoUnit;
 
 public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 {
-	private native static void slightsetup();
-
 	private native static void startCollecting();
 	private native static void stopCollecting();
 	private native static void cSideReset();
