@@ -1,16 +1,16 @@
 
 TARGET = libCPUScaler.so $(OFILES)
 
-CFILES =								\
-		CPUScaler.c						\
-		arch_spec.c						\
-		msr.c							\
-		dvfs.c							\
- 		EnergyStats.c 					\
-		AsyncEnergyMonitorCSide.c		\
-		AsyncEnergyMonitorCSide_JNI.c	\
-		RuntimeTestUtils.c				\
-		CSideDataStorage.c				\
+CFILES =										\
+		CPUScaler.c								\
+		arch_spec.c								\
+		msr.c									\
+		dvfs.c									\
+ 		EnergyStats.c 							\
+		AsyncEnergyMonitorCSide.c				\
+		AsyncEnergyMonitorCSide_JNIExports.c	\
+		RuntimeTestUtils.c						\
+		CSideDataStorage.c						\
 
 OFILES = $(CFILES:.c=.o)
 

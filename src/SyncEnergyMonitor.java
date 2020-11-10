@@ -52,12 +52,6 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		SyncEnergyMonitor monitor = new SyncEnergyMonitor();
 		monitor.init();
 
-		//for (int n = 0; n < 1000; n++) {
-		//	EnergyStats[] a = monitor.getObjectSample();
-		//	System.out.println(Arrays.toString(a));
-		//	Thread.sleep(47);
-		//}
-
 		int socket = 1;
 		EnergyStats before = monitor.getObjectSample(socket);
 		EnergyStats after;

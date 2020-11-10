@@ -2,6 +2,7 @@ package jrapl;
 import java.util.Arrays;
 
 /** <h1> DOCUMENTATION OUT OF DATE </h1>
+*   <b>The goal is to get rid of this class entirely.</b>
 *	Functions around getting energy reading of the system
 */
 public class EnergyCheckUtils {
@@ -12,6 +13,8 @@ public class EnergyCheckUtils {
 	//  but phase out its usage and delete this method definition entirely once you know
 	//  that it's been supplanted by whatever other more appropriate methods come in and
 	//  take its place
+	//
+	// the goal is to get rid of this class entirely
 	public static double[] getEnergyStats() {
 		return EnergyStringParser.toPrimitiveArray(EnergyMonitor.energyStatCheck(0)); // this reading from all sockets
 	}

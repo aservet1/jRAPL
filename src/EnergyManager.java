@@ -3,7 +3,6 @@ package jrapl;
 
 public class EnergyManager
 {
-
 	//@TODO these should eventually be private methods
 	public native static void profileInit();
 	public native static void profileDealloc();

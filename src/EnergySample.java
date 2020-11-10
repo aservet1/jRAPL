@@ -3,10 +3,6 @@ package jrapl;
 import java.time.Instant;
 import java.time.Duration;
 
-//import java.util.Arrays;
-
-// TODO make sure you make the change from cpu to core across the board
-
 public abstract class EnergySample
 {
 	private static final int DRAM_INDEX;
@@ -42,7 +38,6 @@ public abstract class EnergySample
 		GPU_INDEX = gpuIndex;
 		CORE_INDEX = coreIndex;
 		PKG_INDEX = pkgIndex;
-		//System.out.println(DRAM_INDEX+" "+GPU_INDEX +" "+CORE_INDEX+" "+PKG_INDEX);
 
 	}
 	protected final int socket;

@@ -28,12 +28,6 @@ public final class EnergyDiff extends EnergySample
 		);
 	}
 
-	//public void setElapsedTime(Duration et)
-	//{
-	//	assert elapsedTime == null;
-	//	elapsedTime = et;
-	//}
-
 	public static EnergyDiff between(EnergyStats before, EnergyStats after) {
 		assert after.socket == before.socket;
 		assert after.stats.length == before.stats.length;		
