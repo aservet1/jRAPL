@@ -11,17 +11,17 @@ public final class ArchSpec {
 	public static final String CPU_MODEL_NAME;
 	public static final String ENERGY_STATS_STRING_FORMAT;
 
-	public native static int PowerDomainsSupported();
-	public native static int GetSocketNum();
+	public native static int powerDomainsSupported();
+	public native static int getSocketNum();
 	public native static int getWraparoundEnergy();
-	public native static String GetCpuModelName();
-	public native static int GetCpuModel();
-	public native static String EnergyStatsStringFormat();
+	public native static String getCpuModelName();
+	public native static int getCpuModel();
+	public native static String energyStatsStringFormat();
 
 	// which power domains are supported
 	public native static boolean dramSupported();
 	public native static boolean gpuSupported();
-	public native static boolean cpuSupported();
+	public native static boolean coreSupported();
 	public native static boolean pkgSupported();
 
 	static {
@@ -31,10 +31,10 @@ public final class ArchSpec {
 		// won't ever be used outside of an EnergyManger being inited and dealloc'd
 		new EnergyManager().init();
 
-		CPU_MODEL = GetCpuModel();
-		CPU_MODEL_NAME = GetCpuModelName();
+		CPU_MODEL = getCpuModel();
+		CPU_MODEL_NAME = getCpuModelName();
 
-		int rd = PowerDomainsSupported();
+		int rd = powerDomainsSupported();
 		if ( rd == 3 ) {
 		//	readingDRAM = true;
 		//	readingGPU  = true;
@@ -49,10 +49,10 @@ public final class ArchSpec {
 		//	readingGPU  = false;
 		}
 
-		NUM_SOCKETS = GetSocketNum();
+		NUM_SOCKETS = getSocketNum();
 		RAPL_WRAPAROUND = getWraparoundEnergy();
 
-		ENERGY_STATS_STRING_FORMAT = EnergyStatsStringFormat();
+		ENERGY_STATS_STRING_FORMAT = energyStatsStringFormat();
 		NUM_STATS_PER_SOCKET = ENERGY_STATS_STRING_FORMAT.split("@")[0].split(",").length;
 	}
 
@@ -68,14 +68,6 @@ public final class ArchSpec {
 		s += "CPU_MODEL_NAME: " + CPU_MODEL_NAME;
 		s += "ENERGY_STATS_STRING_FORMAT: " + ENERGY_STATS_STRING_FORMAT;
 		return s;
-	}
-
-	public static void main(String[] args) {
-		EnergyManager manager = new EnergyManager();
-		manager.init();
-		System.out.println(EnergyStatsStringFormat());
-		System.out.println(NUM_STATS_PER_SOCKET);
-		manager.dealloc();
 	}
 
 }

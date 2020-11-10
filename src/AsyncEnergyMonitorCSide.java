@@ -1,24 +1,27 @@
 package jrapl;
 
-public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor 
+//these two are just for testing in main(), they dont actually help the class
+import java.util.Arrays;
+import java.time.Duration;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
+
+public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 {
-	private native static void slightsetup();
+	private native static void startCollecting();
+	private native static void stopCollecting();
+	private native static void cSideReset();
 
-	private native static void startCollecting(int id);
-	private native static void stopCollecting(int id);
-
-	private native static void allocMonitor(int id, int samplingRate, int storageType);
-	private native static void deallocMonitor(int id);
-	private native static void writeToFile(int id, String filePath);
-	private native static String lastKSamples(int id, int k);
-
-	private static int nextAvailableId = 0;
+	private native static void allocMonitor(int samplingRate, int storageType);
+	private native static void deallocMonitor();
+	private native static void writeToFileFromC(String filePath);
+	private native static String lastKSamples(int k);
+	private native static long[] lastKTimestamps(int k);
 	
-	private int id;
 	private int samplingRate;
 	private int storageType;
-
-	//TODO -- consider tracking the lifetime of the monitor. timestamp between start and stop, already did it for AsynEnergyManager
 
 	//constants to define energy sample storage method on the C side
 	private static final int DYNAMIC_ARRAY_STORAGE = 1;
@@ -28,15 +31,13 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	public void init()
 	{
 		super.init();
-		id = nextAvailableId++;
-		slightsetup();
-		allocMonitor(id,samplingRate,storageType);
+		allocMonitor(samplingRate,storageType);
 	}
 
 	@Override //from EnergyManager
 	public void dealloc()
 	{
-		deallocMonitor(id);
+		deallocMonitor();
 		super.dealloc();
 	}
 
@@ -65,29 +66,40 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	
 	public void start()
 	{
-		startCollecting(id);
+		monitorStartTime = Instant.now();
+		startCollecting();
 	}
 
 	public void stop()
 	{
-		stopCollecting(id);
+		monitorStopTime = Instant.now();
+		stopCollecting();
 	}
 
 	public void writeToFile(String filePath)
 	{
-		writeToFile(id, filePath);
+		writeToFileFromC(filePath);
 	}
 
-	public String[] lastKSamples(int k)
+	public String[] getLastKSamples(int k)
 	{
-		String lastKString = lastKSamples(id,k);
-
-		return lastKString.split("_");
+		return lastKSamples(k).split("_");
 	}
 
+	public Instant[] getLastKTimestamps(int k)
+	{
+		long[] usecValues = lastKTimestamps(k);
+		Instant[] instantValues = new Instant[usecValues.length];
+		for (int i = 0; i < usecValues.length; i++)
+			instantValues[i] = Instant.EPOCH.plus(usecValues[i], ChronoUnit.MICROS);
+		return instantValues;
+	}
+
+	@Override
 	public void reset()
 	{
-		System.out.println("Coming soon...");
+		super.reset();
+		cSideReset();
 	}
 
 	public String toString()
@@ -97,7 +109,8 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 
 	public static void main(String[] args)
 	{
-		AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
+		//AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
+		AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"LINKED_LIST");
 		a.init();
 
 		a.start();
@@ -105,6 +118,13 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 		a.stop();
 
 		a.writeToFile(null);
+		int k = 5;
+		EnergyStats[][] estats = a.getLastKSamples_Objects(k);
+		for (EnergyStats[] es : estats) System.out.println(Arrays.deepToString(es));
+		System.out.println();
+		Instant[] timestamps = a.getLastKTimestamps(k);
+		for (Instant ts : timestamps) System.out.println(Duration.between(Instant.EPOCH, ts).toNanos()/1000);
+		System.out.println(a.getLifetime().toMillis());
 
 		a.dealloc();
 	}

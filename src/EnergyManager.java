@@ -3,6 +3,8 @@ package jrapl;
 
 public class EnergyManager
 {
+	private static boolean libraryLoaded = false;
+	private static int energyManagersActive = 0 ;
 
 	//@TODO these should eventually be private methods
 	public native static void profileInit();
@@ -29,17 +31,18 @@ public class EnergyManager
 			e.printStackTrace();
 			System.exit(1);
 		}
+		libraryLoaded = true;
 	}
 	public void init() //get a better name
 	{
-		loadLibrary();
-		profileInit();
+		if (!libraryLoaded) loadLibrary();
+		if (energyManagersActive++ == 0) profileInit();
 		ArchSpec.init(); // there's definitely a better way of doing this
 	}
 
 	public void dealloc()
 	{
-		profileDealloc();
+		if (--energyManagersActive == 0) profileDealloc();
 	}
 
 }

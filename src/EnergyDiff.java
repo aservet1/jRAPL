@@ -6,7 +6,7 @@ import java.time.Duration;
 
 public final class EnergyDiff extends EnergySample
 {
-	private final Duration elapsedTime; //time between the two EnergyStamps
+	private Duration elapsedTime = null; //time between the two EnergyStamps
 
 	public EnergyDiff(int socket, double[] statsForSocket, Duration elapsedTime) {
 		super(socket, statsForSocket);
@@ -22,7 +22,9 @@ public final class EnergyDiff extends EnergySample
 		return String.join(
 			",",
 			super.dump(),
-			Long.toString(this.elapsedTime.toNanos())
+			(this.elapsedTime == null)
+			? ("null")
+			: (Long.toString(this.elapsedTime.toNanos()))
 		);
 	}
 
@@ -36,7 +38,11 @@ public final class EnergyDiff extends EnergySample
 			if (statsDiff[i] < 0) statsDiff[i] += ArchSpec.RAPL_WRAPAROUND;
 		}
 
-		return new EnergyDiff(before.socket, statsDiff, Duration.between(before.timestamp, after.timestamp));
+		return new EnergyDiff (	before.socket,
+								statsDiff,
+								(before.timestamp == null || after.timestamp == null)
+								? null
+								: Duration.between(before.timestamp, after.timestamp)	);
 	}
 
 	@Override

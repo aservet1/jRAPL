@@ -26,7 +26,6 @@ LinkNode*
 newLinkNode() {
 	LinkNode* node = malloc(sizeof(LinkNode));
 	node->next = NULL;
-	node->nElems = 0;
 	return node;
 }
 
@@ -34,9 +33,10 @@ LinkedList*
 newLinkedList() {
 	LinkNode* node = newLinkNode();
 	LinkedList* list = malloc(sizeof(LinkedList));
-	//list->nItems = 0;
 	list->head = node;
 	list->tail = node;
+	list->nItemsAtTail = 0;
+	list->nItems = 0;
 	return list;
 }
 
@@ -59,14 +59,13 @@ freeLinkedList(LinkedList* l) {
 void
 addItem_LinkedList(LinkedList* l, EnergyStats stats) { // add to tail
 
-	//l->nItems++;
-
-	if (l->tail->nElems == NODE_CAPACITY) {
+	if (l->nItemsAtTail == NODE_CAPACITY) {
 		l->tail->next = newLinkNode();
 		l->tail = l->tail->next;
+		l->nItemsAtTail = 0;
 	}
-	LinkNode* tail = l->tail;
-	tail->items[tail->nElems++] = stats;
+	l->tail->items[l->nItemsAtTail++] = stats;
+	l->nItems++;
 		
 }
 
@@ -94,14 +93,15 @@ writeToFile_DynamicArray(FILE* outfile, DynamicArray* a) {
 
 void
 writeToFile_LinkedList(FILE* outfile, LinkedList* l) {
-	//printf("NUMITEMS: %d\n",l->nItems);
 	LinkNode* current = l->head;
 	while(current != NULL) {
-		for (int i = 0; i < current->nElems; i++) {
+		int upperbound = (current == l->tail) ?
+			(l->nItemsAtTail) : (NODE_CAPACITY);
+		for (int i = 0; i < upperbound; i++) {
 			char ener_string[512];
 			energy_stats_csv_string(current->items[i], ener_string);
 			fprintf(outfile,"%s\n",ener_string);
-		} // printf(" --\n"); // delimits between the contents of each node (keep for debugging purposes)
+		} printf(" --\n"); // delimits between the contents of each node (keep for debugging purposes)
 		current = current->next;
 	}
 }

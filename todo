@@ -1,8 +1,0 @@
-
-	Intel power domain access
-		what are all of the modern power domains that modern RAPL supports?
-
-	Energy Managers
-			SyncronousEnergyManager						AsyncronousEnergyManager
-		/					\			/					\
-	raw-data				elaborate-data		javaside					cside

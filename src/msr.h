@@ -12,7 +12,7 @@
 #define MSR_RAPL_POWER_UNIT				0x606
 
 /**Energy measurement**/
-#define MSR_PP0_ENERGY_STATUS			0x639 //read to cpu_buffer[i] in CPUScaler.c
+#define MSR_PP0_ENERGY_STATUS			0x639 //read to core_buffer[i] in CPUScaler.c
 #define MSR_PP1_ENERGY_STATUS     0x641 //read to gpu_buffer[i] in CPUScaler.c
 #define MSR_PKG_ENERGY_STATUS			0x611 //read to package[i] in CPUScaler.c (total energy usage)
 #define MSR_DRAM_ENERGY_STATUS		0x619 //read to dram_buffer[i] in CPUScaler.c

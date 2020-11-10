@@ -2,6 +2,7 @@
 package jrapl;
 
 import java.util.Arrays;
+import java.time.Instant;
 
 public class SyncEnergyMonitor extends EnergyMonitor {
 
@@ -17,61 +18,51 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		super.dealloc();
 	}
 
-	public EnergyStats getObjectSample(int socket) // for a specific socket
-	{ //TODO make a more extensive "target-one-socket-at-a-time" implementation on the C side
-	  // instead of reading all of the sockets and 
-		int lo = socket-1;
-		int hi = lo + ArchSpec.NUM_STATS_PER_SOCKET;
-
-		return new EnergyStats(socket, Arrays.copyOfRange(EnergyCheckUtils.getEnergyStats(), lo,hi));
-		
+	public EnergyStats getObjectSample(int socket)
+	{ 
+		String energyString = EnergyMonitor.energyStatCheck(socket);
+		Instant birthday = Instant.now();
+		double[] statsArray = EnergyStringParser.toPrimitiveArray(energyString);
+		return new EnergyStats(socket, statsArray, birthday);
 	}
 
 	public EnergyStats[] getObjectSample()
 	{
-		EnergyStats[] stats = new EnergyStats[ArchSpec.NUM_SOCKETS];
-		double[] energy = EnergyCheckUtils.getEnergyStats();
-
-		int lo = 0;
-		int hi = ArchSpec.NUM_STATS_PER_SOCKET;
-
-		for (int i = 0; i < ArchSpec.NUM_SOCKETS; i++) {
-			int socket = i+1;
-			stats[i] = new EnergyStats(socket, Arrays.copyOfRange(energy,lo,hi));
-			lo += ArchSpec.NUM_STATS_PER_SOCKET;
-			hi += ArchSpec.NUM_STATS_PER_SOCKET;
-		}
-
-		return stats;
+		String energyString = EnergyMonitor.energyStatCheck(0);
+		Instant birthday = Instant.now();
+		EnergyStats[] objects = EnergyStringParser.toObjectArray(energyString);
+		for (EnergyStats e : objects) e.setTimestamp(birthday);
+		return objects;
 	}
 
 	public double[] getPrimitiveSample()
 	{
-		return EnergyCheckUtils.getEnergyStats();
+		String energyString = EnergyMonitor.energyStatCheck(0);
+		return EnergyStringParser.toPrimitiveArray(energyString);
 	}
 	
 	public double[] getPrimitiveSample(int socket)
-	{
-		int lo = socket-1;
-		int hi = lo + ArchSpec.NUM_SOCKETS;
-		return Arrays.copyOfRange(EnergyCheckUtils.getEnergyStats(),lo,hi);
+	{ 
+		String energyString = EnergyMonitor.energyStatCheck(socket);
+		return EnergyStringParser.toPrimitiveArray(energyString);
 	}
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws InterruptedException
 	{
 		SyncEnergyMonitor monitor = new SyncEnergyMonitor();
 		monitor.init();
 
-		EnergyStats before = monitor.getObjectSample(1);
+		int socket = 1;
+		EnergyStats before = monitor.getObjectSample(socket);
 		EnergyStats after;
 		EnergyDiff diff;
 		for (int i = 0; i < 1000; i++) {
-			//try { Thread.sleep(40); }
-			//catch (Exception e) { e.printStackTrace(); }
-			after = monitor.getObjectSample(1);
+			try { Thread.sleep(40); }
+			catch (Exception e) { e.printStackTrace(); }
+			after = monitor.getObjectSample(socket);
 			diff = EnergyDiff.between(before, after);
-			before = after;
 			System.out.println(diff.dump());
+			before = after;
 		}
 
 		monitor.dealloc();

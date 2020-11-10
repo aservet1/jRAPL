@@ -70,7 +70,7 @@ uint64_t read_msr(int fd, uint64_t which)
 	uint64_t data = 0;
 
 	if ( pread(fd, &data, sizeof data, which) != sizeof data ) {
-	  printf("ERROR read_msr(): pread error!\n");
+	  fprintf(stderr,"ERROR read_msr(): pread error!\n");
 	}
 
 	return data;
