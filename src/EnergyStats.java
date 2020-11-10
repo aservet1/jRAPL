@@ -36,7 +36,6 @@ public final class EnergyStats extends EnergySample
 		return super.dump();
 	}
 
-
 	@Override
 	public String toString() {
 		return super.toString();

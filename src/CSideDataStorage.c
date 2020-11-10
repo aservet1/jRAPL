@@ -35,7 +35,8 @@ newLinkedList() {
 	LinkedList* list = malloc(sizeof(LinkedList));
 	list->head = node;
 	list->tail = node;
-	list->nElemsAtTail = 0;
+	list->nItemsAtTail = 0;
+	list->nItems = 0;
 	return list;
 }
 
@@ -58,12 +59,13 @@ freeLinkedList(LinkedList* l) {
 void
 addItem_LinkedList(LinkedList* l, EnergyStats stats) { // add to tail
 
-	if (l->nElemsAtTail == NODE_CAPACITY) {
+	if (l->nItemsAtTail == NODE_CAPACITY) {
 		l->tail->next = newLinkNode();
 		l->tail = l->tail->next;
-		l->nElemsAtTail = 0;
+		l->nItemsAtTail = 0;
 	}
-	l->tail->items[l->nElemsAtTail++] = stats;
+	l->tail->items[l->nItemsAtTail++] = stats;
+	l->nItems++;
 		
 }
 
@@ -94,12 +96,12 @@ writeToFile_LinkedList(FILE* outfile, LinkedList* l) {
 	LinkNode* current = l->head;
 	while(current != NULL) {
 		int upperbound = (current == l->tail) ?
-			(l->nElemsAtTail) : (NODE_CAPACITY);
+			(l->nItemsAtTail) : (NODE_CAPACITY);
 		for (int i = 0; i < upperbound; i++) {
 			char ener_string[512];
 			energy_stats_csv_string(current->items[i], ener_string);
 			fprintf(outfile,"%s\n",ener_string);
-		} // printf(" --\n"); // delimits between the contents of each node (keep for debugging purposes)
+		} printf(" --\n"); // delimits between the contents of each node (keep for debugging purposes)
 		current = current->next;
 	}
 }

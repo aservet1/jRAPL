@@ -101,7 +101,7 @@ public abstract class EnergySample
 					Duration.between(
 							Instant.EPOCH,
 							timestamp
-						).toNanos()
+						).toNanos()/1000 //microseconds
 					)
 		);
 
@@ -124,7 +124,10 @@ public abstract class EnergySample
 		if (CORE_INDEX != -1) labeledStats += "Core: " + String.format("%.4f", stats[CORE_INDEX]) + ", ";
 
 		if (labeledStats.length() == 0) labeledStats = "No power domains supported, ";
-		String timestampString = (timestamp == null) ? ("null") : ("Timestamp (nanoseconds since epoch): " + Duration.between(Instant.EPOCH, timestamp).toMillis());
+		String timestampString = (timestamp == null) ? ("null")
+								: ("Timestamp (usecs since epoch): " 
+									+ Duration.between(Instant.EPOCH, timestamp)
+									.toNanos()/1000);
 
 		return String.format("Socket: %d, ", socket) + labeledStats + timestampString; 
 	}

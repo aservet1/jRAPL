@@ -1,8 +1,11 @@
 package jrapl;
 
 import java.util.Arrays;
+import java.time.Duration;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
 
 public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor implements AsyncMonitor 
 {
@@ -89,7 +92,7 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor implements Async
 		long[] usecValues = lastKTimestamps(k);
 		Instant[] instantValues = new Instant[usecValues.length];
 		for (int i = 0; i < usecValues.length; i++)
-			instantValues[i] = Instant.ofEpochMilli(usecValues[i]/1000);
+			instantValues[i] = Instant.EPOCH.plus(usecValues[i], ChronoUnit.MICROS);
 		return instantValues;
 	}
 
@@ -107,7 +110,8 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor implements Async
 
 	public static void main(String[] args)
 	{
-		AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
+		//AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
+		AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"LINKED_LIST");
 		a.init();
 
 		a.start();
@@ -116,10 +120,12 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor implements Async
 
 		a.writeToFile(null);
 		int k = 5;
-		System.out.println(Arrays.deepToString(a.getLastKSamples_Objects(k)));
+		EnergyStats[][] estats = a.getLastKSamples_Objects(k);
+		for (EnergyStats[] es : estats) System.out.println(Arrays.deepToString(es));
 		System.out.println();
-		System.out.println(Arrays.toString(a.getLastKTimestamps(k)));
-		System.out.println(a.getLifetime());
+		Instant[] timestamps = a.getLastKTimestamps(k);
+		for (Instant ts : timestamps) System.out.println(Duration.between(Instant.EPOCH, ts).toNanos()/1000);
+		System.out.println(a.getLifetime().toMillis());
 
 		a.dealloc();
 	}

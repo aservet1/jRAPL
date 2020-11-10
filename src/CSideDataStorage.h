@@ -13,7 +13,8 @@ typedef struct LinkNode {
 typedef struct LinkedList {
 	LinkNode* head;
 	LinkNode* tail;
-	int nElemsAtTail;
+	int nItemsAtTail;
+	int nItems;
 	// only tail node can have variable items, so only track them. all other ones are full to NODE_CAPACITY
 } LinkedList;
 

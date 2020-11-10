@@ -132,26 +132,90 @@ void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath){
 	if (filepath) fclose(outfile);
 }
 
-void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats return_array[]) {
+
+// for some reason return_array needs to be allocated on the heap, passing a
+//  stack-allocated array copies everything into the array, but then alters
+//  the pointer to something that segfaults when you try to access it. but this
+//  fills and works just fine when it's heap-allocated
+//
+// Ok so sometimes it works fine when stack-allocated but still...leave this
+//  note here until you find out what's going on / how to prevent the issue
+//  from happening
+void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats* return_array) {
+
+	int nItems = (
+		(USING_DYNAMIC_ARRAY) ?
+		monitor->samples_dynarr->nItems : monitor->samples_linklist->nItems
+	);
+
+	int start = nItems-k;
+
+	if (start < 0) {
+		start = 0;
+		k = nItems;
+	}
+	
+	int returnArrayIndex = 0;
+
 	if (USING_DYNAMIC_ARRAY) {
-		int start = monitor->samples_dynarr->nItems-k;
-		int arrayIndex = 0;
-
-		if (start < 0) {
-			start = 0;
-			k = monitor->samples_dynarr->nItems;
+		for (int i = start; i < monitor->samples_dynarr->nItems; i++) {
+			return_array[returnArrayIndex++] = monitor->samples_dynarr->items[i];
 		}
-
-		for (int i = start; i < monitor->samples_dynarr->nItems; i++)
-			return_array[arrayIndex++] = monitor->samples_dynarr->items[i];
-
-		return;
-
 	}
-	else if (USING_LINKED_LIST) {
-		//int numNodes = LINKLIST_NUM_NODES(monitor->samples_linklist);
 
+	if (USING_LINKED_LIST) { // turns out extracting lastK from this type of data structure is a but tricky...
+		LinkedList* list = monitor->samples_linklist;
+		// find which node contains last k'th element (the same as the start'th element)
+		LinkNode* current = list->head;
+		int current_upperbound = NODE_CAPACITY;
+		while (current_upperbound < start) {
+			current = current->next;
+			current_upperbound += NODE_CAPACITY;
+		}
+		// copy over the relevant parts of this node
+		current_upperbound = (current == list->tail) ? list->nItemsAtTail : NODE_CAPACITY;
+
+		for (int i = start % NODE_CAPACITY ; i < current_upperbound; i++) {
+			return_array[returnArrayIndex++] = current->items[i];
+		}
+		current = current->next;
+		while (current != NULL) {
+			current_upperbound = (current != list->tail)
+				? NODE_CAPACITY
+				: list->nItemsAtTail;
+			for ( int i = 0; i < current_upperbound; i++ ) {
+				return_array[returnArrayIndex++] = current->items[i];
+			}
+			current = current->next;
+		}
 	}
+	//printf("return_array at end of function: %p\n",return_array);
+
+	//if (USING_DYNAMIC_ARRAY) {
+	//	int start = monitor->samples_dynarr->nItems-k;
+	//	int arrayIndex = 0;
+
+	//	if (start < 0) {
+	//		start = 0;
+	//		k = monitor->samples_dynarr->nItems;
+	//	}
+
+	//	for (int i = start; i < monitor->samples_dynarr->nItems; i++)
+	//		return_array[arrayIndex++] = monitor->samples_dynarr->items[i];
+
+	//	return;
+
+	//}
+	//else if (USING_LINKED_LIST) {
+
+	//	int upperbound = NODE_CAPACITY;
+	//	LinkNode* current = monitor->samples_linklist->head;
+	//	while ( upperbound < k ) {
+	//		current = current->next;
+	//		upperBound += NODE_CAPACITY;
+	//	}	
+
+	//}
 }
 
 

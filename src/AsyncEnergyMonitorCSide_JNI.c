@@ -1,5 +1,6 @@
 #include <jni.h>
 #include <stdio.h>
+//#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include "EnergyStats.h"
@@ -47,10 +48,15 @@ Java_jrapl_AsyncEnergyMonitorCSide_writeToFileFromC(JNIEnv* env, jclass jcls, co
 JNIEXPORT jstring JNICALL
 Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int k)
 {
-	assert( k < monitor->samples_dynarr->nItems );
+	if (monitor->samples_dynarr) assert( k < monitor->samples_dynarr->nItems );
+	if (monitor->samples_linklist) assert( k < monitor->samples_linklist->nItems );
 
 	EnergyStats samples[k];
+	//EnergyStats* samples = (EnergyStats*)malloc(sizeof(EnergyStats)*k);
+	
+	printf("samples pre-get:  %p\n",samples);
 	lastKSamples(k, monitor, samples);
+	printf("samples post-get: %p\n",samples);
 
 	char sample_strings[512*(k+1)];
 	bzero(sample_strings, 512*(k+1));
@@ -68,7 +74,7 @@ Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int k)
 
 		//printf("string: %s | s_s:%s | offset:%d\n",string,sample_strings,offset);
 	}
-
+	//free(samples);
 	return (*env)->NewStringUTF(env, sample_strings);	
 }
 
