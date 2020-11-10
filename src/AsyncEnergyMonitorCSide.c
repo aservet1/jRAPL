@@ -149,7 +149,7 @@ void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats return_array[]
 
 	}
 	else if (USING_LINKED_LIST) {
-		int numNodes = LINKLIST_NUM_NODES(monitor->samples_linklist);
+		//int numNodes = LINKLIST_NUM_NODES(monitor->samples_linklist);
 
 	}
 }

@@ -24,13 +24,13 @@ int main(int argc, const char* argv[])
 	energy_stats_to_string(stats[0],ener_string);
 	printf("%s\n",ener_string);
 	//AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,DYNAMIC_ARRAY_STORAGE);
-	////AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,LINKED_LIST_STORAGE);
-	//start(m);
-	////sleep_print(3);
+	AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,LINKED_LIST_STORAGE);
+	start(m);
+	sleep_print(3);
 	//sleep(5);
-	//stop(m);
-	//writeToFile(m,NULL);
-	//freeAsyncEnergyMonitor(m);
+	stop(m);
+	writeToFile(m,NULL);
+	freeAsyncEnergyMonitor(m);
 
 	ProfileDealloc();
 }
