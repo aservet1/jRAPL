@@ -1,0 +1,12 @@
+re do the run time tests
+re do the dacapo tests
+refactor the thread comparisons
+
+java micro bench mark harness
+
+
+
+barrier or atomic to synchronize the thread
+
+
+test for precision or for overhead?
