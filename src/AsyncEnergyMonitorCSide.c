@@ -47,7 +47,7 @@ AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, int storageType)
 	monitor->samplingRate = samplingRate;
 	monitor->storageType = storageType;
 	if (USING_DYNAMIC_ARRAY) {
-		monitor->samples_dynarr = newDynamicArray(16);
+		monitor->samples_dynarr = newDynamicArray(64);
 		monitor->samples_linklist = NULL;
 	}
 	if (USING_LINKED_LIST) {

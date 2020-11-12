@@ -51,8 +51,12 @@ freeLinkedList(LinkedList* l) {
 		prev = current;
 		current = current->next;
 	}
+	free(prev);
+	//free(l->head);
+	//free(l->tail);
 	l->head = NULL;
 	l->tail = NULL;
+	free(l);
 	l = NULL;
 }
 
