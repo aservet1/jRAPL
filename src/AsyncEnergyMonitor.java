@@ -15,9 +15,15 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		else return null;
 	}
 
-	public abstract void start();
+	public void start()
+	{
+		monitorStartTime = Instant.now();
+	}
 
-	public abstract void stop();
+	public void stop()
+	{
+		monitorStopTime = Instant.now();
+	}
 
 	public abstract String toString();
 

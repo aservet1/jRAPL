@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.io.FileWriter;
 
 import java.time.Instant;
@@ -61,6 +63,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*/
 	public void start()
 	{
+		super.start();
 		t = new Thread(this);
 		t.start();
 	}
@@ -70,6 +73,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*/
 	public void stop()
 	{
+		super.stop();
 		exit = true;
 		try {
 			 t.join();
@@ -163,11 +167,32 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*/
 	public void writeToFile(String fileName)
 	{
-		FileWriter writer = null;
+		BufferedWriter writer = null;
 		try {
-			writer = new FileWriter(new File(fileName));
-			writer.write(this.toString());
-			writer.close();
+			writer = new BufferedWriter ( // write to stdout if filename is null
+									(fileName == null)
+										? new OutputStreamWriter(System.out)
+										: new FileWriter(new File(fileName))
+									);
+
+			writer.write("samplingRate: " + samplingRate + " milliseconds\n");
+			writer.write("socket,"+ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]+",timestamp(usec since epoch)\n");
+			for (int i = 0; i < samples.size(); i++) {
+				String energyString = samples.get(i);
+				String[] perSocketStrings = energyString.split("@");
+				long usecs = Duration.between(Instant.EPOCH, timestamps.get(i)).toNanos()/1000;
+				for (int _i = 0; _i < perSocketStrings.length; _i++) {
+					int socket = _i+1;
+					writer.write(
+						Integer.toString(socket) + "," 
+						+ perSocketStrings[_i] + "," 
+						+ Long.toString(usecs) + "\n"
+					);
+				}
+			}
+			writer.flush();
+			if (fileName != null)
+				writer.close(); // only close if you were writing to an actual file, otherwise you would be closing System.out
 		} catch (IOException e) {
 			System.out.println("error writing " + fileName);
 			e.printStackTrace();
@@ -175,30 +200,14 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	}
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
-	*	CSV format of all data collected. First two lines are the sampling rate and a header describing which power domain
-	*	each column's energy samples represent
-	*	<br>Format:
-	*	<br>  samplingRate: xxx milliseconds
-	*	<br>  socket,dram,gpu,core,pkg
-	*	<br>  x,xxx,xxx,xxx,xxx
-	*	@return CSV version of the data stored in the object
 	*/
 	public String toString()
 	{
 		String s = "";
 		s += "samplingRate: " + samplingRate + " milliseconds\n";
-		s += "socket,"+ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]+",timestamp(usec since epoch)";
-		for (int i = 0; i < samples.size(); i++) {
-			String energyString = samples.get(i);
-			String[] perSocketStrings = energyString.split("@");
-			long usecs = Duration.between(Instant.EPOCH, timestamps.get(i)).toNanos()/1000;
-			for (int _i = 0; _i < perSocketStrings.length; _i++) {
-				int socket = _i+1;
-				s += Integer.toString(socket) + "," 
-					+ perSocketStrings[_i] + "," 
-					+ Long.toString(usecs) + "\n";
-			}
-		}
+		s += "lifetime: " + Long.toString(getLifetime().toMillis()) + " milliseconds\n";
+		s += "number of samples: " + Integer.toString(getNumReadings()) + "\n";
+
 		return s;
 	}
 
@@ -213,6 +222,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		aemonj.stop();
 
 		System.out.println(aemonj);
+		//aemonj.writeToFile("tmep");
 		int k = 5;
 		System.out.println(Arrays.deepToString(aemonj.getLastKSamples_Arrays(k)));
 		System.out.println();
