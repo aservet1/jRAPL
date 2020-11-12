@@ -66,13 +66,15 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	
 	public void start()
 	{
-		monitorStartTime = Instant.now();
+		//monitorStartTime = Instant.now();
+		super.start();
 		startCollecting();
 	}
 
 	public void stop()
 	{
-		monitorStopTime = Instant.now();
+		//monitorStopTime = Instant.now();
+		super.stop();
 		stopCollecting();
 	}
 
