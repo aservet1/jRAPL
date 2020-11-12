@@ -119,12 +119,14 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 
 		a.writeToFile(null);
 		int k = 5;
-		EnergyStats[][] estats = a.getLastKSamples_Objects(k);
-		for (EnergyStats[] es : estats) System.out.println(Arrays.deepToString(es));
-		System.out.println();
-		Instant[] timestamps = a.getLastKTimestamps(k);
-		for (Instant ts : timestamps) System.out.println(Duration.between(Instant.EPOCH, ts).toNanos()/1000);
-		System.out.println(a.getLifetime().toMillis());
+		double[][] lastK = a.getLastKSamples_Arrays(k);
+		for (double[] d : lastK) System.out.println(Arrays.toString(d));
+		//EnergyStats[][] estats = a.getLastKSamples_Objects(k);
+		//for (EnergyStats[] es : estats) System.out.println(Arrays.deepToString(es));
+		//System.out.println();
+		//Instant[] timestamps = a.getLastKTimestamps(k);
+		//for (Instant ts : timestamps) System.out.println(Duration.between(Instant.EPOCH, ts).toNanos()/1000);
+		//System.out.println(a.getLifetime().toMillis());
 
 		a.dealloc();
 	}

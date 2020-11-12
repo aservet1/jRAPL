@@ -1,6 +1,5 @@
 #include <jni.h>
 #include <stdio.h>
-//#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include "EnergyStats.h"
@@ -54,9 +53,7 @@ Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int k)
 	EnergyStats samples[k];
 	//EnergyStats* samples = (EnergyStats*)malloc(sizeof(EnergyStats)*k);
 	
-	printf("samples pre-get:  %p\n",samples);
 	lastKSamples(k, monitor, samples);
-	printf("samples post-get: %p\n",samples);
 
 	char sample_strings[512*(k+1)];
 	bzero(sample_strings, 512*(k+1));
@@ -72,7 +69,6 @@ Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int k)
 		memcpy(sample_strings + offset, string, string_len);
 		offset += string_len;
 
-		//printf("string: %s | s_s:%s | offset:%d\n",string,sample_strings,offset);
 	}
 	//free(samples);
 	return (*env)->NewStringUTF(env, sample_strings);	
