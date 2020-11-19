@@ -21,10 +21,12 @@ public class BenchmarkingEnergy
 		}
 	}
 
-	public static void printDiffs(EnergyReadings data, String name, int index){ //if data != null, prints all the changes in the values from the energyStats in data followed by a summary of the totals, else prints nothing
-		if(data == null){
-			return;
-		}
+	public static void printDiffs(EnergyReadings data, String name, int index) {
+		// if data != null, prints all the changes in the values from the 
+		//   energyStats arrays in data followed by a summary of the totals,
+		//   else prints nothing
+		if(data == null) return;
+		
 		Instant timeAtLastNonZero = data.times[0];
 		Instant timeAtThisNonZero = null;
 		long totalTime = 0;
@@ -54,17 +56,20 @@ public class BenchmarkingEnergy
 				lastNonZero += 1;
 			}
 		}
-		System.out.println(name + " totals: " + totalEnergy + " " + totalNonZero + " " + totalTime + " " + data.times.length);
+		System.out.println(name + " totals: " + totalEnergy
+							+ " " + totalNonZero + " " + totalTime
+							+ " " + data.times.length);
 	}
 
-	public static EnergyReadings getReadings(int iters){ //Runs the SyncMonitor.getPrimitiveSample() function `iter` number of times and return the array of the readings
+	public static EnergyReadings getReadings(int iters) {
+	//Runs the SyncMonitor.getPrimitiveSample() function `iter` number of times and return the array of the readings
 		SyncEnergyMonitor monitor = new SyncEnergyMonitor();
 		monitor.init();
 
 		EnergyReadings data = new EnergyReadings(iters);
 		int i = 0;
 		while(i < iters) {
-			data.energyStats[i] = monitor.getPrimitiveSample(); //@TODO make this SyncEnergyMonitor.getPrimitiveSample()
+			data.energyStats[i] = monitor.getPrimitiveSample();
 			data.times[i] = Instant.now();
 			i++;
 		}
