@@ -47,21 +47,57 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		return EnergyStringParser.toPrimitiveArray(energyString);
 	}
 
+	// returns a[i] - b[i] for i in range(len(a)), where len(a) == len(b)
+	// @TODO consider whether this class is the best place to hold this function
+	// This method would probably be ok living in here, but consider outsourcing
+	// if you can find something more appropriate for where this guy will live
+	public static double[] subtractPrimitiveSamples(double[] a, double[] b)
+	{
+		assert ( a.length == b.length );
+		double[] diff = new double[a.length];
+		for (int i = 0; i < diff.length; i++) {
+			diff[i] = a[i] - b[i];
+			if (diff[i] < 0)
+				diff[i] += ArchSpec.RAPL_WRAPAROUND;
+		}
+
+		return diff;
+	}
+
+	// @TODO consider whether this class is the best place to hold this function
+	// This method would probably be ok living in here, but consider outsourcing
+	// if you can find something more appropriate for where this guy will live
+	// returns string-joined version of a: a[1],a[2],...,a[n]
+	public static String dumpPrimitiveArray(double[] a)
+	{
+		String s = new String();
+		int i; for (i = 0; i < a.length-1; i++) {
+			s += String.format("%4f",a[i]) + ",";
+		} s += String.format("%4f",a[i]);
+		return s;
+	}
+
 	public static void main(String[] args) throws InterruptedException
 	{
 		SyncEnergyMonitor monitor = new SyncEnergyMonitor();
 		monitor.init();
 
 		int socket = 1;
-		EnergyStats before = monitor.getObjectSample(socket);
-		EnergyStats after;
-		EnergyDiff diff;
+		//EnergyStats before = monitor.getObjectSample(socket);
+		//EnergyStats after;
+		//EnergyDiff diff;
+		double[] before = monitor.getPrimitiveSample();
+		double[] after;
+		double[] diff;
 		for (int i = 0; i < 1000; i++) {
-			try { Thread.sleep(40); }
+			try { Thread.sleep(57); }
 			catch (Exception e) { e.printStackTrace(); }
-			after = monitor.getObjectSample(socket);
-			diff = EnergyDiff.between(before, after);
-			System.out.println(diff.dump());
+			//after = monitor.getObjectSample(socket);
+			//diff = EnergyDiff.between(before, after);
+			after = monitor.getPrimitiveSample();
+			diff = SyncEnergyMonitor.subtractPrimitiveSamples(after,before);
+			System.out.println(dumpPrimitiveArray(diff));
+			//System.out.println(diff.dump());
 			before = after;
 		}
 
