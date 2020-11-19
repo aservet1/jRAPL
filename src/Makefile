@@ -31,8 +31,6 @@ JAVA_USERFILES =							\
 											\
 			EnergyStringParser.java			\
 											\
-			EnergyCheckUtils.java			\
-											\
 			EnergyController.java			\
 			DvfsEnergyController.java		\
 			PowercapEnergyController.java	\
