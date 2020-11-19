@@ -63,10 +63,11 @@ Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int k)
 		EnergyStats e = samples[i];
 		char string[512];
 		energy_stats_to_string(e,string);
-		sprintf(string,"%s_", string);
+		char string2[512+10];
+		sprintf(string2,"%s_", string);
 		
-		int string_len = strlen(string); // +1 for the _ added in %s_
-		memcpy(sample_strings + offset, string, string_len);
+		int string_len = strlen(string2); // +1 for the _ added in %s_
+		memcpy(sample_strings + offset, string2, string_len);
 		offset += string_len;
 
 	}
