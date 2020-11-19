@@ -51,7 +51,7 @@ public class BenchmarkingEnergy
 				totalEnergy += reading;
 				timeAtLastNonZero = timeAtThisNonZero;
 				before = after;
-		}
+			}
 			else{
 				lastNonZero += 1;
 			}
@@ -61,8 +61,9 @@ public class BenchmarkingEnergy
 							+ " " + data.times.length);
 	}
 
+	//Runs the SyncMonitor.getPrimitiveSample() function `iter` number of times
+	// and return the array of the readings
 	public static EnergyReadings getReadings(int iters) {
-	//Runs the SyncMonitor.getPrimitiveSample() function `iter` number of times and return the array of the readings
 		SyncEnergyMonitor monitor = new SyncEnergyMonitor();
 		monitor.init();
 
@@ -78,20 +79,20 @@ public class BenchmarkingEnergy
 		return data;
 	}
 
-	public static void DramCorePackageStats(int iters)
+	public static void DramGpuCorePackageStats(int iters)
 	{
 		EnergyReadings data = getReadings(iters);
-		printDiffs(data, "DRAM", 0);
-		printDiffs(data, "CORE", 1);
-		printDiffs(data, "PACKAGE", 2);
-		EnergyManager.profileDealloc();
+		if(ArchSpec.DRAM_ARRAY_INDEX != -1)	printDiffs(data, "DRAM", ArchSpec.DRAM_ARRAY_INDEX);
+		if(ArchSpec.GPU_ARRAY_INDEX != -1)	printDiffs(data, "GPU", ArchSpec.GPU_ARRAY_INDEX);
+		if(ArchSpec.CORE_ARRAY_INDEX != -1)	printDiffs(data, "CORE", ArchSpec.CORE_ARRAY_INDEX);
+		if(ArchSpec.PKG_ARRAY_INDEX != -1)	printDiffs(data, "PKG", ArchSpec.PKG_ARRAY_INDEX);
 	}
 
 
 	private static void usageAbort() {
 		System.out.println(
-				"\nusage: sudo java jrapltesting.BenchmarkingEnergy <options> <number of iterations>" +
-				"\n  options:" +
+				"\nusage: sudo java jrapltesting.BenchmarkingEnergy <option> <number of iterations>" +
+				"\n  option:" +
 				"\n    --read-energy-values"
 			);
 		System.exit(2);
@@ -115,7 +116,7 @@ public class BenchmarkingEnergy
 		manager.init();
 		
 		if(args[0].equals("--read-energy-values")){ //Timing and reading energy register
-			DramCorePackageStats(iterations);
+			DramGpuCorePackageStats(iterations);
 		} else {
 			manager.dealloc();
 			usageAbort();
