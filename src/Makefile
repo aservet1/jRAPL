@@ -17,6 +17,7 @@ OFILES = $(CFILES:.c=.o)
 JAVA_TESTFILES =					\
 			RuntimeTestUtils.java	\
 			GeneralTestDriver.java	\
+			BenchmarkingEnergy.java	\
 
 JAVA_USERFILES =							\
 			ArchSpec.java 					\

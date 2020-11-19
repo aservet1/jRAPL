@@ -48,77 +48,6 @@ public class RuntimeTestUtils
 			System.out.println(name + ": " + results[i]);
 	}
 
-	/* Runs all the native calls x amount of times. Assumes they're being timed
-		and are printing results on the C side of things
-	*/
-	// index can be 0 (DRAM), 2 (CORE), 3 (PACKAGE) -- index from getenergyStats()
-	// name should store the identifier for each line
-	// iters is the number of iterations
-	public static class EnergyReadings{
-		public double[][] energyStats;
-		public Instant times[];
-
-		public EnergyReadings(int iters){
-			energyStats = new double[iters][3];
-			times = new Instant[iters];
-		}
-	}
-
-	public static void printDiffs(EnergyReadings data, String name, int index){ //if data != null, prints all the changes in the values from the energyStats in data followed by a summary of the totals, else prints nothing
-		if(data == null){
-			return;
-		}
-		Instant timeAtLastNonZero = data.times[0];
-		Instant timeAtThisNonZero = null;
-		long totalTime = 0;
-		long timeDiff = 0;
-		double[] before = data.energyStats[0];
-		double[] after = null;
-		int lastNonZero = 0;
-		int totalNonZero = 0;
-		double reading = 0;
-		double totalEnergy = 0;
-
-		for(int i = 1; i < data.times.length; i++){
-			after = data.energyStats[i];
-			reading = after[index] - before[index];
-			if(reading != 0){
-				timeAtThisNonZero = data.times[i];
-				timeDiff = Duration.between(timeAtLastNonZero, timeAtThisNonZero).toNanos() / 1000;
-				System.out.println(name + " " + reading + " " + timeDiff + " " + lastNonZero);
-				totalTime += timeDiff;
-				lastNonZero = 0;
-				totalNonZero += 1;
-				totalEnergy += reading;
-				timeAtLastNonZero = timeAtThisNonZero;
-				before = after;
-		}
-			else{
-				lastNonZero += 1;
-			}
-		}
-		System.out.println(name + " totals: " + totalEnergy + " " + totalNonZero + " " + totalTime + " " + data.times.length);
-	}
-	public static EnergyReadings getReadings(int iters){ //Runs the getEnergyStats function `iter` number of times
-		EnergyReadings data = new EnergyReadings(iters);
-		int i = 0;
-		while(i < iters) {
-			data.energyStats[i] = EnergyCheckUtils.getEnergyStats();
-			data.times[i] = Instant.now();
-			i++;
-		}
-		return data;
-	}
-
-	public static void DramCorePackageStats(int iters)
-	{
-		EnergyReadings data = getReadings(iters);
-		printDiffs(data, "DRAM", 0);
-		printDiffs(data, "CORE", 1);
-		printDiffs(data, "PACKAGE", 2);
-		EnergyManager.profileDealloc();
-	}
-
 	/** Allocs relevant C side memory and sets up variables */
 	public native static void InitCSideTiming();
 	/** Deallocs relevant C side memory */
@@ -183,14 +112,13 @@ public class RuntimeTestUtils
 	}
 
 
-	private static void usage_message_abort() {
+	private static void usageAbort() {
 		System.out.println(
 				"\nusage: sudo java jrapltesting.RuntimeTestUtils <options> <number of iterations>" +
 				"\n  options:" +
 				"\n    --time-java-calls" +
 				"\n    --time-native-calls" +
-				"\n    --time-msr-readings" +
-				"\n    --read-energy-values"
+				"\n    --time-msr-readings"
 			);
 		System.exit(2);
 	}
@@ -203,7 +131,6 @@ public class RuntimeTestUtils
 	*			--time-java-calls, which does the runtime of native calls from Java
 	*			--time-native-calls, which does the runtime of native calls directly in C
 	*			--time-msr-readings, which times how long it takes to access each MSR register when reading the energy consumption of each power domain
-	*			--read-energy-values ******@TODO THIS STUFF SHOULD BE IN ITS OWN CLASS SINCE IT'S DACAPO ENERGY, NOT RUNTIME TEST
 	*		NUM_ITERATIONS is the number of trials to run any of these options
 	*/
 	public static void main(String[] args)
@@ -213,12 +140,14 @@ public class RuntimeTestUtils
 
 		int iterations;
 		if(args.length != 2) {
-			usage_message_abort();
+			manager.dealloc();
+			usageAbort();
 		}
 		try {
 			iterations = Integer.parseInt(args[1]);
 		} catch(NumberFormatException e){
-			System.out.println("Illegal value for NUM_ITERATIONS");
+			System.out.println("Illegal value for <number of iterations>");
+			usageAbort();
 			return;
 		}
 
@@ -227,9 +156,6 @@ public class RuntimeTestUtils
 			timeMethodMultipleIterations(ArchSpec::getSocketNum, "getSocketNum()", iterations);
 			//timeMethodMultipleIterations(EnergyMonitor::energyStatCheck, "energyStatCheck()", iterations);
 			timeMethodMultipleIterations(EnergyManager::profileDealloc, "profileDealloc()", iterations);
-		}
-		else if(args[0].equals("--read-energy-values")){ //Timing and reading energy register
-			DramCorePackageStats(iterations);
 		}
 		else if(args[0].equals("--time-native-calls")){
 			InitCSideTiming();
@@ -243,7 +169,7 @@ public class RuntimeTestUtils
 		}
 		else {
 			manager.dealloc();
-			usage_message_abort();
+			usageAbort();
 		}
 
 		manager.dealloc();
