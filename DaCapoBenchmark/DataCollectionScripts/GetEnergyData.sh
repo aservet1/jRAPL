@@ -47,7 +47,7 @@ mkdir -p $outputdir
 
 cd ../src/
 
-sudo java jrapl.RuntimeTestUtils --read-energy-values $2 >../DaCapoBenchmark/$outputdir/Output
+sudo java jrapl.BenchmarkingEnergy --read-energy-values $2 >../DaCapoBenchmark/$outputdir/Output
 
 cd ../DaCapoBenchmark/$outputdir/
 
