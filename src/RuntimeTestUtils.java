@@ -114,8 +114,8 @@ public class RuntimeTestUtils
 
 	private static void usageAbort() {
 		System.out.println(
-				"\nusage: sudo java jrapltesting.RuntimeTestUtils <options> <number of iterations>" +
-				"\n  options:" +
+				"\nusage: sudo java jrapltesting.RuntimeTestUtils <option> <number of iterations>" +
+				"\n  option:" +
 				"\n    --time-java-calls" +
 				"\n    --time-native-calls" +
 				"\n    --time-msr-readings"
