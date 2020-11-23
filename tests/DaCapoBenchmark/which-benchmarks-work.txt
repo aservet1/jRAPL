@@ -1,0 +1,19 @@
+--working--
+xalan
+tradesoap
+tradebeans
+avrova
+fop
+h2
+jython
+luindex
+lusearch
+lusearch-fix
+pmd
+sunflow
+
+--not working--
+eclipse
+batik
+tomcat
+

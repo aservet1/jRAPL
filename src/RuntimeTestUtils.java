@@ -15,6 +15,13 @@ import java.time.Instant;
 */
 public class RuntimeTestUtils
 {
+	/** Allocs relevant C side memory and sets up variables */
+	public native static void initCSideTiming();
+	/** Deallocs relevant C side memory */
+	public native static void deallocCSideTiming();
+
+
+
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Times a method call, returns time in microseconds
 	*	@param method The equivalent of a function pointer in C/C++
@@ -47,16 +54,11 @@ public class RuntimeTestUtils
 		for (i = 0; i < results.length; i++)
 			System.out.println(name + ": " + results[i]);
 	}
-
-	/** Allocs relevant C side memory and sets up variables */
-	public native static void InitCSideTiming();
-	/** Deallocs relevant C side memory */
-	public native static void DeallocCSideTiming();
 	
 	//Runs each function once and returns microseconds
 	public native static long usecTimeProfileInit();
 	public native static long usecTimeGetSocketNum();
-	public native static long usecTimeEnergyStatCheck();
+	public native static long usecTimeEnergyStatCheck(int whichSocket);
 	public native static long usecTimeProfileDealloc();
 	public native static long[] usecTimeMSRRead(int powerDomain);
 
@@ -69,6 +71,7 @@ public class RuntimeTestUtils
 		long[][] coreTimes = new long[iterations][ArchSpec.NUM_SOCKETS];
 		long[][] pkgTimes = new long[iterations][ArchSpec.NUM_SOCKETS];
 		
+		//@TODO what to do if reading from a non power domain supported msr? like no gpu allowed? probably just return -1, right??
 		int dramIndex = 0, gpuIndex = 0, coreIndex = 0, pkgIndex = 0;
 		for (int n = 0; n < iterations; n++) coreTimes[coreIndex++] = usecTimeMSRRead(CORE);
 		for (int n = 0; n < iterations; n++) gpuTimes[gpuIndex++] = usecTimeMSRRead(GPU);
@@ -89,7 +92,7 @@ public class RuntimeTestUtils
 		int profInitIndex = 0, getSocketIndex = 0, energyStatIndex = 0, profDeallocIndex = 0;
 		for (int n = 0; n < iterations; n++) profileInitTimes[profInitIndex++] = usecTimeProfileInit();
 		for (int n = 0; n < iterations; n++) getSocketTimes[getSocketIndex++] = usecTimeGetSocketNum();
-		for (int n = 0; n < iterations; n++) energyStatTimes[energyStatIndex++] = usecTimeEnergyStatCheck();
+		for (int n = 0; n < iterations; n++) energyStatTimes[energyStatIndex++] = usecTimeEnergyStatCheck(0);
 		for (int n = 0; n < iterations; n++) {
 			EnergyManager.profileInit(); // make sure memory is alloc'd first to prevent 'double free' errors
 			profileDeallocTimes[profDeallocIndex++] = usecTimeProfileDealloc();
@@ -158,14 +161,14 @@ public class RuntimeTestUtils
 			timeMethodMultipleIterations(EnergyManager::profileDealloc, "profileDealloc()", iterations);
 		}
 		else if(args[0].equals("--time-native-calls")){
-			InitCSideTiming();
+			initCSideTiming();
 			timeAllCFunctions(iterations);
-			DeallocCSideTiming();
+			deallocCSideTiming();
 		}
 		else if (args[0].equals("--time-msr-readings")){
-			InitCSideTiming();
+			initCSideTiming();
 			timeAllMSRReads(iterations);
-			DeallocCSideTiming();
+			deallocCSideTiming();
 		}
 		else {
 			manager.dealloc();
@@ -175,3 +178,7 @@ public class RuntimeTestUtils
 		manager.dealloc();
 	}
 }
+
+
+
+

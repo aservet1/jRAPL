@@ -1,7 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include <fcntl.h>
-//#include <unistd.h>
 #include<sys/time.h>
 
 #include "arch_spec.h"
@@ -17,7 +16,7 @@ static int num_pkg;
 static int dram_or_gpu;
 static int* fd;
 
-JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_InitCSideTiming(JNIEnv* env, jclass jcls, jint power_domain){
+JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_initCSideTiming(JNIEnv* env, jclass jcls, jint power_domain){
 	num_pkg = getSocketNum();
 	dram_or_gpu = get_power_domains_supported(get_cpu_model(),NULL);
 	fd = (int*)malloc(sizeof(int)*num_pkg);
@@ -27,7 +26,7 @@ JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_InitCSideTiming(JNIEnv
 		fd[i] = open(msr_filename, O_RDWR);
 	}
 }
-JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_DeallocCSideTiming(JNIEnv* env, jclass jcls, jint power_domain){
+JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_deallocCSideTiming(JNIEnv* env, jclass jcls, jint power_domain){
 	free(fd);
 }
 
@@ -83,13 +82,17 @@ JNIEXPORT jlongArray JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeMSRRead(
 
 	switch (powerDomain){
 		case DRAM:
-			if (dram_or_gpu != READ_FROM_DRAM){
+			if (dram_or_gpu != READ_FROM_DRAM_AND_GPU 
+				&& dram_or_gpu != READ_FROM_DRAM)
+			{
 				RETURN_EMPTY_ARRAY;
 			}
 			which_msr = MSR_DRAM_ENERGY_STATUS;
 			break;
 		case GPU:
-			if (dram_or_gpu != READ_FROM_GPU) {
+			if (dram_or_gpu != READ_FROM_DRAM_AND_GPU 
+				&& dram_or_gpu != READ_FROM_GPU)
+			{
 				RETURN_EMPTY_ARRAY;
 			}
 			which_msr = MSR_PP1_ENERGY_STATUS;
@@ -101,6 +104,7 @@ JNIEXPORT jlongArray JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeMSRRead(
 			which_msr = MSR_PKG_ENERGY_STATUS;
 			break;
 		default:
+			fprintf(stderr,"invalid powerDomain for usecTimeMSRREad: %d\n",powerDomain);
 			return NULL;
 	}
 

@@ -1,0 +1,94 @@
+--------------------------
+
+Stats for PKG:
+		
+--------------------------
+
+		Average energy change per non-zero reading: 0.02252016296304107
+
+		Stdev of non-zero readings: 0.004986684548114884
+
+		Average num readings between non-zero readings: 28.51851851851852
+
+		Stdev of num of readings between non-zero readings: 19.19143615442655
+
+		Average time between non-zero readings: 994.074074074074μ
+
+		Stdev of time between non-zero readings: 217.91613577997856μ
+
+		
+
+		Total energy consumed: 3.0402220000105444
+
+		Total time taken: 134200
+--------------------------
+
+Stats for CORE:
+		
+--------------------------
+
+		Average energy change per non-zero reading: 0.0015922434210538672
+
+		Stdev of non-zero readings: 0.0015631671469363575
+
+		Average num readings between non-zero readings: 1.3917464114832536
+
+		Stdev of num of readings between non-zero readings: 1.582067010786166
+
+		Average time between non-zero readings: 80.35526315789474μ
+
+		Stdev of time between non-zero readings: 69.7091030689591μ
+
+		
+
+		Total energy consumed: 2.662231000002066
+
+		Total time taken: 134354
+--------------------------
+
+Stats for GPU:
+		
+--------------------------
+
+		Average energy change per non-zero reading: 0.00011255844155921414
+
+		Stdev of non-zero readings: 0.00021565506844060215
+
+		Average num readings between non-zero readings: 12.896103896103897
+
+		Stdev of num of readings between non-zero readings: 68.93227635792111
+
+		Average time between non-zero readings: 544.2987012987013μ
+
+		Stdev of time between non-zero readings: 2396.476504469962μ
+
+		
+
+		Total energy consumed: 0.026001000000178465
+
+		Total time taken: 125733
+--------------------------
+
+Stats for DRAM:
+		
+--------------------------
+
+		Average energy change per non-zero reading: 0.0013536222222211547
+
+		Stdev of non-zero readings: 0.0005065813554585613
+
+		Average num readings between non-zero readings: 28.51851851851852
+
+		Stdev of num of readings between non-zero readings: 19.19026955386577
+
+		Average time between non-zero readings: 994.074074074074μ
+
+		Stdev of time between non-zero readings: 218.0294937473502μ
+
+		
+
+		Total energy consumed: 0.18273899999985588
+
+		Total time taken: 134200
+--------------------------
+

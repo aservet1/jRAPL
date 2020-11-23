@@ -1,0 +1,48 @@
+--------------------------
+
+Stats for PKG:
+		
+--------------------------
+
+		Average energy change per non-zero reading: 0.018739490740699694
+
+		Stdev of non-zero readings: 0.0034684664564488643
+
+		Average num readings between non-zero readings: 35.638888888888886
+
+		Stdev of num of readings between non-zero readings: 20.83107775951722
+
+		Average time between non-zero readings: 986μ
+
+		Stdev of time between non-zero readings: 111.52687115961878μ
+
+		
+
+		Total energy consumed: 2.023864999995567
+
+		Total time taken: 106488
+--------------------------
+
+Stats for CORE:
+		
+--------------------------
+
+		Average energy change per non-zero reading: 0.0029871548183294902
+
+		Stdev of non-zero readings: 0.0008535575763570181
+
+		Average num readings between non-zero readings: 5.312796208530806
+
+		Stdev of num of readings between non-zero readings: 4.218717025320902
+
+		Average time between non-zero readings: 169.24328593996842μ
+
+		Stdev of time between non-zero readings: 49.66811583861085μ
+
+		
+
+		Total energy consumed: 1.8908690000025672
+
+		Total time taken: 107131
+--------------------------
+

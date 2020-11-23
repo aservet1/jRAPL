@@ -8,7 +8,7 @@ import java.time.Duration;
 
 public class BenchmarkingEnergy
 {
-	// index can be 0 (DRAM), 2 (CORE), 3 (PACKAGE) -- index from getenergyStats()
+	// index corresponds to ArchSpec.[DRAM|CORE|PKG|GPU]_ARRAY_INDEX
 	// name should store the identifier for each line
 	// iters is the number of iterations
 	public static class EnergyReadings{
@@ -126,50 +126,6 @@ public class BenchmarkingEnergy
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

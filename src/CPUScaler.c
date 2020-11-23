@@ -60,7 +60,7 @@ void ProfileInit()
 }
 
 
-static inline double read_Package(int socket)
+static inline double read_Pkg(int socket)
 {
 	double result = read_msr(fd[socket], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
 	return (double) result * rapl_unit.energy;
@@ -102,7 +102,7 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg], int whichSocket)
 	for (int i = start; i < num_pkg; i++)
 	{
 		stats_per_socket[i].socket = i+1;
-		stats_per_socket[i].pkg = read_Package(i);
+		stats_per_socket[i].pkg = read_Pkg(i);
 		stats_per_socket[i].core = read_Core(i);
 
 		switch(power_domains_supported) {
