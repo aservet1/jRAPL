@@ -3,29 +3,7 @@
 #ifndef _ARCH_SPEC_H
 #define _ARCH_SPEC_H
 #include "msr.h"
-
-/**
- * Reference Intel ® 64 and IA-32 Architectures Software Developer’s Manual
- * for those CPUID information (December 2016)
- *
- * Table: CPUID Signature Values of DisplayFamily_DisplayModel
- * Need to add cases for more recent architectures 7th gen onwards - kaby lake and coffee lake
- */
-#define SANDYBRIDGE	0x2AU
-#define SANDYBRIDGE_EP	0x2DU
-#define IVYBRIDGE	0x3AU
-#define SKYLAKE1	0x4EU
-#define SKYLAKE2	0x5EU
-#define HASWELL1	0x3CU
-#define HASWELL2	0x45U
-#define HASWELL3	0x46U
-#define HASWELL_EP	0x3FU
-#define BROADWELL	0xD4U
-#define BROADWELL2	0x4FU
-
-#define APOLLOLAKE	0x5CU //alejandro's computer
-#define COFFEELAKE2	0x9eU // rutvik's first computer
-#define KABYLAKE	0x8eU
+#include "cpu_models.h"
 
 #define CPUID				\
     __asm__ volatile ("cpuid"   	\
@@ -84,20 +62,28 @@ get_cpu_model(void);
 void
 parse_apic_id(cpuid_info_t info_l0, cpuid_info_t info_l1, APIC_ID_t *my_id);
 
-void cpuid(uint32_t eax_in, uint32_t ecx_in, cpuid_info_t *ci);
+void
+cpuid(uint32_t eax_in, uint32_t ecx_in, cpuid_info_t *ci);
 
-cpuid_info_t getProcessorTopology(uint32_t level);
+cpuid_info_t
+getProcessorTopology(uint32_t level);
 
-uint64_t get_num_core_thread();
+uint64_t
+get_num_core_thread();
 
-uint64_t get_num_pkg_thread();
+uint64_t
+get_num_pkg_thread();
 
-uint64_t get_num_pkg_core();
+uint64_t
+get_num_pkg_core();
 
-uint64_t getSocketNum();
+uint64_t
+getSocketNum();
 
-rapl_msr_unit get_rapl_unit();
+rapl_msr_unit
+get_rapl_unit();
 
-int get_power_domains_supported(uint32_t cpu_model, char power_domains_string_buffer[]);
+int 
+get_power_domains_supported(uint32_t cpu_model, char power_domains_string_buffer[]);
 
 #endif
