@@ -1,3 +1,7 @@
+'''
+	Pipe in a '\n'-separated list of numbers and print the average and stdev
+'''
+
 from statistics import mean, stdev
 from sys import stdin
 
