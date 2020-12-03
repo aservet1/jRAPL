@@ -37,6 +37,7 @@ public class RuntimeTestUtils
 		return elapsed;
 	}
 
+
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Times a method multiple times. Stores runtime and then prints all
 	*	readings to standard output, labelled by the method name.
@@ -54,6 +55,7 @@ public class RuntimeTestUtils
 		for (i = 0; i < results.length; i++)
 			System.out.println(name + ": " + results[i]);
 	}
+
 	
 	//Runs each function once and returns microseconds
 	public native static long usecTimeProfileInit();
@@ -61,6 +63,7 @@ public class RuntimeTestUtils
 	public native static long usecTimeEnergyStatCheck(int whichSocket);
 	public native static long usecTimeProfileDealloc();
 	public native static long[] usecTimeMSRRead(int powerDomain);
+
 
 	// @TODO -- NOTE TO SELF: look into why the first MSR read from takes 5-10 long readings (84 ish)
 	// some times and if that's something you can do anything about and if it matters
@@ -83,6 +86,7 @@ public class RuntimeTestUtils
 		printMSRReadTimeRecord(coreTimes, "CORE");
 		printMSRReadTimeRecord(pkgTimes, "PKG");
 	}
+
 
 	public static void timeAllCFunctions(int iterations) {
 		long[] profileInitTimes = new long[iterations];
@@ -155,10 +159,10 @@ public class RuntimeTestUtils
 		}
 
 		if(args[0].equals("--time-java-calls")){ //Java function timing
-			timeMethodMultipleIterations(EnergyManager::profileInit, "profileInit()", iterations);
-			timeMethodMultipleIterations(ArchSpec::getSocketNum, "getSocketNum()", iterations);
-			//timeMethodMultipleIterations(EnergyMonitor::energyStatCheck, "energyStatCheck()", iterations);
-			timeMethodMultipleIterations(EnergyManager::profileDealloc, "profileDealloc()", iterations);
+			timeMethodMultipleIterations(() -> EnergyManager.profileInit(), "profileInit()", iterations);
+			timeMethodMultipleIterations(() -> ArchSpec.getSocketNum(), "getSocketNum()", iterations);
+			timeMethodMultipleIterations(() -> EnergyMonitor.energyStatCheck(0), "energyStatCheck()", iterations);
+			timeMethodMultipleIterations(() -> EnergyManager.profileDealloc(), "profileDealloc()", iterations);
 		}
 		else if(args[0].equals("--time-native-calls")){
 			initCSideTiming();
