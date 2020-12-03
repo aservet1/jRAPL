@@ -1,6 +1,7 @@
 #!/bin/bash
 
 JRAPL_HOME="/home/alejandro/jRAPL"
+RUNTIME_TESTS="$JRAPL_HOME/tests/RuntimeTests"
 cd $JRAPL_HOME/tests/RuntimeTests
 
 sudo modprobe msr
@@ -25,14 +26,22 @@ mkdir -p $outputdir
 
 cd $JRAPL_HOME/src
 
-sudo java jrapltesting.RuntimeTestUtils $flag $trials > $JRAPL_HOME/tests/RuntimeTests/$outputdir/MajorOutput.data
-cd $JRAPL_HOME/tests/RuntimeTests/$outputdir
+warmup_iterations=5
+for (( i=1; i<=$warmup_iterations; i++ ))
+do
+	sudo java jrapltesting.RuntimeTestUtils $flag $trials > /dev/null
+	echo "$flag: warmup iteration done $i/$warmup_iterations"
+done
 
-functions='profileInit getSocketNum energyStatCheck profileDealloc'
+sudo java jrapltesting.RuntimeTestUtils $flag $trials > $RUNTIME_TESTS/$outputdir/MajorOutput.data
+echo "$flag: test done running"
+
+cd $RUNTIME_TESTS/$outputdir
+
+functions='profileInit energyStatCheck profileDealloc' #consider putting 'getSocketNum' back into the list
 
 for f in $functions
 do
-	#echo $f.data
 	file=$f.data
 	grep $f MajorOutput.data > $file
 done
@@ -40,5 +49,6 @@ done
 rm MajorOutput.data
 
 python3 $JRAPL_HOME/tests/RuntimeTests/DataCollectionPrograms/cleanup_data.py
-
 python3 $JRAPL_HOME/tests/RuntimeTests/DataCollectionPrograms/create_graphs.py
+
+echo "$flag: data analysis complete"

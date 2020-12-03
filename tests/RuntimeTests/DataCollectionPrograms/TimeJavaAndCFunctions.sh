@@ -18,3 +18,5 @@ name=$2
 cd RuntimeResults_$2
 
 python3 ../DataCollectionPrograms/bar_graphs.py CFunctions JavaFunctions
+
+echo "done with everything"

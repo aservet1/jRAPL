@@ -91,9 +91,9 @@ keys = list(statdict.keys())
 if(len(keys) != 2):
     print("Too few stats files, I need 2")
     exit(1)
-key1_ind = [item for item in range(4)]
-key2_ind = [(item + 0.35) for item in range(4)]
-xticks = [(item + 0.35/2) for item in range(4)]
+key1_ind = [item for item in range(3)]
+key2_ind = [(item + 0.35) for item in range(3)]
+xticks = [(item + 0.35/2) for item in range(3)]
 p1 = ax.bar(key1_ind, statdict[keys[0]][1], width = 0.35, yerr = statdict[keys[0]][2])
 p2 = ax.bar(key2_ind, statdict[keys[1]][1], width = 0.35,  yerr = statdict[keys[1]][2])
 ax.set_title('Timing comparison for ' + keys[0] + " and " + keys[1])
