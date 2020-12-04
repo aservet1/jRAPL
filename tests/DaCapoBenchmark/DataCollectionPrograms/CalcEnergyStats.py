@@ -34,16 +34,16 @@ for item in datadict.keys():
 	times = datadict[item][0]
 	nonZeros = datadict[item][2]
 
-	meanTime = mean(energies)
-	totalTime = sum(energies)
-	stdevTime = stdev(energies)
+	meanTime = mean(energies) if len(energies) else 0
+	totalTime = sum(energies) if len(energies) else 0
+	stdevTime = stdev(energies) if len(energies) else 0
 
-	meanEnergy = mean(times)
-	totalEnergy = sum(times)
-	stdevEnergy = stdev(times)
+	meanEnergy = mean(times) if len(times) else 0
+	totalEnergy = sum(times) if len(times) else 0
+	stdevEnergy = stdev(times) if len(times) else 0
 
-	meanNonZeros = mean(nonZeros)
-	stdevNonZeros = stdev(nonZeros)
+	meanNonZeros = mean(nonZeros) if len(nonZeros) else 0
+	stdevNonZeros = stdev(nonZeros) if len(nonZeros) else 0
 
 	names = [('Time', 'μs'), ('Energy', 'J'), ('Reads_Btwn_Consecutive_NonZero_Readings','')]
 	i = 0

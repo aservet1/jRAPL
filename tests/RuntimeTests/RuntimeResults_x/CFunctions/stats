@@ -1,0 +1,12 @@
+stats for profileInit:
+mean: 12.26069
+stddev: 261.44671371919185
+--------------------------
+stats for profileDealloc:
+mean: 0.05086
+stddev: 0.2205759436962004
+--------------------------
+stats for energyStatCheck:
+mean: 10.30882
+stddev: 6.415624818364779
+--------------------------

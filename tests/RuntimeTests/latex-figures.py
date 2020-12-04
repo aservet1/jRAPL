@@ -6,24 +6,19 @@ def print_image_template(gp):
 	subdomain=''
 	system=''
 
-	if 'SystemA' in gp:
-		system='SystemA'
-	if 'SystemB' in gp:
-		system='SystemB'
+	system = 'SystemC'
 	if '/CFunctions/' in gp:
 		domain = 'C-Functions'
 	if '/JavaFunctions/' in gp:
 		domain = 'Java-Functions'
 	if '/PerSocketMSRReadings/' in gp:
 		domain = 'Per-Socket-MSR-Readings'
-	if 'ProfileInit' in gp:
-		subdomain='ProfileInit'
-	if 'EnergyStatCheck' in gp:
-		subdomain='EnergyStatCheck'
-	if 'GetSocketNum' in gp:
-		subdomain = 'GetSocketNum'
-	if 'ProfileDealloc' in gp:
-		subdomain = 'ProfileDealloc'
+	if 'profileInit' in gp:
+		subdomain='profileInit'
+	if 'energyStatCheck' in gp:
+		subdomain='energyStatCheck'
+	if 'profileDealloc' in gp:
+		subdomain = 'profileDealloc'
 	if 'PACKAGE' in gp:
 		subdomain = 'PACKAGE'
 	if 'CORE' in gp:
@@ -45,9 +40,9 @@ def print_image_template(gp):
 
 
 '''------------------------------------'''
-file=open(argv[1],'r')
-graphpaths=file.readlines()
-file.close()
+fh=open(argv[1],'r')
+graphpaths=fh.readlines()
+fh.close()
 
 for gp in graphpaths:
 	gp=gp.strip()

@@ -1,0 +1,94 @@
+--------------------------
+
+Stats for PKG:
+		
+--------------------------
+
+		Average energy change per non-zero reading: 0.03266084406779432
+
+		Stdev of non-zero readings: 0.04005431350558413
+
+		Average num readings between non-zero readings: 32.85762711864407
+
+		Stdev of num of readings between non-zero readings: 15.443777817031917
+
+		Average time between non-zero readings: 1285.213559322034μ
+
+		Stdev of time between non-zero readings: 1904.2537252571296μ
+
+		
+
+		Total energy consumed: 9.634948999999324
+
+		Total time taken: 379138
+--------------------------
+
+Stats for CORE:
+		
+--------------------------
+
+		Average energy change per non-zero reading: 0.0023537621320590136
+
+		Stdev of non-zero readings: 0.013046612655259738
+
+		Average num readings between non-zero readings: 1.651020949350305
+
+		Stdev of num of readings between non-zero readings: 1.3640654994643449
+
+		Average time between non-zero readings: 100.58843808008486μ
+
+		Stdev of time between non-zero readings: 492.0678424834726μ
+
+		
+
+		Total energy consumed: 8.87603699999454
+
+		Total time taken: 379319
+--------------------------
+
+Stats for GPU:
+		
+--------------------------
+
+		Average energy change per non-zero reading: 0
+
+		Stdev of non-zero readings: 0
+
+		Average num readings between non-zero readings: 0
+
+		Stdev of num of readings between non-zero readings: 0
+
+		Average time between non-zero readings: 0μ
+
+		Stdev of time between non-zero readings: 0μ
+
+		
+
+		Total energy consumed: 0
+
+		Total time taken: 0
+--------------------------
+
+Stats for DRAM:
+		
+--------------------------
+
+		Average energy change per non-zero reading: 0.0013627736486489233
+
+		Stdev of non-zero readings: 0.001733097790638183
+
+		Average num readings between non-zero readings: 32.74324324324324
+
+		Stdev of num of readings between non-zero readings: 15.521934887959551
+
+		Average time between non-zero readings: 1280.8716216216217μ
+
+		Stdev of time between non-zero readings: 1898.5146746611686μ
+
+		
+
+		Total energy consumed: 0.40338100000008126
+
+		Total time taken: 379138
+--------------------------
+
