@@ -18,6 +18,7 @@ JAVA_TESTFILES =					\
 			RuntimeTestUtils.java	\
 			GeneralTestDriver.java	\
 			BenchmarkingEnergy.java	\
+			ThreadTesting.java
 
 JAVA_USERFILES =							\
 			ArchSpec.java 					\

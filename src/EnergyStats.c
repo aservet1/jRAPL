@@ -26,8 +26,8 @@ energy_stats_to_string(EnergyStats estats, char ener_string[512])
 void
 energy_stats_csv_string(EnergyStats estats, char ener_string[512])
 {
-	sprintf(ener_string, "%d,%f,%f,%f,%f,%ld/%ld",
+	sprintf(ener_string, "%d,%f,%f,%f,%f,%ld",
 		estats.socket,
 		estats.dram, estats.gpu, estats.core, estats.pkg, 
-		estats.timestamp.tv_sec, estats.timestamp.tv_usec);
+		(estats.timestamp.tv_sec * 1000000) + estats.timestamp.tv_usec);
 }
