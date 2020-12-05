@@ -4,20 +4,6 @@ import jrapl.*;
 
 public class ThreadTesting
 {
-	/*private static void writeToFile(String data, String filePath)
-	{
-		System.out.println("writing to "+filePath);
-		FileWriter writer = null;
-		try {
-			writer = new FileWriter(filePath);
-			writer.write(data+"\n");
-            writer.close();
-		} catch (Exception e) {
-			System.out.println("error writing to "+filePath);
-		}
-	}*/
-	
-
 	//TODO better way to keep thread alive than sleeping?
 
 	private static void run(AsyncEnergyMonitor mon, int lifetime, String outfile)
@@ -58,7 +44,5 @@ public class ThreadTesting
 	
 	}
 }
-
-
 
 

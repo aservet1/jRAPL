@@ -109,25 +109,25 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 
 	public static void main(String[] args)
 	{
-		//AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
-		AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"LINKED_LIST");
+		AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
+		//AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"LINKED_LIST");
 		a.init();
 
 		a.start();
 		try{ Thread.sleep(400);} catch(Exception e){}
 		a.stop();
 
-		a.writeToFile(null);
-		int k = 5;
-		EnergyStats[][] estats = a.getLastKSamples_Objects(k);
-		for (EnergyStats[] es : estats) System.out.println(Arrays.deepToString(es));
-		System.out.println();
-		Instant[] timestamps = a.getLastKTimestamps(k);
-		for (Instant ts : timestamps) System.out.println(Duration.between(Instant.EPOCH, ts).toNanos()/1000);
-		System.out.println(a.getLifetime().toMillis());
+		a.writeToFile("extra/hello.txt");
+		//int k = 5;
+		//EnergyStats[][] estats = a.getLastKSamples_Objects(k);
+		//for (EnergyStats[] es : estats) System.out.println(Arrays.deepToString(es));
+		//System.out.println();
+		//Instant[] timestamps = a.getLastKTimestamps(k);
+		//for (Instant ts : timestamps) System.out.println(Duration.between(Instant.EPOCH, ts).toNanos()/1000);
+		//System.out.println(a.getLifetime().toMillis());
 
-		double[][] lastK = a.getLastKSamples_Arrays(k);
-		for (double[] d : lastK) System.out.println(Arrays.toString(d));
+		//double[][] lastK = a.getLastKSamples_Arrays(k);
+		//for (double[] d : lastK) System.out.println(Arrays.toString(d));
 		//EnergyStats[][] estats = a.getLastKSamples_Objects(k);
 		//for (EnergyStats[] es : estats) System.out.println(Arrays.deepToString(es));
 		//System.out.println();
