@@ -105,7 +105,7 @@ writeToFile_LinkedList(FILE* outfile, LinkedList* l) {
 			char ener_string[512];
 			energy_stats_csv_string(current->items[i], ener_string);
 			fprintf(outfile,"%s\n",ener_string);
-		} printf(" --\n"); // delimits between the contents of each node (keep for debugging purposes)
+		} //printf(" --\n"); // delimits between the contents of each node (keep for debugging purposes)
 		current = current->next;
 	}
 }

@@ -109,8 +109,8 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 
 	public static void main(String[] args)
 	{
-		AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
-		//AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"LINKED_LIST");
+		//AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
+		AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"LINKED_LIST");
 		a.init();
 
 		a.start();

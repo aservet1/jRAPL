@@ -40,8 +40,10 @@ Java_jrapl_AsyncEnergyMonitorCSide_cSideReset(JNIEnv* env, jclass jcls) {
 }
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_writeToFileFromC(JNIEnv* env, jclass jcls, const char* filepath) {
+Java_jrapl_AsyncEnergyMonitorCSide_writeToFileFromC(JNIEnv* env, jclass jcls, jstring jstringFilepath) {
+	const char* filepath = (*env)->GetStringUTFChars(env, jstringFilepath, NULL);
 	writeToFile(monitor, filepath);
+	(*env)->ReleaseStringUTFChars(env, jstringFilepath, filepath);
 }
 
 JNIEXPORT jstring JNICALL
