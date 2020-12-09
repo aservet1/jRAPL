@@ -66,7 +66,9 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 
 	// @TODO consider whether this class is the best place to hold this function
 	// This method would probably be ok living in here, but consider outsourcing
-	// if you can find something more appropriate for where this guy will live
+	// if you can find something more appropriate for where this guy will live,
+	// a more contrally accessible location maybe
+	//
 	// returns string-joined version of a: a[1],a[2],...,a[n]
 	public static String dumpPrimitiveArray(double[] a)
 	{
@@ -83,22 +85,17 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		monitor.init();
 
 		int socket = 1;
-		//EnergyStats before = monitor.getObjectSample(socket);
-		//EnergyStats after;
-		//EnergyDiff diff;
-		double[] before = monitor.getPrimitiveSample();
-		double[] after;
-		double[] diff;
+		//double[] before = monitor.getPrimitiveSample();
+		//double[] after;
+		//double[] diff;
 		for (int i = 0; i < 1000; i++) {
 			try { Thread.sleep(57); }
 			catch (Exception e) { e.printStackTrace(); }
-			//after = monitor.getObjectSample(socket);
-			//diff = EnergyDiff.between(before, after);
-			after = monitor.getPrimitiveSample();
-			diff = SyncEnergyMonitor.subtractPrimitiveSamples(after,before);
-			System.out.println(dumpPrimitiveArray(diff));
-			//System.out.println(diff.dump());
-			before = after;
+			//after = monitor.getPrimitiveSample();
+			//diff = SyncEnergyMonitor.subtractPrimitiveSamples(after,before);
+			//System.out.println(dumpPrimitiveArray(diff));
+			//before = after;
+			System.out.println(dumpPrimitiveArray(monitor.getPrimitiveSample()));
 		}
 
 		monitor.dealloc();
