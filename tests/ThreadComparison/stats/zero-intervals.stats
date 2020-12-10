@@ -1,66 +1,66 @@
 C Zero Interval Stats DRAM:
-  mean: 14.545727436461878
-  stdev: 1.6884433448880687
-  mode: 14
-  min: 2
+  mean: 15.84243151369726
+  stdev: 1.883180078101584
+  mode: 15
+  min: 1
   max: 22
-  num zero intervals: 4997
+  num zero intervals: 5001
   -------------------------------------  
 Java Zero Interval Stats DRAM:
-  mean: 176.19886593762658
-  stdev: 29.157874258663455
-  mode: 187
-  min: 3
-  max: 242
-  num zero intervals: 4938
+  mean: 103.05756843800322
+  stdev: 61.38791287932857
+  mode: 69
+  min: 0
+  max: 260
+  num zero intervals: 4968
 ==========================================
 C Zero Interval Stats GPU:
-  mean: 6.124828028982849
-  stdev: 55.453642839981484
+  mean: 115.49930843706777
+  stdev: 1370.414849512389
   mode: 0
   min: 0
-  max: 772
-  num zero intervals: 10903
+  max: 25679
+  num zero intervals: 723
   -------------------------------------  
 Java Zero Interval Stats GPU:
-  mean: 76.84768683274021
-  stdev: 641.7644413001219
-  mode: 11
-  min: 0
-  max: 8504
-  num zero intervals: 11240
+  mean: 650.9016393442623
+  stdev: 7072.78542385736
+  mode: 4
+  min: 1
+  max: 128982
+  num zero intervals: 793
 ==========================================
 C Zero Interval Stats CORE:
-  mean: 0.6705950665605712
-  stdev: 0.9620917609380989
-  mode: 0
+  mean: 1.6771661051427118
+  stdev: 0.8809129540553017
+  mode: 2
   min: 0
-  max: 8
-  num zero intervals: 46499
+  max: 7
+  num zero intervals: 31462
   -------------------------------------  
 Java Zero Interval Stats CORE:
-  mean: 17.63027231886218
-  stdev: 9.82004833013419
-  mode: 11
+  mean: 16.70040402656988
+  stdev: 10.387879849793894
+  mode: 9
   min: 0
-  max: 109
-  num zero intervals: 46967
+  max: 85
+  num zero intervals: 29206
 ==========================================
 C Zero Interval Stats PKG:
-  mean: 14.542617046818728
-  stdev: 1.6965292336620446
+  mean: 15.84243151369726
+  stdev: 1.8757311125421705
   mode: 14
-  min: 0
+  min: 1
   max: 22
-  num zero intervals: 4998
+  num zero intervals: 5001
   -------------------------------------  
 Java Zero Interval Stats PKG:
-  mean: 176.19886593762658
-  stdev: 29.07826013375229
-  mode: 192
-  min: 3
-  max: 241
-  num zero intervals: 4938
+  mean: 103.05756843800322
+  stdev: 61.37911631946481
+  mode: 69
+  min: 0
+  max: 260
+  num zero intervals: 4968
 ==========================================
-Total C readings:	77682
-Total Java readings:	875008
+Total C readings:	84229
+Total Java readings:	516958

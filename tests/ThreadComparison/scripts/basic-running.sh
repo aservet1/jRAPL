@@ -20,7 +20,7 @@ monitor_delay=$2
 for jc in java c
 do
 	sudo java -cp $JRAPL_HOME/src jrapltesting.ThreadTesting \
-		$jc $monitor_lifetime $monitor_delay > "output/$jc.data"
+		$jc $monitor_lifetime $monitor_delay "output/$jc.data"
 	echo "done with $jc collecting"
 done
 
@@ -28,5 +28,5 @@ cd output
 
 python3 ../scripts/zero-reading-interval.py	c.data java.data > ../stats/zero-intervals.stats
 echo "done with zero interval"
-python3 ../scripts/compare-ener-reads.py	c.data java.data > ../stats/compare-ener.stats
+python3 ../scripts/compare-ener-reads.py	c.data java.data > ../stats/avg-nonzero-energy-read.stats
 echo "done with ener read analysis"

@@ -24,30 +24,18 @@ def get_zero_intervals(data):
 	return zero_intervals
 
 '''---------------------------------------------------------------'''
-def make_histogram(data,title): # data[0]: cdata // data[1] jdata 
+def make_histogram(ax,data,title): # data[0]: cdata // data[1] jdata 
 
 	plt.xlabel("zero intervals")
 	plt.ylabel("frequency")
 	plt.title(title)
 
-	plt.hist(data,20,histtype='bar',label=('C','Java'))
-	plt.legend(loc="upper right")
+	ax.hist(data,20,histtype='bar',label=('C','Java'))
+	ax.legend(loc="upper right")
 
-	parts = title.split(); category = parts[-1]
-	plt.savefig("zero-intervals_"+category)
-	plt.clf()
-'''---------------------------------------------------------------'''
-def print_stats(data,title):
-	print(f"{title}:")
-	print("  mean: "+str(mean(data)))
-	try:
-		print("  stdev: "+str(stdev(data)))
-	except StatisticsError:
-		print("  stdev: N/A (variance requires at least two data points)") 
-	print("  mode: "+str(mode(data)))
-	print("  min: "+str(min(data)))
-	print("  max: "+str(max(data)))
-	print("  num zero intervals: "+str(len(data)))
+	#parts = title.split(); category = parts[-1]
+	#plt.savefig("zero-intervals_"+category)
+	#plt.clf()
 '''---------------------------------------------------------------'''
 def read_file_to_string(filename):
 	fh = open(filename)
@@ -76,6 +64,18 @@ def group_by_column(data):
 def remove_zeroes(data):
 	return list(filter(lambda x: x != 0,data))
 '''-----------------------------------------------'''
+def print_stats(data,title):
+	print(f"{title}:")
+	print("  mean: "+str(mean(data)))
+	try:
+		print("  stdev: "+str(stdev(data)))
+	except StatisticsError:
+		print("  stdev: N/A (variance requires at least two data points)") 
+	print("  mode: "+str(mode(data)))
+	print("  min: "+str(min(data)))
+	print("  max: "+str(max(data)))
+	print("  num zero intervals: "+str(len(data)))
+'''---------------------------------------------------------------'''
 
 """right now we're just assuming it's one socket"""
 
@@ -93,18 +93,31 @@ header = cdata.split('\n')[1].upper().split(',')[1:-1]
 cdata = group_by_column(make_numeric_array(cdata))
 jdata = group_by_column(make_numeric_array(jdata))
 
-for i in range(len(header)):
-	c_zero_intervals = get_zero_intervals(cdata[i])
-	j_zero_intervals = get_zero_intervals(jdata[i])
+fig, (axs) = plt.subplots(2,2, gridspec_kw={'hspace':0.5,'wspace':0.5})
+fig.suptitle('Zero interval histograms for ' + ','.join(header))
 
-	make_histogram([c_zero_intervals,j_zero_intervals],"C vs Java Zero Intervals "+header[i])
+numbins = 10
 
-	print_stats(c_zero_intervals,title=f"C Zero Interval Stats {header[i]}")
+i = 0
+for ax in axs.flat:
+	powerDomain = header[i]
+
+	c_zerointervals = get_zero_intervals(cdata[i])
+	j_zerointervals = get_zero_intervals(jdata[i])
+	ax.hist([c_zerointervals,j_zerointervals], bins=numbins, alpha=0.5, label=['C','Java'])
+	ax.set_title(powerDomain)
+
+	print_stats(c_zerointervals,title=f"C Zero Interval Stats {powerDomain}")
 	print("  -------------------------------------  ")
-	print_stats(j_zero_intervals,title=f"Java Zero Interval Stats {header[i]}")
+	print_stats(j_zerointervals,title=f"Java Zero Interval Stats {powerDomain}")
 	print("==========================================")
+
+	ax.set(xlabel='size of zero interval',ylabel='frequency')
+	i += 1
+
+#fig.text=(.5, .05, ha='center',str(numbins)+'bins in histogram')
+plt.savefig('zero-intervals')
+
 print(f"Total C readings:\t{len(cdata[0])}")
 print(f"Total Java readings:\t{len(jdata[0])}")
-
-
 
