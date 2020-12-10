@@ -15,15 +15,17 @@ files = [f for f in files if len(f.split('.')) == 2 and f.split('.')[1] == 'data
 if len(files) % 2 != 0:
     rows = len(files)
     columns = 1
-else:
+    specs = {'hspace':.25}
+    figsiz = (6,4*len(files))
+else: # most likely 2x2
     rows = len(files) // 2
     columns = 2 
+    specs = {'hspace':.6,'wspace':.5}
+    figsiz = (6,4)
 
 print(files)
 
-fig, axs = plt.subplots(rows, columns,  \
-            gridspec_kw={'hspace':.25} if len(files) == 3 else {'hspace':.5,'wspace':.5}, \
-            figsize=(6,4*len(files)) if len(files) == 3 else None)
+fig, axs = plt.subplots(rows, columns, gridspec_kw= specs, figsize=figsiz )
 
 #print(files)
 
