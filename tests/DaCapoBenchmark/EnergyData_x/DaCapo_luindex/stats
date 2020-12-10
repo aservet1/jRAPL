@@ -4,91 +4,91 @@ Stats for PKG:
 		
 --------------------------
 
-		Average energy change per non-zero reading: 0.02069717213119281
+		Average energy change per non-zero reading: 1008.6234626300851
 
-		Stdev of non-zero readings: 0.004810484515052199
+		Stdev of non-zero readings: 308.5043835608441
 
-		Average num readings between non-zero readings: 39.90573770491803
+		Average num readings between non-zero readings: 93.50898770104068
 
-		Stdev of num of readings between non-zero readings: 11.40659544378431
+		Stdev of num of readings between non-zero readings: 50.57916616381248
 
-		Average time between non-zero readings: 992.311475409836μ
+		Average time between non-zero readings: 0.01793827246925234μ
 
-		Stdev of time between non-zero readings: 124.6494067385936μ
+		Stdev of time between non-zero readings: 0.006946844374685925μ
 
 		
 
-		Total energy consumed: 5.0501100000110455
+		Total energy consumed: 1066115
 
-		Total time taken: 242124
+		Total time taken: 18.960753999999724
 --------------------------
 
 Stats for CORE:
 		
 --------------------------
 
-		Average energy change per non-zero reading: 0.0018935443714059744
+		Average energy change per non-zero reading: 127.32895679159704
 
-		Stdev of non-zero readings: 0.0016306930035278357
+		Stdev of non-zero readings: 126.7625312673401
 
-		Average num readings between non-zero readings: 3.1072308956450287
+		Average num readings between non-zero readings: 10.934232513726426
 
-		Stdev of num of readings between non-zero readings: 2.1358518262101267
+		Stdev of num of readings between non-zero readings: 9.293104736557623
 
-		Average time between non-zero readings: 99.59901396877568μ
+		Average time between non-zero readings: 0.002039854977321643μ
 
-		Stdev of time between non-zero readings: 59.11924680021762μ
+		Stdev of time between non-zero readings: 0.0024114431556156455μ
 
 		
 
-		Total energy consumed: 4.608887000002142
+		Total energy consumed: 1066762
 
-		Total time taken: 242424
+		Total time taken: 17.089905000000726
 --------------------------
 
 Stats for GPU:
 		
 --------------------------
 
-		Average energy change per non-zero reading: 0.00011619259258387265
+		Average energy change per non-zero reading: 1514.5788590604027
 
-		Stdev of non-zero readings: 4.8805354542840905e-05
+		Stdev of non-zero readings: 25084.774526209032
 
-		Average num readings between non-zero readings: 60.42962962962963
+		Average num readings between non-zero readings: 127.59060402684564
 
-		Stdev of num of readings between non-zero readings: 680.2798429963769
+		Stdev of num of readings between non-zero readings: 2531.884945713714
 
-		Average time between non-zero readings: 1514.9333333333334μ
+		Average time between non-zero readings: 0.00011244463087452166μ
 
-		Stdev of time between non-zero readings: 16665.606943016042μ
+		Stdev of time between non-zero readings: 0.00012715438355885705μ
 
 		
 
-		Total energy consumed: 0.01568599999882281
+		Total energy consumed: 902689
 
-		Total time taken: 204516
+		Total time taken: 0.06701700000121491
 --------------------------
 
 Stats for DRAM:
 		
 --------------------------
 
-		Average energy change per non-zero reading: 0.0007161639344258965
+		Average energy change per non-zero reading: 1007.6758034026465
 
-		Stdev of non-zero readings: 0.0003984722338330252
+		Stdev of non-zero readings: 309.6523545859633
 
-		Average num readings between non-zero readings: 39.90573770491803
+		Average num readings between non-zero readings: 93.42060491493383
 
-		Stdev of num of readings between non-zero readings: 11.380228318135515
+		Stdev of num of readings between non-zero readings: 50.63898071491618
 
-		Average time between non-zero readings: 992.311475409836μ
+		Average time between non-zero readings: 0.0005609697542508817μ
 
-		Stdev of time between non-zero readings: 119.86769674829051μ
+		Stdev of time between non-zero readings: 0.0005473019356036974μ
 
 		
 
-		Total energy consumed: 0.17474399999991874
+		Total energy consumed: 1066121
 
-		Total time taken: 242124
+		Total time taken: 0.5935059999974328
 --------------------------
 

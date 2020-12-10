@@ -35,7 +35,7 @@ if [ "$outputdir" = "" ]; then
 fi
 
 outputdir="EnergyData_$1/"$outputdir
-
+sudo rm -rf $outputdir
 mkdir -p $outputdir
 
 cd ../../src/

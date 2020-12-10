@@ -4,91 +4,91 @@ Stats for PKG:
 		
 --------------------------
 
-		Average energy change per non-zero reading: 0.019523914163065835
+		Average energy change per non-zero reading: 1253.6716141001855
 
-		Stdev of non-zero readings: 0.026425795003219274
+		Stdev of non-zero readings: 2535.622015714521
 
-		Average num readings between non-zero readings: 41.82403433476395
+		Average num readings between non-zero readings: 60.83982683982684
 
-		Stdev of num of readings between non-zero readings: 29.698033823206767
+		Stdev of num of readings between non-zero readings: 32.271584180429564
 
-		Average time between non-zero readings: 1302.892703862661μ
+		Average time between non-zero readings: 0.01852996351267413μ
 
-		Stdev of time between non-zero readings: 1755.7248261507423μ
+		Stdev of time between non-zero readings: 0.03592943828148795μ
 
 		
 
-		Total energy consumed: 4.549071999994339
+		Total energy consumed: 2027187
 
-		Total time taken: 303574
+		Total time taken: 29.962950999994064
 --------------------------
 
 Stats for CORE:
 		
 --------------------------
 
-		Average energy change per non-zero reading: 0.002168628108106409
+		Average energy change per non-zero reading: 165.281206685691
 
-		Stdev of non-zero readings: 0.009841088644829531
+		Stdev of non-zero readings: 937.751468822999
 
-		Average num readings between non-zero readings: 4.404864864864865
+		Average num readings between non-zero readings: 7.15279249898084
 
-		Stdev of num of readings between non-zero readings: 3.6746950305366335
+		Stdev of num of readings between non-zero readings: 5.2105823600061125
 
-		Average time between non-zero readings: 164.29567567567568μ
+		Average time between non-zero readings: 0.0021932447615159406μ
 
-		Stdev of time between non-zero readings: 661.4347980194622μ
+		Stdev of time between non-zero readings: 0.012052310273454022μ
 
 		
 
-		Total energy consumed: 4.011961999996856
+		Total energy consumed: 2027174
 
-		Total time taken: 303947
+		Total time taken: 26.900146999993012
 --------------------------
 
 Stats for GPU:
 		
 --------------------------
 
-		Average energy change per non-zero reading: 0.00010379166666515023
+		Average energy change per non-zero reading: 4686.367231638418
 
-		Stdev of non-zero readings: 4.7409370308495686e-05
+		Stdev of non-zero readings: 85131.17690223684
 
-		Average num readings between non-zero readings: 25.0390625
+		Average num readings between non-zero readings: 194.4463276836158
 
-		Stdev of num of readings between non-zero readings: 385.8174544142754
+		Stdev of num of readings between non-zero readings: 3363.2418932514925
 
-		Average time between non-zero readings: 791.5286458333334μ
+		Average time between non-zero readings: 0.0001036214689263501μ
 
-		Stdev of time between non-zero readings: 13797.145771704107μ
+		Stdev of time between non-zero readings: 4.578559705311768e-05μ
 
 		
 
-		Total energy consumed: 0.03985599999941769
+		Total energy consumed: 1658974
 
-		Total time taken: 303947
+		Total time taken: 0.03668199999992794
 --------------------------
 
 Stats for DRAM:
 		
 --------------------------
 
-		Average energy change per non-zero reading: 0.0008798122270685756
+		Average energy change per non-zero reading: 1252.122915379864
 
-		Stdev of non-zero readings: 0.001179424496909999
+		Stdev of non-zero readings: 2528.9876691556956
 
-		Average num readings between non-zero readings: 42.572052401746724
+		Average num readings between non-zero readings: 60.76343421865349
 
-		Stdev of num of readings between non-zero readings: 29.411781648117483
+		Stdev of num of readings between non-zero readings: 32.33036355319746
 
-		Average time between non-zero readings: 1325.6506550218342μ
+		Average time between non-zero readings: 0.0007137609635590088μ
 
-		Stdev of time between non-zero readings: 1741.6380649700554μ
+		Stdev of time between non-zero readings: 0.0016044225063349274μ
 
 		
 
-		Total energy consumed: 0.20147699999870383
+		Total energy consumed: 2027187
 
-		Total time taken: 303574
+		Total time taken: 1.1555790000020352
 --------------------------
 
