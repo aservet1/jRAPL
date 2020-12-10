@@ -1,0 +1,24 @@
+Nonzero energy sample picked up by thread (joules): C // Java
+  mean: 	1.1241354359010183e-05 // 1.0517902839339208e-06
+  stdev:	5.690995755952745e-05 // 4.579392912987175e-05
+cdata[DRAM] sample size: 80156
+jdata[DRAM] sample size: 981632
+-------------------------------
+Nonzero energy sample picked up by thread (joules): C // Java
+  mean: 	1.3036079644741663e-06 // 1.1260227865562678e-07
+  stdev:	1.64908412004253e-05 // 4.884780841666882e-06
+cdata[GPU] sample size: 80156
+jdata[GPU] sample size: 981632
+-------------------------------
+Nonzero energy sample picked up by thread (joules): C // Java
+  mean: 	0.0002426512176256591 // 4.229767570739006e-05
+  stdev:	0.000380550461868821 // 0.0007912690258879577
+cdata[CORE] sample size: 80156
+jdata[CORE] sample size: 981632
+-------------------------------
+Nonzero energy sample picked up by thread (joules): C // Java
+  mean: 	0.0003233532237137872 // 4.8757330649365975e-05
+  stdev:	0.0013022179005019075 // 0.0010513746098773414
+cdata[PKG] sample size: 80156
+jdata[PKG] sample size: 981632
+-------------------------------

@@ -13,6 +13,7 @@ sudo modprobe msr
 
 sudo rm -rf output
 mkdir output
+mkdir output/stats
 
 monitor_lifetime=$1
 monitor_delay=$2
@@ -26,7 +27,7 @@ done
 
 cd output
 
-python3 ../scripts/zero-reading-interval.py	c.data java.data > ../stats/zero-intervals.stats
+python3 ../scripts/zero-reading-interval.py	c.data java.data > stats/zero-intervals.stats
 echo "done with zero interval"
-python3 ../scripts/compare-ener-reads.py	c.data java.data > ../stats/avg-nonzero-energy-read.stats
+python3 ../scripts/avg-nonzero-energy-read.py	c.data java.data > stats/avg-nonzero-energy-read.stats
 echo "done with ener read analysis"

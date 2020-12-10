@@ -24,18 +24,18 @@ def get_zero_intervals(data):
 	return zero_intervals
 
 '''---------------------------------------------------------------'''
-def make_histogram(ax,data,title): # data[0]: cdata // data[1] jdata 
+#def make_histogram(ax,data,title): # data[0]: cdata // data[1] jdata 
 
-	plt.xlabel("zero intervals")
-	plt.ylabel("frequency")
-	plt.title(title)
+	#plt.xlabel("zero intervals")
+	#plt.ylabel("frequency")
+	#plt.title(title)
 
-	ax.hist(data,20,histtype='bar',label=('C','Java'))
-	ax.legend(loc="upper right")
+	#ax.hist(data,20,histtype='bar',label=('C','Java'))
+	#ax.legend(loc="upper right")
 
-	#parts = title.split(); category = parts[-1]
-	#plt.savefig("zero-intervals_"+category)
-	#plt.clf()
+	##parts = title.split(); category = parts[-1]
+	##plt.savefig("zero-intervals_"+category)
+	##plt.clf()
 '''---------------------------------------------------------------'''
 def read_file_to_string(filename):
 	fh = open(filename)
@@ -104,7 +104,7 @@ for ax in axs.flat:
 
 	c_zerointervals = get_zero_intervals(cdata[i])
 	j_zerointervals = get_zero_intervals(jdata[i])
-	ax.hist([c_zerointervals,j_zerointervals], bins=numbins, alpha=0.5, label=['C','Java'])
+	ax.hist([c_zerointervals,j_zerointervals], bins=numbins, alpha=0.5, label=['C','Java'] if i == 0 else [])
 	ax.set_title(powerDomain)
 
 	print_stats(c_zerointervals,title=f"C Zero Interval Stats {powerDomain}")
@@ -115,7 +115,7 @@ for ax in axs.flat:
 	ax.set(xlabel='size of zero interval',ylabel='frequency')
 	i += 1
 
-#fig.text=(.5, .05, ha='center',str(numbins)+'bins in histogram')
+fig.legend()
 plt.savefig('zero-intervals')
 
 print(f"Total C readings:\t{len(cdata[0])}")
