@@ -23,8 +23,6 @@ else: # most likely 2x2
     specs = {'hspace':.6,'wspace':.5}
     figsiz = (6,4)
 
-print(files)
-
 fig, axs = plt.subplots(rows, columns, gridspec_kw= specs, figsize=figsiz )
 
 #print(files)
