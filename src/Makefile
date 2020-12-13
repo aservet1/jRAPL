@@ -43,6 +43,7 @@ JAVA_USERFILES =							\
 			EnergyStats.java				\
 			EnergyDiff.java					\
 
+MAKELOG = .makelog
 
 CFLAGS = -fPIC -g -c -Wall
 JAVA_HOME = /usr/lib/jvm/java-11-openjdk-amd64
@@ -52,6 +53,7 @@ JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 all: lib_shared_CPUScaler javafiles
 
 common: $(CFILES)
+	date > $(MAKELOG) #keeps track of last time make occurred
 	gcc $(CFLAGS) -I $(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES)
 lib_shared_CPUScaler: common
 	gcc -g -Wall -I $(JAVA_INCLUDE) -I $(JAVA_INCLUDE_LINUX) -shared -Wl,-soname,libCPUScaler.so -o $(TARGET) -lc
@@ -69,3 +71,4 @@ user-api: *.java
 clean:
 	rm -f lib_share_CPUScaler $(TARGET) cdriver *.class
 	rm -rf jrapl/ jrapltesting
+	rm $(MAKELOG)
