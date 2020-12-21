@@ -32,6 +32,6 @@ cdriver
 #class
 *.class
 
-src/Makefile
-
+Makefile
+.makelog
 *.swp
