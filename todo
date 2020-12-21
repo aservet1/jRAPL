@@ -1,0 +1,13 @@
+AsyncMonitor code in Overleaf
+
+Compare # of samples between C and Java
+
+make the LinkedList thing part of the experiments<--- most actionable in the next 30 minutes ***
+
+time between nonzero readings as a test that gets evaluated (based off of timestamps)
+
+apply the JMH
+
+make the AsyncMonitor run a set number of operations
+
+"timer" implemntation on the C side
