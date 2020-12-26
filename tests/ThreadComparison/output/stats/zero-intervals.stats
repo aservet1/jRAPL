@@ -1,66 +1,99 @@
-C Zero Interval Stats DRAM:
-  mean: 15.028194361127774
-  stdev: 1.572960558633368
-  mode: 15
+C LinkList Zero Interval Stats DRAM:
+  mean: 14.3584
+  stdev: 1.3423523464293543
+  mode: 14
   min: 0
   max: 20
-  num zero intervals: 5001
+  num zero intervals: 5000
+  -------------------------------------  
+C DynamicArray Zero Interval Stats DRAM:
+  mean: 14.458074844906944
+  stdev: 1.4424138734175371
+  mode: 14
+  min: 3
+  max: 20
+  num zero intervals: 4997
   -------------------------------------  
 Java Zero Interval Stats DRAM:
-  mean: 198.07381869803285
-  stdev: 21.579510650559943
-  mode: 188
-  min: 2
-  max: 270
-  num zero intervals: 4931
+  mean: 175.5302692852804
+  stdev: 38.684829635047365
+  mode: 194
+  min: 0
+  max: 218
+  num zero intervals: 4939
 ==========================================
-C Zero Interval Stats GPU:
-  mean: 104.6086956521739
-  stdev: 1412.2906246308964
+C LinkList Zero Interval Stats GPU:
+  mean: 3.148228176318064
+  stdev: 28.404525975320805
   mode: 0
   min: 0
-  max: 32967
-  num zero intervals: 759
+  max: 467
+  num zero intervals: 18512
+  -------------------------------------  
+C DynamicArray Zero Interval Stats GPU:
+  mean: 3.1370574688018853
+  stdev: 28.3774753478947
+  mode: 0
+  min: 0
+  max: 449
+  num zero intervals: 18671
   -------------------------------------  
 Java Zero Interval Stats GPU:
-  mean: 1227.5769712140175
-  stdev: 18457.63114758286
+  mean: 44.56721020173513
+  stdev: 314.87338317084016
   mode: 12
   min: 0
-  max: 427382
-  num zero intervals: 799
+  max: 5095
+  num zero intervals: 19134
 ==========================================
-C Zero Interval Stats CORE:
-  mean: 1.4790313601781406
-  stdev: 0.9147175018511956
-  mode: 1
+C LinkList Zero Interval Stats CORE:
+  mean: 0.23487601710996045
+  stdev: 0.5217994621366032
+  mode: 0
   min: 0
-  max: 7
-  num zero intervals: 32334
+  max: 6
+  num zero intervals: 62186
+  -------------------------------------  
+C DynamicArray Zero Interval Stats CORE:
+  mean: 0.2574763540462663
+  stdev: 0.5462337189820926
+  mode: 0
+  min: 0
+  max: 6
+  num zero intervals: 61427
   -------------------------------------  
 Java Zero Interval Stats CORE:
-  mean: 28.396370496810707
-  stdev: 10.524183310768356
-  mode: 23
+  mean: 13.210695309189296
+  stdev: 6.048809318539916
+  mode: 12
   min: 0
-  max: 94
-  num zero intervals: 33393
+  max: 93
+  num zero intervals: 61354
 ==========================================
-C Zero Interval Stats PKG:
-  mean: 15.028194361127774
-  stdev: 1.5770240705253034
-  mode: 15
+C LinkList Zero Interval Stats PKG:
+  mean: 14.3584
+  stdev: 1.3457754873426944
+  mode: 14
   min: 0
-  max: 21
-  num zero intervals: 5001
+  max: 20
+  num zero intervals: 5000
+  -------------------------------------  
+C DynamicArray Zero Interval Stats PKG:
+  mean: 14.458074844906944
+  stdev: 1.436991750928094
+  mode: 14
+  min: 3
+  max: 20
+  num zero intervals: 4997
   -------------------------------------  
 Java Zero Interval Stats PKG:
-  mean: 198.07381869803285
-  stdev: 21.539223761365534
+  mean: 175.5302692852804
+  stdev: 38.66095113047598
   mode: 192
-  min: 3
-  max: 270
-  num zero intervals: 4931
+  min: 0
+  max: 218
+  num zero intervals: 4939
 ==========================================
-Total C readings:	80157
-Total Java readings:	981633
+Total C DynamicArray readings:	77244
+Total C LinkedList readings:	76792
+Total Java readings:	871883

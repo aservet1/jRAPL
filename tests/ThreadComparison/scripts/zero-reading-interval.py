@@ -79,18 +79,20 @@ def print_stats(data,title):
 
 """right now we're just assuming it's one socket"""
 
-if len(argv) != 3:
-	print(f"usage: python3 {argv[0]} cdata javadata")
+if len(argv) != 4:
+	print(f"usage: python3 {argv[0]} c-dynamicarray_data_file c-linklist_data_file java_data_file")
 	exit(1)
 
-cdata = read_file_to_string(argv[1])
-jdata = read_file_to_string(argv[2])
+c_dynamicarray_data = read_file_to_string(argv[1])
+c_linklist_data = read_file_to_string(argv[2])
+jdata = read_file_to_string(argv[3])
 
 #cdata or jdata, it doesn't matter. same header.
 #currently getting rid of [1:-1] because socket and timestamp arent currently relevant
-header = cdata.split('\n')[1].upper().split(',')[1:-1] 
+header = c_dynamicarray_data.split('\n')[1].upper().split(',')[1:-1] 
 
-cdata = group_by_column(make_numeric_array(cdata))
+c_dynamicarray_data = group_by_column(make_numeric_array(c_dynamicarray_data))
+c_linklist_data = group_by_column(make_numeric_array(c_linklist_data))
 jdata = group_by_column(make_numeric_array(jdata))
 
 fig, (axs) = plt.subplots(2,2, gridspec_kw={'hspace':0.5,'wspace':0.5})
@@ -102,12 +104,15 @@ i = 0
 for ax in axs.flat:
 	powerDomain = header[i]
 
-	c_zerointervals = get_zero_intervals(cdata[i])
+	c_dynamicarray_zerointervals = get_zero_intervals(c_dynamicarray_data[i])
+	c_linklist_zerointervals = get_zero_intervals(c_linklist_data[i])
 	j_zerointervals = get_zero_intervals(jdata[i])
-	ax.hist([c_zerointervals,j_zerointervals], bins=numbins, alpha=0.5, label=['C','Java'] if i == 0 else [])
+	ax.hist([c_dynamicarray_zerointervals,c_linklist_zerointervals,j_zerointervals], bins=numbins, alpha=0.5, label=['C-DA','C-LL','Java'] if i == 0 else [])
 	ax.set_title(powerDomain)
 
-	print_stats(c_zerointervals,title=f"C Zero Interval Stats {powerDomain}")
+	print_stats(c_linklist_zerointervals,title=f"C LinkList Zero Interval Stats {powerDomain}")
+	print("  -------------------------------------  ")
+	print_stats(c_dynamicarray_zerointervals,title=f"C DynamicArray Zero Interval Stats {powerDomain}")
 	print("  -------------------------------------  ")
 	print_stats(j_zerointervals,title=f"Java Zero Interval Stats {powerDomain}")
 	print("==========================================")
@@ -118,6 +123,7 @@ for ax in axs.flat:
 fig.legend()
 plt.savefig('zero-intervals')
 
-print(f"Total C readings:\t{len(cdata[0])}")
+print(f"Total C DynamicArray readings:\t{len(c_dynamicarray_data[0])}")
+print(f"Total C LinkedList readings:\t{len(c_linklist_data[0])}")
 print(f"Total Java readings:\t{len(jdata[0])}")
 

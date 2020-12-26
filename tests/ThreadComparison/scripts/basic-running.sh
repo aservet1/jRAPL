@@ -18,7 +18,7 @@ mkdir output/stats
 monitor_lifetime=$1
 monitor_delay=$2
 
-for jc in java c
+for jc in java c-linkedlist c-dynamicarray
 do
 	sudo java -cp $JRAPL_HOME/src jrapltesting.ThreadTesting \
 		$jc $monitor_lifetime $monitor_delay "output/$jc.data"
@@ -26,8 +26,11 @@ do
 done
 
 cd output
+data_output_files="c-dynamicarray.data c-linkedlist.data java.data"
 
-python3 ../scripts/zero-reading-interval.py	c.data java.data > stats/zero-intervals.stats
+python3 ../scripts/zero-reading-interval.py	$data_output_files > stats/zero-intervals.stats
 echo "done with zero interval"
-python3 ../scripts/avg-nonzero-energy-read.py	c.data java.data > stats/avg-nonzero-energy-read.stats
+python3 ../scripts/avg-nonzero-energy-read.py $data_output_files > stats/avg-nonzero-energy-read.stats
 echo "done with ener read analysis"
+
+#rm $data_output_files

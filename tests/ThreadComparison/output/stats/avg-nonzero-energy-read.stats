@@ -1,24 +1,28 @@
-Nonzero energy sample picked up by thread (joules): C // Java
-  mean: 	1.1241354359010183e-05 // 1.0517902839339208e-06
-  stdev:	5.690995755952745e-05 // 4.579392912987175e-05
-cdata[DRAM] sample size: 80156
-jdata[DRAM] sample size: 981632
+Nonzero energy sample picked up by thread (joules): C Linked List // C Dynamic Array // Java
+  mean: 	4.874163638968442e-05 // 4.776028895821598e-05 // 4.414377174892606e-06
+  stdev:	4.874163638968442e-05 // 0.0002150677635562685 // 8.135899260951455e-05
+c_dynarr_data[DRAM] sample size: 77243
+c_linklist_data[DRAM] sample size: 76791
+jdata[DRAM] sample size: 871882
 -------------------------------
-Nonzero energy sample picked up by thread (joules): C // Java
-  mean: 	1.3036079644741663e-06 // 1.1260227865562678e-07
-  stdev:	1.64908412004253e-05 // 4.884780841666882e-06
-cdata[GPU] sample size: 80156
-jdata[GPU] sample size: 981632
+Nonzero energy sample picked up by thread (joules): C Linked List // C Dynamic Array // Java
+  mean: 	2.5916748056414695e-05 // 2.5188263014140063e-05 // 2.46014713000242e-06
+  stdev:	2.5916748056414695e-05 // 5.404512549083008e-05 // 1.959978467646717e-05
+c_dynarr_data[GPU] sample size: 77243
+c_linklist_data[GPU] sample size: 76791
+jdata[GPU] sample size: 871882
 -------------------------------
-Nonzero energy sample picked up by thread (joules): C // Java
-  mean: 	0.0002426512176256591 // 4.229767570739006e-05
-  stdev:	0.000380550461868821 // 0.0007912690258879577
-cdata[CORE] sample size: 80156
-jdata[CORE] sample size: 981632
+Nonzero energy sample picked up by thread (joules): C Linked List // C Dynamic Array // Java
+  mean: 	0.00043518795171307295 // 0.0004158020532604807 // 5.458870581110724e-05
+  stdev:	0.00043518795171307295 // 0.0004316807286135757 // 0.0006826274579001247
+c_dynarr_data[CORE] sample size: 77243
+c_linklist_data[CORE] sample size: 76791
+jdata[CORE] sample size: 871882
 -------------------------------
-Nonzero energy sample picked up by thread (joules): C // Java
-  mean: 	0.0003233532237137872 // 4.8757330649365975e-05
-  stdev:	0.0013022179005019075 // 0.0010513746098773414
-cdata[PKG] sample size: 80156
-jdata[PKG] sample size: 981632
+Nonzero energy sample picked up by thread (joules): C Linked List // C Dynamic Array // Java
+  mean: 	0.0005826011641989426 // 0.0005567993216213553 // 6.710876701205284e-05
+  stdev:	0.0005826011641989426 // 0.002259643122139033 // 0.001146016750257654
+c_dynarr_data[PKG] sample size: 77243
+c_linklist_data[PKG] sample size: 76791
+jdata[PKG] sample size: 871882
 -------------------------------

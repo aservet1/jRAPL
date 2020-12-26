@@ -22,9 +22,9 @@ public class ThreadTesting
 
 	public static void main(String[] args)
 	{
-		if (args.length < 3 || !args[0].equalsIgnoreCase("java") && !args[0].equalsIgnoreCase("c"))
+		if (args.length < 3)
 		{
-			System.out.println("usage: java jrapltesting.ThreadTesting <java|c> <monitor lifetime (ms)> <monitor delay> <outfile>");
+			System.out.println("usage: java jrapltesting.ThreadTesting <java|c-dynamicarray|c-linkedlist> <monitor lifetime (ms)> <monitor delay> <outfile>");
 			System.out.println("  -- if no argument for outfile, prints to stdout");
 			System.exit(2);
 		}
@@ -37,9 +37,19 @@ public class ThreadTesting
 		{
 			run(new AsyncEnergyMonitorJavaSide(delay),lifetime,outfile);
 		}
-		if (args[0].equalsIgnoreCase("c"))
+		else if (args[0].equalsIgnoreCase("c-dynamicarray"))
 		{
-			run(new AsyncEnergyMonitorCSide(delay),lifetime,outfile);
+			run(new AsyncEnergyMonitorCSide(delay,"DYNAMIC_ARRAY"),lifetime,outfile);
+		}
+		else if (args[0].equalsIgnoreCase("c-linkedlist"))
+		{
+			run (new AsyncEnergyMonitorCSide(delay,"LINKED_LIST"),lifetime,outfile);
+		}
+		else
+		{
+			System.out.println("usage: java jrapltesting.ThreadTesting <java|c-dynamicarray|c-linkedlist> <monitor lifetime (ms)> <monitor delay> <outfile>");
+			System.out.println("  -- if no argument for outfile, prints to stdout");
+			System.exit(2);
 		}
 	
 	}
