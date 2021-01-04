@@ -22,7 +22,7 @@ public class EnergyManager
 			//sys_paths.set(null);
 		} catch (Exception e) { }*/	
 
-		String nativelib = "/home/alejandro/jRAPL/src/libCPUScaler.so";
+		String nativelib = "/home/alejandro/jRAPL/src/main/java/jrapl/NativeLib/libCPUScaler.so";
 		try {
 			//NativeUtils.loadLibraryFromJar("libCPUScaler.so");
 			System.load(nativelib);
