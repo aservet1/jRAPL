@@ -3,4 +3,4 @@ dontinline,*.*_avgt_jmhStub
 dontinline,*.*_sample_jmhStub
 dontinline,*.*_ss_jmhStub
 dontinline,*.*_thrpt_jmhStub
-inline,com/jenkov/MyBenchmark.testMethod
+inline,com/aservet/MyBenchmark.testProfileInit

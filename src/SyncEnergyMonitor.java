@@ -85,17 +85,17 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		monitor.init();
 
 		int socket = 1;
-		//double[] before = monitor.getPrimitiveSample();
-		//double[] after;
-		//double[] diff;
+		double[] before = monitor.getPrimitiveSample();
+		double[] after;
+		double[] diff;
 		for (int i = 0; i < 1000; i++) {
-			try { Thread.sleep(57); }
+			try { Thread.sleep(100); }
 			catch (Exception e) { e.printStackTrace(); }
-			//after = monitor.getPrimitiveSample();
-			//diff = SyncEnergyMonitor.subtractPrimitiveSamples(after,before);
-			//System.out.println(dumpPrimitiveArray(diff));
-			//before = after;
-			System.out.println(dumpPrimitiveArray(monitor.getPrimitiveSample()));
+			after = monitor.getPrimitiveSample();
+			diff = SyncEnergyMonitor.subtractPrimitiveSamples(after,before);
+			System.out.println(dumpPrimitiveArray(diff));
+			before = after;
+			//System.out.println(dumpPrimitiveArray(monitor.getPrimitiveSample()));
 		}
 
 		monitor.dealloc();

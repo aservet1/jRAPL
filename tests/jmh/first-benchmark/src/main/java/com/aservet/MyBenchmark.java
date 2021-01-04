@@ -32,23 +32,38 @@
 package com.aservet;
 
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.infra.Blackhole;
+
+import jrapl.EnergyManager;
 
 public class MyBenchmark {
 
-    @Benchmark
-    public void test1(Blackhole b) {
-    	b.consume(new Object());
-	}
-	
-	@Benchmark
-	public void test2() {
-		new Object();
+	static {
+		EnergyManager manager = new EnergyManager();
+		manager.init();
 	}
 
 	@Benchmark
-	public Object test3() {
-		return new Object();
+	@BenchmarkMode(Mode.AverageTime)
+	public void testProfileInit() {
+		EnergyManager.profileInit();
 	}
+
+//	@Benchmark
+//	public void test1(Blackhole b) {
+//	b.consume(new Object());
+//	}
+//
+//	@Benchmark
+//	public void test2() {
+//		new Object();
+//	}
+//
+//	@Benchmark
+//	public Object test3() {
+//		return new Object();
+//	}
 
 }
