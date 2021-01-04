@@ -29,11 +29,11 @@ cd $JRAPL_HOME/src
 warmup_iterations=5
 for (( i=1; i<=$warmup_iterations; i++ ))
 do
-	sudo java jrapltesting.RuntimeTestUtils $flag $trials > /dev/null
+	sudo java $JRAPL_HOME/target/jrapl-1.0.jar jrapltesting.RuntimeTestUtils $flag $trials > /dev/null
 	echo "$flag: warmup iteration done $i/$warmup_iterations"
 done
 
-sudo java jrapltesting.RuntimeTestUtils $flag $trials > $RUNTIME_TESTS/$outputdir/MajorOutput.data
+sudo java -cp $JRAPL_HOME/target/jrapl-1.0.jar jrapltesting.RuntimeTestUtils $flag $trials > $RUNTIME_TESTS/$outputdir/MajorOutput.data
 echo "$flag: test done running"
 
 cd $RUNTIME_TESTS/$outputdir

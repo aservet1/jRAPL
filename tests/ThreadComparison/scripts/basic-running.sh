@@ -20,7 +20,7 @@ monitor_delay=$2
 
 for jc in java c-linkedlist c-dynamicarray
 do
-	sudo java -cp $JRAPL_HOME/src jrapltesting.ThreadTesting \
+	sudo java -cp $JRAPL_HOME/target/jrapl-1.0.jar jrapltesting.ThreadTesting \
 		$jc $monitor_lifetime $monitor_delay "output/$jc.data"
 	echo "done with $jc collecting"
 done
