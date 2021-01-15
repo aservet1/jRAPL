@@ -1,4 +1,4 @@
-package jrapl;
+package jRAPL;
 
 //these two are just for testing in main(), they dont actually help the class
 import java.util.Arrays;

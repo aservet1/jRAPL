@@ -1,6 +1,6 @@
-package jrapltesting;
+package jRAPLTesting;
 
-import jrapl.*;
+import jRAPL.*;
 
 public class ThreadTesting
 {

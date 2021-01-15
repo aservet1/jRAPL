@@ -1,6 +1,6 @@
-package jrapltesting;
+package jRAPLTesting;
 
-import jrapl.*;
+import jRAPL.*;
 
 import java.util.Arrays;
 import java.time.Instant;

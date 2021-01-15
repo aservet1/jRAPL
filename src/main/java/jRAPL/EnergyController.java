@@ -1,5 +1,5 @@
 
-package jrapl;
+package jRAPL;
 
 /** <h1> DOCUMENTATION OUT OF DATE </h1>
 *	Ways to regulate computer's energy consumption. This class is currently just a dump of native methods

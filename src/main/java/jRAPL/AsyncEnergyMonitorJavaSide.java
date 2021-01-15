@@ -1,4 +1,4 @@
-package jrapl;
+package jRAPL;
 
 import java.util.Arrays;
 

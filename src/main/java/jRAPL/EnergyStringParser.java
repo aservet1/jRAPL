@@ -1,4 +1,4 @@
-package jrapl;
+package jRAPL;
 
 public class EnergyStringParser {
 

@@ -1,4 +1,4 @@
-package jrapl;
+package jRAPL;
 
 import java.time.Instant;
 import java.time.Duration;

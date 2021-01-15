@@ -160,18 +160,18 @@ void ProfileDealloc()
 	free(parameters);
 }
 
-JNIEXPORT void JNICALL Java_jrapl_EnergyManager_profileInit(JNIEnv *env, jclass jcls)
+JNIEXPORT void JNICALL Java_jRAPL_EnergyManager_profileInit(JNIEnv *env, jclass jcls)
 {	
 	ProfileInit();
 }
 
 //assumes profile has already been inited. @TODO try to get this to be independent of profileinit and move it into arch_spec.c
-JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_getWraparoundEnergy(JNIEnv* env, jclass jcls)
+JNIEXPORT jint JNICALL Java_jRAPL_ArchSpec_getWraparoundEnergy(JNIEnv* env, jclass jcls)
 {
 	return (jint)wraparound_energy;
 }
 
-JNIEXPORT jstring JNICALL Java_jrapl_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls, jint whichSocket) {
+JNIEXPORT jstring JNICALL Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls, jint whichSocket) {
 	
 	char ener_info[512];
 	EnergyStats stats_per_socket[num_pkg];
@@ -186,7 +186,7 @@ JNIEXPORT jstring JNICALL Java_jrapl_EnergyMonitor_energyStatCheck(JNIEnv *env, 
 
 }
 
-JNIEXPORT void JNICALL Java_jrapl_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls) {
+JNIEXPORT void JNICALL Java_jRAPL_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls) {
 
 	ProfileDealloc();
 

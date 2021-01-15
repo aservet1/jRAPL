@@ -1,5 +1,5 @@
 
-package jrapl;
+package jRAPL;
 
 public class DvfsEnergyController extends EnergyController {
 

@@ -10,13 +10,13 @@ static AsyncEnergyMonitor* monitor;
 
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_allocMonitor(JNIEnv* env, jclass jcls, jint samplingRate, jint storageType)
+Java_jRAPL_AsyncEnergyMonitorCSide_allocMonitor(JNIEnv* env, jclass jcls, jint samplingRate, jint storageType)
 {
 	monitor = newAsyncEnergyMonitor(samplingRate, storageType);
 }
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_deallocMonitor(JNIEnv* env, jclass jcls)
+Java_jRAPL_AsyncEnergyMonitorCSide_deallocMonitor(JNIEnv* env, jclass jcls)
 {
 	if (monitor != NULL) {
 		freeAsyncEnergyMonitor(monitor);
@@ -25,29 +25,29 @@ Java_jrapl_AsyncEnergyMonitorCSide_deallocMonitor(JNIEnv* env, jclass jcls)
 }
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_startCollecting(JNIEnv* env, jclass jcls) {
+Java_jRAPL_AsyncEnergyMonitorCSide_startCollecting(JNIEnv* env, jclass jcls) {
 	start(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_stopCollecting(JNIEnv* env, jclass jcls) {
+Java_jRAPL_AsyncEnergyMonitorCSide_stopCollecting(JNIEnv* env, jclass jcls) {
 	stop(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_cSideReset(JNIEnv* env, jclass jcls) {
+Java_jRAPL_AsyncEnergyMonitorCSide_cSideReset(JNIEnv* env, jclass jcls) {
 	reset(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_writeToFileFromC(JNIEnv* env, jclass jcls, jstring jstringFilepath) {
+Java_jRAPL_AsyncEnergyMonitorCSide_writeToFileFromC(JNIEnv* env, jclass jcls, jstring jstringFilepath) {
 	const char* filepath = (*env)->GetStringUTFChars(env, jstringFilepath, NULL);
 	writeToFile(monitor, filepath);
 	(*env)->ReleaseStringUTFChars(env, jstringFilepath, filepath);
 }
 
 JNIEXPORT jstring JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int k)
+Java_jRAPL_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int k)
 {
 	if (monitor->samples_dynarr) assert( k < monitor->samples_dynarr->nItems );
 	if (monitor->samples_linklist) assert( k < monitor->samples_linklist->nItems );
@@ -78,7 +78,7 @@ Java_jrapl_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int k)
 }
 
 JNIEXPORT jlongArray JNICALL
-Java_jrapl_AsyncEnergyMonitorCSide_lastKTimestamps(JNIEnv* env, jclass jcls, int k)
+Java_jRAPL_AsyncEnergyMonitorCSide_lastKTimestamps(JNIEnv* env, jclass jcls, int k)
 {
 	EnergyStats samples[k];
 	lastKSamples(k, monitor, samples);

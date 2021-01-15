@@ -4,12 +4,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>jrapl</groupId>
-  <artifactId>jrapl</artifactId>
+  <groupId>jRAPL</groupId>
+  <artifactId>jRAPL</artifactId>
   <version>1.0</version>
 
-  <name>jrapl</name>
-  <url>http://www.github.com/aservet1/jrapl</url>
+  <name>jRAPL</name>
+  <url>http://www.github.com/aservet1/jRAPL</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

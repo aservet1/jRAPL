@@ -16,7 +16,7 @@ static int num_pkg;
 static int dram_or_gpu;
 static int* fd;
 
-JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_initCSideTiming(JNIEnv* env, jclass jcls, jint power_domain){
+JNIEXPORT void JNICALL Java_jRAPLTesting_RuntimeTestUtils_initCSideTiming(JNIEnv* env, jclass jcls, jint power_domain){
 	num_pkg = getSocketNum();
 	dram_or_gpu = get_power_domains_supported(get_cpu_model(),NULL);
 	fd = (int*)malloc(sizeof(int)*num_pkg);
@@ -26,38 +26,38 @@ JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_initCSideTiming(JNIEnv
 		fd[i] = open(msr_filename, O_RDWR);
 	}
 }
-JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_deallocCSideTiming(JNIEnv* env, jclass jcls, jint power_domain){
+JNIEXPORT void JNICALL Java_jRAPLTesting_RuntimeTestUtils_deallocCSideTiming(JNIEnv* env, jclass jcls, jint power_domain){
 	free(fd);
 }
 
-JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeProfileInit(JNIEnv* env, jclass jcls){
+JNIEXPORT jlong JNICALL Java_jRAPLTesting_RuntimeTestUtils_usecTimeProfileInit(JNIEnv* env, jclass jcls){
 
 	STARTSTAMP;
-	Java_jrapl_EnergyManager_profileInit(env, jcls);
+	Java_jRAPL_EnergyManager_profileInit(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
 
-JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeGetSocketNum(JNIEnv* env, jclass jcls){
+JNIEXPORT jlong JNICALL Java_jRAPLTesting_RuntimeTestUtils_usecTimeGetSocketNum(JNIEnv* env, jclass jcls){
 
 	STARTSTAMP;
-	Java_jrapl_ArchSpec_getSocketNum(env, jcls);
+	Java_jRAPL_ArchSpec_getSocketNum(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
 
-JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls, jint whichSocket){
+JNIEXPORT jlong JNICALL Java_jRAPLTesting_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls, jint whichSocket){
 
 	STARTSTAMP;
-	Java_jrapl_EnergyMonitor_energyStatCheck(env, jcls, whichSocket);
+	Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls, whichSocket);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
 
-JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeProfileDealloc(JNIEnv* env, jclass jcls){
+JNIEXPORT jlong JNICALL Java_jRAPLTesting_RuntimeTestUtils_usecTimeProfileDealloc(JNIEnv* env, jclass jcls){
 
 	STARTSTAMP;
-	Java_jrapl_EnergyManager_profileDealloc(env, jcls);
+	Java_jRAPL_EnergyManager_profileDealloc(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
@@ -74,7 +74,7 @@ JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeProfileDeallo
 	(*env)->SetLongArrayRegion(env, result, 0, num_pkg, fill);	\
 	return result;
 
-JNIEXPORT jlongArray JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeMSRRead(JNIEnv* env, jclass jcls, jint powerDomain){
+JNIEXPORT jlongArray JNICALL Java_jRAPLTesting_RuntimeTestUtils_usecTimeMSRRead(JNIEnv* env, jclass jcls, jint powerDomain){
 
 	jlong fill[num_pkg];
 

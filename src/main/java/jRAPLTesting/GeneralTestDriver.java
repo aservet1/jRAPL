@@ -1,5 +1,5 @@
-package jrapltesting;
-import jrapl.*;
+package jRAPLTesting;
+import jRAPL.*;
 
 public class GeneralTestDriver
 {

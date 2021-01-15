@@ -205,7 +205,7 @@ int get_power_domains_supported(uint32_t cpu_model, char power_domain_string_buf
 }
 
 JNIEXPORT jstring JNICALL
-Java_jrapl_ArchSpec_energyStatsStringFormat(JNIEnv* env, jclass jcls) {
+Java_jRAPL_ArchSpec_energyStatsStringFormat(JNIEnv* env, jclass jcls) {
 	char power_domain_string[512];
 	get_power_domains_supported(get_cpu_model(),power_domain_string);
 	return (*env)->NewStringUTF(env, power_domain_string);
@@ -218,22 +218,22 @@ Java_jrapl_ArchSpec_energyStatsStringFormat(JNIEnv* env, jclass jcls) {
 //  if you just want to read the wraparound energy real quick
 
 JNIEXPORT jint JNICALL
-Java_jrapl_ArchSpec_powerDomainsSupported(JNIEnv * env, jclass jcls) {
+Java_jRAPL_ArchSpec_powerDomainsSupported(JNIEnv * env, jclass jcls) {
 	return get_power_domains_supported(get_cpu_model(),NULL);
 }
 
 JNIEXPORT jint JNICALL
-Java_jrapl_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls) {
+Java_jRAPL_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls) {
 	return (jint)getSocketNum(); 
 }
 
 JNIEXPORT jint JNICALL
-Java_jrapl_ArchSpec_getCpuModel(JNIEnv* env, jclass jcls) {
+Java_jRAPL_ArchSpec_getCpuModel(JNIEnv* env, jclass jcls) {
 	return get_cpu_model();
 }
 
 JNIEXPORT jstring JNICALL
-Java_jrapl_ArchSpec_getCpuModelName(JNIEnv* env, jclass jcls) {
+Java_jRAPL_ArchSpec_getCpuModelName(JNIEnv* env, jclass jcls) {
 	const char* name;
 	switch(get_cpu_model()) {
 		case KABYLAKE:			name = "KABYLAKE";			break;
