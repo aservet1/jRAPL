@@ -99,19 +99,23 @@ public final class ArchSpec {
 	public static void init() {} // do-nothing function to trigger the static block...probably a better way of doing this
 
 	public static String infoString() {
-		String s = new String();
 		//s += "readingDRAM: " + readingDRAM + "\n";
 		//s += "readingGPU: " + readingGPU + "\n";
-		s += "NUM_SOCKETS: " + NUM_SOCKETS + "\n";
-		s += "RAPL_WRAPAROUND: " + RAPL_WRAPAROUND + "\n";
-		s += "CPU_MODEL: " + Integer.toHexString(CPU_MODEL) + "\n";
-		s += "CPU_MODEL_NAME: " + CPU_MODEL_NAME;
-		s += "ENERGY_STATS_STRING_FORMAT: " + ENERGY_STATS_STRING_FORMAT;
-		s += "DRAM_ARRAY_INDEX: " + DRAM_ARRAY_INDEX + "\n";
-		s += "GPU_ARRAY_INDEX: " + GPU_ARRAY_INDEX + "\n";
-		s += "CORE_ARRAY_INDEX: " + CORE_ARRAY_INDEX + "\n";
-		s += "PKG_ARRAY_INDEX: " + PKG_ARRAY_INDEX + "\n";
-		return s;
+		return String.join(
+			"\n",
+			"CPU_MODEL: " + Integer.toHexString(CPU_MODEL),
+			"CPU_MODEL_NAME: " + CPU_MODEL_NAME,
+			"",
+			"NUM_SOCKETS: " + NUM_SOCKETS,
+			"RAPL_WRAPAROUND: " + RAPL_WRAPAROUND,
+			"",
+			"ENERGY_STATS_STRING_FORMAT: " + ENERGY_STATS_STRING_FORMAT,
+			"",
+			"DRAM_ARRAY_INDEX: " + DRAM_ARRAY_INDEX,
+			"GPU_ARRAY_INDEX: " + GPU_ARRAY_INDEX,
+			"CORE_ARRAY_INDEX: " + CORE_ARRAY_INDEX,
+			"PKG_ARRAY_INDEX: " + PKG_ARRAY_INDEX
+			);
 	}
 
 }
