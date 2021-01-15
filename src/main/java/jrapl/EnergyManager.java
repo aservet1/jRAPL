@@ -19,7 +19,7 @@ public class EnergyManager
 	*   But can be used for any simple / non compound 
 	*   (|&&>;)-like commands. Simple ones.
 	*/
-	static void execCmd(String command) {
+	private static void execCmd(String command) {
 		String s;
 		try {
 			Process p = Runtime.getRuntime().exec(command);
