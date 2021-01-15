@@ -1,4 +1,4 @@
-package pkg;
+
 import jrapl.SyncEnergyMonitor;
 
 public class jRAPL
