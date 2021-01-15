@@ -1,7 +1,6 @@
 
 package jrapl;
 
-import java.lang.reflect.Field;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -41,25 +40,13 @@ public class EnergyManager
 		execCmd("sudo modprobe msr");
 		modprobed = true;
 	}
-	private static void loadLibrary() {
+	private static void loadNativeLibrary() {
 
-		// do NOT delete this commented sections in this !! it's going to be useful when i actually need to load library from jar
-		
+		String nativelib = "/NativeLib/libCPUScaler.so";
 		try {
-			Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
-			fieldSysPath.setAccessible(true);
-			fieldSysPath.set(null, null);
-			//MethodHandles.Lookup cl = MethodHandles.privateLookupIn(ClassLoader.class, MethodHandles.lookup());
-			//VarHandle sys_paths = cl.findStaticVarHandle(ClassLoader.class, "sys_paths", String[].class);
-			//sys_paths.set(null);
-		} catch (Exception e) { }	
-
-		String nativelib = "libCPUScaler.so";
-		try {
-			NativeUtils.loadLibraryFromJar("/NativeLib/"+nativelib);
-			//System.load(nativelib);
+			NativeUtils.loadLibraryFromJar(nativelib);
 		} catch (Exception e) {
-			System.err.println("ERROR LOADING LIBRARY " + nativelib);
+			System.err.println("!! error loading library ! -- " + nativelib);
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -70,7 +57,7 @@ public class EnergyManager
 		if (!modprobed)
 			sudoModprobeMsr();
 		if (!libraryLoaded)
-			loadLibrary();
+			loadNativeLibrary();
 		if (energyManagersActive++ == 0)
 			profileInit();
 		ArchSpec.init(); // there's definitely a better way of doing this
