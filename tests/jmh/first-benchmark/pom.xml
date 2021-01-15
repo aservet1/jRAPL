@@ -88,6 +88,12 @@ THE POSSIBILITY OF SUCH DAMAGE.
                     <compilerVersion>${javac.target}</compilerVersion>
                     <source>${javac.target}</source>
                     <target>${javac.target}</target>
+					<compilerArgs>
+						<!--
+						<arg>-cp</arg>
+						<arg>${cp}:./:/home/alejandro/jRAPL/target/jrapl-1.0.jar</arg>
+						-->
+					</compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
