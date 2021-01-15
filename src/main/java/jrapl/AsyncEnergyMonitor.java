@@ -8,6 +8,8 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 	protected Instant monitorStartTime = null;
 	protected Instant monitorStopTime = null;
+	protected boolean isRunning = false;
+
 	public Duration getLifetime()
 	{
 		if (monitorStartTime != null && monitorStopTime != null)
@@ -17,12 +19,14 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 	public void start()
 	{
+		isRunning = true;
 		monitorStartTime = Instant.now();
 	}
 
 	public void stop()
 	{
 		monitorStopTime = Instant.now();
+		isRunning = false;
 	}
 
 	public abstract String toString();
@@ -69,5 +73,19 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		}
 
 		return samplesArray;
+	}
+
+	public boolean isRunning() {
+		return isRunning;
+	}
+
+	public void monitorAMethod(Runnable method) {
+		// if (isRunning) {
+		// 	throw new RuntimeException("isRunning!!");
+		// }
+		assert !isRunning;
+		this.start();
+		method.run();
+		this.stop();
 	}
 }

@@ -222,11 +222,20 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		aemonj.stop();
 
 		System.out.println(aemonj);
-		//aemonj.writeToFile("tmep");
 		int k = 5;
 		System.out.println(Arrays.deepToString(aemonj.getLastKSamples_Arrays(k)));
 		System.out.println();
 		System.out.println(Arrays.toString(aemonj.getLastKTimestamps(k)));
+
+
+		aemonj.reset();
+		aemonj.monitorAMethod(() -> {
+			try { for (int s = 0; s < 5; s++){
+					Thread.sleep(1000);
+					System.out.println(s+1);				
+				} } catch (Exception ex) { };
+			});
+		System.out.println(Arrays.toString(aemonj.getLastKSamples(aemonj.getNumReadings())));
 
 		aemonj.dealloc();
 	}
