@@ -36,7 +36,7 @@ import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.infra.Blackhole;
 
-import jrapl.EnergyManager;
+import jRAPL.EnergyManager;
 
 public class MyBenchmark {
 
