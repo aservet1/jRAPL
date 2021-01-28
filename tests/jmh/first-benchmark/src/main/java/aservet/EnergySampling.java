@@ -29,41 +29,42 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// package com.aservet;
-// 
-// import org.openjdk.jmh.annotations.Benchmark;
-// import org.openjdk.jmh.annotations.BenchmarkMode;
-// import org.openjdk.jmh.annotations.Mode;
-// import org.openjdk.jmh.infra.Blackhole;
-// 
-// import jRAPL.EnergyManager;
-// 
-// public class MyBenchmark {
-// 
-// 	static {
-// 		EnergyManager manager = new EnergyManager();
-// 		manager.init();
-// 	}
-// 
-// 	@Benchmark
-// 	@BenchmarkMode(Mode.AverageTime)
-// 	public void testProfileInit() {
-// 		EnergyManager.profileInit();
-// 	}
-// 
-// //	@Benchmark
-// //	public void test1(Blackhole b) {
-// //	b.consume(new Object());
-// //	}
-// //
-// //	@Benchmark
-// //	public void test2() {
-// //		new Object();
-// //	}
-// //
-// //	@Benchmark
-// //	public Object test3() {
-// //		return new Object();
-// //	}
-// 
-// }
+package com.aservet;
+
+import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
+import java.util.concurrent.TimeUnit;
+
+import jRAPL.SyncEnergyMonitor;
+
+public class EnergySampling {
+
+	@State(Scope.Thread)
+    public static class MyState {
+		public SyncEnergyMonitor monitor;
+
+        @Setup(Level.Trial)
+        public void doSetup() {
+            monitor = new SyncEnergyMonitor();
+			monitor.init();
+        }
+
+        @TearDown(Level.Trial)
+        public void doTearDown() {
+			monitor.dealloc();
+        }
+    }
+
+	@Benchmark
+	@BenchmarkMode(Mode.All) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void testGetObjectSample(MyState state, Blackhole b) {
+		b.consume(state.monitor.getObjectSample());
+	}
+	
+	@Benchmark
+	@BenchmarkMode(Mode.All) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void testGetPrimitiveSample(MyState state, Blackhole b) {
+		b.consume(state.monitor.getPrimitiveSample());
+	}
+
+}
