@@ -79,13 +79,13 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		return isRunning;
 	}
 
-	public void monitorAMethod(Runnable method) {
-		// if (isRunning) {
-		// 	throw new RuntimeException("isRunning!!");
-		// }
-		assert !isRunning;
-		this.start();
-		method.run();
-		this.stop();
-	}
+	// public void monitorAMethod(Runnable method) {//throws Exception { // if the method throws exception, just pass it up
+	// 	// if (isRunning) {
+	// 	// 	throw new RuntimeException("isRunning!!");
+	// 	// }
+	// 	assert !isRunning;
+	// 	this.start();
+	// 	try { method.run(); } catch (Exception ex) { throw ex; }
+	// 	this.stop();
+	// }
 }

@@ -33,7 +33,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.aservet</groupId>
+    <groupId>jRAPL</groupId>
     <artifactId>first-benchmark</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
@@ -93,12 +93,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
                     <compilerVersion>${javac.target}</compilerVersion>
                     <source>${javac.target}</source>
                     <target>${javac.target}</target>
-					<compilerArgs>
-						<!--
-						<arg>-cp</arg>
-						<arg>${cp}:./:/home/alejandro/jRAPL/target/jrapl-1.0.jar</arg>
-						-->
-					</compilerArgs>
                 </configuration>
             </plugin>
             <plugin>

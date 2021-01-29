@@ -18,7 +18,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		super.dealloc();
 	}
 
-	public EnergyStats getObjectSample(int socket)
+	public EnergyStats getSample(int socket)
 	{ 
 		String energyString = EnergyMonitor.energyStatCheck(socket);
 		Instant birthday = Instant.now();
@@ -26,7 +26,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		return new EnergyStats(socket, statsArray, birthday);
 	}
 
-	public EnergyStats[] getObjectSample()
+	public EnergyStats[] getSample()
 	{
 		String energyString = EnergyMonitor.energyStatCheck(0);
 		Instant birthday = Instant.now();

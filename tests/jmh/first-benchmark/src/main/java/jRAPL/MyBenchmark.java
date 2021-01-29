@@ -29,41 +29,26 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.aservet;
-
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.infra.Blackhole;
-
-import jRAPL.EnergyManager;
-
-public class MyBenchmark {
-
-	static {
-		EnergyManager manager = new EnergyManager();
-		manager.init();
-	}
-
-	@Benchmark
-	@BenchmarkMode(Mode.AverageTime)
-	public void testProfileInit() {
-		EnergyManager.profileInit();
-	}
-
-//	@Benchmark
-//	public void test1(Blackhole b) {
-//	b.consume(new Object());
-//	}
-//
-//	@Benchmark
-//	public void test2() {
-//		new Object();
-//	}
-//
-//	@Benchmark
-//	public Object test3() {
-//		return new Object();
-//	}
-
-}
+// package jRAPL;
+// 
+// import org.openjdk.jmh.annotations.*;
+// import org.openjdk.jmh.infra.Blackhole;
+// 
+// public class MyBenchmark {
+// 
+// 	@Benchmark
+// 	public void test1(Blackhole b) {
+// 	b.consume(new Object());
+// 	}
+// 
+// 	@Benchmark
+// 	public void test2() {
+// 		new Object();
+// 	}
+// 
+// 	@Benchmark
+// 	public Object test3() {
+// 		return new Object();
+// 	}
+// 
+// }
