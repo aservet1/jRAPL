@@ -29,42 +29,49 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.aservet;
-
-import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.infra.Blackhole;
-import java.util.concurrent.TimeUnit;
-
-import jRAPL.SyncEnergyMonitor;
-
-public class EnergySampling {
-
-	@State(Scope.Thread)
-    public static class MyState {
-		public SyncEnergyMonitor monitor;
-
-        @Setup(Level.Trial)
-        public void doSetup() {
-            monitor = new SyncEnergyMonitor();
-			monitor.init();
-        }
-
-        @TearDown(Level.Trial)
-        public void doTearDown() {
-			monitor.dealloc();
-        }
-    }
-
-	@Benchmark
-	@BenchmarkMode(Mode.All) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void testGetObjectSample(MyState state, Blackhole b) {
-		b.consume(state.monitor.getObjectSample());
-	}
-	
-	@Benchmark
-	@BenchmarkMode(Mode.All) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void testGetPrimitiveSample(MyState state, Blackhole b) {
-		b.consume(state.monitor.getPrimitiveSample());
-	}
-
-}
+//package jRAPL;
+//
+//import org.openjdk.jmh.annotations.*;
+//import org.openjdk.jmh.infra.Blackhole;
+//import java.util.concurrent.TimeUnit;
+//
+//public class EnergySampling {
+// 
+// 	@State(Scope.Thread)
+//     public static class MyState {
+// 		public SyncEnergyMonitor monitor;
+// 
+//         @Setup(Level.Trial)
+//         public void doSetup() {
+//            monitor = new SyncEnergyMonitor();
+// 			monitor.init();
+//         }
+// 
+//         @TearDown(Level.Trial)
+//         public void doTearDown() {
+// 			monitor.dealloc();
+//         }
+//     }
+// 
+//	@Benchmark
+//	@BenchmarkMode(Mode.AverageTime)
+//	@OutputTimeUnit(TimeUnit.MICROSECONDS)
+//	public void timeNativeGetSample(MyState state, Blackhole b) {
+//		b.consume(EnergyMonitor.energyStatCheck(0));
+//	}
+//
+//	@Benchmark
+//	@BenchmarkMode(Mode.AverageTime)
+//	@OutputTimeUnit(TimeUnit.MICROSECONDS)
+//	public void timeGetSample(MyState state, Blackhole b) {
+//		b.consume(state.monitor.getSample());
+// 	}
+// 	
+// 	@Benchmark
+// 	@BenchmarkMode(Mode.AverageTime)
+// 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
+// 	public void timeGetPrimitiveSample(MyState state, Blackhole b) {
+// 		b.consume(state.monitor.getPrimitiveSample());
+// 	}
+// 
+// }
