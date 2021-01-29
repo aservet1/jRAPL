@@ -1,4 +1,3 @@
-
 package jRAPL;
 
 import java.io.BufferedReader;
@@ -11,9 +10,9 @@ public class EnergyManager
 	private static boolean libraryLoaded = false;
 	private static int energyManagersActive = 0; // counter for shared resource, decrease on dealloc(), when you get to 0 dealloc everything
 
-	//@TODO these should eventually be private methods
-	public native static void profileInit();
-	public native static void profileDealloc();
+	// package private so it can be called in JMH test methods
+	native static void profileInit();
+	native static void profileDealloc();
 
 	/** Right now only used for 'sudo modprobe msr'.
 	*   But can be used for any simple / non compound 
@@ -31,15 +30,17 @@ public class EnergyManager
 				System.out.println(s); // printing stderr
 			}
 		} catch (IOException e) {
-        		System.out.println("<<<IOException in execCmd():");
-        		e.printStackTrace();
-        		System.exit(-1);
-        	}
+        	System.out.println("<<<IOException in execCmd("+command+"):");
+        	e.printStackTrace();
+        	System.exit(-1);
+        }
 	}
+
 	private static void sudoModprobeMsr() {
 		execCmd("sudo modprobe msr");
 		modprobed = true;
 	}
+
 	private static void loadNativeLibrary() {
 
 		String nativelib = "/native/libCPUScaler.so";
@@ -52,8 +53,7 @@ public class EnergyManager
 		}
 		libraryLoaded = true;
 	}
-	public void init() //get a better name
-	{
+	public void init() { //get a better name, init might be too generic that confuses other things maybe
 		if (!modprobed)
 			sudoModprobeMsr();
 		if (!libraryLoaded)
@@ -67,6 +67,4 @@ public class EnergyManager
 	{
 		if (--energyManagersActive == 0) profileDealloc();
 	}
-
 }
-
