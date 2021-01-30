@@ -6,7 +6,7 @@ I'd be more than happy to give you a run-down of what's usable and what's still 
 Repo for Alejandro and Rutvik to collaborate on the jRAPL project (version 2.0)
 
 Based on jRAPL files originally obtained from Kenan's original jRAPL project: https://github.com/kliu20/jRAPL. jRAPL is used a couple of times here and
-there if you search it in GitHub. This repo is for Alejandro to formalize and expand the jRAPL energy programming interface and develop a general purpose
+there if you search it in GitHub. This repo is for Alejandro to formalize and expand the jRAPL interface and develop a general purpose
 library for energy-aware Java applicactions.
 
 See Kenan's README (above link) for general information about jRAPL, although it's quite different from the current implementation details. However, there
