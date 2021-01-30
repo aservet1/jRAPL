@@ -17,7 +17,7 @@ int get_pos_intnum(int value) {
 	return num;
 }
 
-/** Sets the DVFS governnor policy
+/** Sets the DVFS governor policy
  *	Returns 1 if failed writing opening and closing file. Return 0 if no errors.
  */
 int check_write_gov(int cores, char govFile[cores][60], const char *target) {
