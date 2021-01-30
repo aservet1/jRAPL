@@ -1,2 +1,4 @@
 # maven build target for jRAPL/src
 target/
+
+*.so

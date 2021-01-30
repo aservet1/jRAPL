@@ -21,7 +21,9 @@ JAVA_HOME = $(shell readlink -f /usr/bin/javac | sed "s:bin/javac::")
 JAVA_INCLUDE = $(JAVA_HOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
+
 all: lib_native_RAPL
+	cp $(NATIVE_LIB) ../src/main/resources/native
 
 lib_native_RAPL: $(CFILES)
 	gcc $(CFLAGS) -I $(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES)
