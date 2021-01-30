@@ -4,7 +4,7 @@
 #include<sys/time.h>
 
 #include "arch_spec.h"
-#include "CPUScaler.h"
+#include "EnergyCheckUtils.h"
 
 //timestamp macros
 #define STARTSTAMP	gettimeofday(&start, NULL);

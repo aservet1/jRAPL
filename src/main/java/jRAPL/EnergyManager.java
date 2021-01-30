@@ -43,7 +43,7 @@ public class EnergyManager
 
 	private static void loadNativeLibrary() {
 
-		String nativelib = "/native/libCPUScaler.so";
+		String nativelib = "/native/libNativeRAPL.so";
 		try {
 			NativeUtils.loadLibraryFromJar(nativelib);
 		} catch (Exception e) {

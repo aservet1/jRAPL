@@ -213,7 +213,7 @@ Java_jRAPL_ArchSpec_energyStatsStringFormat(JNIEnv* env, jclass jcls) {
 }
 
 //TODO -- for organization, see if you can do the wraparound energy calculation here
-//	instead of CPUScaler. involves open()-ing up the msr and closing it (if not already open)
+//	instead of EnergyCheckUtils.c involves open()-ing up the msr and closing it (if not already open)
 //  and reading directly from it. that would make it so you don't have to do ProfileInit()
 //  if you just want to read the wraparound energy real quick
 

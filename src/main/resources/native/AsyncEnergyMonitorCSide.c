@@ -9,7 +9,7 @@
 
 #include "EnergyStats.h"
 #include "AsyncEnergyMonitorCSide.h"
-#include "CPUScaler.h"
+#include "EnergyCheckUtils.h"
 #include "arch_spec.h"
 
 #include "CSideDataStorage.h"

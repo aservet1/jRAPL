@@ -9,7 +9,7 @@
 #include <inttypes.h>
 #include <sys/types.h>
 
-#include "CPUScaler.h"
+#include "EnergyCheckUtils.h"
 #include "arch_spec.h"
 #include "msr.h"
 #include "EnergyStats.h"

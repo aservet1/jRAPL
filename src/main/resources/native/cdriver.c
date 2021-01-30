@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "EnergyStats.h"
-#include "CPUScaler.h"
+#include "EnergyCheckUtils.h"
 #include "AsyncEnergyMonitorCSide.h"
 #include "arch_spec.h"
 

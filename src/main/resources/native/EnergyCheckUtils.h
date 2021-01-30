@@ -13,7 +13,6 @@ void ProfileDealloc();
 
 void Java_jRAPL_EnergyManager_profileInit(JNIEnv *env, jclass jcls);
 jint Java_jRAPL_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls);
-jint Java_jRAPL_ArchSpec_dramOrGpu(JNIEnv * env, jclass jcls);
 jstring Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls, jint whichSocket);
 void Java_jRAPL_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls);
 
