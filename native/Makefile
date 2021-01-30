@@ -23,11 +23,11 @@ JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
 all: lib_native_RAPL
 	cp $(NATIVE_LIB) ../src/main/resources/native
+	date > $(MAKELOG) #keeps track of last time 'make' builds the library
 
 lib_native_RAPL: $(CFILES)
 	gcc $(CFLAGS) -I $(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES)
 	gcc -g -Wall -I $(JAVA_INCLUDE) -I $(JAVA_INCLUDE_LINUX) -shared -Wl,-soname,$(NATIVE_LIB) -o $(NATIVE_LIB) $(OFILES) -lc
-	date > $(MAKELOG) #keeps track of last time make occurred
 
 $(CDRIVER): $(CFILES) $(CDRIVER).c
 	#gcc -g -fsanitize=address -fno-omit-frame-pointer -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES) $(CDRIVER).c -o $(CDRIVER)-lm
