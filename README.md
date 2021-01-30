@@ -17,5 +17,5 @@ found in the `target` directory. You can then include the jar like any other, ei
 
 Some classes have sample `main()`drivers that you can execute, for example `sudo java -cp jRAPL-1.0.jar jRAPL.SyncEnergyMonitor`.
 
-#### Contact
+### Contact
 Any questions, feel free to email. Alejandro Servetto {aservet1@binghamton.edu}
