@@ -2,12 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 //// DVFS stands for Dynamic Voltage and Frequency Scaling
+//// Not currently used in current working project, but will be the native function basis for DvfsEnergyController.java once that is implemented
 
-/**	Alejandro's interpretation
- *	Return 1 if negative, otherwise return number of base 10 digits in value
- *		147 => 3, 328974 => 6, -1812973128973 => 1, etc
+/** Return 1 if negative, otherwise return number of base 10 digits in value
+ *	i.e. 147 => 3, 328974 => 6, -1812973128973 => 1, etc
  */
 int get_pos_intnum(int value) {
 	int num = 1;
@@ -18,9 +17,7 @@ int get_pos_intnum(int value) {
 	return num;
 }
 
-/** Alejandro's Interpretation
- *
- *
+/** Sets the DVFS governnor policy
  *	Returns 1 if failed writing opening and closing file. Return 0 if no errors.
  */
 int check_write_gov(int cores, char govFile[cores][60], const char *target) {
@@ -73,13 +70,9 @@ int check_write_gov(int cores, char govFile[cores][60], const char *target) {
 		}
 	}
 	return 0;
-
 }
 
-/** Alejandro's Interpretation
- *
- *
- *
+/** Sets the desired CPU frequency for all CPU cores
  *	Returns 1 if failed writing opening and closing file. Return 0 if no errors.
  */
 int write_freq_all_cores(int cores, char filename[cores][60], const char *cur_freq, const char *scal_freq, int freq) {
@@ -130,7 +123,8 @@ int write_freq_all_cores(int cores, char filename[cores][60], const char *cur_fr
 		}
 		fscanf(f[i], "%d", &scal_cpufreq[i]);
 		rc= fclose(f[i]);
-	  printf("cpu_freq: %d\n", cpu_freq[i]);
+		
+		printf("cpu_freq: %d\n", cpu_freq[i]);
 		printf("scal_cpufreq: %d\n", scal_cpufreq[i]);
 	}
 	return 0;
