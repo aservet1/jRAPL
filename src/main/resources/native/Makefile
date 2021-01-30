@@ -13,7 +13,6 @@ CFILES =										\
 		CSideDataStorage.c						\
 
 OFILES = $(CFILES:.c=.o)
-TARGET = $(NATIVE_LIB)
 CDRIVER = cdriver
 MAKELOG = .makelog
 
@@ -26,7 +25,7 @@ all: lib_native_RAPL
 
 lib_native_RAPL: $(CFILES)
 	gcc $(CFLAGS) -I $(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES)
-	gcc -g -Wall -I $(JAVA_INCLUDE) -I $(JAVA_INCLUDE_LINUX) -shared -Wl,-soname,$(NATIVE_LIB) -o $(TARGET) $(OFILES) -lc
+	gcc -g -Wall -I $(JAVA_INCLUDE) -I $(JAVA_INCLUDE_LINUX) -shared -Wl,-soname,$(NATIVE_LIB) -o $(NATIVE_LIB) $(OFILES) -lc
 	date > $(MAKELOG) #keeps track of last time make occurred
 
 $(CDRIVER): $(CFILES) $(CDRIVER).c
@@ -34,4 +33,4 @@ $(CDRIVER): $(CFILES) $(CDRIVER).c
 	gcc -g -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES) $(CDRIVER).c -o $(CDRIVER) -lm -lpthread
 
 clean:
-	rm -f $(TARGET) $(OFILES) $(CDRIVER) $(MAKELOG)
+	rm -f $(NATIVE_LIB) $(OFILES) $(CDRIVER) $(MAKELOG)
