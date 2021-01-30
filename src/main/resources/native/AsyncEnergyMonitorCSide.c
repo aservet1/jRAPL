@@ -120,6 +120,10 @@ void reset(AsyncEnergyMonitor* monitor){
 
 void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath){
 	FILE * outfile = (filepath) ? fopen(filepath,"w") : stdout;
+	if (!outfile) {
+		fprintf(stderr,"ERROR in writeToFile, could not create output file for filepath = %s\n",filepath);
+		exit(1);
+	}
 
 	fprintf(outfile,"samplingRate: %d milliseconds\n",monitor->samplingRate);
 	fprintf(outfile,"socket,dram,gpu,core,pkg,timestamp(usec since epoch)\n");

@@ -107,17 +107,17 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 		return "Coming soon...";
 	}
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws InterruptedException
 	{
 		//AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
 		AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"LINKED_LIST");
 		a.init();
 
 		a.start();
-		try{ Thread.sleep(400);} catch(Exception e){}
+		Thread.sleep(400);
 		a.stop();
 
-		a.writeToFile("extra/hello.txt");
+		a.writeToFile("extra/hello.tmp");
 		//int k = 5;
 		//EnergyStats[][] estats = a.getLastKSamples_Objects(k);
 		//for (EnergyStats[] es : estats) System.out.println(Arrays.deepToString(es));
