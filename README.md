@@ -13,8 +13,7 @@ is still generally useful knowledge about jRAPL in it. I will have an extensive 
 
 ## How to build
 Execute the `./build.sh` shell script. It compiles the native library, copies it into the maven project and uses maven to build up `jRAPL-{version}.jar` file
-found in the `target` directory. You can then include the jar with `-cp` when you build and run other projects that use it. Some classes have sample `main()`
-drivers that you can execute, for example `sudo java -cp jRAPL-1.0.jar jRAPL.SyncEnergyMonitor`.
+found in the `target` directory. You can then include the jar like any other, either in your IDE or on the command line with `-cp` when you build and run other projects that use it. Some classes have sample `main()`drivers that you can execute, for example `sudo java -cp jRAPL-1.0.jar jRAPL.SyncEnergyMonitor`.
 
 #### Contact
 Any questions, feel free to email. Alejandro Servetto {aservet1@binghamton.edu}
