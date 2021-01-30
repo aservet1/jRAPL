@@ -13,7 +13,7 @@ See Kenan's README (above link) for general information about jRAPL, although it
 is still generally useful knowledge about jRAPL in it. I will have an extensive README once the development details are ironed out.
 
 ## How to build
-Execute the `./build.sh` shell script. It compiles the native library, copies it into the maven project and uses maven to build up `jRAPL-{version}.jar` file
+Execute the `./build.sh` shell script. It compiles the native library, copies it into the maven project and uses maven to create the `jRAPL-{version}.jar` file
 found in the `target` directory.
 
 Some classes have sample `main()` drivers that you can execute, for example `sudo java -cp jRAPL-1.0.jar jRAPL.SyncEnergyMonitor`.
