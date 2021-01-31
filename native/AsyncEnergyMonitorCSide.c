@@ -37,6 +37,16 @@ int sleep_millisecond(long msec){
 	return res;
 }
 
+int nSamples(AsyncEnergyMonitor* monitor) {
+	if (USING_DYNAMIC_ARRAY) {
+		return monitor->samples_dynarr->nItems;
+	} else if (USING_LINKED_LIST) {
+		return monitor->samples_linklist->nItems;
+	} else {
+		return -1;
+	}
+}
+
 AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, int storageType)
 {
 	AsyncEnergyMonitor* monitor = (AsyncEnergyMonitor*)malloc(sizeof(AsyncEnergyMonitor));

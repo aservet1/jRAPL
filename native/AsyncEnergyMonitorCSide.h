@@ -13,6 +13,7 @@
 typedef struct AsyncEnergyMonitor {
 	pthread_t thread;
 	int samplingRate;
+	//int nSamples;
 	bool exit;
 
 	//one of dynArr or linkList will be null
@@ -21,10 +22,7 @@ typedef struct AsyncEnergyMonitor {
 	LinkedList* samples_linklist;
 	int storageType;
 
-	//void (*addSample)(AsyncEnergyMonitor*);
-
 } AsyncEnergyMonitor;
-
 
 AsyncEnergyMonitor* newAsyncEnergyMonitor(int delay, int storageType);
 void start(AsyncEnergyMonitor *monitor);
@@ -33,5 +31,6 @@ void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor);
 void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath);
 void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats return_array[k]);
 void reset(AsyncEnergyMonitor* monitor);
+int nSamples(AsyncEnergyMonitor* monitor);
 
 #endif //_ASYNC_ENERGY_MONITOR_CSIDE_H

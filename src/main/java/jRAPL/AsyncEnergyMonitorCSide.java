@@ -19,7 +19,8 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	private native static void writeToFileFromC(String filePath);
 	private native static String lastKSamples(int k);
 	private native static long[] lastKTimestamps(int k);
-	
+	private native static int nSamples();
+
 	private int samplingRate;
 	private int storageType;
 
@@ -39,6 +40,12 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	{
 		deallocMonitor();
 		super.dealloc();
+	}
+
+	public AsyncEnergyMonitorCSide()
+	{
+		samplingRate = 10;
+		storageType = DYNAMIC_ARRAY_STORAGE; //default
 	}
 
 	public AsyncEnergyMonitorCSide(int s)
@@ -95,6 +102,10 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 		return instantValues;
 	}
 
+	public int getNumSamples() {
+		return nSamples();
+	}
+
 	@Override
 	public void reset()
 	{
@@ -105,37 +116,6 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	public String toString()
 	{
 		return "Coming soon...";
-	}
-
-	public static void main(String[] args) throws InterruptedException
-	{
-		//AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"DYNAMIC_ARRAY");
-		AsyncEnergyMonitor a = new AsyncEnergyMonitorCSide(10,"LINKED_LIST");
-		a.init();
-
-		a.start();
-		Thread.sleep(400);
-		a.stop();
-
-		//a.writeToFile("hello.tmp");
-		int k = 5;
-		EnergyStats[][] estats = a.getLastKSamples_Objects(k);
-		for (EnergyStats[] es : estats) System.out.println(Arrays.deepToString(es));
-		System.out.println();
-		Instant[] timestamps = a.getLastKTimestamps(k);
-		for (Instant ts : timestamps) System.out.println(Duration.between(Instant.EPOCH, ts).toNanos()/1000);
-		System.out.println(a.getLifetime().toMillis());
-
-		// double[][] lastK = a.getLastKSamples_Arrays(k);
-		// for (double[] d : lastK) System.out.println(Arrays.toString(d));
-		// EnergyStats[][] estats = a.getLastKSamples_Objects(k);
-		// for (EnergyStats[] es : estats) System.out.println(Arrays.deepToString(es));
-		// System.out.println();
-		// Instant[] timestamps = a.getLastKTimestamps(k);
-		// for (Instant ts : timestamps) System.out.println(Duration.between(Instant.EPOCH, ts).toNanos()/1000);
-		// System.out.println(a.getLifetime().toMillis());
-
-		a.dealloc();
 	}
 
 }

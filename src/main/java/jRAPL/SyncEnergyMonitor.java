@@ -56,7 +56,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		double[] before = monitor.getPrimitiveSample();
 		double[] after;
 		double[] diff;
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 10; i++) {
 			try { Thread.sleep(100); }
 			catch (Exception e) { e.printStackTrace(); }
 			after = monitor.getPrimitiveSample();

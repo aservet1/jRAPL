@@ -5,9 +5,12 @@
 #include "EnergyStats.h"
 #include "AsyncEnergyMonitorCSide.h"
 
-
 static AsyncEnergyMonitor* monitor;
 
+JNIEXPORT jint JNICALL
+Java_jRAPL_AsyncEnergyMonitorCSide_nSamples(JNIEnv* env, jclass jcls) {
+	return (jint)nSamples(monitor);
+}
 
 JNIEXPORT void JNICALL
 Java_jRAPL_AsyncEnergyMonitorCSide_allocMonitor(JNIEnv* env, jclass jcls, jint samplingRate, jint storageType)
@@ -49,8 +52,8 @@ Java_jRAPL_AsyncEnergyMonitorCSide_writeToFileFromC(JNIEnv* env, jclass jcls, js
 JNIEXPORT jstring JNICALL
 Java_jRAPL_AsyncEnergyMonitorCSide_lastKSamples(JNIEnv* env, jclass jcls, int k)
 {
-	if (monitor->samples_dynarr) assert( k < monitor->samples_dynarr->nItems );
-	if (monitor->samples_linklist) assert( k < monitor->samples_linklist->nItems );
+	if (monitor->samples_dynarr) assert( k <= monitor->samples_dynarr->nItems );
+	if (monitor->samples_linklist) assert( k <= monitor->samples_linklist->nItems );
 
 	EnergyStats samples[k];
 	//EnergyStats* samples = (EnergyStats*)malloc(sizeof(EnergyStats)*k);

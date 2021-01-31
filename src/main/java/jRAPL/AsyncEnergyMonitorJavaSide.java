@@ -154,7 +154,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*	Gets the number of samples the object has currently collected
 	*	@return number of samples collected so far
 	*/
-	public int getNumReadings()
+	public int getNumSamples()
 	{
 		return samples.size();
 	}
@@ -206,45 +206,9 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		String s = "";
 		s += "samplingRate: " + samplingRate + " milliseconds\n";
 		s += "lifetime: " + Long.toString(getLifetime().toMillis()) + " milliseconds\n";
-		s += "number of samples: " + Integer.toString(getNumReadings()) + "\n";
+		s += "number of samples: " + Integer.toString(getNumSamples()) + "\n";
 
 		return s;
 	}
 
-	private static void sleepPrint(int ms) throws InterruptedException {
-		int sec = (int)ms/1000;
-		ms = ms%1000;
-		for (int s = 1; s <= sec; s++) {
-			Thread.sleep(1000);
-			System.out.println(s+"/"+(sec+ms));
-		} Thread.sleep(ms);
-	}
-
-	public static void main(String[] args) throws InterruptedException
-	{
-		int rate = (args.length > 0) ? Integer.parseInt(args[0]) : 10;
-		AsyncEnergyMonitorJavaSide aemonj = new AsyncEnergyMonitorJavaSide(rate);
-		aemonj.init();	
-	
-		aemonj.start();
-		sleepPrint(10000);
-		aemonj.stop();
-
-		System.out.println(aemonj);
-		int k = 5;
-		System.out.println(Arrays.deepToString(aemonj.getLastKSamples_Arrays(k)));
-		System.out.println();
-		System.out.println(Arrays.toString(aemonj.getLastKTimestamps(k)));
-
-		aemonj.reset();
-		// try { 
-		// 	aemonj.monitorAMethod( () -> sleepPrint(5000) );
-		// } catch (Exception ex) {
-		// 	throw ex;
-		// }
-		System.out.println(Arrays.toString(aemonj.getLastKSamples(aemonj.getNumReadings())));
-
-		aemonj.dealloc();
-	}
-	
 }

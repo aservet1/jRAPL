@@ -30,6 +30,9 @@ public final class ArchSpec {
 
 	static {
 
+		EnergyManager m = new EnergyManager();	// to make sure that native access has been set up at this point.
+		m.init();								// is dealloc'd by the end of this static block since it has no other use
+		
 		CPU_MODEL = getCpuModel();
 		CPU_MODEL_NAME = getCpuModelName();
 
@@ -65,6 +68,8 @@ public final class ArchSpec {
 		GPU_ARRAY_INDEX = gpuIndex;
 		CORE_ARRAY_INDEX = coreIndex;
 		PKG_ARRAY_INDEX = pkgIndex;
+
+		m.dealloc();
 	}
 	
 	public static void init() {} // do-nothing function to trigger the static block...probably a better way of doing this
@@ -85,6 +90,10 @@ public final class ArchSpec {
 			"CORE_ARRAY_INDEX: " + CORE_ARRAY_INDEX,
 			"PKG_ARRAY_INDEX: " + PKG_ARRAY_INDEX
 		);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(infoString());
 	}
 
 }

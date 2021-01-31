@@ -4,6 +4,8 @@ package jRAPL;
 import java.time.Instant;
 import java.time.Duration;
 
+import java.util.Arrays; // just for the test driver, not actually used in the code
+
 public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 	protected Instant monitorStartTime = null;
@@ -88,4 +90,50 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	// 	try { method.run(); } catch (Exception ex) { throw ex; }
 	// 	this.stop();
 	// }
+
+	public abstract int getNumSamples();
+
+	private static void sleepPrint(int ms) throws InterruptedException {
+		int sec = (int)ms/1000;
+		ms = ms%1000;
+		for (int s = 0; s < sec; s++) {
+			System.out.println(s+"/"+(sec+ms));
+			Thread.sleep(1000);
+		} Thread.sleep(ms);
+	}
+
+	public static void main(String[] args) throws InterruptedException {
+		AsyncEnergyMonitor m = null;
+		if (args[0].equalsIgnoreCase("Java")) {
+			m = new AsyncEnergyMonitorJavaSide();
+		} else if (args[0].equalsIgnoreCase("C")) {
+			m = new AsyncEnergyMonitorCSide();
+		} else {
+			System.out.println("invalid args[0]: "+args[0]);
+			System.exit(2);
+		}
+		m.init();
+
+		m.start();
+		sleepPrint(3000);
+		m.stop();
+
+		System.out.println(m);
+		int k = 5;
+		System.out.println(Arrays.deepToString(m.getLastKSamples_Arrays(k)));
+		System.out.println();
+		System.out.println(Arrays.toString(m.getLastKTimestamps(k)));
+		System.out.println();
+		System.out.println(Arrays.toString(m.getLastKSamples(m.getNumSamples())));
+		m.writeToFile("AsyncMonitor-"+args[0]+".tmp");
+		m.reset();
+		m.dealloc();
+	}
 }
+
+
+
+
+
+
+
