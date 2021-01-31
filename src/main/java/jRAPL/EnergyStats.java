@@ -7,7 +7,7 @@ import java.time.Duration;
 public final class EnergyStats extends EnergySample
 {
 	public EnergyStats(int socket) {
-		super(socket, EnergyStringParser.toPrimitiveArray(EnergyMonitor.energyStatCheck(socket)));
+		super(socket, Utils.stringToPrimitiveArray(EnergyMonitor.energyStatCheck(socket)));
 	}
 	
 	public EnergyStats(int socket, double[] statsForSocket, Instant ts) {

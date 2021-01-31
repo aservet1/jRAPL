@@ -56,7 +56,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		EnergyStats[][] samplesArray = new EnergyStats[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
 		for (int i = 0; i < strings.length; i++) {
 			String energyString = strings[i];
-			samplesArray[i] = EnergyStringParser.toObjectArray(energyString);
+			samplesArray[i] = Utils.stringToObjectArray(energyString);
 			for (EnergyStats e : samplesArray[i]) e.setTimestamp(timestamps[i]);
 		}
 
@@ -69,7 +69,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		double[][] samplesArray = new double[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
 		for (int i = 0; i < strings.length; i++) {
 			String energyString = strings[i];
-			samplesArray[i] = EnergyStringParser.toPrimitiveArray(energyString);
+			samplesArray[i] = Utils.stringToPrimitiveArray(energyString);
 		}
 
 		return samplesArray;
