@@ -75,7 +75,7 @@ static void storeEnergySample(AsyncEnergyMonitor *monitor, EnergyStats stats)
 {
 	if (USING_DYNAMIC_ARRAY)
 		addItem_DynamicArray(monitor->samples_dynarr, stats);
-	if (USING_LINKED_LIST)
+	else if (USING_LINKED_LIST)
 		addItem_LinkedList(monitor->samples_linklist, stats);
 }
 

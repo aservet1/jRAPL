@@ -14,7 +14,7 @@ import java.time.Duration;
 
 public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Runnable
 {
-	private ArrayList<String> samples; 
+	private ArrayList<String> samples;
 	private int samplingRate; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;

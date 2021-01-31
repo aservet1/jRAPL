@@ -161,6 +161,7 @@ int get_power_domains_supported(uint32_t cpu_model, char power_domain_string_buf
 	switch (cpu_model) {
 
 		case KABYLAKE:
+		case KABYLAKE_v2:
 		case BROADWELL:
 
 			string = "dram,gpu,core,pkg@";
@@ -170,7 +171,7 @@ int get_power_domains_supported(uint32_t cpu_model, char power_domain_string_buf
 			}
 			return READ_FROM_DRAM_AND_GPU;
 
-		case SANDYBRIDGE_EP:			case HASWELL1:		case HASWELL2:
+		case SANDYBRIDGE_EP:		case HASWELL1:		case HASWELL2:
 		case HASWELL3:				case HASWELL_EP:	case SKYLAKE1:
 		case SKYLAKE2: 				case BROADWELL2:
 		case APOLLOLAKE:			case COFFEELAKE2:
