@@ -160,9 +160,7 @@ int get_power_domains_supported(uint32_t cpu_model, char power_domain_string_buf
 		
 	switch (cpu_model) {
 
-		case KABYLAKE:
-		case KABYLAKE_v2:
-		case BROADWELL:
+		case KABYLAKE: case BROADWELL:
 
 			string = "dram,gpu,core,pkg@";
 			if (power_domain_string_buffer != NULL) {
