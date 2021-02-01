@@ -7,45 +7,41 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-
 public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 {
-	private native static void startCollecting();
-	private native static void stopCollecting();
-	private native static void cSideReset();
+	private native static void startNative();
+	private native static void stopNative();
+	private native static void resetNative();
+	private native static void initNative(int samplingRate, int storageType);
+	private native static void deallocNative();
+	private native static void writeToFileNative(String filePath);
+	private native static String getLastKSamplesNative(int k);
+	private native static long[] getLastKTimestampsNative(int k);
+	private native static int getNumSamplesNative();
+	private native static void setSamplingRateNative(int s);
+	private native static int getSamplingRateNative();
 
-	private native static void allocMonitor(int samplingRate, int storageType);
-	private native static void deallocMonitor();
-	private native static void writeToFileFromC(String filePath);
-	private native static String lastKSamples(int k);
-	private native static long[] lastKTimestamps(int k);
-	private native static int nSamples();
-
-	private int samplingRate;
-	private int storageType;
-
-	//constants to define energy sample storage method on the C side
+	// correspond to '#define' macros written in AsyncEnergyMonitor.h
 	private static final int DYNAMIC_ARRAY_STORAGE = 1;
 	private static final int LINKED_LIST_STORAGE = 2;
+
+	private int samplingRate = 10;
+	private int storageType = DYNAMIC_ARRAY_STORAGE; // default, can be changed by specifying in constructor
+
+	public AsyncEnergyMonitorCSide() { }
 
 	@Override //from EnergyManager
 	public void init()
 	{
 		super.init();
-		allocMonitor(samplingRate,storageType);
+		initNative(samplingRate,storageType);
 	}
 
-	@Override //from EnergyManager
+	@Override
 	public void dealloc()
 	{
-		deallocMonitor();
+		deallocNative();
 		super.dealloc();
-	}
-
-	public AsyncEnergyMonitorCSide()
-	{
-		samplingRate = 10;
-		storageType = DYNAMIC_ARRAY_STORAGE; //default
 	}
 
 	public AsyncEnergyMonitorCSide(int s)
@@ -65,57 +61,67 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 				storageType = LINKED_LIST_STORAGE;
 				break;
 			default:
-				storageType = -1; // just to keep the compiler happy, but we're gonna exit in two seconds anyways
 				System.err.println("Invalid storage type string: " + storageTypeString);
 				System.exit(1);
 		}
 	}
-	
+
+	@Override
 	public void start()
 	{
 		super.start();
-		startCollecting();
+		startNative();
 	}
 
+	@Override
 	public void stop()
 	{
 		super.stop();
-		stopCollecting();
+		stopNative();
 	}
 
+	@Override
 	public void writeToFile(String filePath)
 	{
-		writeToFileFromC(filePath);
+		writeToFileNative(filePath);
 	}
 
+	@Override
 	public String[] getLastKSamples(int k)
 	{
-		return lastKSamples(k).split("_");
-	}
+		return getLastKSamplesNative(k).split("_"); // I don't know how to do JNI String arrays, so return '_' delimited string to split
+	} //@TODO -- this is a potential time and memory overhead hazard
 
+	@Override
 	public Instant[] getLastKTimestamps(int k)
 	{
-		long[] usecValues = lastKTimestamps(k);
+		long[] usecValues = getLastKTimestampsNative(k);
 		Instant[] instantValues = new Instant[usecValues.length];
 		for (int i = 0; i < usecValues.length; i++)
 			instantValues[i] = Instant.EPOCH.plus(usecValues[i], ChronoUnit.MICROS);
 		return instantValues;
 	}
 
+	@Override
 	public int getNumSamples() {
-		return nSamples();
+		return getNumSamplesNative();
+	}
+
+	@Override
+	public int getSamplingRate() {
+		return getSamplingRateNative();
+	}
+
+	@Override
+	public void setSamplingRate(int s) {
+		setSamplingRateNative(s);
 	}
 
 	@Override
 	public void reset()
 	{
 		super.reset();
-		cSideReset();
-	}
-
-	public String toString()
-	{
-		return "Coming soon...";
+		resetNative();
 	}
 
 }

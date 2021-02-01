@@ -12,6 +12,19 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	protected Instant monitorStopTime = null;
 	protected boolean isRunning = false;
 
+	public abstract void writeToFile(String fileName);
+	public abstract String[] getLastKSamples(int k);
+	public abstract Instant[] getLastKTimestamps(int k);
+	public abstract int getNumSamples();
+	public abstract void setSamplingRate(int s);
+	public abstract int getSamplingRate();
+
+	@Override
+	public void init() { super.init(); }
+	
+	@Override
+	public void dealloc() { super.dealloc(); }
+
 	public Duration getLifetime()
 	{
 		if (monitorStartTime != null && monitorStopTime != null)
@@ -31,25 +44,20 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		isRunning = false;
 	}
 
-	public abstract String toString();
-
 	public void reset()
 	{
 		monitorStartTime = null;
 		monitorStopTime = null;
 	}
 
-	public abstract void writeToFile(String fileName);
-
-	public abstract String[] getLastKSamples(int k);
-	public abstract Instant[] getLastKTimestamps(int k);
-
-	/* Returns an array of arrays of EnergyStats objects. Each individual array
+	/**	
+		Returns an array of arrays of EnergyStats objects. Each individual array
 		is a list of the readings for all sockets requested. Even if only one
 		socket was read from, it's still an array of arrays. The single socket
 		reading is just index 0 of a 1-element array, regardless of whether it's
 		just one socket because you asked for a specific socket, or because you
-		were reading all sockets but only had one. */
+		were reading all sockets but only had one.
+	*/
 	public EnergyStats[][] getLastKSamples_Objects(int k) 
 	{
 		String[] strings = getLastKSamples(k);
@@ -64,6 +72,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 		return samplesArray;
 	}
+
 	public double[][] getLastKSamples_Arrays(int k)
 	{
 		String[] strings = getLastKSamples(k);
@@ -81,18 +90,6 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		return isRunning;
 	}
 
-	// public void monitorAMethod(Runnable method) {//throws Exception { // if the method throws exception, just pass it up
-	// 	// if (isRunning) {
-	// 	// 	throw new RuntimeException("isRunning!!");
-	// 	// }
-	// 	assert !isRunning;
-	// 	this.start();
-	// 	try { method.run(); } catch (Exception ex) { throw ex; }
-	// 	this.stop();
-	// }
-
-	public abstract int getNumSamples();
-
 	private static void sleepPrint(int ms) throws InterruptedException {
 		int sec = (int)ms/1000;
 		ms = ms%1000;
@@ -100,6 +97,16 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 			System.out.println(s+"/"+(sec+ms));
 			Thread.sleep(1000);
 		} Thread.sleep(ms);
+	}
+	
+	public String toString()
+	{
+		String s = "";
+		s += "samplingRate: " + getSamplingRate() + " milliseconds\n";
+		s += "lifetime: " + Long.toString(getLifetime().toMillis()) + " milliseconds\n";
+		s += "number of samples: " + Integer.toString(getNumSamples()) + "\n";
+
+		return s;
 	}
 
 	public static void main(String[] args) throws InterruptedException {
@@ -130,10 +137,3 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		m.dealloc();
 	}
 }
-
-
-
-
-
-
-

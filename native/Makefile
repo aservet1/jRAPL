@@ -7,8 +7,8 @@ CFILES = \
 		msr.c \
 		dvfs.c \
  		EnergyStats.c \
-		AsyncEnergyMonitorCSide.c \
-		AsyncEnergyMonitorCSide_JNIExports.c \
+		AsyncEnergyMonitor.c \
+		AsyncEnergyMonitor_JNIExports.c \
 		RuntimeTestUtils.c \
 		CSideDataStorage.c \
 
@@ -34,4 +34,3 @@ $(CDRIVER): $(CFILES) $(CDRIVER).c
 
 clean:
 	rm -f $(NATIVE_LIB) $(OFILES) $(CDRIVER) $(MAKELOG)
-	

@@ -15,16 +15,22 @@ import java.time.Duration;
 public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Runnable
 {
 	private ArrayList<String> samples;
-	private int samplingRate; // milliseconds
+	private int samplingRate = 10; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
 
 	protected final ArrayList<Instant> timestamps; //TODO -- decide if you want to have a boolean that enables whether or not you do want to collect timestamps
 
+	@Override
+	public void init() { super.init(); }
+	
+	@Override
+	public void dealloc() { super.dealloc(); }
+
+
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Initializes sample collector with a default sampling rate setting of 10 milliseconds */
 	public AsyncEnergyMonitorJavaSide()
 	{
-		samplingRate = 10;
 		timestamps = new ArrayList<Instant>();
 		samples = new ArrayList<String>();
 	}
@@ -61,6 +67,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*	Starts collecting and storing energy samples in a separate thread. Continually takes and stores energy samples
 	*	in the background while main thread runs. Will run until main thread calls <code>this.stop()</code>.
 	*/
+	@Override
 	public void start()
 	{
 		super.start();
@@ -71,6 +78,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Stops collecting and storing energy samples.
 	*/
+	@Override
 	public void stop()
 	{
 		super.stop();
@@ -89,6 +97,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*	<br>Call this if you intend to reuse the same object for energy collection after already using it.
 	*	<br>Clears out the current list of samples stored in the object.
 	*/
+	@Override
 	public void reset()
 	{
 		super.reset();
@@ -97,6 +106,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		timestamps.clear();
 	}
 
+	@Override
 	public String[] getLastKSamples(int k) 
 	{
 		int start = samples.size() - k;
@@ -114,6 +124,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		return samplesArray;
 	}
 
+	@Override
 	public Instant[] getLastKTimestamps(int k) 
 	{
 		int start = timestamps.size() - k;
@@ -136,6 +147,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*	Gets the sampling rate for the thread to collect samples.
 	*	@return The sampling rate (in milliseconds)
 	*/
+	@Override
 	public int getSamplingRate()
 	{
 		return samplingRate;
@@ -145,6 +157,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*	Sets the sampling rate over which to take samples
 	*	@param s sampling rate (in milliseconds)
 	*/
+	@Override
 	public void setSamplingRate(int s)
 	{
 		samplingRate = s;
@@ -154,6 +167,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*	Gets the number of samples the object has currently collected
 	*	@return number of samples collected so far
 	*/
+	@Override
 	public int getNumSamples()
 	{
 		return samples.size();
@@ -165,6 +179,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*	
 	*	@param fileName name of file to write to
 	*/
+	@Override
 	public void writeToFile(String fileName)
 	{
 		BufferedWriter writer = null;
@@ -197,18 +212,6 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 			System.out.println("error writing " + fileName);
 			e.printStackTrace();
 		}
-	}
-
-	/** <h1> DOCUMENTATION OUT OF DATE </h1>
-	*/
-	public String toString()
-	{
-		String s = "";
-		s += "samplingRate: " + samplingRate + " milliseconds\n";
-		s += "lifetime: " + Long.toString(getLifetime().toMillis()) + " milliseconds\n";
-		s += "number of samples: " + Integer.toString(getNumSamples()) + "\n";
-
-		return s;
 	}
 
 }

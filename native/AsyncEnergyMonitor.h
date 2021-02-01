@@ -31,6 +31,8 @@ void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor);
 void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath);
 void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats return_array[k]);
 void reset(AsyncEnergyMonitor* monitor);
-int nSamples(AsyncEnergyMonitor* monitor);
+int getNumSamples(AsyncEnergyMonitor* monitor);
+void setSamplingRate(AsyncEnergyMonitor* monitor, int s);
+int getSamplingRate(AsyncEnergyMonitor* monitor);
 
 #endif //_ASYNC_ENERGY_MONITOR_CSIDE_H

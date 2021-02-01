@@ -8,7 +8,7 @@
 #include <jni.h>
 
 #include "EnergyStats.h"
-#include "AsyncEnergyMonitorCSide.h"
+#include "AsyncEnergyMonitor.h"
 #include "EnergyCheckUtils.h"
 #include "arch_spec.h"
 
@@ -37,7 +37,15 @@ int sleep_millisecond(long msec){
 	return res;
 }
 
-int nSamples(AsyncEnergyMonitor* monitor) {
+void setSamplingRate(AsyncEnergyMonitor* monitor, int s) {
+	monitor->samplingRate = s;
+}
+
+int getSamplingRate(AsyncEnergyMonitor* monitor){
+	return monitor->samplingRate;
+}
+
+int getNumSamples(AsyncEnergyMonitor* monitor) {
 	if (USING_DYNAMIC_ARRAY) {
 		return monitor->samples_dynarr->nItems;
 	} else if (USING_LINKED_LIST) {
