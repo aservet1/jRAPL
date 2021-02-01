@@ -11,18 +11,4 @@ public class EnergyMonitor extends EnergyManager {
 	// whichSocket = 0 for all sockets	
 	// package private so it can be called in JMH things
 	native static String energyStatCheck(int whichSocket);
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
