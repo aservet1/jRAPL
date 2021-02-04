@@ -10,8 +10,8 @@
 #include <sys/types.h>
 
 #include "EnergyCheckUtils.h"
-#include "arch_spec.h"
-#include "msr.h"
+#include "ArchSpec.h"
+#include "MSR.h"
 #include "EnergyStats.h"
 
 #define MSR_DRAM_ENERGY_UNIT 0.000015

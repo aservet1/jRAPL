@@ -6,7 +6,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <string.h>
-#include "arch_spec.h"
+#include "ArchSpec.h"
 
 /** <Alejandro's Interpretation>
  *	- (?) Direct  CPUID  access  through  this  device

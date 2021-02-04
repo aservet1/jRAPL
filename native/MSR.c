@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "msr.h"
-#include "arch_spec.h"
+#include "MSR.h"
+#include "ArchSpec.h"
 
 
 /** Note that when reaserching MSR, it stands for Model-Specific Register, not to be

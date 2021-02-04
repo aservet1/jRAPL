@@ -3,9 +3,9 @@ NATIVE_LIB = libNativeRAPL.so
 
 CFILES = \
 		EnergyCheckUtils.c \
-		arch_spec.c \
-		msr.c \
-		dvfs.c \
+		ArchSpec.c \
+		MSR.c \
+		DVFS.c \
  		EnergyStats.c \
 		AsyncEnergyMonitor.c \
 		AsyncEnergyMonitor_JNIExports.c \

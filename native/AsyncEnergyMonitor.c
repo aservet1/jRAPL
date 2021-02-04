@@ -10,7 +10,7 @@
 #include "EnergyStats.h"
 #include "AsyncEnergyMonitor.h"
 #include "EnergyCheckUtils.h"
-#include "arch_spec.h"
+#include "ArchSpec.h"
 
 #include "CSideDataStorage.h"
 
