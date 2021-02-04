@@ -1,2 +1,2 @@
 #!/bin/bash
-cd native && make && cd .. && mvn clean install
+([ -z $1 ] && make) || ([ $1 = 'clean' ] && make clean)
