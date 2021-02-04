@@ -1,8 +1,5 @@
 # maven build target for jRAPL/src
 target/
 
-#shared library file
-*.so
-
 #temp files i generate, usually from testing a writeToFile() method
 *.tmp
