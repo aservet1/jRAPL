@@ -21,7 +21,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 
 	public EnergyStats getSample()
 	{
-		String energyString = EnergyMonitor.energyStatCheck(0);
+		String energyString = EnergyMonitor.energyStatCheck();
 		Instant birthday = Instant.now();
 		EnergyStats sample = Utils.stringToEnergyStats(energyString);
 		sample.setTimestamp(birthday);
@@ -30,7 +30,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 
 	public double[] getPrimitiveSample()
 	{
-		String energyString = EnergyMonitor.energyStatCheck(0);
+		String energyString = EnergyMonitor.energyStatCheck();
 		return Utils.stringToPrimitiveSample(energyString);
 	}
 

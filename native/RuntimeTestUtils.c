@@ -46,10 +46,10 @@ JNIEXPORT jlong JNICALL Java_jRAPLTesting_RuntimeTestUtils_usecTimeGetSocketNum(
 	return DIFF_USEC;
 }
 
-JNIEXPORT jlong JNICALL Java_jRAPLTesting_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls, jint whichSocket){
+JNIEXPORT jlong JNICALL Java_jRAPLTesting_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls){
 
 	STARTSTAMP;
-	Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls, whichSocket);
+	Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
