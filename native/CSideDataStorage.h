@@ -21,7 +21,7 @@ typedef struct LinkedList {
 LinkedList* newLinkedList();
 void freeLinkedList(LinkedList* esll);
 void addItem_LinkedList(LinkedList* l, EnergyStats e); // add to tail
-void writeToFile_LinkedList(FILE* outfile, LinkedList* l);
+void writeToFile_LinkedList(FILE* outfile, LinkedList* l, int power_domain);
 
 typedef struct DynamicArray {
 	EnergyStats* items;
@@ -32,6 +32,6 @@ typedef struct DynamicArray {
 DynamicArray* newDynamicArray(int capacity);
 void freeDynamicArray(DynamicArray* list);
 void addItem_DynamicArray(DynamicArray* a, EnergyStats e);
-void writeToFile_DynamicArray(FILE* outfile, DynamicArray* a);
+void writeToFile_DynamicArray(FILE* outfile, DynamicArray* a, int power_domain);
 
 #endif //CSIDE_DATA_STORAGE
