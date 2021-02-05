@@ -24,12 +24,33 @@ static int *fd;
 static uint64_t num_pkg;
 static int wraparound_energy = -1;
 
-rapl_msr_unit get_rapl_unit()
+int rapl_unit_fd() {
+	return fd[0];
+}
+
+static inline double read_Pkg(int socket)
 {
-	rapl_msr_unit rapl_unit;
-	uint64_t unit_info = read_msr(fd[0], MSR_RAPL_POWER_UNIT);
-	get_msr_unit(&rapl_unit, unit_info);
-	return rapl_unit;
+	double result = read_msr(fd[socket], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
+	return (double) result * rapl_unit.energy;
+}
+static inline double read_Core(int socket)
+{
+	double result = read_msr(fd[socket], MSR_PP0_ENERGY_STATUS);
+	return (double) result * rapl_unit.energy;
+}
+static inline double read_Gpu(int socket)
+{
+	double result = read_msr(fd[socket],MSR_PP1_ENERGY_STATUS);
+	return (double) result * rapl_unit.energy;
+}
+static inline double read_Dram(int socket)
+{
+	double result = read_msr(fd[socket],MSR_DRAM_ENERGY_STATUS);
+	if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
+		return (double) result * MSR_DRAM_ENERGY_UNIT;
+	} else {
+		return (double) result * rapl_unit.energy;
+	}
 }
 
 void ProfileInit()
@@ -55,34 +76,14 @@ void ProfileInit()
 		fd[i] = open(msr_filename, O_RDWR);
 	}
 
-	rapl_unit = get_rapl_unit();
+	rapl_unit = get_rapl_unit(fd[0]);
 	wraparound_energy = get_wraparound_energy(rapl_unit.energy);
 }
 
-
-static inline double read_Pkg(int socket)
+void ProfileDealloc()
 {
-	double result = read_msr(fd[socket], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
-	return (double) result * rapl_unit.energy;
-}
-static inline double read_Core(int socket)
-{
-	double result = read_msr(fd[socket], MSR_PP0_ENERGY_STATUS);
-	return (double) result * rapl_unit.energy;
-}
-static inline double read_Gpu(int socket)
-{
-	double result = read_msr(fd[socket],MSR_PP1_ENERGY_STATUS);
-	return (double) result * rapl_unit.energy;
-}
-static inline double read_Dram(int socket)
-{
-	double result = read_msr(fd[socket],MSR_DRAM_ENERGY_STATUS);
-	if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
-		return (double) result * MSR_DRAM_ENERGY_UNIT;
-	} else {
-		return (double) result * rapl_unit.energy;
-	}
+	free(fd);
+	free(parameters);
 }
 
 void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg], int whichSocket)
@@ -131,63 +132,5 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg], int whichSocket)
 
 		if (whichSocket != ALL_SOCKETS) break;
 	}
-
-}
-
-static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info[512], int whichSocket)
-{
-  	bzero(ener_info, 512);
-	int offset = 0;
-
-	char buffer[100];
-	int buffer_len;
-
-	int start = whichSocket == ALL_SOCKETS ? 0 : whichSocket-1;
-	for (int i = start; i < num_pkg; i++) {
-		EnergyStats stats = stats_per_socket[i];
-		energy_stats_to_string(stats, buffer);
-		buffer_len = strlen(buffer);
-		memcpy(ener_info + offset, buffer, buffer_len);
-		offset += buffer_len;
-
-		if (whichSocket != ALL_SOCKETS) break;
-	}
-}
-
-void ProfileDealloc()
-{
-	free(fd);
-	free(parameters);
-}
-
-JNIEXPORT void JNICALL Java_jRAPL_EnergyManager_profileInit(JNIEnv *env, jclass jcls)
-{	
-	ProfileInit();
-}
-
-//assumes profile has already been inited. @TODO try to get this to be independent of profileinit and move it into arch_spec.c
-JNIEXPORT jint JNICALL Java_jRAPL_ArchSpec_getWraparoundEnergy(JNIEnv* env, jclass jcls)
-{
-	return (jint)wraparound_energy;
-}
-
-JNIEXPORT jstring JNICALL Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls, jint whichSocket) {
-	
-	char ener_info[512];
-	EnergyStats stats_per_socket[num_pkg];
-
-	EnergyStatCheck(stats_per_socket, whichSocket);
-	copy_to_string(stats_per_socket, ener_info, whichSocket);
-	
-	
-	jstring ener_string = (*env)->NewStringUTF(env, ener_info);
-  	
-	return ener_string;
-
-}
-
-JNIEXPORT void JNICALL Java_jRAPL_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls) {
-
-	ProfileDealloc();
 
 }

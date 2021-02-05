@@ -2,15 +2,20 @@
 NATIVE_LIB = libNativeRAPL.so
 
 CFILES = \
+		JNIEXPORT_ArchSpec.c \
+		JNIEXPORT_AsyncEnergyMonitor.c \
+		JNIEXPORT_EnergyCheckUtils.c \
+		\
+		JNIEXPORT_RuntimeTestUtils.c \
+		\
 		EnergyCheckUtils.c \
 		ArchSpec.c \
 		MSR.c \
-		DVFS.c \
  		EnergyStats.c \
 		AsyncEnergyMonitor.c \
-		AsyncEnergyMonitor_JNIExports.c \
-		RuntimeTestUtils.c \
 		CSideDataStorage.c \
+		\
+		DVFS.c \
 
 OFILES = $(CFILES:.c=.o)
 CDRIVER = cdriver
