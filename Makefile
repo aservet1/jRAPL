@@ -11,3 +11,4 @@ javaLib: ## Build java .jar
 clean:
 	(cd native && make clean)
 	mvn clean
+	rm -f AsyncMonitor-C.tmp AsyncMonitor-Java.tmp

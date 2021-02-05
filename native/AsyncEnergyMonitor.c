@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <errno.h>
-#include <jni.h>
 
 #include "EnergyStats.h"
 #include "AsyncEnergyMonitor.h"
