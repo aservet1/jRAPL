@@ -125,18 +125,9 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 
 static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info[512])
 {
-  	bzero(ener_info, 512);
-	int offset = 0;
-
-	char buffer[100];
-	int buffer_len;
-
 	for (int i = 0; i < num_pkg; i++) {
 		EnergyStats stats = stats_per_socket[i];
-		energy_stats_to_string(stats, buffer);
-		buffer_len = strlen(buffer);
-		memcpy(ener_info + offset, buffer, buffer_len);
-		offset += buffer_len;
+		ener_info += energy_stats_to_string(stats, ener_info, power_domains_supported);
 	}
 }
 
