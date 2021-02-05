@@ -19,14 +19,6 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		super.dealloc();
 	}
 
-	// public EnergyStats getSample(int socket)
-	// { 
-	// 	String energyString = EnergyMonitor.energyStatCheck(socket);
-	// 	Instant birthday = Instant.now();
-	// 	double[] statsArray = Utils.stringToPrimitiveArray(energyString);
-	// 	return new EnergyStats(socket, statsArray, birthday);
-	// }
-
 	public EnergyStats getSample()
 	{
 		String energyString = EnergyMonitor.energyStatCheck(0);
@@ -41,12 +33,6 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		String energyString = EnergyMonitor.energyStatCheck(0);
 		return Utils.stringToPrimitiveSample(energyString);
 	}
-	
-	// public double[] getPrimitiveSample(int socket)
-	// { 
-	// 	String energyString = EnergyMonitor.energyStatCheck(socket);
-	// 	return Utils.stringToPrimitiveArray(energyString);
-	// }	
 
 	public static void main(String[] args) throws InterruptedException
 	{
@@ -80,25 +66,3 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
