@@ -13,7 +13,7 @@ typedef struct {
 } EnergyStats;
 
 EnergyStats energy_stats_subtract(EnergyStats a, EnergyStats b);
-void energy_stats_to_string(EnergyStats estats, char ener_string[512]);
-void energy_stats_csv_string(EnergyStats estats, char ener_string[512]);
+int energy_stats_to_string(EnergyStats estats, char* ener_string, int power_domain);
+int energy_stats_csv_string(EnergyStats estats, char* ener_string, int power_domain);
 
 #endif //ENERGY_STATS_H

@@ -136,20 +136,10 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg], int whichSocket)
 
 static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info[512], int whichSocket)
 {
-  	bzero(ener_info, 512);
-	int offset = 0;
-
-	char buffer[100];
-	int buffer_len;
-
 	int start = whichSocket == ALL_SOCKETS ? 0 : whichSocket-1;
 	for (int i = start; i < num_pkg; i++) {
 		EnergyStats stats = stats_per_socket[i];
-		energy_stats_to_string(stats, buffer);
-		buffer_len = strlen(buffer);
-		memcpy(ener_info + offset, buffer, buffer_len);
-		offset += buffer_len;
-
+		ener_info += energy_stats_to_string(stats, ener_info, power_domains_supported);
 		if (whichSocket != ALL_SOCKETS) break;
 	}
 }

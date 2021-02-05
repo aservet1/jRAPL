@@ -86,24 +86,24 @@ void addItem_DynamicArray(DynamicArray* a, EnergyStats stats) {
 }
 
 void
-writeToFile_DynamicArray(FILE* outfile, DynamicArray* a) {
+writeToFile_DynamicArray(FILE* outfile, DynamicArray* a, int power_domain) {
 	for (int i = 0; i < a->nItems; i++) {
 		EnergyStats current = a->items[i];
 		char csv_string[512];
-		energy_stats_csv_string(current, csv_string);
+		energy_stats_csv_string(current, csv_string, power_domain);
 		fprintf(outfile,"%s\n",csv_string);
 	}
 }
 
 void
-writeToFile_LinkedList(FILE* outfile, LinkedList* l) {
+writeToFile_LinkedList(FILE* outfile, LinkedList* l, int power_domain) {
 	LinkNode* current = l->head;
 	while(current != NULL) {
 		int upperbound = (current == l->tail) ?
 			(l->nItemsAtTail) : (NODE_CAPACITY);
 		for (int i = 0; i < upperbound; i++) {
 			char ener_string[512];
-			energy_stats_csv_string(current->items[i], ener_string);
+			energy_stats_csv_string(current->items[i], ener_string, power_domain);
 			fprintf(outfile,"%s\n",ener_string);
 		} //printf(" --\n"); // delimits between the contents of each node (keep for debugging purposes)
 		current = current->next;
