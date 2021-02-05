@@ -3,7 +3,7 @@
 package jRAPL;
 
 class Utils {
-    public static double[] stringToPrimitiveArray(String energyString)
+    public static double[] stringToPrimitiveSample(String energyString)
 	{
 		String[] stringVals = energyString.split("@|,");
 		double[] stats = new double[stringVals.length];
@@ -13,19 +13,9 @@ class Utils {
 		return stats;
 	}
 
-	public static EnergyStats[] stringToObjectArray(String energyString)
+	public static EnergyStats stringToEnergyStats(String energyString)
 	{
-		String[] perSocketEnergyString = energyString.split("@");
-		EnergyStats[] stats = new EnergyStats[perSocketEnergyString.length];
-		for (int i = 0; i < perSocketEnergyString.length; i++) {
-			String[] statsStrings = perSocketEnergyString[i].split(","); 
-			double[] statsNums = new double[statsStrings.length];
-			for (int j = 0; j < statsNums.length; j++)
-				statsNums[j] = Double.parseDouble(statsStrings[j]);
-			int socket = i+1;
-			stats[i] = new EnergyStats(socket, statsNums, null);
-		}
-		return stats;
+		return new EnergyStats(stringToPrimitiveSample(energyString));
     }
     
     public static double[] subtractPrimitiveSamples(double[] a, double[] b)

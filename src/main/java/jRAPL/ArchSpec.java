@@ -97,7 +97,3 @@ public final class ArchSpec {
 	}
 
 }
-
-
-
-

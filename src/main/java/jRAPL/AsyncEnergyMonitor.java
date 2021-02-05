@@ -58,16 +58,16 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		just one socket because you asked for a specific socket, or because you
 		were reading all sockets but only had one.
 	*/
-	public EnergyStats[][] getLastKSamples_Objects(int k) 
+	public EnergyStats[] getLastKSamples_Objects(int k) 
 	{
 		String[] strings = getLastKSamples(k);
 		Instant[] timestamps = getLastKTimestamps(k);
 
-		EnergyStats[][] samplesArray = new EnergyStats[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
+		EnergyStats[] samplesArray = new EnergyStats[k];
 		for (int i = 0; i < strings.length; i++) {
 			String energyString = strings[i];
-			samplesArray[i] = Utils.stringToObjectArray(energyString);
-			for (EnergyStats e : samplesArray[i]) e.setTimestamp(timestamps[i]);
+			samplesArray[i] = Utils.stringToEnergyStats(energyString);
+			samplesArray[i].setTimestamp(timestamps[i]);
 		}
 
 		return samplesArray;
@@ -80,7 +80,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		double[][] samplesArray = new double[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
 		for (int i = 0; i < strings.length; i++) {
 			String energyString = strings[i];
-			samplesArray[i] = Utils.stringToPrimitiveArray(energyString);
+			samplesArray[i] = Utils.stringToPrimitiveSample(energyString);
 		}
 
 		return samplesArray;
@@ -122,7 +122,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		m.init();
 
 		m.start();
-		sleepPrint(3000);
+		sleepPrint(2000);
 		m.stop();
 
 		System.out.println(m);

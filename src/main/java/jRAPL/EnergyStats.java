@@ -1,21 +1,21 @@
 package jRAPL;
 
 import java.time.Instant;
-import java.time.Duration;
 
 /** High-level representation of jrapl's energy stats. */
 public final class EnergyStats extends EnergySample
-{
-	public EnergyStats(int socket) {
-		super(socket, Utils.stringToPrimitiveArray(EnergyMonitor.energyStatCheck(socket)));
-	}
+{	// public EnergyStats() {
+	// 	String statCheck = EnergyMonitor.energyStatCheck(0); // @TODO make sure the C level thing can just go back to 0 arguments and always reads all sockets
+	// 	double[] primitiveSample = Utils.stringToPrimitiveArray(statCheck);
+	// 	super(primitiveSample);
+	// }
 	
-	public EnergyStats(int socket, double[] statsForSocket, Instant ts) {
-		super(socket, statsForSocket, ts);
+	public EnergyStats(double[] primitiveSample, Instant ts) {
+		super(primitiveSample, ts);
 	}
 
-	public EnergyStats(int socket, double[] statsForSocket) {
-		super(socket, statsForSocket);
+	public EnergyStats(double[] primitiveSample) {
+		super(primitiveSample);
 	}
 
 	@Override
@@ -29,4 +29,3 @@ public final class EnergyStats extends EnergySample
 	}
 
 }
-

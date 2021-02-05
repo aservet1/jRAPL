@@ -1,7 +1,5 @@
 package jRAPL;
 
-import java.util.Arrays;
-
 import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
