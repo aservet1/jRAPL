@@ -1,11 +1,5 @@
 #include <stdio.h>
 #include <jni.h>
-//#include <stdlib.h>
-//#include <fcntl.h>
-//#include <unistd.h>
-//#include <math.h>
-//#include <stdint.h>
-//#include <string.h>
 #include "ArchSpec.h"
 
 //assumes profile has already been inited. @TODO try to get this to be independent of profileinit and move it into arch_spec.c
@@ -28,6 +22,7 @@ Java_jRAPL_ArchSpec_energyStatsStringFormat(JNIEnv* env, jclass jcls) {
 
 JNIEXPORT jint JNICALL
 Java_jRAPL_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls) {
+	printf("hello ! ! !! !!! !!!!! !!!!!!!! !!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!!!!\n");
 	return (jint)getSocketNum(); 
 }
 
