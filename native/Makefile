@@ -33,4 +33,5 @@ $(CDRIVER): $(CFILES) $(CDRIVER).c
 	gcc -g -fsanitize=address -fno-omit-frame-pointer -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES) $(CDRIVER).c -o $(CDRIVER) -lm -lpthread
 
 clean:
+	rm -f ../src/main/resources/native/$(NATIVE_LIB)
 	rm -f $(NATIVE_LIB) $(OFILES) $(CDRIVER) $(MAKELOG)
