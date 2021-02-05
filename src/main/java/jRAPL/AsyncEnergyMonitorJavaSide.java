@@ -1,7 +1,5 @@
 package jRAPL;
 
-import java.util.Arrays;
-
 import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +54,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	public void run()
 	{
 		while (!exit) {
-			String energyString = EnergyMonitor.energyStatCheck(0);
+			String energyString = EnergyMonitor.energyStatCheck();
 			samples.add(energyString);
 			timestamps.add(Instant.now());
 			try { Thread.sleep(samplingRate); } catch (Exception e) {}

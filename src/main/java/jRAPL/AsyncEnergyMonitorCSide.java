@@ -1,9 +1,5 @@
 package jRAPL;
 
-//these two are just for testing in main(), they dont actually help the class
-import java.util.Arrays;
-import java.time.Duration;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -30,28 +26,7 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 
 	public AsyncEnergyMonitorCSide() { }
 
-	@Override //from EnergyManager
-	public void init()
-	{
-		super.init();
-		initNative(samplingRate,storageType);
-	}
-
-	@Override
-	public void dealloc()
-	{
-		deallocNative();
-		super.dealloc();
-	}
-
-	public AsyncEnergyMonitorCSide(int s)
-	{
-		samplingRate = s;
-		storageType = DYNAMIC_ARRAY_STORAGE; //default
-	}
-
-	public AsyncEnergyMonitorCSide(int s, String storageTypeString)
-	{
+	public AsyncEnergyMonitorCSide(int s, String storageTypeString) {
 		samplingRate = s;
 		switch (storageTypeString) {
 			case "DYNAMIC_ARRAY":
@@ -66,35 +41,47 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 		}
 	}
 
+	public AsyncEnergyMonitorCSide(int s) {
+		samplingRate = s;
+		storageType = DYNAMIC_ARRAY_STORAGE; //default
+	}
+
+	@Override //from EnergyManager
+	public void init() {
+		super.init();
+		initNative(samplingRate,storageType);
+	}
+
 	@Override
-	public void start()
-	{
+	public void dealloc() {
+		deallocNative();
+		super.dealloc();
+	}
+
+	@Override
+	public void start() {
 		super.start();
 		startNative();
 	}
 
 	@Override
-	public void stop()
-	{
+	public void stop() {
 		super.stop();
 		stopNative();
 	}
 
 	@Override
-	public void writeToFile(String filePath)
-	{
+	public void writeToFile(String filePath) {
 		writeToFileNative(filePath);
 	}
 
 	@Override
-	public String[] getLastKSamples(int k)
-	{
+	public String[] getLastKSamples(int k) {
 		return getLastKSamplesNative(k).split("_"); // I don't know how to do JNI String arrays, so return '_' delimited string to split
 	} //@TODO -- this is a potential time and memory overhead hazard
 
 	@Override
-	public Instant[] getLastKTimestamps(int k)
-	{
+	public Instant[] getLastKTimestamps(int k) {
 		long[] usecValues = getLastKTimestampsNative(k);
 		Instant[] instantValues = new Instant[usecValues.length];
 		for (int i = 0; i < usecValues.length; i++)
@@ -118,10 +105,8 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	}
 
 	@Override
-	public void reset()
-	{
+	public void reset() {
 		super.reset();
 		resetNative();
 	}
-
 }

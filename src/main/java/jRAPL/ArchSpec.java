@@ -22,10 +22,10 @@ public final class ArchSpec {
 	//  but just keep it in the back of your mind that you might wanna relocate
 	//  to something more specific, maybe classes only relevant to energy monitoring,
 	//  since where else would you even use these values?
-	public static final int DRAM_ARRAY_INDEX;
-	public static final int GPU_ARRAY_INDEX;
-	public static final int CORE_ARRAY_INDEX;
-	public static final int PKG_ARRAY_INDEX;
+	public static final int DRAM_IDX;
+	public static final int GPU_IDX;
+	public static final int CORE_IDX;
+	public static final int PKG_IDX;
 	//TODO -- there's a 5th possible power domain, right? like full motherboard energy or something
 
 	static {
@@ -64,10 +64,10 @@ public final class ArchSpec {
 					System.exit(0);
 			}	
 		}
-		DRAM_ARRAY_INDEX = dramIndex;
-		GPU_ARRAY_INDEX = gpuIndex;
-		CORE_ARRAY_INDEX = coreIndex;
-		PKG_ARRAY_INDEX = pkgIndex;
+		DRAM_IDX = dramIndex;
+		GPU_IDX = gpuIndex;
+		CORE_IDX = coreIndex;
+		PKG_IDX = pkgIndex;
 
 		m.dealloc();
 	}
@@ -85,10 +85,10 @@ public final class ArchSpec {
 			"",
 			"ENERGY_STATS_STRING_FORMAT: " + ENERGY_STATS_STRING_FORMAT,
 			"",
-			"DRAM_ARRAY_INDEX: " + DRAM_ARRAY_INDEX,
-			"GPU_ARRAY_INDEX: " + GPU_ARRAY_INDEX,
-			"CORE_ARRAY_INDEX: " + CORE_ARRAY_INDEX,
-			"PKG_ARRAY_INDEX: " + PKG_ARRAY_INDEX
+			"DRAM_IDX: " + DRAM_IDX,
+			"GPU_IDX: " + GPU_IDX,
+			"CORE_IDX: " + CORE_IDX,
+			"PKG_IDX: " + PKG_IDX
 		);
 	}
 
@@ -97,7 +97,3 @@ public final class ArchSpec {
 	}
 
 }
-
-
-
-

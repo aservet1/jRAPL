@@ -85,21 +85,11 @@ static inline double read_Dram(int socket)
 	}
 }
 
-void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg], int whichSocket)
+void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 {
-	if (whichSocket > num_pkg || whichSocket < 0) {
-		fprintf(
-			stderr,
-			"ERROR: invalid socket requested to read for EnergyStatCheck: %d\n",
-			whichSocket
-		);
-		exit(1);
-	}
-
 	struct timeval timestamp;
 
-	int start = whichSocket == ALL_SOCKETS ? 0 : whichSocket-1;
-	for (int i = start; i < num_pkg; i++)
+	for (int i = 0; i < num_pkg; i++)
 	{
 		stats_per_socket[i].socket = i+1;
 		stats_per_socket[i].pkg = read_Pkg(i);
@@ -129,18 +119,15 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg], int whichSocket)
 		gettimeofday(&timestamp,NULL);
 		stats_per_socket[i].timestamp = timestamp;
 
-		if (whichSocket != ALL_SOCKETS) break;
 	}
 
 }
 
-static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info[512], int whichSocket)
+static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info[512])
 {
-	int start = whichSocket == ALL_SOCKETS ? 0 : whichSocket-1;
-	for (int i = start; i < num_pkg; i++) {
+	for (int i = 0; i < num_pkg; i++) {
 		EnergyStats stats = stats_per_socket[i];
 		ener_info += energy_stats_to_string(stats, ener_info, power_domains_supported);
-		if (whichSocket != ALL_SOCKETS) break;
 	}
 }
 
@@ -161,13 +148,13 @@ JNIEXPORT jint JNICALL Java_jRAPL_ArchSpec_getWraparoundEnergy(JNIEnv* env, jcla
 	return (jint)wraparound_energy;
 }
 
-JNIEXPORT jstring JNICALL Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls, jint whichSocket) {
+JNIEXPORT jstring JNICALL Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls) {
 	
 	char ener_info[512];
 	EnergyStats stats_per_socket[num_pkg];
 
-	EnergyStatCheck(stats_per_socket, whichSocket);
-	copy_to_string(stats_per_socket, ener_info, whichSocket);
+	EnergyStatCheck(stats_per_socket);
+	copy_to_string(stats_per_socket, ener_info);
 	
 	
 	jstring ener_string = (*env)->NewStringUTF(env, ener_info);

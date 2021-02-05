@@ -161,7 +161,7 @@ public class RuntimeTestUtils
 		if(args[0].equals("--time-java-calls")){ //Java function timing
 			timeMethodMultipleIterations(() -> EnergyManager.profileInit(), "profileInit()", iterations);
 			//timeMethodMultipleIterations(() -> ArchSpec.getSocketNum(), "getSocketNum()", iterations);
-			timeMethodMultipleIterations(() -> EnergyMonitor.energyStatCheck(0), "energyStatCheck()", iterations);
+			timeMethodMultipleIterations(() -> EnergyMonitor.energyStatCheck(), "energyStatCheck()", iterations);
 			timeMethodMultipleIterations(() -> EnergyManager.profileDealloc(), "profileDealloc()", iterations);
 		}
 		else if(args[0].equals("--time-native-calls")){
