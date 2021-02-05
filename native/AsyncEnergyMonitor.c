@@ -106,7 +106,7 @@ void* run(void* monitor_arg)
 
 	while (!monitor->exit)
 	{
-		EnergyStatCheck(stats,ALL_SOCKETS); 
+		EnergyStatCheck(stats); 
 		for (int i = 0; i < sockets; i++) {
 			storeEnergySample(monitor,stats[i]);
 		}

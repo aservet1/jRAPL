@@ -1,71 +1,124 @@
 package jRAPL;
 
+import java.util.Arrays;
+
 import java.time.Instant;
-import java.time.Duration;
+
+// @TODO consider making EnergySamples's two subclasses be named EnergyStamp and EnergyLapse, instead of EnergyStats and EnergyDiff
 
 public abstract class EnergySample
 {
+	public static class PerSocketSample {
 
-	protected final int socket;
+		private final int socketNumber;
+		private final double[] primitiveSample;
+		
+		public PerSocketSample(int socketNumber, double[] primitiveSample) {
+			this.socketNumber = socketNumber;
+			this.primitiveSample = primitiveSample;
+		}
+
+		private PerSocketSample(PerSocketSample other) {
+			this.socketNumber = other.socketNumber;
+			this.primitiveSample = other.primitiveSample.clone();
+		}
+
+		public int getSocketNumber() {
+			return socketNumber;
+		}
+
+		public double getCore() {
+			return (ArchSpec.CORE_IDX == -1) ? -1.0 : this.primitiveSample[ArchSpec.CORE_IDX];
+		}
 	
-	protected final double[] stats;
+		public double getGpu() {
+			return (ArchSpec.GPU_IDX == -1) ? -1.0 : this.primitiveSample[ArchSpec.GPU_IDX];
+		}
+	
+		public double getPackage() {
+			return (ArchSpec.PKG_IDX == -1) ? -1.0 : this.primitiveSample[ArchSpec.PKG_IDX];
+		}
+	
+		public double getDram() {
+			return (ArchSpec.DRAM_IDX == -1) ? -1.0 : this.primitiveSample[ArchSpec.DRAM_IDX];
+		}
+		
+		public String dump() {
+			
+			String joinedStats = new String();
+			int i = 0;
+			for (; i < primitiveSample.length-1; i++) joinedStats += String.format("%.4f", primitiveSample[i]) + ",";
+			joinedStats += String.format("%.4f",primitiveSample[i]);
+	
+			return String.join(
+				",",
+				String.format("%d", socketNumber),joinedStats);
+	
+		}
+
+		@Override
+		public String toString() {
+			switch (ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]) {
+				case "dram,gpu,core,pkg":
+					return String.format("DRAM: %.4f, GPU: %.4f, Package: %.4f, Core: %.4f, ",
+											primitiveSample[ArchSpec.DRAM_IDX],
+											primitiveSample[ArchSpec.GPU_IDX],
+											primitiveSample[ArchSpec.PKG_IDX],
+											primitiveSample[ArchSpec.CORE_IDX]
+										);
+				case "gpu,core,pkg":
+					return String.format("GPU: %.4f, Package: %.4f, Core: %.4f, ",
+											primitiveSample[ArchSpec.GPU_IDX],
+											primitiveSample[ArchSpec.PKG_IDX],
+											primitiveSample[ArchSpec.CORE_IDX]
+										);
+				case "dram,core,pkg":
+					return String.format("DRAM: %.4f, Package: %.4f, Core: %.4f, ",
+											primitiveSample[ArchSpec.DRAM_IDX],
+											primitiveSample[ArchSpec.PKG_IDX],
+											primitiveSample[ArchSpec.CORE_IDX]
+										);
+				default:
+					System.err.println("PerSocketSample::toString(): ENERGY_STATS_STRING_FORMAT not supported !!: "
+										+ ArchSpec.ENERGY_STATS_STRING_FORMAT);
+					System.exit(1);
+					return null;
+			}
+		}
+
+		public double[] getPrimitiveSample() {
+			return primitiveSample.clone();
+		}
+
+	}
+
+	private PerSocketSample[] perSocketSamples;
 	protected Instant timestamp;
 
-	public EnergySample(int socket, double[] statsForSocket, Instant timestamp)
+	public EnergySample(double[] primitiveSample, Instant timestamp)
 	{
-		this.socket = socket;
-		this.stats = statsForSocket;
+		this.perSocketSamples = new PerSocketSample[ArchSpec.NUM_SOCKETS];
+		
+		int lo = 0, hi = ArchSpec.NUM_STATS_PER_SOCKET;
+		for (int i = 0; i < ArchSpec.NUM_SOCKETS; i++) {
+			int socketNumber = i+1;
+			perSocketSamples[i] = new PerSocketSample(socketNumber, Arrays.copyOfRange(primitiveSample, lo, hi));
+		}
+		
 		this.timestamp = timestamp;
 	}
 
-	public EnergySample(int socket, double[] statsForSocket)
+	public EnergySample(double[] primitiveSample)
 	{
-		this.socket = socket;
-		this.stats = statsForSocket;
-		this.timestamp = Instant.now();
-	}
-
-	public int getSocket() {
-		return this.socket;
-	}
-
-	public double getCore() {
-		return this.stats[ArchSpec.CORE_ARRAY_INDEX];
-	}
-
-	public double getGpu() {
-		return this.stats[ArchSpec.GPU_ARRAY_INDEX];
-	}
-
-	public double getPackage() {
-		return this.stats[ArchSpec.PKG_ARRAY_INDEX];
-	}
-
-	public double getDram() {
-		return this.stats[ArchSpec.DRAM_ARRAY_INDEX];
-	}
-	
-	public String dump() {
-		
-		String joinedStats = new String();
-		int i = 0;
-		for (; i < stats.length-1; i++) joinedStats += String.format("%4f", stats[i]) + ",";
-		joinedStats += String.format("%4f",stats[i]);
-
-		return String.join(
-			",",
-			String.format("%d", socket),
-			joinedStats,
-			(timestamp == null)
-				? "null"
-				: Long.toString(
-					Duration.between(
-							Instant.EPOCH,
-							timestamp
-						).toNanos()/1000 //microseconds
-					)
-		);
-
+		this.perSocketSamples = new PerSocketSample[ArchSpec.NUM_SOCKETS];
+		int lo = 0, hi = ArchSpec.NUM_STATS_PER_SOCKET;
+		for (int i = 0; i < ArchSpec.NUM_SOCKETS; i++) {
+			int socketNumber = i+1;
+			perSocketSamples[i] = new PerSocketSample(socketNumber, Arrays.copyOfRange(primitiveSample, lo, hi));
+			lo = hi;
+			hi += ArchSpec.NUM_STATS_PER_SOCKET;
+		}
+		timestamp = Instant.now();
 	}
 
 	public void setTimestamp(Instant ts)
@@ -73,24 +126,27 @@ public abstract class EnergySample
 		assert this.timestamp == null;
 		this.timestamp = ts;
 	}
-
-
-	@Override
-	public String toString() {
-		//System.out.println(Arrays.toString(stats));
-		String labeledStats = new String();
-		if (ArchSpec.DRAM_ARRAY_INDEX != -1) labeledStats += "DRAM: " + String.format("%.4f", stats[ArchSpec.DRAM_ARRAY_INDEX]) + ", ";
-		if (ArchSpec.GPU_ARRAY_INDEX != -1)  labeledStats += "GPU: " + String.format("%.4f", stats[ArchSpec.GPU_ARRAY_INDEX]) + ", ";
-		if (ArchSpec.PKG_ARRAY_INDEX != -1)  labeledStats += "Package: " + String.format("%.4f", stats[ArchSpec.PKG_ARRAY_INDEX]) + ", ";
-		if (ArchSpec.CORE_ARRAY_INDEX != -1) labeledStats += "Core: " + String.format("%.4f", stats[ArchSpec.CORE_ARRAY_INDEX]) + ", ";
-
-		if (labeledStats.length() == 0) labeledStats = "No power domains supported, ";
-		String timestampString = (timestamp == null) ? ("null")
-								: ("Timestamp (usecs since epoch): " 
-									+ Duration.between(Instant.EPOCH, timestamp)
-									.toNanos()/1000);
-
-		return String.format("Socket: %d, ", socket) + labeledStats + timestampString; 
+	
+	public PerSocketSample atSocket(int socket) {
+		return new PerSocketSample(perSocketSamples[socket-1]);
 	}
 
+	public double[] getPrimitiveSample() {
+		double[] primitiveSample = new double[ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
+		int index = 0;
+		for (int socket = 1; socket <= ArchSpec.NUM_SOCKETS; socket++) {
+			double[] currentPrimitive = this.atSocket(socket).getPrimitiveSample();
+			for (int i = 0; i < currentPrimitive.length; i++) primitiveSample[index++] = currentPrimitive[i];
+		}
+		return primitiveSample;
+	}
+
+	public String dump() {
+		String s = new String();
+		int n = ArchSpec.NUM_SOCKETS;
+		for (int socket = 1; socket <= n-1; socket++) {
+			s += this.atSocket(socket).dump()+",";
+		} s += this.atSocket(n).dump();
+		return s;
+	}
 }

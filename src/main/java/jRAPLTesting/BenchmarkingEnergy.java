@@ -1,14 +1,16 @@
 package jRAPLTesting;
 
-import jRAPL.*;
+import jRAPL.ArchSpec;
+import jRAPL.SyncEnergyMonitor;
+import jRAPL.EnergyManager;
 
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.time.Instant;
 import java.time.Duration;
 
 public class BenchmarkingEnergy
 {
-	// index corresponds to ArchSpec.[DRAM|CORE|PKG|GPU]_ARRAY_INDEX
+	// index corresponds to ArchSpec.[DRAM|CORE|PKG|GPU]_IDX
 	// name should store the identifier for each line
 	// iters is the number of iterations
 	public static class EnergyReadings{
@@ -82,10 +84,10 @@ public class BenchmarkingEnergy
 	public static void DramGpuCorePackageStats(int iters)
 	{
 		EnergyReadings data = getReadings(iters);
-		if(ArchSpec.DRAM_ARRAY_INDEX != -1)	printDiffs(data, "DRAM", ArchSpec.DRAM_ARRAY_INDEX);
-		if(ArchSpec.GPU_ARRAY_INDEX != -1)	printDiffs(data, "GPU", ArchSpec.GPU_ARRAY_INDEX);
-		if(ArchSpec.CORE_ARRAY_INDEX != -1)	printDiffs(data, "CORE", ArchSpec.CORE_ARRAY_INDEX);
-		if(ArchSpec.PKG_ARRAY_INDEX != -1)	printDiffs(data, "PKG", ArchSpec.PKG_ARRAY_INDEX);
+		if(ArchSpec.DRAM_IDX != -1)	printDiffs(data, "DRAM", ArchSpec.DRAM_IDX);
+		if(ArchSpec.GPU_IDX != -1)	printDiffs(data, "GPU", ArchSpec.GPU_IDX);
+		if(ArchSpec.CORE_IDX != -1)	printDiffs(data, "CORE", ArchSpec.CORE_IDX);
+		if(ArchSpec.PKG_IDX != -1)	printDiffs(data, "PKG", ArchSpec.PKG_IDX);
 	}
 
 

@@ -3,3 +3,5 @@ target/
 
 #temp files i generate, usually from testing a writeToFile() method
 *.tmp
+
+*.swp

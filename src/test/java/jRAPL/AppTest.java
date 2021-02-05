@@ -1,5 +1,4 @@
-package jRAPLTesting;
-import jRAPL.*;
+package jRAPL;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
