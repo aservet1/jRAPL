@@ -52,6 +52,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		}
 
 		EnergyStats stats = monitor.getSample();
+		System.out.println("wait 1000ms...");
 		Thread.sleep(1000);
 		EnergyDiff d = EnergyDiff.between(stats, monitor.getSample());
 		System.out.println("EnergyDiff over 1000ms:");
