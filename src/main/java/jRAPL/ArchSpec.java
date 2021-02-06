@@ -9,7 +9,6 @@ public final class ArchSpec {
 	public static final String CPU_MODEL_NAME;
 	public static final String ENERGY_STATS_STRING_FORMAT;
 
-	//public native static int powerDomainsSupported(); @TODO -- is this obsolete??
 	public native static int getSocketNum();
 	public native static int getWraparoundEnergy();
 	public native static String getCpuModelName();

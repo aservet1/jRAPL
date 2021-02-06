@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "msr.h"
-#include "arch_spec.h"
+#include "EnergyCheckUtils.h" // for rapl_unit_fd()
+#include "MSR.h"
+#include "ArchSpec.h"
 
 
 /** Note that when reaserching MSR, it stands for Model-Specific Register, not to be
@@ -64,12 +65,12 @@ extractBitField(uint64_t inField, uint64_t width, uint64_t offset)
 /* <--- Alejandro's Interpretation --->
  * Reads the msr into a uint64_t
  */
-uint64_t read_msr(int fd, uint64_t which)
+uint64_t read_msr(int fd, uint64_t msrOffset)
 {
 
 	uint64_t data = 0;
 
-	if ( pread(fd, &data, sizeof data, which) != sizeof data ) {
+	if ( pread(fd, &data, sizeof data, msrOffset) != sizeof data ) {
 	  fprintf(stderr,"ERROR read_msr(): pread error!\n");
 	}
 
@@ -79,8 +80,8 @@ uint64_t read_msr(int fd, uint64_t which)
 /* <--- Alejandro's Interpretation --->
  * Writes (presumably updated) msr data to msr register
  */
-void write_msr(int fd, uint64_t which, uint64_t limit_info) {
-	if ( pwrite(fd, &limit_info , sizeof limit_info, which) != sizeof limit_info)
+void write_msr(int fd, uint64_t msrOffset, uint64_t limit_info) {
+	if ( pwrite(fd, &limit_info , sizeof limit_info, msrOffset) != sizeof limit_info)
 	  printf("pwrite error!\n");
 }
 
@@ -90,7 +91,7 @@ void write_msr(int fd, uint64_t which, uint64_t limit_info) {
  * Formula from Intel Manual: Actual time window value = 2^Y * (1.0 + Z/4.0) * TimeWindowBits.
  */
 double calc_time_window(uint64_t Y, uint64_t F) {
-	rapl_msr_unit rapl_unit = get_rapl_unit();
+	rapl_msr_unit rapl_unit = get_rapl_unit(rapl_unit_fd());
 	return _2POW(Y) * F_arr[F] * rapl_unit.time;
 }
 
@@ -99,7 +100,7 @@ double calc_time_window(uint64_t Y, uint64_t F) {
  */
 void
 calc_y(uint64_t *Y, uint64_t F, jdouble custm_time) {
-	rapl_msr_unit rapl_unit = get_rapl_unit();
+	rapl_msr_unit rapl_unit = get_rapl_unit(rapl_unit_fd());
 	*Y = log2(custm_time / rapl_unit.time / F_arr[F]);
 }
 
@@ -109,7 +110,7 @@ calc_y(uint64_t *Y, uint64_t F, jdouble custm_time) {
  */
 rapl_msr_power_limit_t
 get_specs(int fd, uint64_t addr) {
-	rapl_msr_unit rapl_unit = get_rapl_unit();
+	rapl_msr_unit rapl_unit = get_rapl_unit(rapl_unit_fd());
 	uint64_t msr;
 	rapl_msr_power_limit_t limit_info;
 	msr = read_msr(fd, addr);
@@ -252,7 +253,7 @@ set_dram_time_window_limit(int fd, uint64_t addr, jdouble custm_time) {
  */
 void
 set_pkg_power_limit(int fd, uint64_t addr, jdouble custm_power) {
-	rapl_msr_unit rapl_unit = get_rapl_unit();
+	rapl_msr_unit rapl_unit = get_rapl_unit(rapl_unit_fd());
 	uint64_t msr;
 	msr = read_msr(fd, addr);
 	//Set the customized power.
@@ -271,7 +272,7 @@ set_pkg_power_limit(int fd, uint64_t addr, jdouble custm_power) {
  */
 void
 set_dram_power_limit(int fd, uint64_t addr, jdouble custm_power) {
-	rapl_msr_unit rapl_unit = get_rapl_unit();
+	rapl_msr_unit rapl_unit = get_rapl_unit(rapl_unit_fd());
 	uint64_t msr;
 	msr = read_msr(fd, addr);
 	//Set the customized power.

@@ -1,6 +1,6 @@
 
-#ifndef CPUSCALER_H
-#define CPUSCALER_H
+#ifndef ENERGY_CHECK_UTILS_H
+#define ENERGY_CHECK_UTILS_H
 
 #include <jni.h>
 #include "EnergyStats.h"
@@ -14,4 +14,6 @@ jint Java_jRAPL_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls);
 jstring Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls);
 void Java_jRAPL_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls);
 
-#endif //CPUSCALER_H
+int rapl_unit_fd();
+
+#endif //ENERGY_CHECK_UTILS_H

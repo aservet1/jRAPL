@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <sys/time.h>
 #include "EnergyStats.h"
-#include "arch_spec.h"
+#include "ArchSpec.h"
 
 EnergyStats
 energy_stats_subtract(EnergyStats x, EnergyStats y){ //@TODO -- implement the wraparound for negative values
