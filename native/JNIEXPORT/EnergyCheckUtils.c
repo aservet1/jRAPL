@@ -16,16 +16,6 @@
 
 #define MSR_DRAM_ENERGY_UNIT 0.000015
 
-
-
-/////////////
-JNIEXPORT void JNICALL Java_jRAPL_JavaTest_nativeSandbox(JNIEnv* env, jclass jcls) {
-	printf("hello world from sayHello in C\n");
-	//EnergyStats e; printf("%.4f %.4f %.4f %.4f\n",e.dram,e.core,e.pkg, e.gpu);//ProfileInit();
-}
-////////////
-
-
 static uint64_t num_sockets;
 
 static void copy_to_string(EnergyStats stats_per_socket[num_sockets], char ener_info[512], int which_socket)
@@ -50,11 +40,8 @@ static void copy_to_string(EnergyStats stats_per_socket[num_sockets], char ener_
 
 JNIEXPORT void JNICALL Java_jRAPL_EnergyManager_profileInit(JNIEnv *env, jclass jcls)
 {
-	//printf("c-hello1\n");
 	uint64_t n = getSocketNum();
-	//printf("c-hello2\n");
 	num_sockets = n;
-	//printf("c-hello3\n");
 	ProfileInit();
 }
 

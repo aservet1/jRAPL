@@ -22,7 +22,6 @@ Java_jRAPL_ArchSpec_energyStatsStringFormat(JNIEnv* env, jclass jcls) {
 
 JNIEXPORT jint JNICALL
 Java_jRAPL_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls) {
-	printf("hello ! ! !! !!! !!!!! !!!!!!!! !!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!!!!\n");
 	return (jint)getSocketNum(); 
 }
 
