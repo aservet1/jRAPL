@@ -86,21 +86,11 @@ void ProfileDealloc()
 	free(parameters);
 }
 
-void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg], int whichSocket)
+void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
 {
-	if (whichSocket > num_pkg || whichSocket < 0) {
-		fprintf(
-			stderr,
-			"ERROR: invalid socket requested to read for EnergyStatCheck: %d\n",
-			whichSocket
-		);
-		exit(1);
-	}
-
 	struct timeval timestamp;
 
-	int start = whichSocket == ALL_SOCKETS ? 0 : whichSocket-1;
-	for (int i = start; i < num_pkg; i++)
+	for (int i = 0; i < num_pkg; i++)
 	{
 		stats_per_socket[i].socket = i+1;
 		stats_per_socket[i].pkg = read_Pkg(i);
@@ -130,7 +120,68 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg], int whichSocket)
 		gettimeofday(&timestamp,NULL);
 		stats_per_socket[i].timestamp = timestamp;
 
-		if (whichSocket != ALL_SOCKETS) break;
 	}
 
 }
+
+//static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info[512])
+//{
+////<<<<<<< HEAD
+////  	bzero(ener_info, 512);
+////	int offset = 0;
+////
+////	char buffer[100];
+////	int buffer_len;
+////
+////	for (int i = 0; i < num_pkg; i++) {
+////		EnergyStats stats = stats_per_socket[i];
+////		energy_stats_to_string(stats, buffer);
+////		buffer_len = strlen(buffer);
+////		memcpy(ener_info + offset, buffer, buffer_len);
+////		offset += buffer_len;
+////=======
+//	for (int i = 0; i < num_pkg; i++) {
+//		EnergyStats stats = stats_per_socket[i];
+//		ener_info += energy_stats_to_string(stats, ener_info, power_domains_supported);
+////>>>>>>> master
+//	}
+//}
+//
+//void ProfileDealloc()
+//{
+//	free(fd);
+//	free(parameters);
+//}
+//
+//JNIEXPORT void JNICALL Java_jRAPL_EnergyManager_profileInit(JNIEnv *env, jclass jcls)
+//{	
+//	ProfileInit();
+//}
+//
+////assumes profile has already been inited. @TODO try to get this to be independent of profileinit and move it into arch_spec.c
+//JNIEXPORT jint JNICALL Java_jRAPL_ArchSpec_getWraparoundEnergy(JNIEnv* env, jclass jcls)
+//{
+//	return (jint)wraparound_energy;
+//}
+//
+//JNIEXPORT jstring JNICALL Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls) {
+//	
+//	char ener_info[512];
+//	EnergyStats stats_per_socket[num_pkg];
+//
+//	EnergyStatCheck(stats_per_socket);
+//	copy_to_string(stats_per_socket, ener_info);
+//	
+//	
+//	jstring ener_string = (*env)->NewStringUTF(env, ener_info);
+//  	
+//	return ener_string;
+//
+//}
+//
+//JNIEXPORT void JNICALL Java_jRAPL_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls) {
+//
+//	ProfileDealloc();
+//
+//}
+//>>>>>>> master

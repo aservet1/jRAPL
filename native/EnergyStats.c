@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <sys/time.h>
 #include "EnergyStats.h"
+#include "ArchSpec.h"
 
 EnergyStats
 energy_stats_subtract(EnergyStats x, EnergyStats y){ //@TODO -- implement the wraparound for negative values
@@ -17,17 +18,58 @@ energy_stats_subtract(EnergyStats x, EnergyStats y){ //@TODO -- implement the wr
 }
 
 
-void
-energy_stats_to_string(EnergyStats estats, char ener_string[512])
-{
-	sprintf(ener_string, "%f,%f,%f,%f@", estats.dram, estats.gpu, estats.core, estats.pkg);
+int
+energy_stats_to_string(EnergyStats estats, char* ener_string, int power_domain) {
+	if (power_domain == READ_FROM_GPU)
+		return sprintf(ener_string, "%.4f,%.4f,%.4f@",
+			estats.gpu,
+			estats.core,
+			estats.pkg
+		);
+	if (power_domain == READ_FROM_DRAM)
+		return sprintf(ener_string, "%.4f,%.4f,%.4f@",
+			estats.dram,
+			estats.core,
+			estats.pkg
+		);
+	if (power_domain == READ_FROM_DRAM_AND_GPU)
+		return sprintf(ener_string, "%.4f,%.4f,%.4f,%.4f@",
+			estats.dram,
+			estats.gpu,
+			estats.core,
+			estats.pkg
+		);
+	return -1;
+
 }
 
-void
-energy_stats_csv_string(EnergyStats estats, char ener_string[512])
-{
-	sprintf(ener_string, "%d,%f,%f,%f,%f,%ld",
-		estats.socket,
-		estats.dram, estats.gpu, estats.core, estats.pkg, 
-		(estats.timestamp.tv_sec * 1000000) + estats.timestamp.tv_usec);
+int
+energy_stats_csv_string(EnergyStats estats, char* ener_string, int power_domain) {
+	if (power_domain == READ_FROM_GPU)
+		return sprintf(ener_string, "%d,%.4f,%.4f,%.4f,%ld",
+			estats.socket,
+			estats.gpu,
+			estats.core,
+			estats.pkg,
+			(estats.timestamp.tv_sec * 1000000) + estats.timestamp.tv_usec
+		);
+	if (power_domain == READ_FROM_DRAM)
+		return sprintf(ener_string, "%d,%.4f,%.4f,%.4f,%ld",
+			estats.socket,
+			estats.dram,
+			estats.core,
+			estats.pkg,
+			(estats.timestamp.tv_sec * 1000000) + estats.timestamp.tv_usec
+		);
+	if (power_domain == READ_FROM_DRAM_AND_GPU)
+		return sprintf(ener_string, "%d,%.4f,%.4f,%.4f,%.4f,%ld",
+			estats.socket,
+			estats.dram,
+			estats.gpu,
+			estats.core,
+			estats.pkg,
+			(estats.timestamp.tv_sec * 1000000) + estats.timestamp.tv_usec
+		);
+	return -1;
 }
+

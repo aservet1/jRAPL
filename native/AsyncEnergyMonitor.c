@@ -63,6 +63,7 @@ AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, int storageType)
 	monitor->exit = false;
 	monitor->samplingRate = samplingRate;
 	monitor->storageType = storageType;
+	monitor->power_domain = get_power_domains_supported(get_cpu_model(), NULL);
 	if (USING_DYNAMIC_ARRAY) {
 		monitor->samples_dynarr = newDynamicArray(64);
 		monitor->samples_linklist = NULL;
@@ -105,7 +106,7 @@ void* run(void* monitor_arg)
 
 	while (!monitor->exit)
 	{
-		EnergyStatCheck(stats,ALL_SOCKETS); 
+		EnergyStatCheck(stats); 
 		for (int i = 0; i < sockets; i++) {
 			storeEnergySample(monitor,stats[i]);
 		}
@@ -146,9 +147,9 @@ void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath){
 	fprintf(outfile,"socket,dram,gpu,core,pkg,timestamp(usec since epoch)\n");
 	
 	if (USING_DYNAMIC_ARRAY)
-		writeToFile_DynamicArray(outfile, monitor->samples_dynarr);
+		writeToFile_DynamicArray(outfile, monitor->samples_dynarr, monitor->power_domain);
 	if (USING_LINKED_LIST)
-		writeToFile_LinkedList(outfile, monitor->samples_linklist);
+		writeToFile_LinkedList(outfile, monitor->samples_linklist, monitor->power_domain);
 
 	if (filepath) fclose(outfile);
 }
