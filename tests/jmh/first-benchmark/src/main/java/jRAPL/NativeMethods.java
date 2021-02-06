@@ -91,7 +91,7 @@ public class NativeMethods {
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeEnergyStatCheck(Blackhole b, MyState state) throws InterruptedException {
-		b.consume(EnergyMonitor.energyStatCheck(0));
+		b.consume(EnergyMonitor.energyStatCheck());
 		//TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
