@@ -1,0 +1,8 @@
+Coming soon! (don't ask how soon please)
+
+Will hold all of the language barrier interface files for a goRAPL interface, just like
+how the folder currently named JNIEXPORTS holds all the language barrier files for the
+jRAPL interface.
+
+"language barrier files" are the files that package up the native C functions into the
+API calls from the non-C language, like Java for jRAPL or Go for goRAPL

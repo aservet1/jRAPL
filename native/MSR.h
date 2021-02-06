@@ -2,8 +2,8 @@
 #define MSR
 #define _XOPEN_SOURCE 500 //for pread and pwrite
 
-#include <stdint.h>
 #include <jni.h>
+#include <stdint.h>
 
 /**
  * Reference Intel ® 64 and IA-32 Architectures Software Developer’s Manual

@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include<sys/time.h>
 
-#include "arch_spec.h"
+#include "ArchSpec.h"
 #include "EnergyCheckUtils.h"
 
 //timestamp macros
