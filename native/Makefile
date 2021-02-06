@@ -20,9 +20,7 @@ JAVA_HOME = $(shell readlink -f /usr/bin/javac | sed "s:bin/javac::")
 JAVA_INCLUDE = $(JAVA_HOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
-all:
-	make $(LIB)
-	make JNI
+all: $(LIB) JNI
 
 JNI:
 	(cd JNIEXPORT && make)

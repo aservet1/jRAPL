@@ -21,7 +21,7 @@
 /////////////
 JNIEXPORT void JNICALL Java_jRAPL_JavaTest_nativeSandbox(JNIEnv* env, jclass jcls) {
 	printf("hello world from sayHello in C\n");
-	EnergyStats e; printf("%.4f %.4f %.4f %.4f\n",e.dram,e.core,e.pkg, e.gpu);//ProfileInit();
+	//EnergyStats e; printf("%.4f %.4f %.4f %.4f\n",e.dram,e.core,e.pkg, e.gpu);//ProfileInit();
 }
 ////////////
 

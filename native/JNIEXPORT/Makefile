@@ -27,7 +27,7 @@ all: $(JNI_LIB)
 
 $(JNI_LIB): $(JNIEXPORTS)
 	gcc $(CFLAGS) $(INCLUDE_FLAGS) $(JNIEXPORTS) $(JNIEXPORTS)
-	gcc -g -Wall $(INCLUDE_FLAGS) -shared -Wl,-soname,$(JNI_LIB) -o $(JNI_LIB) $(OFILES) -lc 
+	gcc -g -Wall $(INCLUDE_FLAGS) -shared -Wl,-soname,$(JNI_LIB) -o $(JNI_LIB) $(OFILES) -L .. -lc -lNativeRAPL
 clean:
 	rm -f $(JNI_LIB) $(OFILES) $(CDRIVER)
 	rm -f ../../src/main/resources/native/$(JNI_LIB) # make sure to modularize this variable name
