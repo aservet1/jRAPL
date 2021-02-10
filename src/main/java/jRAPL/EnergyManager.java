@@ -9,7 +9,7 @@ public class EnergyManager
 	native static void profileInit();
 	native static void profileDealloc();
 
-	private static void loadNativeLibrary() {
+	static void loadNativeLibrary() {
 		String nativelib = "/native/libJNIRAPL.so";
 		try {
 			NativeUtils.loadLibraryFromJar(nativelib);

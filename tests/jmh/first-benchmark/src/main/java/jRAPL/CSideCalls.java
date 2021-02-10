@@ -27,40 +27,78 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- */
+ 
 
 package jRAPL;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
+
+import jRAPL.RuntimeTestUtils;
+
+import java.time.Instant;
 import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
+public class CSideCalls {
+    public static class State {
+		long average = 0;
+		int numIterations = 0;
 
-public class NativeMethods {
-
-	@State(Scope.Thread)
-    public static class MyState {
-		public EnergyManager manager;
-
-        @Setup(Level.Trial)
-        public void doSetup() {
-            manager = new EnergyManager();
-			manager.init();
-        }
-
-        @TearDown(Level.Trial)
-        public void doTearDown() {
-			manager.dealloc();
-        }
-    }
+		public void addValue(long microSeconds) {
+			this.average = ((this.average*this.numIterations) + microSeconds) / ++this.numIterations;
+		}
+	}
 
 	@State(Scope.Thread)
-	public static class ProfileDeallocState {
+    public static class ProfileInitState extends State {
 
 		@Setup(Level.Trial)
-		public void doSetup(){
-			new EnergyManager().init();
+		public void doInitialSetup() {
+			RuntimeTestUtils.initCSideTiming();
 		}
+
+        @TearDown(Level.Invocation)
+        public void doTearDown() {
+			EnergyManager.ProfileDealloc();
+        }
+
+		@Setup(Level.Trial)
+		public void doFinalTeardown() {
+			RuntimeTestUtils.deallocCSideTiming();
+		}
+    }
+
+	@Benchmark
+	@Fork(1)
+	@Warmup(iterations = 1)
+	@Measurement(iterations = 1)
+	@BenchmarkMode(Mode.AverageTime)
+	@OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void timeProfileInit(MyState s) throws InterruptedException {
+		s.addValue(RuntimeTestUtils.usecTimeProfileInit());
+		TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+	}
+
+
+	@State(Scope.Thread)
+	public static class ProfileDeallocState extends State {
+		
+		@Setup(Level.Trial)
+		public void doInitialSetup() {
+			RuntimeTestUtils.initCSideTiming();
+		}
+
+		@Setup(Level.Invocation)
+		public void doSetup(){
+			EnergyManager.ProfileInit();
+		}
+
+		@Setup(Level.Trial)
+		public void doFinalTeardown() {
+			RuntimeTestUtils.deallocCSideTiming();
+		}
+		
 	}
 
 	@Benchmark
@@ -70,18 +108,27 @@ public class NativeMethods {
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeProfileDealloc(ProfileDeallocState s) {
-		EnergyManager.profileDealloc();
+		s.addValue(RuntimeTestUtils.usecTimeProfileDealloc());
+		TimeUnit.MILLISECONDS.sleep(1);
 	}
+
+	
 
 	@Benchmark
 	@Fork(1)
-	@Warmup(iterations = 1)
+	@Warmup(iterations = 0)
 	@Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeProfileInit() throws InterruptedException {
-		EnergyManager.profileInit();
-		TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+	public void timeEnergyStatCheck(Blackhole b, MyState s) throws InterruptedException {
+		s.setBefore();
+		b.consume(EnergyMonitor.energyStatCheck());
+		s.setAfter();
+		s.addValue();
+		TimeUnit.MILLISECONDS.sleep(1);
+
+		
+		//TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
 	@Benchmark
@@ -90,9 +137,8 @@ public class NativeMethods {
 	@Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeEnergyStatCheck(Blackhole b, MyState state) throws InterruptedException {
-		b.consume(EnergyMonitor.energyStatCheck());
-		//TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+	public void timeOneMillisecondSleep(MyState state) throws InterruptedException { // To check the reliability of the sleep utility in java on a given machine so that we can subtract the appropriate amount from the benchmarking results for other methods
+		TimeUnit.MILLISECONDS.sleep(1);
 	}
-
 }
+*/

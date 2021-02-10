@@ -140,10 +140,10 @@ public class RuntimeTestUtils
 	*			--time-msr-readings, which times how long it takes to access each MSR register when reading the energy consumption of each power domain
 	*		NUM_ITERATIONS is the number of trials to run any of these options
 	*/
-	public static void main(String[] args)
+	/*public static void main(String[] args)
 	{
-		EnergyManager manager = new EnergyManager();
-		manager.init();
+		// EnergyManager manager = new EnergyManager();
+		// manager.init();
 
 		int iterations;
 		if(args.length != 2) {
@@ -179,8 +179,8 @@ public class RuntimeTestUtils
 			usageAbort();
 		}
 
-		manager.dealloc();
-	}
+		// manager.dealloc();
+	}*/
 }
 
 

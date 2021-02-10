@@ -19,12 +19,6 @@ static int* fd;
 JNIEXPORT void JNICALL Java_jRAPLTesting_RuntimeTestUtils_initCSideTiming(JNIEnv* env, jclass jcls, jint power_domain){
 	num_pkg = getSocketNum();
 	dram_or_gpu = get_power_domains_supported(get_cpu_model(),NULL);
-	fd = (int*)malloc(sizeof(int)*num_pkg);
-	char msr_filename[BUFSIZ];
-	for (int i = 0; i < num_pkg; i++) {
-		sprintf(msr_filename, "/dev/cpu/%d/msr", i);
-		fd[i] = open(msr_filename, O_RDWR);
-	}
 }
 JNIEXPORT void JNICALL Java_jRAPLTesting_RuntimeTestUtils_deallocCSideTiming(JNIEnv* env, jclass jcls, jint power_domain){
 	free(fd);
@@ -107,7 +101,7 @@ JNIEXPORT jlongArray JNICALL Java_jRAPLTesting_RuntimeTestUtils_usecTimeMSRRead(
 			fprintf(stderr,"invalid powerDomain for usecTimeMSRREad: %d\n",powerDomain);
 			return NULL;
 	}
-
+	fd = get_msr_fds();
 	for (int i = 0; i < num_pkg; i++) {
 		STARTSTAMP;
 		/*double energy = */read_msr(fd[i],which_msr);
