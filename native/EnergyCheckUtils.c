@@ -28,6 +28,11 @@ int rapl_unit_fd() {
 	return fd[0];
 }
 
+// only valid 
+int* get_msr_fds() {
+	return fd;
+}
+
 static inline double read_Pkg(int socket)
 {
 	double result = read_msr(fd[socket], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
