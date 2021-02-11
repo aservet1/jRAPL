@@ -14,7 +14,6 @@ jint Java_jRAPL_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls);
 jstring Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls);
 void Java_jRAPL_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls);
 
-int rapl_unit_fd();
 int* get_msr_fds();
 
 #endif //ENERGY_CHECK_UTILS_H

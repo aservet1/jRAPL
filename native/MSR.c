@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "EnergyCheckUtils.h" // for rapl_unit_fd()
+#include "EnergyCheckUtils.h"
 #include "MSR.h"
 #include "ArchSpec.h"
 
@@ -91,7 +91,7 @@ void write_msr(int fd, uint64_t msrOffset, uint64_t limit_info) {
  * Formula from Intel Manual: Actual time window value = 2^Y * (1.0 + Z/4.0) * TimeWindowBits.
  */
 double calc_time_window(uint64_t Y, uint64_t F) {
-	rapl_msr_unit rapl_unit = get_rapl_unit(rapl_unit_fd());
+	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	return _2POW(Y) * F_arr[F] * rapl_unit.time;
 }
 
@@ -100,7 +100,7 @@ double calc_time_window(uint64_t Y, uint64_t F) {
  */
 void
 calc_y(uint64_t *Y, uint64_t F, jdouble custm_time) {
-	rapl_msr_unit rapl_unit = get_rapl_unit(rapl_unit_fd());
+	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	*Y = log2(custm_time / rapl_unit.time / F_arr[F]);
 }
 
@@ -110,7 +110,7 @@ calc_y(uint64_t *Y, uint64_t F, jdouble custm_time) {
  */
 rapl_msr_power_limit_t
 get_specs(int fd, uint64_t addr) {
-	rapl_msr_unit rapl_unit = get_rapl_unit(rapl_unit_fd());
+	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	uint64_t msr;
 	rapl_msr_power_limit_t limit_info;
 	msr = read_msr(fd, addr);
@@ -253,7 +253,7 @@ set_dram_time_window_limit(int fd, uint64_t addr, jdouble custm_time) {
  */
 void
 set_pkg_power_limit(int fd, uint64_t addr, jdouble custm_power) {
-	rapl_msr_unit rapl_unit = get_rapl_unit(rapl_unit_fd());
+	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	uint64_t msr;
 	msr = read_msr(fd, addr);
 	//Set the customized power.
@@ -272,7 +272,7 @@ set_pkg_power_limit(int fd, uint64_t addr, jdouble custm_power) {
  */
 void
 set_dram_power_limit(int fd, uint64_t addr, jdouble custm_power) {
-	rapl_msr_unit rapl_unit = get_rapl_unit(rapl_unit_fd());
+	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	uint64_t msr;
 	msr = read_msr(fd, addr);
 	//Set the customized power.
