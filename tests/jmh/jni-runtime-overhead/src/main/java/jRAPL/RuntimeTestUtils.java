@@ -1,6 +1,4 @@
-package jRAPL;//Testing;
-
-//import jRAPL.*;
+package jRAPL;
 
 import java.util.Arrays;
 import java.text.ParseException;
@@ -59,8 +57,8 @@ public class RuntimeTestUtils
 	
 	//Runs each function once and returns microseconds
 	public native static long usecTimeProfileInit();
-	public native static long usecTimeGetSocketNum();
-	public native static long usecTimeEnergyStatCheck(int whichSocket);
+	// public native static long usecTimeGetSocketNum();
+	public native static long usecTimeEnergyStatCheck();
 	public native static long usecTimeProfileDealloc();
 	public native static long[] usecTimeMSRRead(int powerDomain);
 
@@ -90,19 +88,19 @@ public class RuntimeTestUtils
 
 	public static void timeAllCFunctions(int iterations) {
 		long[] profileInitTimes = new long[iterations];
-		long[] getSocketTimes = new long[iterations];
+		// long[] getSocketTimes = new long[iterations];
 		long[] energyStatTimes = new long[iterations];
 		long[] profileDeallocTimes = new long[iterations];
-		int profInitIndex = 0, getSocketIndex = 0, energyStatIndex = 0, profDeallocIndex = 0;
+		int profInitIndex = 0, /* getSocketIndex = 0,*/ energyStatIndex = 0, profDeallocIndex = 0;
 		for (int n = 0; n < iterations; n++) profileInitTimes[profInitIndex++] = usecTimeProfileInit();
-		for (int n = 0; n < iterations; n++) getSocketTimes[getSocketIndex++] = usecTimeGetSocketNum();
-		for (int n = 0; n < iterations; n++) energyStatTimes[energyStatIndex++] = usecTimeEnergyStatCheck(0);
+		// for (int n = 0; n < iterations; n++) getSocketTimes[getSocketIndex++] = usecTimeGetSocketNum();
+		for (int n = 0; n < iterations; n++) energyStatTimes[energyStatIndex++] = usecTimeEnergyStatCheck();
 		for (int n = 0; n < iterations; n++) {
 			EnergyManager.profileInit(); // make sure memory is alloc'd first to prevent 'double free' errors
 			profileDeallocTimes[profDeallocIndex++] = usecTimeProfileDealloc();
 		}
 		printFunctionTimeRecord(profileInitTimes,"profileInit()");
-		printFunctionTimeRecord(getSocketTimes,"getSocketNum()");
+		// printFunctionTimeRecord(getSocketTimes,"getSocketNum()");
 		printFunctionTimeRecord(energyStatTimes,"energyStatCheck()");
 		printFunctionTimeRecord(profileDeallocTimes,"profileDealloc()");
 

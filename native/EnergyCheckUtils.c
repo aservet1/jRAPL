@@ -52,7 +52,6 @@ static inline double read_dram(int i) {
 }
 
 void ProfileInit() {
-	int i;
 	char msr_filename[BUFSIZ];
 	int core = 0;
 
@@ -65,7 +64,7 @@ void ProfileInit() {
 	parameters = (rapl_msr_parameter *)malloc(2 * sizeof(rapl_msr_parameter));
 	msr_fds = (int *) malloc(num_pkg * sizeof(int));
 
-	for(i = 0; i < num_pkg; i++) {
+	for(int i = 0; i < num_pkg; i++) {
 		if(i > 0) {
 			core += num_pkg_thread / 2; 	//measure the first core of each package
 		}
