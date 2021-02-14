@@ -1,7 +1,7 @@
 
 << Have done by next week ## wednesday #:
-	JMH tests on Native vs Java
-	JMH tests on MSR reading
+	<pr>JMH tests on Native vs Java
+	<pr>JMH tests on MSR reading
 	Run the tests on a Jolteon or whatever the other server is called (ask Timur for access)
 	Python parsing and graphing
 	Update the above to to Overleaf
