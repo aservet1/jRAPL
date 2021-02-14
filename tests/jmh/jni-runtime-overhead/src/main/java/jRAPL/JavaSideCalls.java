@@ -39,8 +39,9 @@ import java.util.concurrent.TimeUnit;
 import java.time.Duration;
 import java.io.*; 
 
-public class JNICalls {
+public class JavaSideCalls {
 
+	@State(Scope.Thread)
 	public static class State_ {
 		private long average = 0;
 		private int numIterations = 0;
@@ -57,23 +58,28 @@ public class JNICalls {
 		public void setAfter() {
 			this.after = Instant.now();
 		}
+		@TearDown(Level.Invocation)
+		public void doTearDown() throws InterruptedException {
+			TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+		}
 	}
 
 	@State(Scope.Thread)
     public static class ProfileInitState extends State_ {
 
 		@Setup(Level.Trial)
-		public void doSetupInitially() {
+		public void doInitialSetup() {
 			EnergyManager.loadNativeLibrary();
 		}
 
         @TearDown(Level.Invocation)
-        public void doTearDown() {
+        public void doTearDown() throws InterruptedException {
+			super.doTearDown();
 			EnergyManager.profileDealloc();
         }
 
 		@TearDown(Level.Trial)
-        public void doTearDownInTheEnd() {
+        public void doFinalTearDown() {
 			try {
 				FileWriter myWriter = new FileWriter("profile_init_statz.txt");
 				myWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
@@ -94,14 +100,13 @@ public class JNICalls {
 		EnergyManager.profileInit();
 		pis.setAfter();
 		pis.addValue();
-		TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
 	@State(Scope.Thread)
 	public static class ProfileDeallocState extends State_ {
 
 		@Setup(Level.Trial)
-		public void doSetupInitially() {
+		public void doInitialSetup() {
 			EnergyManager.loadNativeLibrary();
 		}
 
@@ -110,7 +115,7 @@ public class JNICalls {
 			EnergyManager.profileInit();
 		}
 		@TearDown(Level.Trial)
-        public void doTearDownInTheEnd() {
+        public void doFinalTearDown() {
 			try {
 				FileWriter myWriter = new FileWriter("profile_dealloc_statz.txt");
 				myWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
@@ -131,7 +136,6 @@ public class JNICalls {
 		EnergyManager.profileDealloc();
 		pds.setAfter();
 		pds.addValue();
-		TimeUnit.MILLISECONDS.sleep(1);
 	}
 
 	@State(Scope.Thread)
@@ -168,13 +172,12 @@ public class JNICalls {
 		b.consume(EnergyMonitor.energyStatCheck());
 		escs.setAfter();
 		escs.addValue();
-		TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
-	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
-	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeOneMillisecondSleep() throws InterruptedException { // To check the reliability of the sleep utility in java on a given machine so that we can subtract the appropriate amount from the benchmarking results for other methods
-		TimeUnit.MILLISECONDS.sleep(1);
-	}
+	// @Benchmark
+	// @Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	// public void timeOneMillisecondSleep() throws InterruptedException { // To check the reliability of the sleep utility in java on a given machine so that we can subtract the appropriate amount from the benchmarking results for other methods
+	// 	TimeUnit.MILLISECONDS.sleep(1);
+	// }
 }
