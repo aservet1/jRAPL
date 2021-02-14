@@ -167,8 +167,6 @@ public class JNICalls {
         }
 	}
 
-	
-
 	@Benchmark
 	@Fork(1)
 	@Warmup(iterations = 0)
@@ -181,9 +179,6 @@ public class JNICalls {
 		escs.setAfter();
 		escs.addValue();
 		TimeUnit.MILLISECONDS.sleep(1);
-
-		
-		//TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
 	@Benchmark

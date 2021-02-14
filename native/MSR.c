@@ -5,7 +5,6 @@
 #include "MSR.h"
 #include "ArchSpec.h"
 
-
 /** Note that when reaserching MSR, it stands for Model-Specific Register, not to be
  *    confused with Machine State Register
  *
@@ -67,13 +66,10 @@ extractBitField(uint64_t inField, uint64_t width, uint64_t offset)
  */
 uint64_t read_msr(int fd, uint64_t msrOffset)
 {
-
 	uint64_t data = 0;
-
 	if ( pread(fd, &data, sizeof data, msrOffset) != sizeof data ) {
 	  fprintf(stderr,"ERROR read_msr(): pread error!\n");
 	}
-
 	return data;
 }
 
@@ -81,10 +77,10 @@ uint64_t read_msr(int fd, uint64_t msrOffset)
  * Writes (presumably updated) msr data to msr register
  */
 void write_msr(int fd, uint64_t msrOffset, uint64_t limit_info) {
-	if ( pwrite(fd, &limit_info , sizeof limit_info, msrOffset) != sizeof limit_info)
-	  printf("pwrite error!\n");
+	if ( pwrite(fd, &limit_info , sizeof limit_info, msrOffset) != sizeof limit_info) {
+	  fprintf(stderr,"pwrite error!\n");
+	}
 }
-
 
 /* <--- Alejandro's Interpretation --->
  * Calculates the actual time window from the bits stored in the time window field
@@ -363,8 +359,7 @@ get_rapl_parameters(int fd, uint64_t msr_addr, rapl_msr_unit *unit_obj, rapl_msr
  * the parameter list into an an array. {thermal_spec_power, min_power, max_power, max_time_window}
  */
 void
-getPowerSpec(double result[4], rapl_msr_parameter *parameters, int domain)
-{
+getPowerSpec(double result[4], rapl_msr_parameter *parameters, int domain) {
 	result[0] = parameters[domain].thermal_spec_power;
 	result[1] = parameters[domain].min_power;
 	result[2] = parameters[domain].max_power;

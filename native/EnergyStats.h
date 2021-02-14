@@ -4,7 +4,7 @@
 #include <sys/time.h>
 
 typedef struct {
-	int socket;
+	char socket;
 	double pkg;
 	double dram;
 	double gpu; //pp1

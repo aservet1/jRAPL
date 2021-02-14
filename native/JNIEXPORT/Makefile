@@ -22,11 +22,11 @@ OFILES = $(JNIEXPORTS:.c=.o)
 CFLAGS = -fPIC -g -c -Wall
 
 all: $(JNI_LIB)
-	cp $(JNI_LIB) ../../src/main/resources/native # make sure to modularize this variable name
+	cp $(JNI_LIB) ../../java/src/main/resources/native # make sure to modularize this variable name
 
 $(JNI_LIB): $(JNIEXPORTS)
 	gcc $(CFLAGS) $(INCLUDE_FLAGS) $(JNIEXPORTS) $(JNIEXPORTS)
 	gcc -g -Wall $(INCLUDE_FLAGS) -shared -Wl,-soname,$(JNI_LIB) -o $(JNI_LIB) $(OFILES) -L $(NATIVE_FILES_LOCATION) -lc -lNativeRAPL
 clean:
 	rm -f $(JNI_LIB) $(OFILES) $(CDRIVER)
-	rm -f ../../src/main/resources/native/$(JNI_LIB) # make sure to modularize this variable name
+	rm -f ../../java/src/main/resources/native/$(JNI_LIB) # make sure to modularize this variable name

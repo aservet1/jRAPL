@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include <jni.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "ArchSpec.h"
+#include "MSR.h"
 
-//assumes profile has already been inited. @TODO try to get this to be independent of profileinit and move it into arch_spec.c
 JNIEXPORT jint JNICALL Java_jRAPL_ArchSpec_getWraparoundEnergy(JNIEnv* env, jclass jcls)
 {
-	return 9999; //@TODO actually make this the accurate one from open()ing and close()ing the msr fd, making sure not to interfere with it being open in the other thing from ProfileInit();      //(jint)wraparound_energy;
+	int fd = open("/dev/cpu/0/msr",O_RDONLY);
+	int wraparound_energy = get_wraparound_energy(get_rapl_unit(fd).energy);
+	close(fd);
+	return wraparound_energy;
 }
-//TODO -- for organization, see if you can do the wraparound energy calculation here
-//	instead of EnergyCheckUtils.c involves open()-ing up the msr and closing it (if not already open)
-//  and reading directly from it. that would make it so you don't have to do ProfileInit()
-//  if you just want to read the wraparound energy real quick
 
 JNIEXPORT jstring JNICALL
 Java_jRAPL_ArchSpec_energyStatsStringFormat(JNIEnv* env, jclass jcls) {

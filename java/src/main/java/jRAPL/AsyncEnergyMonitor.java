@@ -120,6 +120,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 			System.exit(2);
 		}
 		m.init();
+		m.setSamplingRate(125);
 
 		m.start();
 		sleepPrint(2000);

@@ -1,0 +1,17 @@
+jrapl ideas:
+	EnergySample.getNumSockets() instead of ArchSpec.NUM_SOCKETS
+	
+	make Diff.between() take abstract samples -- think about if you want to enforce strictly using this class for the difference between two raw EnergyStats stamps
+
+	EnergySample.dumpFormatHeader(), or overloaded dump where you ask for the header one line above the dump
+
+	EnergySample.dumps() vs EnergySample.loads()
+
+
+
+
+
+
+
+report bug:
+	it looks like the add subplot function says that it returns none here but it doesnt but on their actual page website thing it works. the problems probably coming from intellisense
