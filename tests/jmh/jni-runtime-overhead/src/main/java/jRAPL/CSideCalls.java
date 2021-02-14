@@ -34,8 +34,6 @@ package jRAPL;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
-// import jRAPL.RuntimeTestUtils;
-
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 import java.time.Duration;
@@ -57,18 +55,25 @@ public class CSideCalls {
 			RuntimeTestUtils.initCSideTiming();
 		}
 
-		@Setup(Level.Trial)
+		@TearDown(Level.Trial)
 		public void doFinalTeardown() {
 			RuntimeTestUtils.deallocCSideTiming();
 			System.out.println("=====================\n"+average+"\n========================");
 		}
+		
+		@Setup(Level.Invocation)
+		public void doTearDown() throws InterruptedException {
+			TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+		}
+
 	}
 
 	@State(Scope.Thread)
     public static class ProfileInitState extends State_ {
 
         @TearDown(Level.Invocation)
-        public void doTearDown() {
+        public void doTearDown() throws InterruptedException {
+			super.doTearDown();
 			EnergyManager.profileDealloc();
         }
 
@@ -81,37 +86,39 @@ public class CSideCalls {
 		public void doSetup(){
 			EnergyManager.profileInit();
 		}
+
+		@TearDown(Level.Invocation)
+		public void doTearDown() throws InterruptedException {
+			super.doTearDown();
+		}
 	
 	}
 
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeProfileInit(ProfileInitState pis) throws InterruptedException {
+	public void timeProfileInit(ProfileInitState pis) {
 		pis.addValue(RuntimeTestUtils.usecTimeProfileInit());
-		TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
-	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
-	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeProfileDealloc(ProfileDeallocState pds) throws InterruptedException {
-		pds.addValue(RuntimeTestUtils.usecTimeProfileDealloc());
-		TimeUnit.MILLISECONDS.sleep(1);
-	}
+	// @Benchmark
+	// @Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	// public void timeProfileDealloc(ProfileDeallocState pds) {
+	// 	pds.addValue(RuntimeTestUtils.usecTimeProfileDealloc());
+	// }
 
-	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
-	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeEnergyStatCheck(State_ s) throws InterruptedException {
-		s.addValue(RuntimeTestUtils.usecTimeEnergyStatCheck());
-		TimeUnit.MILLISECONDS.sleep(1);
-	}
+	// @Benchmark
+	// @Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	// public void timeEnergyStatCheck(State_ s) {
+	// 	s.addValue(RuntimeTestUtils.usecTimeEnergyStatCheck());
+	// }
 
-	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
-	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeOneMillisecondSleep() throws InterruptedException {
-		TimeUnit.MILLISECONDS.sleep(1);
-	} // To check the reliability of the sleep utility in java on a given machine so that we can subtract the appropriate amount from the benchmarking results for other methods
+	// @Benchmark
+	// @Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	// public void timeOneMillisecondSleep() throws InterruptedException {
+	// 	TimeUnit.MILLISECONDS.sleep(1);
+	// } // To check the reliability of the sleep utility in java on a given machine so that we can subtract the appropriate amount from the benchmarking results for other methods
 }
