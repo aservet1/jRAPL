@@ -4,7 +4,7 @@
 
 echo; sudo echo 'hello w0rld'; echo
 
-runDriver="sudo java -cp target/jRAPL-1.0.jar "
+runDriver="sudo java -cp java/target/jRAPL-1.0.jar "
 
 for driver in 'ArchSpec' 'SyncEnergyMonitor' 'AsyncEnergyMonitor C' 'AsyncEnergyMonitor Java'
 do
