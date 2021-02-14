@@ -1,0 +1,29 @@
+
+<< Have done by next week ## wednesday #:
+	JMH tests on Native vs Java
+	JMH tests on MSR reading
+	Run the tests on a Jolteon or whatever the other server is called (ask Timur for access)
+	Python parsing and graphing
+	Update the above to to Overleaf
+	Organize code for AsyncEnergyMonitor (and also C side and Java side) so it can be clearly presented on Overleaf
+	Update the UML
+	Implement the small 'jRAPL improvements' that you came up with during the hackathon
+	Do a pass on Overleaf document to make sure everything is in shape
+	EnergyManager.active boolean variable, so as to prevent double init()s or double dealloc()s
+
+Make sure Java code is neat, since we're pretty much done refactoring the core utilities, so it's important for it to be legible for presenting it
+
+add another info thing youre tracking for 'number of microseconds between nonzero readings'
+  and make that a third plot for each dram/core/gpu/pkg (again, best to do it all in one fig
+  of 4 subplots)
+
+run thread experiments with 5 and 10 and 20 ms delay
+
+Compare # of samples between C and Java
+
+time between nonzero readings as a test that gets evaluated (based off of timestamps)
+
+make the AsyncMonitor run a set number of operations   instead of start/stop wait loop
+make the AsyncMonitor run a set number of milliseconds instead of start/stop wait loop
+
+"timer" implemntation on the C side
