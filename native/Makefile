@@ -20,10 +20,10 @@ JAVA_HOME = $(shell readlink -f /usr/bin/javac | sed "s:bin/javac::")
 JAVA_INCLUDE = $(JAVA_HOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
-all: $(LIB) JNI
+all: $(LIB) JNIfiles
 
-JNI:
-	(cd JNIEXPORT && make)
+JNIfiles:
+	(cd JNI && make)
 
 $(LIB): $(CFILES)
 	gcc -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFLAGS) $(CFILES)
@@ -34,4 +34,4 @@ $(CDRIVER): $(LIB) $(CFILES) $(CDRIVER).c
 
 clean:
 	rm -f $(LIB) $(OFILES) $(CDRIVER) $(MAKELOG)
-	(cd JNIEXPORT && make clean)
+	(cd JNI && make clean)
