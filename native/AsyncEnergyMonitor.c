@@ -144,7 +144,7 @@ void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath){
 	}
 
 	fprintf(outfile,"samplingRate: %d milliseconds\n",monitor->samplingRate);
-	fprintf(outfile,"socket,dram,gpu,core,pkg,timestamp(usec since epoch)\n");
+	fprintf(outfile,"socket,dram,gpu,core,pkg,timestamp\n");
 	
 	if (USING_DYNAMIC_ARRAY)
 		writeToFile_DynamicArray(outfile, monitor->samples_dynarr, monitor->power_domain);
