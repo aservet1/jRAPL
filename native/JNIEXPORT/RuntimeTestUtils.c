@@ -20,21 +20,22 @@ JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_initCSideTiming(JNIEnv* env, 
 	num_sockets = getSocketNum();
 	dram_or_gpu = get_power_domains_supported(get_cpu_model(),NULL);
 	fd = (int *) malloc(num_sockets * sizeof(int));
-	// char msr_filename[BUFSIZ];
-	// int core = 0;
-	// for(int i = 0; i < num_sockets; i++) {
-	// 	if(i > 0) {
-	// 		core += num_pkg_thread / 2; 	//measure the first core of each package
-	// 	}
-	// 	sprintf(msr_filename, "/dev/cpu/%d/msr", core);
-	// 	fd[i] = open(msr_filename, O_RDONLY);
-	// }
+	uint64_t num_pkg_thread = get_num_pkg_thread();
+	char msr_filename[BUFSIZ];
+	int core = 0;
+	for(int i = 0; i < num_sockets; i++) {
+		if(i > 0) {
+			core += num_pkg_thread / 2; 	//measure the first core of each package
+		}
+		sprintf(msr_filename, "/dev/cpu/%d/msr", core);
+		fd[i] = open(msr_filename, O_RDONLY);
+	}
 }
 
 JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_deallocCSideTiming(JNIEnv* env, jclass jcls) {//, jint power_domain){
-	// for (int i = 0; i < num_sockets; i++) {
-	// 	close(fd[i]);
-	// }
+	for (int i = 0; i < num_sockets; i++) {
+		close(fd[i]);
+	}
 	free(fd);
 }
 
@@ -84,34 +85,34 @@ JNIEXPORT jlongArray JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeMSRRead(JNIEnv*
 
 	int which_msr;
 
-	switch (which_power_domain){
+	switch (which_power_domain) {
 		case DRAM:
-			if (dram_or_gpu != READ_FROM_DRAM_AND_GPU 
-				&& dram_or_gpu != READ_FROM_DRAM)
-			{
+			if (dram_or_gpu != READ_FROM_DRAM_AND_GPU && dram_or_gpu != READ_FROM_DRAM) {
 				RETURN_EMPTY_ARRAY;
 			}
 			which_msr = MSR_DRAM_ENERGY_STATUS;
 			break;
+
 		case GPU:
-			if (dram_or_gpu != READ_FROM_DRAM_AND_GPU 
-				&& dram_or_gpu != READ_FROM_GPU)
-			{
+			if (dram_or_gpu != READ_FROM_DRAM_AND_GPU && dram_or_gpu != READ_FROM_GPU) {
 				RETURN_EMPTY_ARRAY;
 			}
 			which_msr = MSR_PP1_ENERGY_STATUS;
 			break;
+
 		case CORE:
 			which_msr = MSR_PP0_ENERGY_STATUS;
 			break;
+
 		case PKG:
 			which_msr = MSR_PKG_ENERGY_STATUS;
 			break;
+
 		default:
 			fprintf(stderr,"invalid power domain request for usecTimeMSRREad: %d\n",which_power_domain);
 			return NULL;
 	}
-	fd = get_msr_fds();
+	
 	for (int i = 0; i < num_sockets; i++) {
 		STARTSTAMP;
 		read_msr(fd[i],which_msr);
@@ -122,6 +123,5 @@ JNIEXPORT jlongArray JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeMSRRead(JNIEnv*
 	jlongArray result = (*env)->NewLongArray(env, num_sockets);
 	if (result == NULL) return NULL;
 	(*env)->SetLongArrayRegion(env, result, 0, num_sockets, fill);
-
 	return result;
 }

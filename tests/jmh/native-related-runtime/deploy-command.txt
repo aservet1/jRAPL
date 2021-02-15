@@ -1,0 +1,9 @@
+mvn deploy:deploy-file \
+    -Dfile=./jRAPL-repo/target/jRAPL-1.0.jar \
+    -DgroupId=jRAPL \
+    -DartifactId=jRAPL \
+    -Dversion=1.0 \
+    -Dpackaging=jar \
+    -Durl=file:./jRAPL-repo/ \
+    -DrepositoryId=jRAPL-repo \
+    -DupdateReleaseInfo=true
