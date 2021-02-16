@@ -34,23 +34,23 @@ readMSR(int whichMSR) {
 	}
 	return data;
 }
-// - $$ --------------------------------------------------------------------------- $$
-void																				//
-rapl::Init() { // static background initializer										//
-	fd = open("/dev/cpu/0/msr",O_RDONLY);											//
-	energyUnit = extractBits (	readMSR(MSR_RAPL_POWER_UNIT),						//
-								8, 12	);											//
-	wrapAround = 0;																	//
-}																					//
-																					//
-void																				//
-rapl::Dealloc() {																		//
-	close(fd);																		//
-	energyUnit = wrapAround = fd = -1;												//
-}																					//
-																					//
+// - $$ --------------------------------------------------------------------------------------- $$
+void																							//
+rapl::Init() { // static background initializer													//
+	fd = open("/dev/cpu/0/msr",O_RDONLY);														//
+	energyUnit = extractBits (	readMSR(MSR_RAPL_POWER_UNIT),									//
+								8, 12	);														//
+	wrapAround = 0;																				//
+}																								//
+																								//
+void																							//
+rapl::Dealloc() {																				//
+	close(fd);																					//
+	energyUnit = wrapAround = fd = -1;															//
+}																								//
+																								//
 double rapl::DRAM() { return readMSR(MSR_DRAM_ENERGY_STATUS) * 1/_2tothepowerof(energyUnit);	//
 double rapl::CORE() { return readMSR(MSR_PP0_ENERGY_STATUS)  * 1/_2tothepowerof(energyUnit);	//
 double rapl::PKG()  { return readMSR(MSR_PKG_ENERGY_STATUS)  * 1/_2tothepowerof(energyUnit);	//
 double rapl::GPU()  { return readMSR(MSR_PP1_ENERGY_STATUS)  * 1/_2tothepowerof(energyUnit);	//
-// - $$ ---------------------------------------------------------------------------	$$
+// - $$ ------------------------------------------------------------------------------------	$$
