@@ -19,6 +19,8 @@ int main(int argc, const char* argv[])
 {
 	ProfileInitAllCores(20);
 
+	ProfileDeallocAllCores();
+
 	// //EnergyStats stats[getSocketNum()];
 	// //EnergyStatCheck(stats,1);
 	// //char ener_string[512];
@@ -50,6 +52,4 @@ int main(int argc, const char* argv[])
 
 	// free(lastk); lastk = NULL;
 	// freeAsyncEnergyMonitor(m);
-
-	ProfileDeallocAllCores();
 }
