@@ -15,7 +15,7 @@ typedef struct AsyncEnergyMonitor {
 	int samplingRate;
 	//int nSamples;
 	bool exit;
-
+	int power_domain;
 	//one of dynArr or linkList will be null
 	//which one in use will be inidcated by storageType
 	DynamicArray* samples_dynarr;

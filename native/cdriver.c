@@ -4,8 +4,8 @@
 
 #include "EnergyStats.h"
 #include "EnergyCheckUtils.h"
-#include "AsyncEnergyMonitorCSide.h"
-#include "arch_spec.h"
+#include "AsyncEnergyMonitor.h"
+#include "ArchSpec.h"
 
 void sleep_print(int seconds)
 {

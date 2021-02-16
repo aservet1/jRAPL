@@ -1,16 +1,15 @@
 
-NATIVE_LIB = libNativeRAPL.so
+LIB = libNativeRAPL.a
 
 CFILES = \
 		EnergyCheckUtils.c \
-		arch_spec.c \
-		msr.c \
-		dvfs.c \
+		ArchSpec.c \
+		MSR.c \
  		EnergyStats.c \
 		AsyncEnergyMonitor.c \
-		AsyncEnergyMonitor_JNIExports.c \
-		RuntimeTestUtils.c \
 		CSideDataStorage.c \
+		\
+		DVFS.c \
 
 OFILES = $(CFILES:.c=.o)
 CDRIVER = cdriver
@@ -21,16 +20,18 @@ JAVA_HOME = $(shell readlink -f /usr/bin/javac | sed "s:bin/javac::")
 JAVA_INCLUDE = $(JAVA_HOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
-all: lib_native_RAPL
-	cp $(NATIVE_LIB) ../src/main/resources/native
-	date > $(MAKELOG) #keeps track of last time 'make' builds the library
+all: $(LIB) JNIfiles
 
-lib_native_RAPL: $(CFILES)
-	gcc $(CFLAGS) -I $(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES)
-	gcc -g -Wall -I $(JAVA_INCLUDE) -I $(JAVA_INCLUDE_LINUX) -shared -Wl,-soname,$(NATIVE_LIB) -o $(NATIVE_LIB) $(OFILES) -lc
+JNIfiles:
+	(cd JNI && make)
 
-$(CDRIVER): $(CFILES) $(CDRIVER).c
-	gcc -g -fsanitize=address -fno-omit-frame-pointer -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFILES) $(CDRIVER).c -o $(CDRIVER) -lm -lpthread
+$(LIB): $(CFILES)
+	gcc -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CFLAGS) $(CFILES)
+	ar -rc $(LIB) $(OFILES)
+
+$(CDRIVER): $(LIB) $(CFILES) $(CDRIVER).c
+	gcc -g -fsanitize=address -fno-omit-frame-pointer -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) $(CDRIVER).c $(LIB) -o $(CDRIVER) -lm -lpthread
 
 clean:
-	rm -f $(NATIVE_LIB) $(OFILES) $(CDRIVER) $(MAKELOG)
+	rm -f $(LIB) $(OFILES) $(CDRIVER) $(MAKELOG)
+	(cd JNI && make clean)
