@@ -18,6 +18,8 @@ void sleep_print(int seconds)
 int main(int argc, const char* argv[])
 {
 	ProfileInit();
+	ProfileDealloc();
+	exit(0);
 
 	//EnergyStats stats[getSocketNum()];
 	//EnergyStatCheck(stats,1);
@@ -44,7 +46,7 @@ int main(int argc, const char* argv[])
 	printf(":)\n --\n");
 	for (int i = 0; i < k; i++) {
 		char ener_string[512];
-		energy_stats_csv_string(lastk[i],ener_string);
+		energy_stats_csv_string(lastk[i],ener_string,1); // idk if 1 is the correct argument, just getting the compiler to ignore this until i actually need this part of the code to be correct
 		printf("%s\n",ener_string);
 	}
 

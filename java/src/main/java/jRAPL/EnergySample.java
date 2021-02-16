@@ -12,7 +12,7 @@ public abstract class EnergySample
 
 		private final int socketNumber;
 		private final double[] primitiveSample;
-		
+
 		public PerSocketSample(int socketNumber, double[] primitiveSample) {
 			this.socketNumber = socketNumber;
 			this.primitiveSample = primitiveSample;
@@ -30,30 +30,28 @@ public abstract class EnergySample
 		public double getCore() {
 			return (ArchSpec.CORE_IDX == -1) ? -1.0 : this.primitiveSample[ArchSpec.CORE_IDX];
 		}
-	
+
 		public double getGpu() {
 			return (ArchSpec.GPU_IDX == -1) ? -1.0 : this.primitiveSample[ArchSpec.GPU_IDX];
 		}
-	
+
 		public double getPackage() {
 			return (ArchSpec.PKG_IDX == -1) ? -1.0 : this.primitiveSample[ArchSpec.PKG_IDX];
 		}
-	
+
 		public double getDram() {
 			return (ArchSpec.DRAM_IDX == -1) ? -1.0 : this.primitiveSample[ArchSpec.DRAM_IDX];
 		}
-		
+
 		public String dump() {
-			
+
 			String joinedStats = new String();
 			int i = 0;
 			for (; i < primitiveSample.length-1; i++) joinedStats += String.format("%.4f", primitiveSample[i]) + ",";
 			joinedStats += String.format("%.4f",primitiveSample[i]);
-	
-			return String.join(
-				",",
-				String.format("%d", socketNumber),joinedStats);
-	
+
+			return joinedStats;
+
 		}
 
 		@Override
@@ -98,13 +96,13 @@ public abstract class EnergySample
 	public EnergySample(double[] primitiveSample, Instant timestamp)
 	{
 		this.perSocketSamples = new PerSocketSample[ArchSpec.NUM_SOCKETS];
-		
+
 		int lo = 0, hi = ArchSpec.NUM_STATS_PER_SOCKET;
 		for (int i = 0; i < ArchSpec.NUM_SOCKETS; i++) {
 			int socketNumber = i+1;
 			perSocketSamples[i] = new PerSocketSample(socketNumber, Arrays.copyOfRange(primitiveSample, lo, hi));
 		}
-		
+
 		this.timestamp = timestamp;
 	}
 
@@ -126,7 +124,7 @@ public abstract class EnergySample
 		assert this.timestamp == null;
 		this.timestamp = ts;
 	}
-	
+
 	public PerSocketSample atSocket(int socket) {
 		return new PerSocketSample(perSocketSamples[socket-1]);
 	}
@@ -145,8 +143,9 @@ public abstract class EnergySample
 		String s = new String();
 		int n = ArchSpec.NUM_SOCKETS;
 		for (int socket = 1; socket <= n-1; socket++) {
-			s += this.atSocket(socket).dump()+",";
-		} s += this.atSocket(n).dump();
+			s += this.atSocket(socket).dump()+"@";
+		} // s += this.atSocket(n).dump();
 		return s;
 	}
 }
+

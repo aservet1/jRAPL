@@ -70,6 +70,7 @@ void ProfileInit() {
 			core += num_pkg_thread / 2; 	//measure the first core of each package
 		}
 		sprintf(msr_filename, "/dev/cpu/%d/msr", core);
+		printf("num_pkg_thread: %ld core: %d msr_filename: %s\n",num_pkg_thread, core, msr_filename);
 		msr_fds[i] = open(msr_filename, O_RDWR);
 	}
 

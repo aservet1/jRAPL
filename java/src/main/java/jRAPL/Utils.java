@@ -32,10 +32,20 @@ class Utils {
     
     public static String dumpPrimitiveArray(double[] a)
 	{
+		assert ( a.length == ArchSpec.NUM_SOCKETS * ArchSpec.NUM_STATS_PER_SOCKET );
+
 		String s = new String();
-		int i; for (i = 0; i < a.length-1; i++) {
-			s += String.format("%4f",a[i]) + ",";
-		} s += String.format("%4f",a[i]);
+		int index = 0;
+		for (int socket = 1; socket < ArchSpec.NUM_SOCKETS; socket++) {
+			for (int i = 0; i <= ArchSpec.NUM_STATS_PER_SOCKET-1; i++) {
+				s += String.format("%4f",a[index++]) + ",";
+			} s+= a[index] + "@";
+		}
 		return s;
+		//String s = new String();
+		//int i; for (i = 0; i < a.length-1; i++) {
+		//	s += String.format("%4f",a[i]) + ",";
+		//} s += String.format("%4f",a[i]);
+		//return s;
 	}
 }
