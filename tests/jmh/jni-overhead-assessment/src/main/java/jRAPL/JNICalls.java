@@ -38,6 +38,7 @@ import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 import java.time.Duration;
 import java.io.*; 
+import java.util.*;
 
 public class JNICalls {
 
@@ -46,9 +47,11 @@ public class JNICalls {
 		private int numIterations = 0;
 		private Instant before;
 		private Instant after;
+		private HashMap<Long, Long> scatter = new HashMap<>();
 
 		public void addValue() {
 			long microSeconds = (Duration.between(this.before, this.after).toNanos()) / 1000;
+			scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
 			this.average = ((this.average*this.numIterations) + microSeconds) / ++this.numIterations;
 		}
 		public void setBefore() {
@@ -75,14 +78,29 @@ public class JNICalls {
 		@TearDown(Level.Trial)
         public void doTearDownInTheEnd() {
 			try {
-				FileWriter myWriter = new FileWriter("profile_init_statz.txt");
-				myWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
-				myWriter.close();
+				FileWriter myStatsWriter = new FileWriter("profile_init_statz.txt");
+				myStatsWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
+				myStatsWriter.flush();
+				myStatsWriter.close();
+				System.out.println("Successfully wrote to the file.");
+				FileWriter myScatterWriter = new FileWriter("profile_init_scatter.txt");
+				super.scatter.forEach((k, v) -> {
+					try {
+						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
+					}
+					catch (IOException e) {
+						System.out.println("An error occurred.");
+						e.printStackTrace();
+					}
+				});
+				myScatterWriter.flush();
+				myScatterWriter.close();
 				System.out.println("Successfully wrote to the file.");
 			} catch (IOException e) {
 				System.out.println("An error occurred.");
 				e.printStackTrace();
 			}
+
         }
     }
 
@@ -116,9 +134,23 @@ public class JNICalls {
 		@TearDown(Level.Trial)
         public void doTearDownInTheEnd() {
 			try {
-				FileWriter myWriter = new FileWriter("profile_dealloc_statz.txt");
-				myWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
-				myWriter.close();
+				FileWriter myStatsWriter = new FileWriter("profile_dealloc_statz.txt");
+				myStatsWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
+				myStatsWriter.flush();
+				myStatsWriter.close();
+				System.out.println("Successfully wrote to the file.");
+				FileWriter myScatterWriter = new FileWriter("profile_dealloc_scatter.txt");
+				super.scatter.forEach((k, v) -> {
+					try {
+						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
+					}
+					catch (IOException e) {
+						System.out.println("An error occurred.");
+						e.printStackTrace();
+					}
+				});
+				myScatterWriter.flush();
+				myScatterWriter.close();
 				System.out.println("Successfully wrote to the file.");
 			} catch (IOException e) {
 				System.out.println("An error occurred.");
@@ -156,9 +188,23 @@ public class JNICalls {
 		@TearDown(Level.Trial)
         public void doTearDownInTheEnd() {
 			try {
-				FileWriter myWriter = new FileWriter("energy_statz_check.txt");
-				myWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
-				myWriter.close();
+				FileWriter myStatsWriter = new FileWriter("energy_stat_check_statz.txt");
+				myStatsWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
+				myStatsWriter.flush();
+				myStatsWriter.close();
+				System.out.println("Successfully wrote to the file.");
+				FileWriter myScatterWriter = new FileWriter("energy_stat_check_scatter.txt");
+				super.scatter.forEach((k, v) -> {
+					try {
+						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
+					}
+					catch (IOException e) {
+						System.out.println("An error occurred.");
+						e.printStackTrace();
+					}
+				});
+				myScatterWriter.flush();
+				myScatterWriter.close();
 				System.out.println("Successfully wrote to the file.");
 			} catch (IOException e) {
 				System.out.println("An error occurred.");
