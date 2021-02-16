@@ -144,7 +144,7 @@ void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath){
 	}
 
 	fprintf(outfile,"samplingRate: %d milliseconds\n",monitor->samplingRate);
-	fprintf(outfile,"socket,dram,gpu,core,pkg,timestamp(usec since epoch)\n");
+	fprintf(outfile,"socket,dram,gpu,core,pkg,timestamp\n");
 	
 	if (USING_DYNAMIC_ARRAY)
 		writeToFile_DynamicArray(outfile, monitor->samples_dynarr, monitor->power_domain);
@@ -211,33 +211,6 @@ void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats* return_array)
 			current = current->next;
 		}
 	}
-	//printf("return_array at end of function: %p\n",return_array);
-
-	//if (USING_DYNAMIC_ARRAY) {
-	//	int start = monitor->samples_dynarr->nItems-k;
-	//	int arrayIndex = 0;
-
-	//	if (start < 0) {
-	//		start = 0;
-	//		k = monitor->samples_dynarr->nItems;
-	//	}
-
-	//	for (int i = start; i < monitor->samples_dynarr->nItems; i++)
-	//		return_array[arrayIndex++] = monitor->samples_dynarr->items[i];
-
-	//	return;
-
-	//}
-	//else if (USING_LINKED_LIST) {
-
-	//	int upperbound = NODE_CAPACITY;
-	//	LinkNode* current = monitor->samples_linklist->head;
-	//	while ( upperbound < k ) {
-	//		current = current->next;
-	//		upperBound += NODE_CAPACITY;
-	//	}	
-
-	//}
 }
 
 

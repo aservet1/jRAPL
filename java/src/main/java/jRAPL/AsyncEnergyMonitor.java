@@ -11,19 +11,29 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	protected Instant monitorStartTime = null;
 	protected Instant monitorStopTime = null;
 	protected boolean isRunning = false;
-
-	public abstract void writeToFile(String fileName);
-	public abstract String[] getLastKSamples(int k);
-	public abstract Instant[] getLastKTimestamps(int k);
-	public abstract int getNumSamples();
-	public abstract void setSamplingRate(int s);
-	public abstract int getSamplingRate();
+	protected int samplingRate;
 
 	@Override
 	public void init() { super.init(); }
 	
 	@Override
 	public void dealloc() { super.dealloc(); }
+
+	/** Dumps all samples to file, along with the sampling rate, in CSV format.
+	 *	Same format as <code>this.toString()</code>
+	 *	@param fileName name of file to write to
+	*/
+	public abstract void writeToFile(String fileName);
+
+	/** Gets the number of samples the monitor currently collected
+	 *	@return number of samples collected so far
+	*/
+	public abstract int getNumSamples();
+	/** Sets the energy sampling rate
+	 *	@param s sampling rate (in milliseconds)
+	*/
+	public abstract void setSamplingRate(int s);
+	public abstract int getSamplingRate();
 
 	public Duration getLifetime()
 	{
@@ -32,32 +42,34 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		else return null;
 	}
 
+	/** Starts monitoring in background thread until 
+	 *	main thread calls <code>this.stop()</code>.
+	*/
 	public void start()
 	{
 		isRunning = true;
 		monitorStartTime = Instant.now();
 	}
 
+	/** Stops monitoring and storing energy samples. */
 	public void stop()
 	{
 		monitorStopTime = Instant.now();
 		isRunning = false;
 	}
 
+	/** Resets the object for reuse. */
 	public void reset()
 	{
 		monitorStartTime = null;
 		monitorStopTime = null;
 	}
 
-	/**	
-		Returns an array of arrays of EnergyStats objects. Each individual array
-		is a list of the readings for all sockets requested. Even if only one
-		socket was read from, it's still an array of arrays. The single socket
-		reading is just index 0 of a 1-element array, regardless of whether it's
-		just one socket because you asked for a specific socket, or because you
-		were reading all sockets but only had one.
-	*/
+	/** Last K timestamps */
+	public abstract Instant[] getLastKTimestamps(int k);
+	/** Last K samples in raw string format */
+	public abstract String[] getLastKSamples(int k);
+	/** Last K samples as EnergyStats objects  */
 	public EnergyStats[] getLastKSamples_Objects(int k) 
 	{
 		String[] strings = getLastKSamples(k);
@@ -72,7 +84,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 		return samplesArray;
 	}
-
+	/** Last K samples as primitive arrays of doubles */
 	public double[][] getLastKSamples_Arrays(int k)
 	{
 		String[] strings = getLastKSamples(k);
@@ -90,15 +102,6 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		return isRunning;
 	}
 
-	private static void sleepPrint(int ms) throws InterruptedException {
-		int sec = (int)ms/1000;
-		ms = ms%1000;
-		for (int s = 0; s < sec; s++) {
-			System.out.println(s+"/"+(sec+ms));
-			Thread.sleep(1000);
-		} Thread.sleep(ms);
-	}
-	
 	public String toString()
 	{
 		String s = "";
@@ -107,6 +110,15 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		s += "number of samples: " + Integer.toString(getNumSamples()) + "\n";
 
 		return s;
+	}
+
+	private static void sleepPrint(int ms) throws InterruptedException {
+		int sec = (int)ms/1000;
+		ms = ms%1000;
+		for (int s = 0; s < sec; s++) {
+			System.out.println(s+"/"+(sec+ms));
+			Thread.sleep(1000);
+		} Thread.sleep(ms);
 	}
 
 	public static void main(String[] args) throws InterruptedException {

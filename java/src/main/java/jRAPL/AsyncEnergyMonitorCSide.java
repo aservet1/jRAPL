@@ -21,10 +21,13 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	private static final int DYNAMIC_ARRAY_STORAGE = 1;
 	private static final int LINKED_LIST_STORAGE = 2;
 
-	private int samplingRate = 10;
-	private int storageType = DYNAMIC_ARRAY_STORAGE; // default, can be changed by specifying in constructor
+	// private int samplingRate;
+	private int storageType;
 
-	public AsyncEnergyMonitorCSide() { }
+	public AsyncEnergyMonitorCSide() { 
+		samplingRate = 10;
+		storageType = DYNAMIC_ARRAY_STORAGE;
+	}
 
 	public AsyncEnergyMonitorCSide(int s, String storageTypeString) {
 		samplingRate = s;
@@ -77,8 +80,10 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 
 	@Override
 	public String[] getLastKSamples(int k) {
-		return getLastKSamplesNative(k).split("_"); // I don't know how to do JNI String arrays, so return '_' delimited string to split
-	} //@TODO -- this is a potential time and memory overhead hazard
+		// I don't know how to do JNI String arrays,
+		// so return '_' delimited string to split
+		return getLastKSamplesNative(k).split("_");
+	} // this is a potential time and memory overhead hazard
 
 	@Override
 	public Instant[] getLastKTimestamps(int k) {

@@ -38,11 +38,9 @@ outputdir="EnergyData_$1/"$outputdir
 sudo rm -rf $outputdir
 mkdir -p $outputdir
 
-cd ../../src/
+sudo java -cp ~/jRAPL/java/target/jRAPL-1.0.jar jRAPLTesting.BenchmarkingEnergy --read-energy-values $2 > $outputdir/Output
 
-sudo java jrapltesting.BenchmarkingEnergy --read-energy-values $2 >../tests/DaCapoBenchmark/$outputdir/Output
-
-cd ../tests/DaCapoBenchmark/$outputdir/
+cd $outputdir
 
 powerDomains="DRAM GPU CORE PKG"
 

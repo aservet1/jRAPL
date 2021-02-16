@@ -1,5 +1,6 @@
 
 << Have done by next week ## wednesday #:
+	get 2 socket support down on jolteon -- like just the simple 1 string solution instead of breaking the string into 2 pieces when processing AsyncEnergyMonitor data
 	<pr>JMH tests on Native vs Java
 	<pr>JMH tests on MSR reading
 	Run the tests on a Jolteon or whatever the other server is called (ask Timur for access)
