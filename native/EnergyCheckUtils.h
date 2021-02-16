@@ -6,9 +6,10 @@
 #include "EnergyStats.h"
 
 void ProfileInit();
+void ProfileInitAllCores(int num_readings);
 void EnergyStatCheck(EnergyStats stats_per_socket[]);
 void ProfileDealloc();
-
+void ProfileDeallocAllCores();
 void Java_jRAPL_EnergyManager_profileInit(JNIEnv *env, jclass jcls);
 jint Java_jRAPL_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls);
 jstring Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls);
