@@ -120,6 +120,7 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg]) {
 	}
 }
 
+// just for test purposes, not part of real RAPL implementation
 void ProfileInitAllCores(int num_readings) {
 	int i;
 	char msr_filename[BUFSIZ];
@@ -164,6 +165,7 @@ void ProfileInitAllCores(int num_readings) {
 	}
 }
 
+// just for test purposes, not part of real RAPL implementation
 void ProfileDeallocAllCores() {
 	for (int i = 0; i < num_cores; i++) {
 		close(msr_fds[i]);

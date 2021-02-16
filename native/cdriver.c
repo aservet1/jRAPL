@@ -17,7 +17,7 @@ void sleep_print(int seconds)
 
 int main(int argc, const char* argv[])
 {
-	ProfileInitAllCores(20);
+	ProfileInitAllCores(5);
 
 	ProfileDeallocAllCores();
 
