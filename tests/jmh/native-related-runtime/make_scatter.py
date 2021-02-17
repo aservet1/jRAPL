@@ -31,7 +31,7 @@ for i in range(1, len(sys.argv)):
         plt.legend()
         title = fname.split('.')[0]
         plt.title(title)
-        plt.legend([extra1, extra2], (f"σ: {sd}µ", f"x̄: {mean}µ"))
-        plt.xlabel("ms")
+        plt.legend([extra1, extra2], ("σ: "+str(sd)+"µ", "x̄: "+str(mean)+"µ"))
+        plt.xlabel("microseconds")
         plt.ylabel("num calls with time")
         plt.savefig(title)

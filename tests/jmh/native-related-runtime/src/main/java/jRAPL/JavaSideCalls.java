@@ -56,7 +56,7 @@ public class JavaSideCalls {
 			if (getIter() >= startIter) {
 				long microSeconds = (Duration.between(this.before, this.after).toNanos()) / 1000;
 				scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
-				System.out.println("added");
+				// System.out.println("added");
 			} // else System.out.println("not added");
 		}
 		public void setBefore() {
