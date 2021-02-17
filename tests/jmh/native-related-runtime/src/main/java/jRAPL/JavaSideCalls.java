@@ -39,18 +39,22 @@ import java.util.concurrent.TimeUnit;
 import java.time.Duration;
 import java.io.*; 
 
+import java.util.HashMap;
+
 public class JavaSideCalls {
 
 	@State(Scope.Thread)
 	public static class State_ {
-		private long average = 0;
-		private int numIterations = 0;
+		protected HashMap<Long, Long> scatter = new HashMap();
+		
 		private Instant before;
 		private Instant after;
 
+		protected String name;
+
 		public void addValue() {
 			long microSeconds = (Duration.between(this.before, this.after).toNanos()) / 1000;
-			this.average = ((this.average*this.numIterations) + microSeconds) / ++this.numIterations;
+			scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
 		}
 		public void setBefore() {
 			this.before = Instant.now();
@@ -58,9 +62,9 @@ public class JavaSideCalls {
 		public void setAfter() {
 			this.after = Instant.now();
 		}
-		//@TearDown(Level.Invocation)
-		public void doTearDown() throws InterruptedException {
-		}
+		// @TearDown(Level.Invocation)
+		// public void doTearDown() throws InterruptedException {
+		// }
 	}
 
 	@State(Scope.Thread)
@@ -70,25 +74,36 @@ public class JavaSideCalls {
 		public void doInitialSetup() {
 			EnergyManager.loadNativeLibrary();
 			EnergyManager.profileInit();
+			name = "ProfileInit";
 		}
 
         @TearDown(Level.Invocation)
         public void doTearDown() throws InterruptedException {
 			EnergyManager.profileDealloc();
         }
-
 		@TearDown(Level.Trial)
-        public void doFinalTearDown() {
+		public void doFinalTeardown() {
+			// System.out.println("=====================\n"+average+"\n========================");
 			try {
-				FileWriter myWriter = new FileWriter("profile_init_statz.txt");
-				myWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
-				myWriter.close();
+				FileWriter myScatterWriter = new FileWriter("JavaSide_"+name+"_scatter.data");
+				scatter.forEach((k, v) -> {
+					try {
+						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
+					}
+					catch (IOException e) {
+						System.out.println("An error occurred.");
+						e.printStackTrace();
+					}
+				});
+				myScatterWriter.flush();
+				myScatterWriter.close();
 				System.out.println("Successfully wrote to the file.");
 			} catch (IOException e) {
 				System.out.println("An error occurred.");
 				e.printStackTrace();
 			}
-        }
+		}
+  
     }
 
 	@Benchmark
@@ -108,6 +123,7 @@ public class JavaSideCalls {
 		@Setup(Level.Trial)
 		public void doInitialSetup() {
 			EnergyManager.loadNativeLibrary();
+			name = "ProfileDealloc";
 		}
 
 		@Setup(Level.Invocation)
@@ -115,17 +131,39 @@ public class JavaSideCalls {
 			EnergyManager.profileInit();
 		}
 		@TearDown(Level.Trial)
-        public void doFinalTearDown() {
+		public void doFinalTeardown() {
+			// System.out.println("=====================\n"+average+"\n========================");
 			try {
-				FileWriter myWriter = new FileWriter("profile_dealloc_statz.txt");
-				myWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
-				myWriter.close();
+				FileWriter myScatterWriter = new FileWriter("JavaSide_"+name+"_scatter.data");
+				scatter.forEach((k, v) -> {
+					try {
+						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
+					}
+					catch (IOException e) {
+						System.out.println("An error occurred.");
+						e.printStackTrace();
+					}
+				});
+				myScatterWriter.flush();
+				myScatterWriter.close();
 				System.out.println("Successfully wrote to the file.");
 			} catch (IOException e) {
 				System.out.println("An error occurred.");
 				e.printStackTrace();
 			}
-        }
+		}
+		// @TearDown(Level.Trial)
+  //       public void doFinalTearDown() {
+		// 	try {
+		// 		FileWriter myWriter = new FileWriter("profile_dealloc_statz.txt");
+		// 		myWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
+		// 		myWriter.close();
+		// 		System.out.println("Successfully wrote to the file.");
+		// 	} catch (IOException e) {
+		// 		System.out.println("An error occurred.");
+		// 		e.printStackTrace();
+		// 	}
+  //       }
 	}
 
 	@Benchmark
@@ -146,21 +184,44 @@ public class JavaSideCalls {
 		public void initialSetup() {
 			EnergyManager.loadNativeLibrary();
 			EnergyManager.profileInit();
+			name = "EnergyStatCheck";
 		}
-		
 		@TearDown(Level.Trial)
-        public void finalTearDown() {
-			EnergyManager.profileDealloc();
+		public void doFinalTeardown() {
+			// System.out.println("=====================\n"+average+"\n========================");
 			try {
-				FileWriter myWriter = new FileWriter("energy_statz_check.txt");
-				myWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
-				myWriter.close();
+				FileWriter myScatterWriter = new FileWriter("JavaSide_"+name+"_scatter.data");
+				scatter.forEach((k, v) -> {
+					try {
+						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
+					}
+					catch (IOException e) {
+						System.out.println("An error occurred.");
+						e.printStackTrace();
+					}
+				});
+				myScatterWriter.flush();
+				myScatterWriter.close();
 				System.out.println("Successfully wrote to the file.");
 			} catch (IOException e) {
 				System.out.println("An error occurred.");
 				e.printStackTrace();
 			}
-        }
+		}
+		
+		// @TearDown(Level.Trial)
+  //       public void finalTearDown() {
+		// 	EnergyManager.profileDealloc();
+		// 	try {
+		// 		FileWriter myWriter = new FileWriter("energy_statz_check.txt");
+		// 		myWriter.write("AVERAGE in us per op:" + Long.toString(super.average));
+		// 		myWriter.close();
+		// 		System.out.println("Successfully wrote to the file.");
+		// 	} catch (IOException e) {
+		// 		System.out.println("An error occurred.");
+		// 		e.printStackTrace();
+		// 	}
+  //       }
 	}
 
 	@Benchmark

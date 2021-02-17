@@ -46,14 +46,11 @@ public class CSideCalls {
 
 	@State(Scope.Thread)
     public static class State_ {
-		// long average = 0;
-		// int numIterations = 0;
 		private HashMap<Long, Long> scatter = new HashMap();
 
 		protected String name;
 
 		public void addValue(long microSeconds) { 
-			// this.average = ((this.average*this.numIterations) + microSeconds) / ++this.numIterations;
 			scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
 		}
 
@@ -68,7 +65,6 @@ public class CSideCalls {
 			RuntimeTestUtils.deallocCSideTiming();
 			// System.out.println("=====================\n"+average+"\n========================");
 			try {
-				System.out.println("Successfully wrote to the file.");
 				FileWriter myScatterWriter = new FileWriter("CSide_"+name+"_scatter.data");
 				scatter.forEach((k, v) -> {
 					try {
