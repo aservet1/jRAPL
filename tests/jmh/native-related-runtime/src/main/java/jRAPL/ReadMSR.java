@@ -145,28 +145,28 @@ public class ReadMSR {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeReadDRAM(StateDRAM state) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.DRAM));
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeReadPKG(StatePKG state) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.PKG));
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeReadGPU(StateGPU state) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.GPU));
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeReadCORE(StateCORE state) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.CORE));

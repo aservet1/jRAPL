@@ -171,7 +171,7 @@ public class CSideCalls {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeProfileInit(ProfileInitState pis) throws InterruptedException {
 		pis.addValue(RuntimeTestUtils.usecTimeProfileInit());
@@ -179,7 +179,7 @@ public class CSideCalls {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeProfileDealloc(ProfileDeallocState pds) throws InterruptedException {
 		pds.addValue(RuntimeTestUtils.usecTimeProfileDealloc());
@@ -187,7 +187,7 @@ public class CSideCalls {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeEnergyStatCheck(EnergyStatCheckState s) throws InterruptedException {
 		s.addValue(RuntimeTestUtils.usecTimeEnergyStatCheck());
