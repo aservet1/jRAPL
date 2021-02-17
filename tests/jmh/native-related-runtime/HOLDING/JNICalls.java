@@ -48,17 +48,34 @@ public class JNICalls {
 		private Instant before;
 		private Instant after;
 		private HashMap<Long, Long> scatter = new HashMap<>();
+		private int iterNum = 0;
+		private int startIter;
 
 		public void addValue() {
-			long microSeconds = (Duration.between(this.before, this.after).toNanos()) / 1000;
-			scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
-			this.average = ((this.average*this.numIterations) + microSeconds) / ++this.numIterations;
+			if(this.iterNum >= this.startIter) {
+				long microSeconds = (Duration.between(this.before, this.after).toNanos()) / 1000;
+				scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
+				this.average = ((this.average*this.numIterations) + microSeconds) / (this.numIterations + 1);
+				this.numIterations++;
+			}
 		}
 		public void setBefore() {
 			this.before = Instant.now();
 		}
 		public void setAfter() {
 			this.after = Instant.now();
+		}
+
+		public void incrementIter() {
+			this.iterNum += 1;
+		}
+
+		public int getIter() {
+			return this.iterNum;
+		}
+
+		public void setStartIter(int iterNum) {
+			this.startIter = iterNum;
 		}
 	}
 
@@ -68,12 +85,17 @@ public class JNICalls {
 		@Setup(Level.Trial)
 		public void doSetupInitially() {
 			EnergyManager.loadNativeLibrary();
+			this.setStartIter(3); // CHANGE THIS NUMBER TO BE *num warmup iterations* + 1
 		}
 
         @TearDown(Level.Invocation)
         public void doTearDown() {
 			EnergyManager.profileDealloc();
         }
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
 
 		@TearDown(Level.Trial)
         public void doTearDownInTheEnd() {
@@ -106,8 +128,8 @@ public class JNICalls {
 
 	@Benchmark
 	@Fork(1)
-	@Warmup(iterations = 1)
-	@Measurement(iterations = 1)
+	@Warmup(iterations = 2)
+	@Measurement(iterations = 2)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeProfileInit(ProfileInitState pis) throws InterruptedException {
@@ -124,12 +146,19 @@ public class JNICalls {
 		@Setup(Level.Trial)
 		public void doSetupInitially() {
 			EnergyManager.loadNativeLibrary();
+			this.setStartIter(3);  // CHANGE THIS NUMBER TO BE *num warmup iterations* + 1
 		}
 
 		@Setup(Level.Invocation)
 		public void doSetup() {
 			EnergyManager.profileInit();
 		}
+
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
+
 		@TearDown(Level.Trial)
         public void doTearDownInTheEnd() {
 			try {
@@ -160,8 +189,8 @@ public class JNICalls {
 
 	@Benchmark
 	@Fork(1)
-	@Warmup(iterations = 1)
-	@Measurement(iterations = 1)
+	@Warmup(iterations = 2)
+	@Measurement(iterations = 2)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeProfileDealloc(ProfileDeallocState pds) throws InterruptedException{
@@ -178,10 +207,16 @@ public class JNICalls {
 		public void doSetup() {
 			EnergyManager.loadNativeLibrary();
 			EnergyManager.profileInit();
+			this.setStartIter(3); // CHANGE THIS NUMBER TO BE *num warmup iterations* + 1
 		}
 		@TearDown(Level.Trial)
 		public void doTearDown() {
 			EnergyManager.profileDealloc();
+		}
+
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
 		}
 
 		@TearDown(Level.Trial)
@@ -216,8 +251,8 @@ public class JNICalls {
 
 	@Benchmark
 	@Fork(1)
-	@Warmup(iterations = 0)
-	@Measurement(iterations = 1)
+	@Warmup(iterations = 2)
+	@Measurement(iterations = 2)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeEnergyStatCheck(Blackhole b, EnergyStatCheckState escs) throws InterruptedException {
