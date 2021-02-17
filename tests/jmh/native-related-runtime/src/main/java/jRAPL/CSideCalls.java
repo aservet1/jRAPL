@@ -34,22 +34,30 @@ package jRAPL;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
+import java.util.HashMap;
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 import java.time.Duration;
+
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class CSideCalls {
 
 	@State(Scope.Thread)
     public static class State_ {
-		long average = 0;
-		int numIterations = 0;
+		// long average = 0;
+		// int numIterations = 0;
+		private HashMap<Long, Long> scatter = new HashMap();
 
-		public void addValue(long microSeconds) { // calculating a running average
-			this.average = ((this.average*this.numIterations) + microSeconds) / ++this.numIterations;
+		protected String name;
+
+		public void addValue(long microSeconds) { 
+			// this.average = ((this.average*this.numIterations) + microSeconds) / ++this.numIterations;
+			scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
 		}
 
-		@Setup(Level.Trial)
+		// @Setup(Level.Trial)
 		public void doInitialSetup() {
 			EnergyManager.loadNativeLibrary();
 			RuntimeTestUtils.initCSideTiming();
@@ -58,13 +66,53 @@ public class CSideCalls {
 		@TearDown(Level.Trial)
 		public void doFinalTeardown() {
 			RuntimeTestUtils.deallocCSideTiming();
-			System.out.println("=====================\n"+average+"\n========================");
+			// System.out.println("=====================\n"+average+"\n========================");
+			try {
+				System.out.println("Successfully wrote to the file.");
+				FileWriter myScatterWriter = new FileWriter("CSide_"+name+"_scatter.data");
+				scatter.forEach((k, v) -> {
+					try {
+						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
+					}
+					catch (IOException e) {
+						System.out.println("An error occurred.");
+						e.printStackTrace();
+					}
+				});
+				myScatterWriter.flush();
+				myScatterWriter.close();
+				System.out.println("Successfully wrote to the file.");
+			} catch (IOException e) {
+				System.out.println("An error occurred.");
+				e.printStackTrace();
+			}
 		}
 		
 	}
 
 	@State(Scope.Thread)
     public static class ProfileInitState extends State_ {
+
+		@Setup(Level.Trial)
+		public void doInitalSetup() {
+			super.doInitialSetup();
+			name = "ProfileInit";
+		}
+
+        @TearDown(Level.Invocation)
+        public void doTearDown() throws InterruptedException {
+			EnergyManager.profileDealloc();
+        }
+
+    }
+	@State(Scope.Thread)
+    public static class EnergyStatCheckState extends State_ {
+
+		@Setup(Level.Trial)
+		public void doInitalSetup() {
+			super.doInitialSetup();
+			name = "EnergyStatCheck";
+		}
 
         @TearDown(Level.Invocation)
         public void doTearDown() throws InterruptedException {
@@ -76,15 +124,15 @@ public class CSideCalls {
 	@State(Scope.Thread)
 	public static class ProfileDeallocState extends State_ {
 
+		@Setup(Level.Trial)
+		public void doInitalSetup() {
+			super.doInitialSetup();
+			name = "ProfileDealloc";
+		}
 		@Setup(Level.Invocation)
 		public void doSetup(){
 			EnergyManager.profileInit();
 		}
-
-		// @TearDown(Level.Invocation)
-		// public void doTearDown() throws InterruptedException {
-		// 	super.doTearDown();
-		// }
 	
 	}
 
@@ -93,7 +141,7 @@ public class CSideCalls {
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeProfileInit(ProfileInitState pis) throws InterruptedException {
 		pis.addValue(RuntimeTestUtils.usecTimeProfileInit());
-		TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+		TimeUnit.MICROSECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
 	@Benchmark
@@ -101,15 +149,15 @@ public class CSideCalls {
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeProfileDealloc(ProfileDeallocState pds) throws InterruptedException {
 		pds.addValue(RuntimeTestUtils.usecTimeProfileDealloc());
-		TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+		TimeUnit.MICROSECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeEnergyStatCheck(State_ s) throws InterruptedException {
+	public void timeEnergyStatCheck(EnergyStatCheckState s) throws InterruptedException {
 		s.addValue(RuntimeTestUtils.usecTimeEnergyStatCheck());
-		TimeUnit.MILLISECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+		TimeUnit.MICROSECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
 }

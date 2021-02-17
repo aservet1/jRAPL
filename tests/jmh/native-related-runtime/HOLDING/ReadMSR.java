@@ -47,15 +47,11 @@ public class ReadMSR {
 
 		protected String NAME;
 
-		// private long average = 0;//new long[ArchSpec.NUM_SOCKETS];
-		// private int numIterations = 0;
 		private HashMap<Long, Long> scatter = new HashMap<>();
 
 		public void addValue(long[] runtimePerSocket) {
-			// this.numIterations += 1;
 			for (int socket = 1; socket <= ArchSpec.NUM_SOCKETS; socket++) {
 				long microSeconds = runtimePerSocket[socket-1];
-				// this.average = ( (this.average*this.numIterations) + microSeconds ) / this.numIterations;
 				scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
 			}
 		}
@@ -69,12 +65,7 @@ public class ReadMSR {
 		@TearDown(Level.Trial)
 		public void finalTearDown() {
 			RuntimeTestUtils.deallocCSideTiming();
-			// System.out.println("======================== DONE WITH " + NAME + " ==========================");
 			try {
-				// FileWriter myStatsWriter = new FileWriter("readMSR_"+NAME+"_statz.txt");
-				// myStatsWriter.write("AVERAGE in us per op:" + Long.toString(average));
-				// myStatsWriter.flush();
-				// myStatsWriter.close();
 				System.out.println("Successfully wrote to the file.");
 				FileWriter myScatterWriter = new FileWriter("readMSR_"+NAME+"_scatter.data");
 				scatter.forEach((k, v) -> {
