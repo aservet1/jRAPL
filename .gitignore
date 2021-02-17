@@ -7,3 +7,4 @@ target/
 *.swp
 
 .vscode
+.settings
