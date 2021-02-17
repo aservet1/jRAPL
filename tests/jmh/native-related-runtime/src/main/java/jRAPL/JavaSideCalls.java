@@ -53,14 +53,35 @@ public class JavaSideCalls {
 		protected String name;
 
 		public void addValue() {
-			long microSeconds = (Duration.between(this.before, this.after).toNanos()) / 1000;
-			scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
+			if (getIter() >= startIter) {
+				long microSeconds = (Duration.between(this.before, this.after).toNanos()) / 1000;
+				scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
+				System.out.println("added");
+			} // else System.out.println("not added");
 		}
 		public void setBefore() {
 			this.before = Instant.now();
 		}
 		public void setAfter() {
 			this.after = Instant.now();
+		}
+		
+
+		protected final int WARMUPS = 5;
+
+		private int iterNum = 0;
+		private int startIter;
+		
+		public void incrementIter() {
+			this.iterNum += 1;
+		}
+
+		public int getIter() {
+			return this.iterNum;
+		}
+
+		public void setStartIter(int iterNum) {
+			this.startIter = iterNum;
 		}
 
 		@TearDown(Level.Trial)
@@ -89,9 +110,14 @@ public class JavaSideCalls {
 
 	@State(Scope.Thread)
     public static class ProfileInitState extends State_ {
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
 
 		@Setup(Level.Trial)
 		public void doInitialSetup() {
+			this.setStartIter(WARMUPS+1);  // CHANGE THIS NUMBER TO BE *num warmup iterations* + 1
 			EnergyManager.loadNativeLibrary();
 			EnergyManager.profileInit();
 			name = "ProfileInit";
@@ -104,22 +130,33 @@ public class JavaSideCalls {
   
     }
 
-	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
-	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeProfileInit(ProfileInitState pis) throws InterruptedException {
-		pis.setBefore();
-		EnergyManager.profileInit();
-		pis.setAfter();
-		pis.addValue();
-		TimeUnit.MICROSECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+	@State(Scope.Thread)
+	public static class EnergyStatCheckState extends State_ {
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
+
+		@Setup(Level.Trial)
+		public void initialSetup() {
+			this.setStartIter(WARMUPS+1);  // CHANGE THIS NUMBER TO BE *num warmup iterations* + 1
+			EnergyManager.loadNativeLibrary();
+			EnergyManager.profileInit();
+			name = "EnergyStatCheck";
+		}
+		
 	}
 
 	@State(Scope.Thread)
 	public static class ProfileDeallocState extends State_ {
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
 
 		@Setup(Level.Trial)
 		public void doInitialSetup() {
+			this.setStartIter(WARMUPS+1);  // CHANGE THIS NUMBER TO BE *num warmup iterations* + 1
 			EnergyManager.loadNativeLibrary();
 			name = "ProfileDealloc";
 		}
@@ -132,7 +169,18 @@ public class JavaSideCalls {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void timeProfileInit(ProfileInitState pis) throws InterruptedException {
+		pis.setBefore();
+		EnergyManager.profileInit();
+		pis.setAfter();
+		pis.addValue();
+		TimeUnit.MICROSECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+	}
+
+	@Benchmark
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeProfileDealloc(ProfileDeallocState pds) throws InterruptedException{
 		pds.setBefore();
@@ -142,20 +190,8 @@ public class JavaSideCalls {
 		TimeUnit.MICROSECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
-	@State(Scope.Thread)
-	public static class EnergyStatCheckState extends State_ {
-
-		@Setup(Level.Trial)
-		public void initialSetup() {
-			EnergyManager.loadNativeLibrary();
-			EnergyManager.profileInit();
-			name = "EnergyStatCheck";
-		}
-		
-	}
-
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeEnergyStatCheck(Blackhole b, EnergyStatCheckState escs) throws InterruptedException {
 		escs.setBefore();

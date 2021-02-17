@@ -148,6 +148,7 @@ public class JNICalls {
 			EnergyManager.loadNativeLibrary();
 			this.setStartIter(3);  // CHANGE THIS NUMBER TO BE *num warmup iterations* + 1
 		}
+		
 
 		@Setup(Level.Invocation)
 		public void doSetup() {

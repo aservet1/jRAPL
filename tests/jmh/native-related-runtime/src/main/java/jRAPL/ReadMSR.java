@@ -49,15 +49,38 @@ public class ReadMSR {
 
 		private HashMap<Long, Long> scatter = new HashMap<>();
 
+
+		protected final int WARMUPS = 5;
+
+		private int iterNum = 0;
+		private int startIter;
+		
+		public void incrementIter() {
+			this.iterNum += 1;
+		}
+
+		public int getIter() {
+			return this.iterNum;
+		}
+
+		public void setStartIter(int iterNum) {
+			this.startIter = iterNum;
+		}
+
+
 		public void addValue(long[] runtimePerSocket) {
-			for (int socket = 1; socket <= ArchSpec.NUM_SOCKETS; socket++) {
-				long microSeconds = runtimePerSocket[socket-1];
-				scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
-			}
+			if (getIter() >= startIter) {
+				// System.out.println("added");
+				for (int socket = 1; socket <= ArchSpec.NUM_SOCKETS; socket++) {
+					long microSeconds = runtimePerSocket[socket-1];
+					scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
+				}
+			} // else System.out.println("not added");
 		}
 	
 		// @Setup(Level.Trial)
 		public void initialSetup() {
+			this.setStartIter(WARMUPS+1);  // CHANGE THIS NUMBER TO BE *num warmup iterations* + 1
 			EnergyManager.loadNativeLibrary();
 			RuntimeTestUtils.initCSideTiming();
 		}
@@ -89,45 +112,61 @@ public class ReadMSR {
 	}
 
 	public static class StateDRAM extends MyState { 
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
 		@Setup(Level.Trial)
 		public void setName() { super.initialSetup(); NAME = "DRAM"; }
 	}
 	public static class StateGPU extends MyState {
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
 		@Setup(Level.Trial)
 		public void setName() { super.initialSetup(); NAME = "GPU"; }
 	}
 	public static class StateCORE extends MyState {
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
 		@Setup(Level.Trial)
 		public void setName() { super.initialSetup(); NAME = "CORE"; }
 	}
 	public static class StatePKG extends MyState {
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
 		@Setup(Level.Trial)
 		public void setName() { super.initialSetup(); NAME = "PKG"; }
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeReadDRAM(StateDRAM state) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.DRAM));
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeReadPKG(StatePKG state) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.PKG));
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeReadGPU(StateGPU state) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.GPU));
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeReadCORE(StateCORE state) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.CORE));

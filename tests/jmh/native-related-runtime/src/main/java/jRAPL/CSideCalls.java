@@ -51,17 +51,43 @@ public class CSideCalls {
 		protected String name;
 
 		public void addValue(long microSeconds) { 
-			scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
+			if (getIter() >= startIter) {
+				scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
+				// System.out.println("added");
+			} //else System.out.println("didn't add");
 		}
+
+		protected final int WARMUPS = 5;
+
+		private int iterNum = 0;
+		private int startIter;
+		
+		public void incrementIter() {
+			this.iterNum += 1;
+		}
+
+		public int getIter() {
+			return this.iterNum;
+		}
+
+		public void setStartIter(int iterNum) {
+			this.startIter = iterNum;
+		}
+
 
 		// @Setup(Level.Trial)
 		public void doInitialSetup() {
+			this.setStartIter(WARMUPS+1);  // CHANGE THIS NUMBER TO BE *num warmup iterations* + 1
 			EnergyManager.loadNativeLibrary();
 			RuntimeTestUtils.initCSideTiming();
 		}
 
 		@TearDown(Level.Trial)
 		public void doFinalTeardown() {
+			if (getIter() < startIter) { System.out.println("not doing the final thing"); return; }
+
+			System.out.println("doing the final thing");
+
 			RuntimeTestUtils.deallocCSideTiming();
 			// System.out.println("=====================\n"+average+"\n========================");
 			try {
@@ -88,6 +114,10 @@ public class CSideCalls {
 
 	@State(Scope.Thread)
     public static class ProfileInitState extends State_ {
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
 
 		@Setup(Level.Trial)
 		public void doInitalSetup() {
@@ -103,6 +133,10 @@ public class CSideCalls {
     }
 	@State(Scope.Thread)
     public static class EnergyStatCheckState extends State_ {
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
 
 		@Setup(Level.Trial)
 		public void doInitalSetup() {
@@ -119,6 +153,10 @@ public class CSideCalls {
 
 	@State(Scope.Thread)
 	public static class ProfileDeallocState extends State_ {
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
 
 		@Setup(Level.Trial)
 		public void doInitalSetup() {
@@ -133,7 +171,7 @@ public class CSideCalls {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeProfileInit(ProfileInitState pis) throws InterruptedException {
 		pis.addValue(RuntimeTestUtils.usecTimeProfileInit());
@@ -141,7 +179,7 @@ public class CSideCalls {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeProfileDealloc(ProfileDeallocState pds) throws InterruptedException {
 		pds.addValue(RuntimeTestUtils.usecTimeProfileDealloc());
@@ -149,7 +187,7 @@ public class CSideCalls {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeEnergyStatCheck(EnergyStatCheckState s) throws InterruptedException {
 		s.addValue(RuntimeTestUtils.usecTimeEnergyStatCheck());
