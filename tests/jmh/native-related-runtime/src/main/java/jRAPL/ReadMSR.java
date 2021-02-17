@@ -70,12 +70,11 @@ public class ReadMSR {
 
 		public void addValue(long[] runtimePerSocket) {
 			if (getIter() >= startIter) {
-				// System.out.println("added");
 				for (int socket = 1; socket <= ArchSpec.NUM_SOCKETS; socket++) {
 					long microSeconds = runtimePerSocket[socket-1];
 					scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
 				}
-			} // else System.out.println("not added");
+			}
 		}
 	
 		// @Setup(Level.Trial)

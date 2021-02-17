@@ -53,8 +53,7 @@ public class CSideCalls {
 		public void addValue(long microSeconds) { 
 			if (getIter() >= startIter) {
 				scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
-				// System.out.println("added");
-			} //else System.out.println("didn't add");
+			}
 		}
 
 		protected final int WARMUPS = 5;
@@ -74,10 +73,8 @@ public class CSideCalls {
 			this.startIter = iterNum;
 		}
 
-
-		// @Setup(Level.Trial)
 		public void doInitialSetup() {
-			this.setStartIter(WARMUPS+1);  // CHANGE THIS NUMBER TO BE *num warmup iterations* + 1
+			this.setStartIter(WARMUPS+1);
 			EnergyManager.loadNativeLibrary();
 			RuntimeTestUtils.initCSideTiming();
 		}
@@ -89,7 +86,6 @@ public class CSideCalls {
 			System.out.println("doing the final thing");
 
 			RuntimeTestUtils.deallocCSideTiming();
-			// System.out.println("=====================\n"+average+"\n========================");
 			try {
 				FileWriter myScatterWriter = new FileWriter("CSide_"+name+"_scatter.data");
 				scatter.forEach((k, v) -> {
