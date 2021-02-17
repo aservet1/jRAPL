@@ -21,10 +21,15 @@ for i in range(1, len(sys.argv)):
         filtered = {}
         outliers = {}
         for time in data:
-            if time <= 3*sd:
+            if time <= mean + 3*sd or time <= mean - 3*sd:
                 filtered[time] = data[time]
             else:
                 outliers[time] = data[time]
+
+        # print(fname)
+        # print(filtered.keys(), filtered.values())
+        # print(outliers.keys(), outliers.values())
+
         plt.bar(list(filtered.keys()), filtered.values())
         extra1 = Rectangle((0, 0), 1, 1, fc="w", fill=False, edgecolor='none', linewidth=0)
         extra2 = Rectangle((0, 0), 1, 1, fc="w", fill=False, edgecolor='none', linewidth=0)
@@ -35,3 +40,4 @@ for i in range(1, len(sys.argv)):
         plt.xlabel("microseconds")
         plt.ylabel("num calls with time")
         plt.savefig(title)
+        plt.clf()
