@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
 
-/** <h1> DOCUMENTATION OUT OF DATE </h1>
+/**
 *	Utilities for assessing runtime of (currently) a few things in C and Java. Can be used for performance diagnostics
 *	on a particular system. These methods are accessed externally through a shell script that runs "java RuntimeTestUtils"
 *	followed by command line arguments that tell the program which of these methods to use and how. Their output is then
@@ -27,6 +27,7 @@ public class RuntimeTestUtils
 	public native static long usecTimeProfileDealloc();
 	public native static long[] usecTimeMSRRead(int powerDomain);
 
+}
 	// /** <h1> DOCUMENTATION OUT OF DATE </h1>
 	// *	Times a method call, returns time in microseconds
 	// *	@param method The equivalent of a function pointer in C/C++
@@ -178,8 +179,3 @@ public class RuntimeTestUtils
 
 		// manager.dealloc();
 	}*/
-}
-
-
-
-
