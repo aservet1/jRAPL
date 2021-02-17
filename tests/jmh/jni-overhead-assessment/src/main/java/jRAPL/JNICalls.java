@@ -55,7 +55,8 @@ public class JNICalls {
 			if(this.iterNum >= this.startIter) {
 				long microSeconds = (Duration.between(this.before, this.after).toNanos()) / 1000;
 				scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
-				this.average = ((this.average*this.numIterations) + microSeconds) / ++this.numIterations;
+				this.average = ((this.average*this.numIterations) + microSeconds) / (this.numIterations + 1);
+				this.numIterations++;
 			}
 		}
 		public void setBefore() {
@@ -74,7 +75,7 @@ public class JNICalls {
 		}
 
 		public void setStartIter(int iterNum) {
-			this.iterNum = iterNum;
+			this.startIter = iterNum;
 		}
 	}
 

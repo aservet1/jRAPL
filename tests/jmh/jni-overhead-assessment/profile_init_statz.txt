@@ -1,1 +1,1 @@
-AVERAGE in us per op:25
+AVERAGE in us per op:18
