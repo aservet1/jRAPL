@@ -34,6 +34,7 @@ package jRAPL;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
+import java.util.HashMap;
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 import java.time.Duration;
@@ -44,57 +45,101 @@ public class ReadMSR {
 	@State(Scope.Thread)
 	public static class MyState {
 
-		protected long[] average = new long[ArchSpec.NUM_SOCKETS];
-		private int numIterations = 0;
+		protected String NAME;
 
-		public void incorporateIntoAverage(long[] trialTime) {
-			this.numIterations += 1;
+		// private long average = 0;//new long[ArchSpec.NUM_SOCKETS];
+		// private int numIterations = 0;
+		private HashMap<Long, Long> scatter = new HashMap<>();
+
+		public void addValue(long[] runtimePerSocket) {
+			// this.numIterations += 1;
 			for (int socket = 1; socket <= ArchSpec.NUM_SOCKETS; socket++) {
-				this.average[socket-1] = (
-					(this.average[socket-1]*this.numIterations)
-					 + trialTime[socket-1]
-				) / this.numIterations;
+				long microSeconds = runtimePerSocket[socket-1];
+				// this.average = ( (this.average*this.numIterations) + microSeconds ) / this.numIterations;
+				scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
 			}
 		}
 	
-		@Setup(Level.Trial)
+		// @Setup(Level.Trial)
 		public void initialSetup() {
+			EnergyManager.loadNativeLibrary();
 			RuntimeTestUtils.initCSideTiming();
 		}
 
 		@TearDown(Level.Trial)
 		public void finalTearDown() {
 			RuntimeTestUtils.deallocCSideTiming();
+			// System.out.println("======================== DONE WITH " + NAME + " ==========================");
+			try {
+				// FileWriter myStatsWriter = new FileWriter("readMSR_"+NAME+"_statz.txt");
+				// myStatsWriter.write("AVERAGE in us per op:" + Long.toString(average));
+				// myStatsWriter.flush();
+				// myStatsWriter.close();
+				System.out.println("Successfully wrote to the file.");
+				FileWriter myScatterWriter = new FileWriter("readMSR_"+NAME+"_scatter.data");
+				scatter.forEach((k, v) -> {
+					try {
+						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
+					}
+					catch (IOException e) {
+						System.out.println("An error occurred.");
+						e.printStackTrace();
+					}
+				});
+				myScatterWriter.flush();
+				myScatterWriter.close();
+				System.out.println("Successfully wrote to the file.");
+			} catch (IOException e) {
+				System.out.println("An error occurred.");
+				e.printStackTrace();
+			}
 		}
 
 	}
 
-	@Benchmark
-	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
-	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeReadDRAM(MyState state) {
-		state.incorporateIntoAverage(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.DRAM));
+	public static class StateDRAM extends MyState { 
+		@Setup(Level.Trial)
+		public void setName() { super.initialSetup(); NAME = "DRAM"; }
+	}
+	public static class StateGPU extends MyState {
+		@Setup(Level.Trial)
+		public void setName() { super.initialSetup(); NAME = "GPU"; }
+	}
+	public static class StateCORE extends MyState {
+		@Setup(Level.Trial)
+		public void setName() { super.initialSetup(); NAME = "CORE"; }
+	}
+	public static class StatePKG extends MyState {
+		@Setup(Level.Trial)
+		public void setName() { super.initialSetup(); NAME = "PKG"; }
 	}
 
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeReadPKG(MyState state) {
-		state.incorporateIntoAverage(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.PKG));
+	public void timeReadDRAM(StateDRAM state) {
+		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.DRAM));
 	}
 
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeReadGPU(MyState state) {
-		state.incorporateIntoAverage(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.GPU));
+	public void timeReadPKG(StatePKG state) {
+		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.PKG));
 	}
 
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeReadCORE(MyState state) {
-		state.incorporateIntoAverage(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.CORE));
+	public void timeReadGPU(StateGPU state) {
+		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.GPU));
+	}
+
+	@Benchmark
+	@Fork(1) @Warmup(iterations = 1) @Measurement(iterations = 1)
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void timeReadCORE(StateCORE state) {
+		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.CORE));
 	}
 
 }
