@@ -116,7 +116,7 @@ public class JavaSideCalls {
 
 		@Setup(Level.Trial)
 		public void doInitialSetup() {
-			this.setStartIter(WARMUPS+1);  // CHANGE THIS NUMBER TO BE *num warmup iterations* + 1
+			this.setStartIter(WARMUPS+1);
 			EnergyManager.loadNativeLibrary();
 			EnergyManager.profileInit();
 			name = "ProfileInit";
@@ -138,7 +138,7 @@ public class JavaSideCalls {
 
 		@Setup(Level.Trial)
 		public void initialSetup() {
-			this.setStartIter(WARMUPS+1);  // CHANGE THIS NUMBER TO BE *num warmup iterations* + 1
+			this.setStartIter(WARMUPS+1);
 			EnergyManager.loadNativeLibrary();
 			EnergyManager.profileInit();
 			name = "EnergyStatCheck";

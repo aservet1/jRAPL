@@ -81,10 +81,6 @@ public class CSideCalls {
 
 		@TearDown(Level.Trial)
 		public void doFinalTeardown() {
-			if (getIter() < startIter) { System.out.println("not doing the final thing"); return; }
-
-			System.out.println("doing the final thing");
-
 			RuntimeTestUtils.deallocCSideTiming();
 			try {
 				FileWriter myScatterWriter = new FileWriter("CSide_"+name+"_scatter.data");
@@ -101,11 +97,10 @@ public class CSideCalls {
 				myScatterWriter.close();
 				System.out.println("Successfully wrote to the file.");
 			} catch (IOException e) {
-				System.out.println("An error occurred.");
+				System.out.println("An error occurred dumping hashmap to file.");
 				e.printStackTrace();
 			}
 		}
-		
 	}
 
 	@State(Scope.Thread)
