@@ -14,10 +14,10 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	protected int samplingRate;
 
 	@Override
-	public void init() { super.init(); }
+	public void activate() { super.activate(); }
 	
 	@Override
-	public void dealloc() { super.dealloc(); }
+	public void deactivate() { super.deactivate(); }
 
 	/** Dumps all samples to file, along with the sampling rate, in CSV format.
 	 *	Same format as <code>this.toString()</code>
@@ -131,7 +131,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 			System.out.println("invalid args[0]: "+args[0]);
 			System.exit(2);
 		}
-		m.init();
+		m.activate();
 		m.setSamplingRate(125);
 
 		m.start();
@@ -147,6 +147,6 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		System.out.println(Arrays.toString(m.getLastKSamples(m.getNumSamples())));
 		m.writeToFile("AsyncMonitor-"+args[0]+".tmp");
 		m.reset();
-		m.dealloc();
+		m.deactivate();
 	}
 }

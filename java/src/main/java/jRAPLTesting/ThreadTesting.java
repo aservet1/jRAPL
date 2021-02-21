@@ -8,7 +8,7 @@ public class ThreadTesting
 
 	private static void run(AsyncEnergyMonitor mon, int lifetime, String outfile)
 	{
-		mon.init();
+		mon.activate();
 		mon.start();
 		try{
 			Thread.sleep(lifetime);
@@ -17,7 +17,7 @@ public class ThreadTesting
 		}
 		mon.stop();
 		mon.writeToFile(outfile);
-		mon.dealloc();
+		mon.deactivate();
 	}
 
 	public static void main(String[] args)

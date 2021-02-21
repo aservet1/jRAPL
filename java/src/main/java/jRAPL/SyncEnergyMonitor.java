@@ -8,15 +8,15 @@ import java.time.Instant;
 public class SyncEnergyMonitor extends EnergyMonitor {
 
 	@Override
-	public void init()
+	public void activate()
 	{
-		super.init();
+		super.activate();
 	}
 
 	@Override
-	public void dealloc()
+	public void deactivate()
 	{
-		super.dealloc();
+		super.deactivate();
 	}
 
 	public EnergyStats getSample()
@@ -37,7 +37,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 	public static void main(String[] args) throws InterruptedException
 	{
 		SyncEnergyMonitor monitor = new SyncEnergyMonitor();
-		monitor.init();
+		monitor.activate();
 
 		double[] before = monitor.getPrimitiveSample();
 		double[] after;
@@ -63,6 +63,6 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 			System.out.println("PackageSock"+socket+": "+d.atSocket(socket).getPackage());
 		}
 
-		monitor.dealloc();
+		monitor.deactivate();
 	}
 }

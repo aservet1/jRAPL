@@ -2,8 +2,10 @@ package jRAPL;
 
 public class EnergyManager
 {
+	private boolean active = false;
+
 	private static boolean libraryLoaded = false;
-	private static int energyManagersActive = 0; // counter for shared resource, decrease on dealloc(), when you get to 0 dealloc everything
+	private static int energyManagersActive = 0; // counter for shared resource, decrease on deactivate(), when you get to 0 dealloc everything
 
 	// package-private so they can be called in JMH test methods
 	native static void profileInit();
@@ -20,15 +22,28 @@ public class EnergyManager
 		}
 		libraryLoaded = true;
 	}
-	public void init() { //get a better name, init might be too generic that confuses other things maybe
-		if (!libraryLoaded)
+
+	public void activate() { //get a better name, init might be too generic that confuses other things maybe
+		assert !active;
+
+		if (!libraryLoaded) {
 			loadNativeLibrary();
-		if (energyManagersActive++ == 0)
+			ArchSpec.init(); // there's definitely a better way of doing this
+		}
+		if (energyManagersActive == 0) {
 			profileInit();
-		ArchSpec.init(); // there's definitely a better way of doing this
+		}
+
+		active = true;
+		energyManagersActive += 1;
 	}
 
-	public void dealloc() {
-		if (--energyManagersActive == 0) profileDealloc();
+	public void deactivate() {
+		assert active;
+
+		active = false;
+		energyManagersActive -= 1;
+
+		if (energyManagersActive == 0) profileDealloc();
 	}
 }
