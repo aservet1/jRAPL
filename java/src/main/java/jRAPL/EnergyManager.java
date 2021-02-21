@@ -5,7 +5,7 @@ public class EnergyManager
 	private boolean active = false;
 
 	private static boolean libraryLoaded = false;
-	private static int energyManagersActive = 0; // counter for shared resource, decrease on deactivate(), when you get to 0 dealloc everything
+	private static int energyManagersActive = 0; // counter for shared resource
 
 	// package-private so they can be called in JMH test methods
 	native static void profileInit();
@@ -23,7 +23,7 @@ public class EnergyManager
 		libraryLoaded = true;
 	}
 
-	public void activate() { //get a better name, init might be too generic that confuses other things maybe
+	public void activate() {
 		assert !active;
 
 		if (!libraryLoaded) {
@@ -39,7 +39,7 @@ public class EnergyManager
 	}
 
 	public void deactivate() {
-		assert active;
+		assert active; // @TODO gracefully handle exiting and notifying the user
 
 		active = false;
 		energyManagersActive -= 1;
