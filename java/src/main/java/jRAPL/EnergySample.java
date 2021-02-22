@@ -121,6 +121,10 @@ public abstract class EnergySample
 		timestamp = Instant.now();
 	}
 
+	public Instant getTimestamp() {
+		return timestamp;
+	}
+
 	public void setTimestamp(Instant ts)
 	{
 		assert this.timestamp == null;
