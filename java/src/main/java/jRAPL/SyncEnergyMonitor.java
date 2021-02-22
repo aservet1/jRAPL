@@ -39,28 +39,48 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		SyncEnergyMonitor monitor = new SyncEnergyMonitor();
 		monitor.activate();
 
-		double[] before = monitor.getPrimitiveSample();
-		double[] after;
-		double[] diff;
+		System.out.println(" -- running with primitive array sample...");
+		double[] _before = monitor.getPrimitiveSample();
+		double[] _after;
+		double[] _diff;
 		for (int i = 0; i < 10; i++) {
-			try { Thread.sleep(100); }
-			catch (Exception e) { e.printStackTrace(); }
-			after = monitor.getPrimitiveSample();
-			diff = Utils.subtractPrimitiveSamples(after,before);
-			System.out.println(Utils.dumpPrimitiveArray(diff));
+			Thread.sleep(100);
+			_after = monitor.getPrimitiveSample();
+			_diff = Utils.subtractPrimitiveSamples(_after,_before);
+			System.out.println(Utils.dumpPrimitiveArray(_diff));
+			_before = _after;
+		}
+
+		System.out.println("\n -- running with EnergyDiff sample...");
+		EnergyStats before = monitor.getSample();
+		EnergyStats after;
+		EnergyDiff diff;
+		System.out.println(EnergyDiff.dumpHeader());
+		for (int i = 0; i < 10; i++) {
+			Thread.sleep(100);
+			after = monitor.getSample();
+			diff = EnergyDiff.between(before,after);
+			System.out.println(diff.dump());
 			before = after;
 		}
 
+		System.out.println("\n -- running with EnergyStats sample...");
+		System.out.println(EnergyStats.dumpHeader());
+		for (int i = 0; i < 10; i++) {
+			Thread.sleep(100);
+			System.out.println(monitor.getSample().dump());
+		}
+		
 		EnergyStats stats = monitor.getSample();
 		System.out.println("wait 1000ms...");
 		Thread.sleep(1000);
 		EnergyDiff d = EnergyDiff.between(stats, monitor.getSample());
 		System.out.println("EnergyDiff over 1000ms:");
 		for (int socket = 1; socket <= ArchSpec.NUM_SOCKETS; socket++) {
-			System.out.println("DramSock"+socket+": "+d.atSocket(socket).getDram());
-			System.out.println("CoreSock"+socket+": "+d.atSocket(socket).getCore());
-			System.out.println("GpuSock"+socket+": "+d.atSocket(socket).getGpu());
-			System.out.println("PackageSock"+socket+": "+d.atSocket(socket).getPackage());
+			System.out.println("Dram_Sock"+socket+": "+d.getDram(socket));
+			System.out.println("Core_Sock"+socket+": "+d.getCore(socket));
+			System.out.println("Gpu_Sock"+socket+": "+d.getGpu(socket));
+			System.out.println("Package_Sock"+socket+": "+d.getPackage(socket));
 		}
 
 		monitor.deactivate();
