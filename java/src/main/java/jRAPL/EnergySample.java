@@ -17,6 +17,7 @@ public abstract class EnergySample
 	}
 
 	private double getEnergy(int socket, int index) {
+		if (index == -1) return -1; // index of -1 for a power domain means the power domain is not supported by your system
 		int socketOffset = (socket-1)*ArchSpec.NUM_STATS_PER_SOCKET;
 		return primitiveSample[socketOffset + index];
 	}
