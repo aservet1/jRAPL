@@ -24,6 +24,7 @@ static uint32_t cpu_model;
 static rapl_msr_unit rapl_unit;
 static uint64_t num_pkg;
 static int wraparound_energy = -1;
+static int num_cores;
 
 // only valid after ProfileInit() has been called. otherwise ignore it
 int* get_msr_fds() {
@@ -52,7 +53,6 @@ static inline double read_dram(int i) {
 }
 
 void ProfileInit() {
-	int i;
 	char msr_filename[BUFSIZ];
 	int core = 0;
 
@@ -65,7 +65,7 @@ void ProfileInit() {
 	parameters = (rapl_msr_parameter *)malloc(2 * sizeof(rapl_msr_parameter));
 	msr_fds = (int *) malloc(num_pkg * sizeof(int));
 
-	for(i = 0; i < num_pkg; i++) {
+	for(int i = 0; i < num_pkg; i++) {
 		if(i > 0) {
 			core += num_pkg_thread / 2; 	//measure the first core of each package
 		}
@@ -77,6 +77,7 @@ void ProfileInit() {
 	rapl_unit = get_rapl_unit(msr_fds[0]);
 	wraparound_energy = get_wraparound_energy(rapl_unit.energy);
 }
+
 
 void ProfileDealloc() {
 	for (int i = 0; i < num_pkg; i++) {
@@ -117,4 +118,57 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg]) {
 		gettimeofday(&timestamp,NULL);
 		stats_per_socket[i].timestamp = timestamp;
 	}
+}
+
+// just for test purposes, not part of real RAPL implementation
+void ProfileInitAllCores(int num_readings) {
+	int i;
+	char msr_filename[BUFSIZ];
+	// int core = 0;
+
+	num_pkg = getSocketNum(); 
+	cpu_model = get_cpu_model();
+	power_domains_supported = get_power_domains_supported(cpu_model,NULL);
+	uint64_t num_pkg_thread = get_num_pkg_thread();
+
+	/*only two domains are supported for parameters check*/
+	parameters = (rapl_msr_parameter *)malloc(2 * sizeof(rapl_msr_parameter));
+	num_cores = num_pkg*num_pkg_thread;
+	msr_fds = (int *) malloc(num_pkg * sizeof(int) * num_cores);
+	
+	for(i = 0; i < num_cores; i++) {
+		// if(i > 0) {
+		// 	core += num_pkg_thread / 2; 	//measure the first core of each package
+		// }
+		sprintf(msr_filename, "/dev/cpu/%d/msr", i);
+		printf("%s\n",msr_filename);
+		msr_fds[i] = open(msr_filename, O_RDWR);
+	}
+
+	rapl_unit = get_rapl_unit(msr_fds[0]);
+	wraparound_energy = get_wraparound_energy(rapl_unit.energy);
+	for(int _ = 0; _ < num_readings; _++) {
+		double pkg[num_cores];
+		double dram[num_cores];
+		double core[num_cores];
+		double gpu[num_cores];
+		for(int i = 0; i < num_cores; i++) {
+			pkg[i]  =  read_pkg(i);
+			dram[i] =  read_dram(i);
+			core[i] =  read_core(i);
+			gpu[i]  =  read_gpu(i);
+		}
+		for (int c = 0; c < num_cores; c++) {
+			printf("%d || pkg: %f dram: %f gpu: %f core: %f\n", c, pkg[c], dram[c], gpu[c], core[c]);
+		} printf("----------------------\n");
+		sleep(1);
+	}
+}
+
+// just for test purposes, not part of real RAPL implementation
+void ProfileDeallocAllCores() {
+	for (int i = 0; i < num_cores; i++) {
+		close(msr_fds[i]);
+	} free(msr_fds); msr_fds = NULL;
+	free(parameters); parameters = NULL;
 }

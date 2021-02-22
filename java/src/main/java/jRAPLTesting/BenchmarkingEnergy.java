@@ -67,7 +67,7 @@ public class BenchmarkingEnergy
 	// and return the array of the readings
 	public static EnergyReadings getReadings(int iters) {
 		SyncEnergyMonitor monitor = new SyncEnergyMonitor();
-		monitor.init();
+		monitor.activate();
 
 		EnergyReadings data = new EnergyReadings(iters);
 		int i = 0;
@@ -77,7 +77,7 @@ public class BenchmarkingEnergy
 			i++;
 		}
 
-		monitor.dealloc();
+		monitor.deactivate();
 		return data;
 	}
 
@@ -115,16 +115,16 @@ public class BenchmarkingEnergy
 		}
 
 		EnergyManager manager = new EnergyManager();
-		manager.init();
+		manager.activate();
 		
 		if(args[0].equals("--read-energy-values")){ //Timing and reading energy register
 			DramGpuCorePackageStats(iterations);
 		} else {
-			manager.dealloc();
+			manager.deactivate();
 			usageAbort();
 		}
 
-		manager.dealloc();
+		manager.deactivate();
 	}
 
 }

@@ -32,13 +32,13 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	}
 
 	@Override
-	public void init() {
-		super.init();
+	public void activate() {
+		super.activate();
 	}
 	
 	@Override
-	public void dealloc() {
-		super.dealloc();
+	public void deactivate() {
+		super.deactivate();
 	}
 
 	/** Overrides the Runnable interface's run() method.

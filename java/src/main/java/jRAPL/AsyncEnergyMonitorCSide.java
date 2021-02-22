@@ -8,8 +8,8 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	private native static void startNative();
 	private native static void stopNative();
 	private native static void resetNative();
-	private native static void initNative(int samplingRate, int storageType);
-	private native static void deallocNative();
+	private native static void activateNative(int samplingRate, int storageType);
+	private native static void deactivateNative();
 	private native static void writeToFileNative(String filePath);
 	private native static String getLastKSamplesNative(int k);
 	private native static long[] getLastKTimestampsNative(int k);
@@ -50,15 +50,15 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	}
 
 	@Override //from EnergyManager
-	public void init() {
-		super.init();
-		initNative(samplingRate,storageType);
+	public void activate() {
+		super.activate();
+		activateNative(samplingRate,storageType);
 	}
 
 	@Override
-	public void dealloc() {
-		deallocNative();
-		super.dealloc();
+	public void deactivate() {
+		deactivateNative();
+		super.deactivate();
 	}
 
 	@Override
