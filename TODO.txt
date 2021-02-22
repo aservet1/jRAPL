@@ -7,6 +7,7 @@
 	Implement some of the small, easily doable 'jRAPL improvements' that you came up with during the hackathon (like add a getter for timestamp)
 	EnergyManager.active boolean variable, so as to prevent double init()s or double dealloc()s
 
+make async monitors writeToFile or lastKSamples as multisocket things instead of breaking it up into per-socket things for each sample
 
 IDEA for AsyncMonitor: set a maxCapacityUntilDump and when arraylist gets that full, start (another) thread to dump to file and clear out the current thing. to not puollute RAM too much. idk, maybe.
 like you can have a second thread monitoring the capacity and then dumping as necessary. idk if it's a problem to implicitly spawn a second
@@ -16,7 +17,7 @@ thread. there might be a conventional method to deal with things growing in memo
 Make sure Java code is neat and well documented (at least the already written documentation is up to date),
 	since we're pretty much done refactoring the core utilities, so it's important for it to be legible for presenting it
 
-add another info thing youre tracking for 'number of microseconds between nonzero readings'
+for AsyncMonitor experiments, add another info thing youre tracking for 'number of microseconds between nonzero readings'
   and make that a third plot for each dram/core/gpu/pkg (again, best to do it all in one fig
   of 4 subplots)
 
