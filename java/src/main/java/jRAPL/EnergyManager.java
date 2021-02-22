@@ -24,7 +24,17 @@ public class EnergyManager
 	}
 
 	public void activate() {
-		assert !active;
+		if (active) {
+			System.err.println(
+				"Error: "
+				+ getClass().getName()
+				+ "@"
+				+ Integer.toHexString(hashCode())
+				+ " already activated."
+				+ " Double activate is not allowed. Exiting program."
+			);
+			System.exit(1);
+		}
 
 		if (!libraryLoaded) {
 			loadNativeLibrary();
@@ -39,7 +49,17 @@ public class EnergyManager
 	}
 
 	public void deactivate() {
-		assert active; // @TODO gracefully handle exiting and notifying the user
+		if (!active) {
+			System.err.println(
+				"Error: "
+				+ getClass().getName()
+				+ "@"
+				+ Integer.toHexString(hashCode())
+				+ " already deactivated."
+				+ " Double deactivate is not allowed. Exiting program."
+			);
+			System.exit(1);
+		}
 
 		active = false;
 		energyManagersActive -= 1;
