@@ -12,31 +12,35 @@ public final class EnergyDiff extends EnergySample
 		this.elapsedTime = elapsedTime;
 	}
 
+	public void setElapsedTime(Duration elapsed) {
+		elapsedTime = elapsed;
+	}
+
 	public Duration getElapsedTime() {
 		return this.elapsedTime;
 	}
 
+	public static String dumpHeader() {
+		return EnergySample.dumpHeader() + "elapsedTime";
+	}
+
 	@Override
 	public String dump() {
-		return String.join(
-			",",
-			super.dump(),
-			(this.elapsedTime == null)
-			? ("null")
-			: (Long.toString(this.elapsedTime.toNanos()))
-		);
+		return super.dump() + (
+					(this.elapsedTime == null)
+					? ("null") : (Long.toString(Utils.durationToUsec(elapsedTime)))
+				);
 	}
 
 	public static EnergyDiff between(EnergyStats before, EnergyStats after) {
 		double[] primitiveSample = Utils.subtractPrimitiveSamples(after.getPrimitiveSample(), before.getPrimitiveSample());
-		Duration elapsedTime = (before.timestamp == null || after.timestamp == null)
-									? null : Duration.between(before.timestamp, after.timestamp);
+		Duration elapsedTime = (before.getTimestamp() == null || after.getTimestamp() == null)
+				? null : Duration.between(before.getTimestamp(), after.getTimestamp());
 		return new EnergyDiff(primitiveSample, elapsedTime);
 	}
 
-	@Override
-	public String toString() {
-		return String.join(", ", super.toString(), "Duration (nanoseconds): " + this.elapsedTime.toNanos());
-	}
-
+	// @Override
+	// public String toString() {
+	// 	return String.join(", ", super.toString(), "Duration (nanoseconds): " + this.elapsedTime.toNanos());
+	// }
 }
