@@ -1,8 +1,8 @@
 
 << Have done by next week ## wednesday #:
 	sanity check for 'how often do the MSRs update'?
-
 	get 2 socket support down on jolteon -- like just the simple 1 string solution instead of breaking the string into 2 pieces when processing AsyncEnergyMonitor data
+
 	Update the UML
 	Implement some of the small, easily doable 'jRAPL improvements' that you came up with during the hackathon (like add a getter for timestamp)
 	EnergyManager.active boolean variable, so as to prevent double init()s or double dealloc()s

@@ -7,7 +7,7 @@ public class StressTest
 	// }
 	public static void main(String[] args) throws InterruptedException
 	{
-		new EnergyManager().init();
+		new EnergyManager().activate();
 		for (int i = 0; i < 2000000; i++) {
 			EnergyManager.profileInit();
 			int x = 0;

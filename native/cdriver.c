@@ -18,7 +18,6 @@ void sleep_print(int seconds)
 int main(int argc, const char* argv[])
 {
 	ProfileInitAllCores(5);
-
 	ProfileDeallocAllCores();
 
 	// //EnergyStats stats[getSocketNum()];
