@@ -14,10 +14,12 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	protected int samplingRate;
 
 	@Override
-	public void activate() { super.activate(); }
+	public  void  activate()
+	{  super.activate();   }
 	
 	@Override
-	public void deactivate() { super.deactivate(); }
+	public void deactivate()
+	{  super.deactivate(); }
 
 	/** Dumps all samples to file, along with the sampling rate, in CSV format.
 	 *	Same format as <code>this.toString()</code>
@@ -35,8 +37,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	public abstract void setSamplingRate(int s);
 	public abstract int getSamplingRate();
 
-	public Duration getLifetime()
-	{
+	public Duration getLifetime() {
 		if (monitorStartTime != null && monitorStopTime != null)
 			return Duration.between(monitorStartTime, monitorStopTime);
 		else return null;
@@ -45,22 +46,19 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	/** Starts monitoring in background thread until 
 	 *	main thread calls <code>this.stop()</code>.
 	*/
-	public void start()
-	{
+	public void start() {
 		isRunning = true;
 		monitorStartTime = Instant.now();
 	}
 
 	/** Stops monitoring and storing energy samples. */
-	public void stop()
-	{
+	public void stop() {
 		monitorStopTime = Instant.now();
 		isRunning = false;
 	}
 
 	/** Resets the object for reuse. */
-	public void reset()
-	{
+	public void reset() {
 		monitorStartTime = null;
 		monitorStopTime = null;
 	}
@@ -70,8 +68,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	/** Last K samples in raw string format */
 	public abstract String[] getLastKSamples(int k);
 	/** Last K samples as EnergyStats objects  */
-	public EnergyStats[] getLastKSamples_Objects(int k) 
-	{
+	public EnergyStats[] getLastKSamples_Objects(int k) {
 		String[] strings = getLastKSamples(k);
 		Instant[] timestamps = getLastKTimestamps(k);
 
@@ -84,9 +81,8 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 		return samplesArray;
 	}
-	/** Last K samples as primitive arrays of doubles */
-	public double[][] getLastKSamples_Arrays(int k)
-	{
+	/** Last K samples as primitive arrays of doubles. You can use this in conjunction with getLastKTimestamps() if you want parralell arrays. */
+	public double[][] getLastKSamples_Arrays(int k) {
 		String[] strings = getLastKSamples(k);
 	
 		double[][] samplesArray = new double[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
@@ -102,8 +98,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		return isRunning;
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		String s = "";
 		s += "samplingRate: " + getSamplingRate() + " milliseconds\n";
 		s += "lifetime: " + Long.toString(getLifetime().toMillis()) + " milliseconds\n";
@@ -112,6 +107,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		return s;
 	}
 
+	// this is just used in the main() driver, not part of the AsyncMonitor
 	private static void sleepPrint(int ms) throws InterruptedException {
 		int sec = (int)ms/1000;
 		ms = ms%1000;

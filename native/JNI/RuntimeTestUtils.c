@@ -6,7 +6,7 @@
 #include "ArchSpec.h"
 #include "EnergyCheckUtils.h"
 
-//timestamp macros
+//timestamping macros
 #define STARTSTAMP	gettimeofday(&start, NULL);
 #define STOPSTAMP	gettimeofday(&end, NULL); timersub(&end, &start, &diff);
 #define DIFF_USEC	diff.tv_sec*1000000 + diff.tv_usec
@@ -16,7 +16,7 @@ static int num_sockets;
 static int dram_or_gpu;
 static int* fd;
 
-JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_initCSideTiming(JNIEnv* env, jclass jcls) {//, jint power_domain){
+JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_initCSideTiming(JNIEnv* env, jclass jcls) {
 	num_sockets = getSocketNum();
 	dram_or_gpu = get_power_domains_supported(get_cpu_model(),NULL);
 	fd = (int *) malloc(num_sockets * sizeof(int));
@@ -32,7 +32,7 @@ JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_initCSideTiming(JNIEnv* env, 
 	}
 }
 
-JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_deallocCSideTiming(JNIEnv* env, jclass jcls) {//, jint power_domain){
+JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_deallocCSideTiming(JNIEnv* env, jclass jcls) {
 	for (int i = 0; i < num_sockets; i++) {
 		close(fd[i]);
 	}
@@ -60,13 +60,6 @@ JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeProfileDealloc(JNIEn
 	return DIFF_USEC;
 }
 
-// JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeGetSocketNum(JNIEnv* env, jclass jcls) {
-// 	STARTSTAMP;
-// 	Java_jRAPL_ArchSpec_getSocketNum(env, jcls);
-// 	STOPSTAMP;
-// 	return DIFF_USEC;
-// }
-
 #define DRAM 1
 #define GPU 2
 #define CORE 3
@@ -80,9 +73,7 @@ JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeProfileDealloc(JNIEn
 	return result;
 
 JNIEXPORT jlongArray JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeMSRRead(JNIEnv* env, jclass jcls, jint which_power_domain) {
-
 	jlong fill[num_sockets];
-
 	int which_msr;
 
 	switch (which_power_domain) {

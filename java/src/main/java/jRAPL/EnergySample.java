@@ -58,7 +58,7 @@ public abstract class EnergySample
 		} return result;
 	}
 	
-	protected static String dumpHeader() {
+	protected static String csvHeader() {
 		String header = new String();
 		int sock = 1;
 		for (String perSocket : ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")) {
@@ -70,7 +70,7 @@ public abstract class EnergySample
 		return header;
 	}
 
-	public String dump() {
+	public String csv() {
 		String s = new String();
 		for (int i = 0; i < primitiveSample.length; i++) {
 			s += String.format("%.4f,",primitiveSample[i]);

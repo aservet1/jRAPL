@@ -1,41 +1,32 @@
 
 package jRAPL;
 
-//import java.util.Arrays; // sometimes used in main() sample driver
-
 import java.time.Instant;
 
 public class SyncEnergyMonitor extends EnergyMonitor {
 
 	@Override
-	public void activate()
-	{
+	public void activate() {
 		super.activate();
 	}
 
 	@Override
-	public void deactivate()
-	{
+	public void deactivate() {
 		super.deactivate();
 	}
 
-	public EnergyStats getSample()
-	{
+	public EnergyStats getSample() {
 		String energyString = EnergyMonitor.energyStatCheck();
-		Instant birthday = Instant.now();
-		EnergyStats sample = Utils.stringToEnergyStats(energyString);
-		sample.setTimestamp(birthday);
+		EnergyStats sample = Utils.stringToEnergyStats(energyString, Instant.now());
 		return sample;
 	}
 
-	public double[] getPrimitiveSample()
-	{
+	public double[] getPrimitiveSample() {
 		String energyString = EnergyMonitor.energyStatCheck();
 		return Utils.stringToPrimitiveSample(energyString);
 	}
 
-	public static void main(String[] args) throws InterruptedException
-	{
+	public static void main(String[] args) throws InterruptedException {
 		SyncEnergyMonitor monitor = new SyncEnergyMonitor();
 		monitor.activate();
 
@@ -47,7 +38,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 			Thread.sleep(100);
 			_after = monitor.getPrimitiveSample();
 			_diff = Utils.subtractPrimitiveSamples(_after,_before);
-			System.out.println(Utils.dumpPrimitiveArray(_diff));
+			System.out.println(Utils.csvPrimitiveArray(_diff));
 			_before = _after;
 		}
 
@@ -55,20 +46,20 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		EnergyStats before = monitor.getSample();
 		EnergyStats after;
 		EnergyDiff diff;
-		System.out.println(EnergyDiff.dumpHeader());
+		System.out.println(EnergyDiff.csvHeader());
 		for (int i = 0; i < 10; i++) {
 			Thread.sleep(100);
 			after = monitor.getSample();
 			diff = EnergyDiff.between(before,after);
-			System.out.println(diff.dump());
+			System.out.println(diff.csv());
 			before = after;
 		}
 
 		System.out.println("\n -- running with EnergyStats sample...");
-		System.out.println(EnergyStats.dumpHeader());
+		System.out.println(EnergyStats.csvHeader());
 		for (int i = 0; i < 10; i++) {
 			Thread.sleep(100);
-			System.out.println(monitor.getSample().dump());
+			System.out.println(monitor.getSample().csv());
 		}
 		
 		EnergyStats stats = monitor.getSample();

@@ -22,13 +22,13 @@ public final class EnergyStats extends EnergySample
 		this.timestamp = other.timestamp;
 	}
 
-	public static String dumpHeader() {
-		return EnergySample.dumpHeader() + "timestamp";
+	public static String csvHeader() {
+		return EnergySample.csvHeader() + "timestamp";
 	}
 
 	@Override
-	public String dump() {
-		return super.dump() + (
+	public String csv() {
+		return super.csv() + (
 			(timestamp == null) ? "null" : Utils.timestampToUsec(timestamp)
 		);
 	}

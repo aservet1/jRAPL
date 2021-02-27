@@ -47,7 +47,7 @@ import java.io.IOException;
 public class EnergyStatsUpdateTime {
 
 	@State(Scope.Benchmark)
-    public static class PostProcessing {
+    public static class State_ {
 		private SyncEnergyMonitor monitor;
 		private ArrayList<EnergyStats> samples = new ArrayList<>(65536); // come up with the most optimal initial size
 		
@@ -63,7 +63,7 @@ public class EnergyStatsUpdateTime {
 				FileWriter writer = new FileWriter("results/samples-collected.csv", false);
 				
 				writer.write (
-						EnergyStats.dumpHeader()
+						EnergyStats.csvHeader()
 					+ "\n" );
 				
 				writer.flush();
@@ -91,7 +91,7 @@ public class EnergyStatsUpdateTime {
 				try {
 					FileWriter writer = new FileWriter("results/samples-collected.csv", true);
 					for (EnergyStats sample : samples)
-						writer.write(sample.dump()+"\n");
+						writer.write(sample.csv()+"\n");
 					writer.flush();
 					writer.close();
 					System.out.println("Successfully wrote samples to output file.");
@@ -113,7 +113,7 @@ public class EnergyStatsUpdateTime {
 	@Warmup(iterations = 5)
 	@Measurement(iterations = 5)
 	@BenchmarkMode(Mode.Throughput)
-	public void postProcessAddSample(PostProcessing state) {
+	public void postProcessAddSample(State_ state) {
 		state.addSample();
 	}
 

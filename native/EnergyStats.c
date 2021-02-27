@@ -5,7 +5,7 @@
 #include "ArchSpec.h"
 
 EnergyStats
-energy_stats_subtract(EnergyStats x, EnergyStats y){ //@TODO -- implement the wraparound for negative values
+energy_stats_subtract(EnergyStats x, EnergyStats y) { //@TODO -- implement the wraparound for negative values
 	assert(x.socket == y.socket);
 	EnergyStats diff;
 	diff.socket = x.socket;
@@ -40,7 +40,6 @@ energy_stats_to_string(EnergyStats estats, char* ener_string, int power_domain) 
 			estats.pkg
 		);
 	return -1;
-
 }
 
 int
@@ -72,4 +71,3 @@ energy_stats_csv_string(EnergyStats estats, char* ener_string, int power_domain)
 		);
 	return -1;
 }
-
