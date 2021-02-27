@@ -59,7 +59,15 @@ public abstract class EnergySample
 	}
 	
 	protected static String dumpHeader() {
-		return ArchSpec.ENERGY_STATS_STRING_FORMAT.replace("@",","); 
+		String header = new String();
+		int sock = 1;
+		for (String perSocket : ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")) {
+			for (String powerDomain : perSocket.split(",")) {
+				header += String.format("%s_socket%d,", powerDomain, sock);
+			}
+			sock++;
+		}
+		return header;
 	}
 
 	public String dump() {
