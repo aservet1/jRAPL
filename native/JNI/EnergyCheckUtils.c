@@ -39,10 +39,9 @@ JNIEXPORT jstring JNICALL Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, 
 	EnergyStatCheck(stats_per_socket);
 	copy_to_string(stats_per_socket, ener_info);
 	
-	
-	jstring ener_string = (*env)->NewStringUTF(env, ener_info);
-  	
-	return ener_string;
+	return (*env)->NewStringUTF(env, ener_info);
+	// jstring ener_string = (*env)->NewStringUTF(env, ener_info);
+	// return ener_string;
 }
 
 JNIEXPORT void JNICALL Java_jRAPL_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls) {
