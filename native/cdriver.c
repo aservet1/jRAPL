@@ -2,6 +2,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include "EnergyStats.h"
 #include "EnergyCheckUtils.h"
 #include "AsyncEnergyMonitor.h"
@@ -17,8 +21,16 @@ void sleep_print(int seconds)
 
 int main(int argc, const char* argv[])
 {
-	ProfileInitAllCores(5);
-	ProfileDeallocAllCores();
+
+	int fd = open("/dev/cpu/0/msr",O_RDONLY);
+	rapl_msr_unit rapl_unit = get_rapl_unit(fd);
+	double power_pkg = read_msr(fd, MSR_PKG_POWER_INFO) * rapl_unit.power;
+	printf("%f\n",power_pkg);
+	close(fd);
+	// ProfileInitAllCores(5);
+	// ProfileDeallocAllCores();
+
+
 
 	// //EnergyStats stats[getSocketNum()];
 	// //EnergyStatCheck(stats,1);
