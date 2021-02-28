@@ -1,12 +1,12 @@
 
-import harness.org.dacapo.harness.Callback;      
-import harness.org.dacapo.harness.CommandLineArgs;   
+import org.dacapo.harness.Callback;      
+import org.dacapo.harness.CommandLineArgs;   
 import java.io.*;
 
 import jRAPL.AsyncEnergyMonitor;
 import jRAPL.AsyncEnergyMonitorJavaSide;
 
-public class MyCustomCallback extends Callback {
+public class AsyncMonitorHarness extends Callback {
 
 	public static int MAX_ITERATIONS = 20;
 	public static int CURRENT_ITERATION = 1;
@@ -18,22 +18,20 @@ public class MyCustomCallback extends Callback {
 
 	AsyncEnergyMonitor m;
 	
-	public MyCustomCallback(CommandLineArgs args) {
+	public AsyncMonitorHarness(CommandLineArgs args) {
 		super(args);
-		System.out.println("~~ "+CommandLineArgs+" ~~");
 		m = new AsyncEnergyMonitorJavaSide();
 		m.activate();
 	}
 
 	@Override
-	public void stop(boolean w) {
-		super.stop(w);
+	public void stop(long l, boolean w) {
+		super.stop(l, w);
 		m.stop();	
-
+		
 		STOP_ITER_TS[CURRENT_ITERATION-1] = System.currentTimeMillis();
-		CURRENT_ITERATION++;
-	
 		System.out.println("Iteration "+CURRENT_ITERATION+" Stopping");
+		CURRENT_ITERATION++;
 		
 		if (CURRENT_ITERATION > FIRE_AFTER) {
 			System.out.println(m);
@@ -55,7 +53,7 @@ public class MyCustomCallback extends Callback {
 			FileWriter fileWriter = new FileWriter("iteration_times");
 			PrintWriter printWriter = new PrintWriter(fileWriter);
 			for(int i = FIRE_AFTER; i <= CURRENT_ITERATION; i++) {
-				printWriter.printf("%d,%d \n",START_ITER_TS[i],STOP_ITER_TS[i]);
+				printWriter.printf("%d\n",STOP_ITER_TS[i],START_ITER_TS[i]);
 			}
 			printWriter.close();
 			
