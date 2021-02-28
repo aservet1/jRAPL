@@ -8,7 +8,7 @@
 #include "ArchSpec.h"
 #include "MSR.h"
 
-/** RAPL conversion unit */
+/** RAPL conversion unit */ //@TODO shouldn't this be in MSR.c??
 rapl_msr_unit get_rapl_unit(int msr_fd)
 {
 	rapl_msr_unit rapl_unit;
