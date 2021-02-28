@@ -24,9 +24,11 @@ outputdir=""
 #	stress-ng --vm 2 --cpu 2 --vm-bytes 50% --all 0 --timeout 180s >/dev/null 1>&2 &
 #fi
 
+dacapojar='dacapo-evaluation-git+309e1fa.jar'
+
 if [ "$3" = "dacapo" ]; then
 	outputdir="DaCapo_"$4
-	java -jar ./DataCollectionPrograms/dacapo-9.12-MR1-bach.jar $4 -n 100 >/dev/null 1>&2 &
+	java -jar ./DataCollectionPrograms/$dacapojar $4 -n 100 >/dev/null 1>&2 &
 	sleep 15
 fi
 
@@ -34,7 +36,7 @@ if [ "$outputdir" = "" ]; then
 	outputdir="idleCPU"
 fi
 
-outputdir="EnergyData_$1/"$outputdir
+outputdir="./EnergyData/EnergyData_$1/"$outputdir
 sudo rm -rf $outputdir
 mkdir -p $outputdir
 
