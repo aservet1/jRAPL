@@ -1,6 +1,4 @@
 
-package raplCallback;
-
 import org.dacapo.harness.Callback;      
 import org.dacapo.harness.CommandLineArgs;   
 import java.io.*;
@@ -9,7 +7,7 @@ import jRAPL.AsyncEnergyMonitor;
 import jRAPL.AsyncEnergyMonitorCSide;
 import jRAPL.AsyncEnergyMonitorJavaSide;
 
-public class AsyncMonitorHarness extends Callback {
+public class AsyncMonitorCallback extends Callback {
 
 	public static int MAX_ITERATIONS = 20;
 	public static int CURRENT_ITERATION = 1;
@@ -18,7 +16,7 @@ public class AsyncMonitorHarness extends Callback {
 
 	AsyncEnergyMonitor m;
 	
-	public AsyncMonitorHarness(CommandLineArgs args) {
+	public AsyncMonitorCallback(CommandLineArgs args) {
 		super(args);
 		m = new AsyncEnergyMonitorCSide();
 	}
