@@ -1,6 +1,6 @@
 
-JAVA_HOME = $(shell readlink -f /usr/bin/javac | sed "s:bin/javac::")
-JAVA_INCLUDE = $(JAVA_HOME)/include
+JAVAHOME = $(shell readlink -f /usr/bin/javac | sed "s:bin/javac::")
+JAVA_INCLUDE = $(JAVAHOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
 NATIVE_FILES_LOCATION = ..

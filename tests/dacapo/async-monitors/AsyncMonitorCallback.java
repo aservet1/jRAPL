@@ -1,6 +1,6 @@
 
-import org.dacapo.harness.Callback;      
 import org.dacapo.harness.CommandLineArgs;   
+import org.dacapo.harness.Callback;      
 import java.io.*;
 
 import jRAPL.AsyncEnergyMonitor;
@@ -9,31 +9,30 @@ import jRAPL.AsyncEnergyMonitorJavaSide;
 
 public class AsyncMonitorCallback extends Callback {
 
-	public static int MAX_ITERATIONS = 20;
-	public static int CURRENT_ITERATION = 1;
-	
-	private static final int FIRE_AFTER = 2;
+	//public static int MAX_ITERATIONS = 20;
+	public static int currentIter = 0;
+	private static final int WARMUPS = 3;
 
+	private String monitorType;
 	AsyncEnergyMonitor m;
 	
 	public AsyncMonitorCallback(CommandLineArgs args) {
 		super(args);
-		m = new AsyncEnergyMonitorCSide();
-	}
-
-	@Override
-	public void stop(long l, boolean w) {
-		super.stop(l, w);
-		m.stop();	
-		
-		CURRENT_ITERATION++;
-		
-		if (CURRENT_ITERATION > FIRE_AFTER) {
-			System.out.println(m);
-			m.writeToFile(CURRENT_ITERATION+".log");
+		monitorType = System.getProperty("monitorType");
+		switch (monitorType){
+			case "java":
+				m = new AsyncEnergyMonitorJavaSide();
+				break;
+			case "c-linklist":
+				m = new AsyncEnergyMonitorCSide("LINKED_LIST");
+				break;
+			case "c-dynamicarray":
+				m = new AsyncEnergyMonitorCSide("DYNAMIC_ARRAY");
+				break;
+			default:
+				System.err.println(String.format("Invalid option for monitorType: '%s'",monitorType));
+				System.exit(1);
 		}
-		
-		m.reset();
 	}
 
 	@Override
@@ -45,19 +44,21 @@ public class AsyncMonitorCallback extends Callback {
 	}
 
 	@Override
+	public void stop(long l, boolean w) {
+		super.stop(l, w);
+		m.stop();	
+		currentIter++;
+		
+		if (currentIter > WARMUPS) {
+			System.out.println(m);
+			m.writeToFile(String.format("%d-%s.log", currentIter, monitorType));
+		}
+		m.reset();
+	}
+
+	@Override
 	public void complete(String benchmark, boolean valid) {
 		super.complete(benchmark, valid);
-		// try {
-		// 	FileWriter fileWriter = new FileWriter("iteration_times");
-		// 	PrintWriter printWriter = new PrintWriter(fileWriter);
-		// 	for(int i = FIRE_AFTER; i <= CURRENT_ITERATION; i++) {
-		// 		printWriter.printf("%d\n",STOP_ITER_TS[i],START_ITER_TS[i]);
-		// 	}
-		// 	printWriter.close();
-		// 	
-		// } catch(Exception exception) {
-		// 	System.out.println(exception.getMessage());
-		// }
 		m.deactivate();
 	}
 
