@@ -19,6 +19,7 @@ public class AsyncMonitorCallback extends Callback {
 	public AsyncMonitorCallback(CommandLineArgs args) {
 		super(args);
 		monitorType = System.getProperty("monitorType");
+		System.out.printf("monitorType = %s\n", monitorType);
 		switch (monitorType){
 			case "java":
 				m = new AsyncEnergyMonitorJavaSide();
