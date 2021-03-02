@@ -1,3 +1,6 @@
 *.jar
 scratch
 *.class
+
+# if you wanna transfer log files, find another way to do it than github. theyre just gonna add bloat and theyre system specific anyways
+# *.log

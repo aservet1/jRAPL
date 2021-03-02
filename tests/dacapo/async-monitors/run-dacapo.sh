@@ -15,6 +15,6 @@ classpath="$dacapo_jar:$jRAPL_jar:."
 
 benchmark=$1
 iterations=$2
-java_or_c=$3
+monitorType=$3
 
-sudo java -DmonitorType=java -cp $classpath Harness $benchmark -c $mycallback -n $iterations
+sudo java -DmonitorType=$monitorType -cp $classpath Harness $benchmark -c $mycallback -n $iterations

@@ -52,7 +52,7 @@ public class AsyncMonitorCallback extends Callback {
 		
 		if (currentIter > WARMUPS) {
 			System.out.println(m);
-			m.writeToFile(String.format("%d-%s.log", currentIter, monitorType));
+			m.writeToFile(String.format("results/%d_%s.log", currentIter, monitorType));
 		}
 		m.reset();
 	}
