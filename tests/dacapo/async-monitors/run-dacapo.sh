@@ -1,3 +1,4 @@
+#!/bin/bash
 
 function usage() {
 	echo "usage: $1 <benchmark> <iterations> <monitorType>"
