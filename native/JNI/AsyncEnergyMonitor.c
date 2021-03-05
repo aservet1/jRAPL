@@ -58,11 +58,11 @@ Java_jRAPL_AsyncEnergyMonitorCSide_getLastKSamplesNative(JNIEnv* env, jclass jcl
 	for (int i = 0; i < k; i++) {
 		EnergyStats e = samples[i];
 		char string[512];
-		energy_stats_to_string(e,string, monitor->power_domain);
+		energy_stats_to_jni_string(e, string);
 		char string2[512+10];
 		sprintf(string2,"%s_", string);
 		
-		int string_len = strlen(string2); // +1 for the _ added in %s_
+		int string_len = strlen(string2);
 		memcpy(sample_strings + offset, string2, string_len);
 		offset += string_len;
 	}

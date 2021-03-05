@@ -5,6 +5,7 @@
 
 #include "ArchSpec.h"
 #include "EnergyCheckUtils.h"
+#include "JNIFunctionDeclarations.h"
 
 //timestamping macros
 #define STARTSTAMP	gettimeofday(&start, NULL);
@@ -13,12 +14,12 @@
 
 static struct timeval start, end, diff;
 static int num_sockets;
-static int dram_or_gpu;
+static int power_domains_supported;
 static int* fd;
 
 JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_initCSideTiming(JNIEnv* env, jclass jcls) {
 	num_sockets = getSocketNum();
-	dram_or_gpu = get_power_domains_supported(get_cpu_model(),NULL);
+	power_domains_supported = get_power_domains_supported(get_cpu_model());
 	fd = (int *) malloc(num_sockets * sizeof(int));
 	uint64_t num_pkg_thread = get_num_pkg_thread();
 	char msr_filename[BUFSIZ];
@@ -75,30 +76,25 @@ JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeProfileDealloc(JNIEn
 JNIEXPORT jlongArray JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeMSRRead(JNIEnv* env, jclass jcls, jint which_power_domain) {
 	jlong fill[num_sockets];
 	int which_msr;
-
 	switch (which_power_domain) {
 		case DRAM:
-			if (dram_or_gpu != READ_FROM_DRAM_AND_GPU && dram_or_gpu != READ_FROM_DRAM) {
+			if (power_domains_supported != DRAM_GPU_CORE_PKG && power_domains_supported != DRAM_CORE_PKG) {
 				RETURN_EMPTY_ARRAY;
 			}
 			which_msr = MSR_DRAM_ENERGY_STATUS;
 			break;
-
 		case GPU:
-			if (dram_or_gpu != READ_FROM_DRAM_AND_GPU && dram_or_gpu != READ_FROM_GPU) {
+			if (power_domains_supported != DRAM_GPU_CORE_PKG && power_domains_supported != GPU_CORE_PKG) {
 				RETURN_EMPTY_ARRAY;
 			}
 			which_msr = MSR_PP1_ENERGY_STATUS;
 			break;
-
 		case CORE:
 			which_msr = MSR_PP0_ENERGY_STATUS;
 			break;
-
 		case PKG:
 			which_msr = MSR_PKG_ENERGY_STATUS;
 			break;
-
 		default:
 			fprintf(stderr,"invalid power domain request for usecTimeMSRREad: %d\n",which_power_domain);
 			return NULL;
