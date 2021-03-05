@@ -57,7 +57,6 @@ AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, int storageType) {
 	monitor->exit = false;
 	monitor->samplingRate = samplingRate;
 	monitor->storageType = storageType;
-	monitor->power_domain = get_power_domains_supported(get_cpu_model(), NULL);
 	if (USING_DYNAMIC_ARRAY) {
 		monitor->samples_dynarr = newDynamicArray(64);
 		monitor->samples_linklist = NULL;
@@ -135,11 +134,15 @@ void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath) {
 		exit(1);
 	}
 
+	//@TODO -- dump sampling rate into a separate meta-info file. can honestly probably be taken care of in Java, since its like a 5 line file-write so we don't really care that the file making was done in C, since doing stuff in C is for the efficiency of energy sampling and a 5 line filewrite is pretty useless to hyper-optimize and have a C version.
 	fprintf(outfile,"samplingRate: %d milliseconds\n",monitor->samplingRate);
-	fprintf(outfile,"socket,dram,gpu,core,pkg,timestamp\n");
+
+	char csv_header[512];
+	energy_stats_csv_header(csv_header);
+	fprintf(outfile,"%s\n",csv_header);
 	
-	if (USING_DYNAMIC_ARRAY) writeToFile_DynamicArray(outfile, monitor->samples_dynarr, monitor->power_domain);
-	if (USING_LINKED_LIST)   writeToFile_LinkedList(outfile, monitor->samples_linklist, monitor->power_domain);
+	if (USING_DYNAMIC_ARRAY) writeToFile_DynamicArray(outfile, monitor->samples_dynarr);
+	if (USING_LINKED_LIST)   writeToFile_LinkedList(outfile, monitor->samples_linklist);
 
 	if (filepath) fclose(outfile);
 }

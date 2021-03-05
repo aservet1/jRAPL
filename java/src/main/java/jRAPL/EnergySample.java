@@ -16,6 +16,29 @@ public abstract class EnergySample
 		this.primitiveSample = other.primitiveSample.clone();
 	}
 
+	protected static String csvHeader() {
+		String header = new String();
+		int sock = 1;
+		for (String perSocket : ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")) {
+			for (String powerDomain : perSocket.split(",")) {
+				header += String.format("%s_socket%d,", powerDomain, sock);
+			}
+			sock++;
+		}
+		return header;
+	}
+
+	protected String csv() {
+		String s = new String();
+		for (int i = 0; i < primitiveSample.length; i++) {
+			s += String.format("%.4f,",primitiveSample[i]);
+		}
+		return s;
+	}
+
+	public double[] getPrimitiveSample() {
+		return primitiveSample.clone();
+	}
 	private double getEnergy(int socket, int index) {
 		if (index == -1) return -1; // index of -1 for a power domain means the power domain is not supported by your system
 		int socketOffset = (socket-1)*ArchSpec.NUM_STATS_PER_SOCKET;
@@ -56,30 +79,6 @@ public abstract class EnergySample
 		for (int s = 1; s <= ArchSpec.NUM_SOCKETS; s++) {
 			result += getDram(s);
 		} return result;
-	}
-	
-	protected static String csvHeader() {
-		String header = new String();
-		int sock = 1;
-		for (String perSocket : ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")) {
-			for (String powerDomain : perSocket.split(",")) {
-				header += String.format("%s_socket%d,", powerDomain, sock);
-			}
-			sock++;
-		}
-		return header;
-	}
-
-	public String csv() {
-		String s = new String();
-		for (int i = 0; i < primitiveSample.length; i++) {
-			s += String.format("%.4f,",primitiveSample[i]);
-		}
-		return s;
-	}
-
-	public double[] getPrimitiveSample() {
-		return primitiveSample.clone();
 	}
 
 }

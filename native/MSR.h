@@ -136,8 +136,8 @@ typedef enum {
 	MAXIMUM_TIME_WINDOW,
 	COSTOM_TIME_WINDOW
 } msr_time_window_set;
-#define _2POW(e)	\
-((e == 0) ? 1 : (2 << (e - 1)))
+
+#define _2POW(e) ((e == 0) ? 1 : (2 << (e - 1)))
 
 double
 calc_time_window(uint64_t Y, uint64_t F);
