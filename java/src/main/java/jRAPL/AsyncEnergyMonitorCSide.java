@@ -21,7 +21,7 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	private static final int DYNAMIC_ARRAY_STORAGE = 1;
 	private static final int LINKED_LIST_STORAGE = 2;
 
-	// private int samplingRate;
+	private int samplingRate;
 	private int storageType;
 
 	public AsyncEnergyMonitorCSide() { 
@@ -43,10 +43,18 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 				System.exit(1);
 		}
 	}
-
-	public AsyncEnergyMonitorCSide(int s) {
-		samplingRate = s;
-		storageType = DYNAMIC_ARRAY_STORAGE; //default
+	public AsyncEnergyMonitorCSide(String storageTypeString) {
+		switch (storageTypeString) { // @TODO consider if you want to do a setStorageType method...that might be a hell of a C-Side carfuffle though
+			case "DYNAMIC_ARRAY":
+				storageType = DYNAMIC_ARRAY_STORAGE;
+				break;
+			case "LINKED_LIST":
+				storageType = LINKED_LIST_STORAGE;
+				break;
+			default:
+				System.err.println("Invalid storage type string: " + storageTypeString);
+				System.exit(1);
+		}
 	}
 
 	@Override //from EnergyManager
