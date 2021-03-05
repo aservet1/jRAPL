@@ -3,6 +3,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+
+#include "EnergyStats.h"
 #include "ArchSpec.h"
 #include "MSR.h"
 
@@ -15,10 +17,10 @@ JNIEXPORT jint JNICALL Java_jRAPL_ArchSpec_getWraparoundEnergy(JNIEnv* env, jcla
 
 JNIEXPORT jstring JNICALL
 Java_jRAPL_ArchSpec_energyStatsStringFormat(JNIEnv* env, jclass jcls) {
-	char power_domain_string[512];
-	get_power_domains_supported(get_cpu_model(),power_domain_string);
-	return (*env)->NewStringUTF(env, power_domain_string);
-	
+	char energy_stats_jni_string_format[512];
+	get_energy_stats_jni_string_format(energy_stats_jni_string_format);
+	// get_power_domains_supported(get_cpu_model(),power_domain_string);
+	return (*env)->NewStringUTF(env, energy_stats_jni_string_format);	
 }
 
 JNIEXPORT jint JNICALL
