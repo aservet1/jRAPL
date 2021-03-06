@@ -5,3 +5,7 @@ scratch
 # jupyter notebook cache files, dont wanna carry around bloat
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
+
+# generated raw data results
+*.metadata.json
+*.csv
