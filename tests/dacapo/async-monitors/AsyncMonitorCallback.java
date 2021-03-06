@@ -11,7 +11,7 @@ public class AsyncMonitorCallback extends Callback {
 
 	//public static int MAX_ITERATIONS = 20;
 	public static int currentIter = 0;
-	private static final int WARMUPS = 3;
+	private static final int WARMUPS = 5;
 
 	private String monitorType;
 	AsyncEnergyMonitor m;
@@ -47,19 +47,21 @@ public class AsyncMonitorCallback extends Callback {
 	@Override
 	public void stop(long l, boolean w) {
 		super.stop(l, w);
-		m.stop();	
-		currentIter++;
-		
-		if (currentIter > WARMUPS) {
-			System.out.println(m);
-			m.writeToFile(String.format("results/%d_%s.log", currentIter, monitorType));
-		}
-		m.reset();
+		m.stop();
+
 	}
 
 	@Override
 	public void complete(String benchmark, boolean valid) {
 		super.complete(benchmark, valid);
+		currentIter++;
+		if (currentIter > WARMUPS) {
+			System.out.println(m);
+			String fileNameBase = String.format("results/%s_%d_%s", benchmark, currentIter, monitorType);
+			m.writeFileMetadata(fileNameBase+"-metadata.json");
+			m.writeFileCSV(fileNameBase+".csv");
+		}
+		m.reset();
 		m.deactivate();
 	}
 

@@ -2,9 +2,6 @@
 scratch
 *.class
 
-# if you wanna transfer log files, find another way to do it. github should auto ignore them by default because theyre just gonna add bloat and theyre system specific anyways
-*.log
-
 # jupyter notebook cache files, dont wanna carry around bloat
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
