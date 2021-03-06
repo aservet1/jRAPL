@@ -48,7 +48,6 @@ public class AsyncMonitorCallback extends Callback {
 	public void stop(long l, boolean w) {
 		super.stop(l, w);
 		m.stop();
-
 	}
 
 	@Override
@@ -57,7 +56,7 @@ public class AsyncMonitorCallback extends Callback {
 		currentIter++;
 		if (currentIter > WARMUPS) {
 			System.out.println(m);
-			String fileNameBase = String.format("%s/%s_%d_%s", System.getProperty("resultDir"), benchmark, currentIter, monitorType);
+			String fileNameBase = String.format("%s/%s_%d_%s", System.getProperty("resultDir"), benchmark, (currentIter-WARMUPS), monitorType);
 			m.writeFileMetadata(fileNameBase+".metadata.json");
 			m.writeFileCSV(fileNameBase+".csv");
 		}
