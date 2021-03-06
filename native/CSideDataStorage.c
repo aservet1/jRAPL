@@ -86,7 +86,7 @@ void addItem_DynamicArray(DynamicArray* a, EnergyStats stats) {
 }
 
 void
-writeToFile_DynamicArray(FILE* outfile, DynamicArray* a) {
+writeFileCSV_DynamicArray(FILE* outfile, DynamicArray* a) {
 	for (int i = 0; i < a->nItems; i++) {
 		EnergyStats current = a->items[i];
 		char csv_string[512];
@@ -96,7 +96,7 @@ writeToFile_DynamicArray(FILE* outfile, DynamicArray* a) {
 }
 
 void
-writeToFile_LinkedList(FILE* outfile, LinkedList* l) {
+writeFileCSV_LinkedList(FILE* outfile, LinkedList* l) {
 	LinkNode* current = l->head;
 	while(current != NULL) {
 		int upperbound = (current == l->tail) ?

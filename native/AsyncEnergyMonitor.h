@@ -27,7 +27,7 @@ AsyncEnergyMonitor* newAsyncEnergyMonitor(int delay, int storageType);
 void start(AsyncEnergyMonitor *monitor);
 void stop(AsyncEnergyMonitor *monitor);
 void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor);
-void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath);
+void writeFileCSV(AsyncEnergyMonitor *monitor, const char* filepath);
 void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats return_array[k]);
 void reset(AsyncEnergyMonitor* monitor);
 int getNumSamples(AsyncEnergyMonitor* monitor);

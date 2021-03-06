@@ -16,7 +16,7 @@ public class ThreadTesting
 			e.printStackTrace();
 		}
 		mon.stop();
-		mon.writeToFile(outfile);
+		mon.writeFileCSV(outfile);
 		mon.deactivate();
 	}
 

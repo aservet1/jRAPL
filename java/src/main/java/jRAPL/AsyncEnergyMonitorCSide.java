@@ -10,7 +10,7 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	private native static void resetNative();
 	private native static void activateNative(int samplingRate, int storageType);
 	private native static void deactivateNative();
-	private native static void writeToFileNative(String filePath);
+	private native static void writeFileCSVNative(String filePath);
 	private native static String getLastKSamplesNative(int k);
 	private native static long[] getLastKTimestampsNative(int k);
 	private native static int getNumSamplesNative();
@@ -44,7 +44,7 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 		}
 	}
 	public AsyncEnergyMonitorCSide(String storageTypeString) {
-		switch (storageTypeString) { // @TODO consider if you want to do a setStorageType method...that might be a hell of a C-Side carfuffle though
+		switch (storageTypeString) { // @TODO consider if you want to do a setStorageType() method...that might be a hell of a C-Side carfuffle though
 			case "DYNAMIC_ARRAY":
 				storageType = DYNAMIC_ARRAY_STORAGE;
 				break;
@@ -82,14 +82,14 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	}
 
 	@Override
-	public void writeToFile(String filePath) {
-		writeToFileNative(filePath);
+	public void writeFileCSV(String filePath) {
+		writeFileCSVNative(filePath);
 	}
 
 	@Override
 	public String[] getLastKSamples(int k) {
 		// I don't know how to do JNI String arrays,
-		// so return '_' delimited string to split
+		// so return one giant '_'-delimited string to split
 		return getLastKSamplesNative(k).split("_");
 	} // this is a potential time and memory overhead hazard
 

@@ -13,4 +13,4 @@ clean:
 	(cd native && make clean)
 	(cd native/JNI && make clean)
 	(cd java && mvn clean)
-	rm -f AsyncMonitor-C.tmp AsyncMonitor-Java.tmp
+	rm -f AsyncMonitor-C.csv AsyncMonitor-Java.csv AsyncMonitor-C-metainfo.json AsyncMonitor-Java-metainfo.json

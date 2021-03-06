@@ -1,8 +1,11 @@
 # maven build target for jRAPL/src
 target/
 
-#temp files i generate, usually from testing a writeToFile() method
-*.tmp
+#temp files i generate, from testing AsyncMonitor.writeToFile() method
+AsyncMonitor-C.csv
+AsyncMonitor-Java.csv
+AsyncMonitor-C-metainfo.json
+AsyncMonitor-Java-metainfo.json
 
 *.swp
 

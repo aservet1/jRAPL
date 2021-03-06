@@ -4,7 +4,10 @@ package jRAPL;
 import java.time.Instant;
 import java.time.Duration;
 
-import java.util.Arrays; // just for the test driver, not actually used in the code
+import java.io.FileWriter;
+import java.io.IOException;
+
+import java.util.Arrays; // just for the test driver, and debug. should eventually not actually be used in user-facing code, if we can make that happen. for modularity and cleanliness :)
 
 public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
@@ -20,12 +23,6 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	@Override
 	public void deactivate()
 	{  super.deactivate(); }
-
-	/** Dumps all samples to file, along with the sampling rate, in CSV format.
-	 *	Same format as <code>this.toString()</code>
-	 *	@param fileName name of file to write to
-	*/
-	public abstract void writeToFile(String fileName);
 
 	/** Gets the number of samples the monitor currently collected
 	 *	@return number of samples collected so far
@@ -98,11 +95,53 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		return isRunning;
 	}
 
+	/** Dumps all samples to file, along with the sampling rate, in CSV format.
+	 *	Same format as <code>this.toString()</code>
+	 *	@param fileName name of file to write to
+	*/
+	public abstract void writeFileCSV(String fileName);
+
+	public void writeFileMetadata(String fileName) { //@TODO at some point, make it write to stdout instead of a file if fileName == null
+		// currently enforcing only JSON files
+		if (fileName != null) {
+			String[] parts = fileName.split("\\.");
+			if (parts.length > 0 && !(parts[parts.length-1].equalsIgnoreCase("json"))) {
+				System.err.printf("<<<<<<<<<<<< ERROR: writeToFileMetaInfo() only acccepts .json output file format, not the received: %s\n", fileName);
+				System.err.println(Thread.currentThread().getStackTrace());
+				System.exit(2);
+			}
+		}
+		
+		long samplingRate = getSamplingRate();
+		long lifetime = getLifetime().toMillis();
+		long numSamples = getNumSamples();
+
+		// java generate JSON for the meta info object RIGHT HERE RIGHT NOW
+		String json = String.format( //@TODO make sure all of the metainfo points are here or if you need to gather more data to display
+				"{\"samplingRate\": %d, \"lifetime\": %d, \"numSamples\": %d }",
+				samplingRate, lifetime, numSamples);
+		try {
+			FileWriter writer = new FileWriter(fileName);
+			writer.write(json);
+			writer.flush();
+			writer.close();
+		} catch (IOException ex) {
+			System.err.printf("error in writeToFileMetaInfo(%s)",fileName);
+			ex.printStackTrace();
+		}
+	}
+
 	public String toString() {
-		String s = "";
-		s += "samplingRate: " + getSamplingRate() + " milliseconds\n";
-		s += "lifetime: " + Long.toString(getLifetime().toMillis()) + " milliseconds\n";
-		s += "number of samples: " + Integer.toString(getNumSamples()) + "\n";
+
+		int samplingRate = getSamplingRate();
+		long lifetime = getLifetime().toMillis();
+		int numSamples = getNumSamples();
+
+		String s = String.join("\n",
+			"samplingRate: " + samplingRate + " milliseconds",
+			"lifetime: " + lifetime + " milliseconds",
+			"numSamples: " + numSamples
+		);
 
 		return s;
 	}
@@ -112,7 +151,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		int sec = (int)ms/1000;
 		ms = ms%1000;
 		for (int s = 0; s < sec; s++) {
-			System.out.println(s+"/"+(sec+ms));
+			System.out.printf("%d/%d\n",s,(sec+ms));
 			Thread.sleep(1000);
 		} Thread.sleep(ms);
 	}
@@ -128,10 +167,10 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 			System.exit(2);
 		}
 		m.activate();
-		m.setSamplingRate(125);
+		m.setSamplingRate(127);
 
 		m.start();
-		sleepPrint(2000);
+		sleepPrint(3000);
 		m.stop();
 
 		System.out.println(m);
@@ -141,7 +180,10 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		System.out.println(Arrays.toString(m.getLastKTimestamps(k)));
 		System.out.println();
 		System.out.println(Arrays.toString(m.getLastKSamples(m.getNumSamples())));
-		m.writeToFile("AsyncMonitor-"+args[0]+".tmp");
+
+		m.writeFileMetadata("AsyncMonitor-"+args[0]+"-metainfo.json");
+		m.writeFileCSV("AsyncMonitor-"+args[0]+".csv");
+
 		m.reset();
 		m.deactivate();
 	}
