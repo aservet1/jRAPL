@@ -126,23 +126,19 @@ void reset(AsyncEnergyMonitor* monitor) {
 	}
 }
 
-void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath) {
+void writeFileCSV(AsyncEnergyMonitor *monitor, const char* filepath) {
 	FILE * outfile = (filepath) ? fopen(filepath,"w") : stdout;
 
 	if (!outfile) {
-		fprintf(stderr,"ERROR in writeToFile, could not create output file for filepath = %s\n",filepath);
+		fprintf(stderr,"ERROR in writeFileCSV, could not create output file for filepath = %s\n",filepath);
 		exit(1);
 	}
-
-	//@TODO -- dump sampling rate into a separate meta-info file. can honestly probably be taken care of in Java, since its like a 5 line file-write so we don't really care that the file making was done in C, since doing stuff in C is for the efficiency of energy sampling and a 5 line filewrite is pretty useless to hyper-optimize and have a C version.
-	fprintf(outfile,"samplingRate: %d milliseconds\n",monitor->samplingRate);
-
 	char csv_header[512];
 	energy_stats_csv_header(csv_header);
 	fprintf(outfile,"%s\n",csv_header);
 	
-	if (USING_DYNAMIC_ARRAY) writeToFile_DynamicArray(outfile, monitor->samples_dynarr);
-	if (USING_LINKED_LIST)   writeToFile_LinkedList(outfile, monitor->samples_linklist);
+	if (USING_DYNAMIC_ARRAY) writeFileCSV_DynamicArray(outfile, monitor->samples_dynarr);
+	if (USING_LINKED_LIST)   writeFileCSV_LinkedList(outfile, monitor->samples_linklist);
 
 	if (filepath) fclose(outfile);
 }

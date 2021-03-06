@@ -36,9 +36,9 @@ Java_jRAPL_AsyncEnergyMonitorCSide_resetNative(JNIEnv* env, jclass jcls) {
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_writeToFileNative(JNIEnv* env, jclass jcls, jstring jstringFilepath) {
+Java_jRAPL_AsyncEnergyMonitorCSide_writeFileCSVNative(JNIEnv* env, jclass jcls, jstring jstringFilepath) {
 	const char* filepath = (*env)->GetStringUTFChars(env, jstringFilepath, NULL);
-	writeToFile(monitor, filepath);
+	writeFileCSV(monitor, filepath);
 	(*env)->ReleaseStringUTFChars(env, jstringFilepath, filepath);
 }
 
