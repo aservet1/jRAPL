@@ -44,7 +44,7 @@ def stdev_nonzero_energy_increase(energy):
 '''------------------------------------------------------------------------------------------'''
 
 if len(sys.argv) != 2:
-	print(f"usage: python3 {sys.argv[0]} <folder containing the data that you intend to process and generate results for>")
+	print("usage: python3 "+sys.argv[0]+" <folder containing the data that you intend to process and generate results for>")
 	exit(1)
 
 results_dir = sys.argv[1]# 'jolteon-results-subset'
@@ -54,16 +54,16 @@ datafiles = os.listdir()
 datafilenames = list(set([ name.split('.')[0] for name in datafiles]))
 
 for filename in sorted(datafilenames):
-    print("================== started working on:",filename)
+    print("<=< started working on '"+filename+"'")
     # parts = filename.split('_')
     # benchmark = parts[0]
     # iter = parts[1]
     # type = parts[2]
 
-    with open(f'{filename}.metadata.json') as fh:
+    with open(filename+'.metadata.json') as fh:
         metadata = json.loads(fh.read())
 
-    data = pd.read_csv(f'{filename}.csv')
+    data = pd.read_csv(filename+'.csv')
     filter_zero_columns(data)
 
     result = {}
@@ -92,8 +92,8 @@ for filename in sorted(datafilenames):
             result['persocket'][socket][powd]['nonzero-energy-increase']['avg'] = avg_nonzero_energy_increase(energy)
             result['persocket'][socket][powd]['nonzero-energy-increase']['stdev'] = stdev_nonzero_energy_increase(energy)
 
-    with open(f'{filename}.stats.json','w') as fh:
+    with open(filename+'.stats.json','w') as fh:
         fh.write(json.dumps(result))
 
     result.clear()
-    print(f"done processing, json result written to '{filename}.stats.json'")
+    print(">=> done processing, json result written to "+filename+".stats.json'")
