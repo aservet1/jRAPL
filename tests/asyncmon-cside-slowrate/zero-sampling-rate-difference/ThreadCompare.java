@@ -11,7 +11,7 @@ public class ThreadCompare
 
 		int n = Integer.parseInt(args[0]);
 		if (args[1].equals("J")) {
-			JavaSide j = new JavaMirror();
+			JavaSide j = new JavaSide();
 			j.start();
 			Thread.sleep(n);
 			j.stop();
