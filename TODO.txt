@@ -2,8 +2,13 @@
 << Have done by next week ## wednesday #:
 	get 2 socket support down on jolteon -- like just the simple 1 string solution instead of breaking the string into 2 pieces when processing AsyncEnergyMonitor data
 		make async monitors writeToFile or lastKSamples as multisocket things instead of breaking it up into per-socket things for each sample
-	Plots that Timur asked for
 	Implement some of the small, easily doable 'jRAPL improvements' that you came up with during the hackathon (like add a getter for timestamp)
+	collect graphs on the dacapo things @ 0.00ms sampling rate
+		avg nonero energy increase
+		zero intervals
+		time between nonzero reading
+		number of samples collected
+		(someday) -- memory footprint of Cside implementations vs javaside implementations
 
 
 Update the UML
@@ -22,11 +27,7 @@ for AsyncMonitor experiments, add another info thing youre tracking for 'number 
 
 run thread experiments with 5 and 10 and 20 ms delay
 
-Compare # of samples between C and Java
-
-time between nonzero readings as a test that gets evaluated (based off of timestamps)
-
 make the AsyncMonitor run a set number of operations   instead of start/stop wait loop
 make the AsyncMonitor run a set number of milliseconds instead of start/stop wait loop
 
-"timer" implemntation on the C side
+"timer" implemntation on the C side -- could make the sleep_milliseconds() function more accurate

@@ -55,13 +55,16 @@ datafilenames = list(set([ name.split('.')[0] for name in datafiles]))
 
 for filename in sorted(datafilenames):
     print("<=< started working on '"+filename+"'")
-    # parts = filename.split('_')
-    # benchmark = parts[0]
-    # iter = parts[1]
-    # type = parts[2]
+    filename_parts = filename.split('_')
+    benchmark = filename_parts[0]
+    iteration = filename_parts[1]
+    monitor_type = filename_parts[2]
 
     with open(filename+'.metadata.json') as fh:
         metadata = json.loads(fh.read())
+        metadata['benchmark'] = benchmark
+        metadata['iteration'] = iteration
+        metadata['monitor_type'] = monitor_type
 
     data = pd.read_csv(filename+'.csv')
     filter_zero_columns(data)
