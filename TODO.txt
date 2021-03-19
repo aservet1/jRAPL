@@ -1,13 +1,17 @@
 
 << Have done by next week ## wednesday #:
-	sanity check for 'how often do the MSRs update'?
-
 	get 2 socket support down on jolteon -- like just the simple 1 string solution instead of breaking the string into 2 pieces when processing AsyncEnergyMonitor data
-	Update the UML
+		make async monitors writeToFile or lastKSamples as multisocket things instead of breaking it up into per-socket things for each sample
 	Implement some of the small, easily doable 'jRAPL improvements' that you came up with during the hackathon (like add a getter for timestamp)
-	EnergyManager.active boolean variable, so as to prevent double init()s or double dealloc()s
+	collect graphs on the dacapo things @ 0.00ms sampling rate
+		avg nonero energy increase
+		zero intervals
+		time between nonzero reading
+		number of samples collected
+		(someday) -- memory footprint of Cside implementations vs javaside implementations
 
-make async monitors writeToFile or lastKSamples as multisocket things instead of breaking it up into per-socket things for each sample
+
+Update the UML
 
 IDEA for AsyncMonitor: set a maxCapacityUntilDump and when arraylist gets that full, start (another) thread to dump to file and clear out the current thing. to not puollute RAM too much. idk, maybe.
 like you can have a second thread monitoring the capacity and then dumping as necessary. idk if it's a problem to implicitly spawn a second
@@ -23,11 +27,7 @@ for AsyncMonitor experiments, add another info thing youre tracking for 'number 
 
 run thread experiments with 5 and 10 and 20 ms delay
 
-Compare # of samples between C and Java
-
-time between nonzero readings as a test that gets evaluated (based off of timestamps)
-
 make the AsyncMonitor run a set number of operations   instead of start/stop wait loop
 make the AsyncMonitor run a set number of milliseconds instead of start/stop wait loop
 
-"timer" implemntation on the C side
+"timer" implemntation on the C side -- could make the sleep_milliseconds() function more accurate

@@ -4,7 +4,10 @@ package jRAPL;
 import java.time.Instant;
 import java.time.Duration;
 
-import java.util.Arrays; // just for the test driver, not actually used in the code
+import java.io.FileWriter;
+import java.io.IOException;
+
+import java.util.Arrays; // just for the test driver, and debug. should eventually not actually be used in user-facing code, if we can make that happen. for modularity and cleanliness :)
 
 public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
@@ -14,16 +17,12 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	protected int samplingRate;
 
 	@Override
-	public void activate() { super.activate(); }
+	public  void  activate()
+	{  super.activate();   }
 	
 	@Override
-	public void deactivate() { super.deactivate(); }
-
-	/** Dumps all samples to file, along with the sampling rate, in CSV format.
-	 *	Same format as <code>this.toString()</code>
-	 *	@param fileName name of file to write to
-	*/
-	public abstract void writeToFile(String fileName);
+	public void deactivate()
+	{  super.deactivate(); }
 
 	/** Gets the number of samples the monitor currently collected
 	 *	@return number of samples collected so far
@@ -35,8 +34,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	public abstract void setSamplingRate(int s);
 	public abstract int getSamplingRate();
 
-	public Duration getLifetime()
-	{
+	public Duration getLifetime() {
 		if (monitorStartTime != null && monitorStopTime != null)
 			return Duration.between(monitorStartTime, monitorStopTime);
 		else return null;
@@ -45,22 +43,19 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	/** Starts monitoring in background thread until 
 	 *	main thread calls <code>this.stop()</code>.
 	*/
-	public void start()
-	{
+	public void start() {
 		isRunning = true;
 		monitorStartTime = Instant.now();
 	}
 
 	/** Stops monitoring and storing energy samples. */
-	public void stop()
-	{
+	public void stop() {
 		monitorStopTime = Instant.now();
 		isRunning = false;
 	}
 
 	/** Resets the object for reuse. */
-	public void reset()
-	{
+	public void reset() {
 		monitorStartTime = null;
 		monitorStopTime = null;
 	}
@@ -70,8 +65,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	/** Last K samples in raw string format */
 	public abstract String[] getLastKSamples(int k);
 	/** Last K samples as EnergyStats objects  */
-	public EnergyStats[] getLastKSamples_Objects(int k) 
-	{
+	public EnergyStats[] getLastKSamples_Objects(int k) {
 		String[] strings = getLastKSamples(k);
 		Instant[] timestamps = getLastKTimestamps(k);
 
@@ -84,9 +78,8 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 		return samplesArray;
 	}
-	/** Last K samples as primitive arrays of doubles */
-	public double[][] getLastKSamples_Arrays(int k)
-	{
+	/** Last K samples as primitive arrays of doubles. You can use this in conjunction with getLastKTimestamps() if you want parralell arrays. */
+	public double[][] getLastKSamples_Arrays(int k) {
 		String[] strings = getLastKSamples(k);
 	
 		double[][] samplesArray = new double[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
@@ -102,21 +95,63 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		return isRunning;
 	}
 
-	public String toString()
-	{
-		String s = "";
-		s += "samplingRate: " + getSamplingRate() + " milliseconds\n";
-		s += "lifetime: " + Long.toString(getLifetime().toMillis()) + " milliseconds\n";
-		s += "number of samples: " + Integer.toString(getNumSamples()) + "\n";
+	/** Dumps all samples to file, along with the sampling rate, in CSV format.
+	 *	Same format as <code>this.toString()</code>
+	 *	@param fileName name of file to write to
+	*/
+	public abstract void writeFileCSV(String fileName);
+
+	public void writeFileMetadata(String fileName) { //@TODO at some point, make it write to stdout instead of a file if fileName == null
+		// currently enforcing only JSON files
+		if (fileName != null) {
+			String[] parts = fileName.split("\\.");
+			if (parts.length > 0 && !(parts[parts.length-1].equalsIgnoreCase("json"))) {
+				System.err.printf("<<<<<<<<<<<< ERROR: writeToFileMetaInfo() only acccepts .json output file format, not the received: %s\n", fileName);
+				System.err.println(Thread.currentThread().getStackTrace());
+				System.exit(2);
+			}
+		}
+		
+		long samplingRate = getSamplingRate();
+		long lifetime = getLifetime().toMillis();
+		long numSamples = getNumSamples();
+
+		// java generate JSON for the meta info object RIGHT HERE RIGHT NOW
+		String json = String.format( //@TODO make sure all of the metainfo points are here or if you need to gather more data to display
+				"{\"samplingRate\": %d, \"lifetime\": %d, \"numSamples\": %d }",
+				samplingRate, lifetime, numSamples);
+		try {
+			FileWriter writer = new FileWriter(fileName);
+			writer.write(json);
+			writer.flush();
+			writer.close();
+		} catch (IOException ex) {
+			System.err.printf("error in writeToFileMetaInfo(%s)",fileName);
+			ex.printStackTrace();
+		}
+	}
+
+	public String toString() {
+
+		int samplingRate = getSamplingRate();
+		long lifetime = getLifetime().toMillis();
+		int numSamples = getNumSamples();
+
+		String s = String.join("\n",
+			"samplingRate: " + samplingRate + " milliseconds",
+			"lifetime: " + lifetime + " milliseconds",
+			"numSamples: " + numSamples
+		);
 
 		return s;
 	}
 
+	// this is just used in the main() driver, not part of the AsyncMonitor
 	private static void sleepPrint(int ms) throws InterruptedException {
 		int sec = (int)ms/1000;
 		ms = ms%1000;
 		for (int s = 0; s < sec; s++) {
-			System.out.println(s+"/"+(sec+ms));
+			System.out.printf("%d/%d\n",s,(sec+ms));
 			Thread.sleep(1000);
 		} Thread.sleep(ms);
 	}
@@ -132,10 +167,10 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 			System.exit(2);
 		}
 		m.activate();
-		m.setSamplingRate(125);
+		m.setSamplingRate(127);
 
 		m.start();
-		sleepPrint(2000);
+		sleepPrint(3000);
 		m.stop();
 
 		System.out.println(m);
@@ -145,7 +180,10 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		System.out.println(Arrays.toString(m.getLastKTimestamps(k)));
 		System.out.println();
 		System.out.println(Arrays.toString(m.getLastKSamples(m.getNumSamples())));
-		m.writeToFile("AsyncMonitor-"+args[0]+".tmp");
+
+		m.writeFileMetadata("AsyncMonitor-"+args[0]+"-metainfo.json");
+		m.writeFileCSV("AsyncMonitor-"+args[0]+".csv");
+
 		m.reset();
 		m.deactivate();
 	}

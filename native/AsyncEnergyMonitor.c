@@ -16,12 +16,11 @@
 #define USING_DYNAMIC_ARRAY	monitor->storageType == DYNAMIC_ARRAY_STORAGE
 #define USING_LINKED_LIST	monitor->storageType == LINKED_LIST_STORAGE
 
-int sleep_millisecond(long msec){
+int sleep_millisecond(long msec) {
 	struct timespec ts;
 	int res;
 
-	if (msec < 0)
-	{
+	if (msec < 0) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -40,22 +39,17 @@ void setSamplingRate(AsyncEnergyMonitor* monitor, int s) {
 	monitor->samplingRate = s;
 }
 
-int getSamplingRate(AsyncEnergyMonitor* monitor){
+int getSamplingRate(AsyncEnergyMonitor* monitor) {
 	return monitor->samplingRate;
 }
 
 int getNumSamples(AsyncEnergyMonitor* monitor) {
-	if (USING_DYNAMIC_ARRAY) {
-		return monitor->samples_dynarr->nItems;
-	} else if (USING_LINKED_LIST) {
-		return monitor->samples_linklist->nItems;
-	} else {
-		return -1;
-	}
+	if (USING_DYNAMIC_ARRAY) return monitor->samples_dynarr->nItems;
+	else if (USING_LINKED_LIST) return monitor->samples_linklist->nItems;
+	else return -1;
 }
 
-AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, int storageType)
-{
+AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, int storageType) {
 	AsyncEnergyMonitor* monitor = (AsyncEnergyMonitor*)malloc(sizeof(AsyncEnergyMonitor));
 
 	pthread_t thread;
@@ -63,7 +57,6 @@ AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, int storageType)
 	monitor->exit = false;
 	monitor->samplingRate = samplingRate;
 	monitor->storageType = storageType;
-	monitor->power_domain = get_power_domains_supported(get_cpu_model(), NULL);
 	if (USING_DYNAMIC_ARRAY) {
 		monitor->samples_dynarr = newDynamicArray(64);
 		monitor->samples_linklist = NULL;
@@ -75,8 +68,7 @@ AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, int storageType)
 	return monitor;
 }
 
-void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor)
-{
+void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor) {
 	if (USING_DYNAMIC_ARRAY) {
 		freeDynamicArray(monitor->samples_dynarr);
 		monitor->samples_dynarr = NULL;
@@ -89,16 +81,14 @@ void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor)
 	monitor = NULL;
 }
 
-static void storeEnergySample(AsyncEnergyMonitor *monitor, EnergyStats stats)
-{
+static void storeEnergySample(AsyncEnergyMonitor *monitor, EnergyStats stats) {
 	if (USING_DYNAMIC_ARRAY)
 		addItem_DynamicArray(monitor->samples_dynarr, stats);
 	else if (USING_LINKED_LIST)
 		addItem_LinkedList(monitor->samples_linklist, stats);
 }
 
-void* run(void* monitor_arg)
-{
+void* run(void* monitor_arg) {
 	AsyncEnergyMonitor* monitor = (AsyncEnergyMonitor*)monitor_arg;
 
 	int sockets = getSocketNum();
@@ -115,16 +105,16 @@ void* run(void* monitor_arg)
 	return NULL;
 }
 
-void start(AsyncEnergyMonitor *monitor){
+void start(AsyncEnergyMonitor *monitor) {
 	pthread_create(&(monitor->thread), NULL, run, monitor);
 }
 
-void stop(AsyncEnergyMonitor *monitor){
+void stop(AsyncEnergyMonitor *monitor) {
 	monitor->exit = true;
 	pthread_join(monitor->thread,NULL);
 }
 
-void reset(AsyncEnergyMonitor* monitor){
+void reset(AsyncEnergyMonitor* monitor) {
 	monitor->exit = false;
 	if (USING_DYNAMIC_ARRAY) {
 		freeDynamicArray(monitor->samples_dynarr);
@@ -136,20 +126,19 @@ void reset(AsyncEnergyMonitor* monitor){
 	}
 }
 
-void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath){
+void writeFileCSV(AsyncEnergyMonitor *monitor, const char* filepath) {
 	FILE * outfile = (filepath) ? fopen(filepath,"w") : stdout;
+
 	if (!outfile) {
-		fprintf(stderr,"ERROR in writeToFile, could not create output file for filepath = %s\n",filepath);
+		fprintf(stderr,"ERROR in writeFileCSV, could not create output file for filepath = %s\n",filepath);
 		exit(1);
 	}
-
-	fprintf(outfile,"samplingRate: %d milliseconds\n",monitor->samplingRate);
-	fprintf(outfile,"socket,dram,gpu,core,pkg,timestamp\n");
+	char csv_header[512];
+	energy_stats_csv_header(csv_header);
+	fprintf(outfile,"%s\n",csv_header);
 	
-	if (USING_DYNAMIC_ARRAY)
-		writeToFile_DynamicArray(outfile, monitor->samples_dynarr, monitor->power_domain);
-	if (USING_LINKED_LIST)
-		writeToFile_LinkedList(outfile, monitor->samples_linklist, monitor->power_domain);
+	if (USING_DYNAMIC_ARRAY) writeFileCSV_DynamicArray(outfile, monitor->samples_dynarr);
+	if (USING_LINKED_LIST)   writeFileCSV_LinkedList(outfile, monitor->samples_linklist);
 
 	if (filepath) fclose(outfile);
 }
@@ -163,7 +152,7 @@ void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath){
 // Ok so sometimes it works fine when stack-allocated but still...leave this
 //  note here until you find out what's going on / how to prevent the issue
 //  from happening
-void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats* return_array) {
+void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats* return_buffer) {
 
 	int nItems = (
 		(USING_DYNAMIC_ARRAY) ?
@@ -181,7 +170,7 @@ void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats* return_array)
 
 	if (USING_DYNAMIC_ARRAY) {
 		for (int i = start; i < monitor->samples_dynarr->nItems; i++) {
-			return_array[returnArrayIndex++] = monitor->samples_dynarr->items[i];
+			return_buffer[returnArrayIndex++] = monitor->samples_dynarr->items[i];
 		}
 	}
 
@@ -198,7 +187,7 @@ void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats* return_array)
 		current_upperbound = (current == list->tail) ? list->nItemsAtTail : NODE_CAPACITY;
 
 		for (int i = start % NODE_CAPACITY ; i < current_upperbound; i++) {
-			return_array[returnArrayIndex++] = current->items[i];
+			return_buffer[returnArrayIndex++] = current->items[i];
 		}
 		current = current->next;
 		while (current != NULL) {
@@ -206,23 +195,9 @@ void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats* return_array)
 				? NODE_CAPACITY
 				: list->nItemsAtTail;
 			for ( int i = 0; i < current_upperbound; i++ ) {
-				return_array[returnArrayIndex++] = current->items[i];
+				return_buffer[returnArrayIndex++] = current->items[i];
 			}
 			current = current->next;
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

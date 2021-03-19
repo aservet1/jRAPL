@@ -8,8 +8,9 @@
 #include "ArchSpec.h"
 #include "MSR.h"
 
-/** RAPL conversion unit */
-rapl_msr_unit get_rapl_unit(int msr_fd)
+/** RAPL conversion unit */ //@TODO shouldn't this be in MSR.c??
+rapl_msr_unit
+get_rapl_unit(int msr_fd)
 {
 	rapl_msr_unit rapl_unit;
 	uint64_t unit_info = read_msr(msr_fd, MSR_RAPL_POWER_UNIT);
@@ -39,7 +40,8 @@ get_cpu_model(void)
 /** <Alejandro's Interpretation>
  * Gets the number of processors with sysconf. # processors == # cores (right(?))
  */
-int core_num() {
+int
+core_num() {
 	return sysconf(_SC_NPROCESSORS_CONF); //passed in is number of configured processors
 }
 
@@ -72,7 +74,8 @@ parse_apic_id(cpuid_info_t info_l0, cpuid_info_t info_l1, APIC_ID_t *my_id){
  *	Gets CPUID info given eax_in and ecx_in and eax and ecx x86 args. Stores
  *  reulting e[a/b/c/d]x values in a cpuid_info_t struct
  */
-void cpuid(uint32_t eax_in, uint32_t ecx_in, cpuid_info_t *ci) {
+void
+cpuid(uint32_t eax_in, uint32_t ecx_in, cpuid_info_t *ci) {
 	 asm (
 #if defined(__LP64__)           /* 64-bit architecture */
 	     "cpuid;"                /* execute the cpuid instruction */
@@ -88,7 +91,6 @@ void cpuid(uint32_t eax_in, uint32_t ecx_in, cpuid_info_t *ci) {
         );
 }
 
-
 /** <Alejandro's Interpretation>
  *  Wraps up the cpuid function that gets cpuid information stuff. More abstract and easy to deal with
  *	no specific numbers or assembly or whatever. Always passes in 0xb because thats the cpuid() arg that
@@ -102,31 +104,32 @@ void cpuid(uint32_t eax_in, uint32_t ecx_in, cpuid_info_t *ci) {
 	  ECX=1) it tells you how many bits of the APIC ID is used to identify the core and logical CPU within the chip, and to get "core_bits" from this value you subtract
 	  "logical_CPU_bits" from it.
  */
-cpuid_info_t getProcessorTopology(uint32_t level) {
+cpuid_info_t
+getProcessorTopology(uint32_t level) {
 	cpuid_info_t info;
 	cpuid(0xb, level, &info); ///define a constant for 0xb at some point...
 	return info;
 }
 
-uint64_t get_num_core_thread()
-{
+uint64_t
+get_num_core_thread() {
 	uint32_t level1 = 0;
 	cpuid_info_t infol0 = getProcessorTopology(level1);
 	return infol0.ebx & 0xffff;
 }
 
-uint64_t get_num_pkg_thread()
-{
+uint64_t
+get_num_pkg_thread() {
 	uint32_t level2 = 1;
 	cpuid_info_t infol1 = getProcessorTopology(level2);
 	return infol1.ebx & 0xffff;
 }
 
-uint64_t get_num_pkg_core()
-{
-		uint32_t num_core_thread = get_num_core_thread();
-		uint32_t num_pkg_thread = get_num_pkg_thread();
-		return num_pkg_thread / num_core_thread;
+uint64_t
+get_num_pkg_core() {
+	uint32_t num_core_thread = get_num_core_thread();
+	uint32_t num_pkg_thread = get_num_pkg_thread();
+	return num_pkg_thread / num_core_thread;
 }
 
 /** <Alejandro's Interpretation>
@@ -141,7 +144,8 @@ uint64_t get_num_pkg_core()
 	  num_pkg; 			//number of packages for current machine
 
  */
-uint64_t getSocketNum() {
+uint64_t
+getSocketNum() {
 
 	int coreNum = core_num();
 	uint64_t num_pkg_thread = get_num_pkg_thread();
@@ -150,64 +154,26 @@ uint64_t getSocketNum() {
 	return num_pkg;
 }
 
-void multiply_string_by_socket_num(char out_buffer[], char string[]) {
-
-	int socketnum = getSocketNum();
-	int string_len = strlen(string);
-	int offset = 0;
-	for (int i = 0; i < socketnum; i++) {
-		memcpy(out_buffer + offset, string, string_len);
-		offset += string_len;
-	}
-	out_buffer[++offset] = '\0';
-
-}
-
-int get_power_domains_supported(uint32_t cpu_model, char power_domain_string_buffer[512]) {
-
-	char* string;
-		
+int
+get_power_domains_supported(uint32_t cpu_model) {
 	switch (cpu_model) {
+		case KABYLAKE:			case BROADWELL:
+		
+			return DRAM_GPU_CORE_PKG;
+		
+		case SANDYBRIDGE_EP:	case HASWELL1:
+		case HASWELL2:			case HASWELL3:
+		case HASWELL_EP:		case SKYLAKE1:
+		case SKYLAKE2: 			case BROADWELL2:
+		case APOLLOLAKE:		case COFFEELAKE2:
 
-		case KABYLAKE: case BROADWELL:
-
-			string = "dram,gpu,core,pkg@";
-			if (power_domain_string_buffer != NULL) {
-				bzero(power_domain_string_buffer, 512);
-				multiply_string_by_socket_num(power_domain_string_buffer,string);
-			}
-			return READ_FROM_DRAM_AND_GPU;
-
-		case SANDYBRIDGE_EP:		case HASWELL1:		case HASWELL2:
-		case HASWELL3:				case HASWELL_EP:	case SKYLAKE1:
-		case SKYLAKE2: 				case BROADWELL2:
-		case APOLLOLAKE:			case COFFEELAKE2:
-
-			string = "dram,core,pkg@";
-			if (power_domain_string_buffer != NULL) {
-				bzero(power_domain_string_buffer, 512);
-				multiply_string_by_socket_num(power_domain_string_buffer,string);
-			}
-			return READ_FROM_DRAM;
-
-		case SANDYBRIDGE:
-		case IVYBRIDGE:
-
-			string = "gpu,core,pkg@";
-			if (power_domain_string_buffer != NULL) {
-				bzero(power_domain_string_buffer, 512);
-				multiply_string_by_socket_num(power_domain_string_buffer,string);
-			}
-			return READ_FROM_GPU;
-
+			return DRAM_CORE_PKG;
+		
+		case SANDYBRIDGE:		case IVYBRIDGE:
+		
+			return GPU_CORE_PKG;
+		
 		default:
-
-			if (power_domain_string_buffer != NULL) {
-				bzero(power_domain_string_buffer, 512);
-				sprintf(power_domain_string_buffer,"undefined_architecture");
-			}
-
 			return UNDEFINED_ARCHITECTURE;
 	}
-
 }

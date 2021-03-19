@@ -2,6 +2,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include "EnergyStats.h"
 #include "EnergyCheckUtils.h"
 #include "AsyncEnergyMonitor.h"
@@ -15,17 +19,40 @@ void sleep_print(int seconds)
 	}
 }
 
+void pkg_power_sampleread() {
+	int fd = open("/dev/cpu/0/msr",O_RDONLY);
+	rapl_msr_unit rapl_unit = get_rapl_unit(fd);
+	double power_pkg = read_msr(fd, MSR_PKG_POWER_INFO) * rapl_unit.power;
+	printf("%f\n",power_pkg);
+	close(fd);
+}
+
 int main(int argc, const char* argv[])
 {
-	ProfileInitAllCores(5);
-	ProfileDeallocAllCores();
+	ProfileInit();
+	char csv_header[1024];
+	energy_stats_csv_header(csv_header);
+	printf("%s\n", csv_header);
 
-	// //EnergyStats stats[getSocketNum()];
-	// //EnergyStatCheck(stats,1);
-	// //char ener_string[512];
-	// //energy_stats_to_string(stats[0],ener_string);
-	// //printf("%s\n",ener_string);
-	
+	char csv_string[1024];
+	int num_sockets = getSocketNum();
+	EnergyStats stats[num_sockets];
+	for (int x = 0; x < 10; x++) {
+		sleep(1);
+		EnergyStatCheck(stats);
+		for (int i = 0; i < num_sockets; i++) {
+			EnergyStats e = stats[i];
+			energy_stats_csv_string(e, csv_string);
+			printf("%s\n", csv_string);
+		}
+	}
+	ProfileDealloc();
+
+
+	// ProfileInitAllCores(5);
+	// ProfileDeallocAllCores();
+
+
 	// //AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,DYNAMIC_ARRAY_STORAGE);
 	// AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,LINKED_LIST_STORAGE);
 	// start(m);

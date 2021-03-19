@@ -133,7 +133,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	}
 
 	@Override
-	public void writeToFile(String fileName) {
+	public void writeFileCSV(String fileName) {
 		BufferedWriter writer = null;
 		try {
 			writer = new BufferedWriter ( // write to stdout if filename is null
@@ -141,18 +141,14 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 										? new OutputStreamWriter(System.out)
 										: new FileWriter(new File(fileName))
 									);
-			writer.write("samplingRate: " + samplingRate + " milliseconds\n");
 			writer.write("socket,"+ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]+",timestamp\n");
 			for (int i = 0; i < samples.size(); i++) {
 				String energyString = samples.get(i);
 				String[] perSocketStrings = energyString.split("@");
-				long usecs = Duration.between(Instant.EPOCH, timestamps.get(i)).toNanos()/1000;
-				for (int _i = 0; _i < perSocketStrings.length; _i++) {
-					int socket = _i+1;
-					writer.write(
-						Integer.toString(socket) + "," 
-						+ perSocketStrings[_i] + "," 
-						+ Long.toString(usecs) + "\n"
+				long usecs = Utils.timestampToUsec(timestamps.get(i));
+				for (int socket = 1; socket <= perSocketStrings.length; socket++) {
+					writer.write (
+						String.format("%d,%s,%d\n", socket, perSocketStrings[socket-1], usecs)
 					);
 				}
 			}

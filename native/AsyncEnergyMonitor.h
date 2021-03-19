@@ -15,7 +15,6 @@ typedef struct AsyncEnergyMonitor {
 	int samplingRate;
 	//int nSamples;
 	bool exit;
-	int power_domain;
 	//one of dynArr or linkList will be null
 	//which one in use will be inidcated by storageType
 	DynamicArray* samples_dynarr;
@@ -28,7 +27,7 @@ AsyncEnergyMonitor* newAsyncEnergyMonitor(int delay, int storageType);
 void start(AsyncEnergyMonitor *monitor);
 void stop(AsyncEnergyMonitor *monitor);
 void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor);
-void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath);
+void writeFileCSV(AsyncEnergyMonitor *monitor, const char* filepath);
 void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats return_array[k]);
 void reset(AsyncEnergyMonitor* monitor);
 int getNumSamples(AsyncEnergyMonitor* monitor);

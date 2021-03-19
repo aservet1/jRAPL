@@ -58,7 +58,7 @@ void ProfileInit() {
 
 	num_pkg = getSocketNum(); 
 	cpu_model = get_cpu_model();
-	power_domains_supported = get_power_domains_supported(cpu_model,NULL);
+	power_domains_supported = get_power_domains_supported(cpu_model);
 	uint64_t num_pkg_thread = get_num_pkg_thread();
 
 	/*only two domains are supported for parameters check*/
@@ -70,7 +70,7 @@ void ProfileInit() {
 			core += num_pkg_thread / 2; 	//measure the first core of each package
 		}
 		sprintf(msr_filename, "/dev/cpu/%d/msr", core);
-		printf("num_pkg_thread: %ld core: %d msr_filename: %s\n",num_pkg_thread, core, msr_filename);
+		// printf("num_pkg_thread: %ld core: %d msr_filename: %s\n",num_pkg_thread, core, msr_filename);
 		msr_fds[i] = open(msr_filename, O_RDWR);
 	}
 
@@ -87,36 +87,33 @@ void ProfileDealloc() {
 }
 
 void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg]) {
-	struct timeval timestamp;
-
 	for (int i = 0; i < num_pkg; i++) {
-		int socket = i+1;
-		stats_per_socket[i].socket = socket;
-		stats_per_socket[i].pkg = read_pkg(i);
-		stats_per_socket[i].core = read_core(i);
-
 		switch(power_domains_supported) {
-			case READ_FROM_DRAM_AND_GPU:
+			case DRAM_GPU_CORE_PKG:
 				stats_per_socket[i].dram = read_dram(i);
 				stats_per_socket[i].gpu = read_gpu(i);
+				stats_per_socket[i].core = read_core(i);
+				stats_per_socket[i].pkg = read_pkg(i);
 				break;
-
-			case READ_FROM_DRAM:
+			case DRAM_CORE_PKG:
 				stats_per_socket[i].dram = read_dram(i);
 				stats_per_socket[i].gpu = -1;
+				stats_per_socket[i].core = read_core(i);
+				stats_per_socket[i].pkg = read_pkg(i);
 				break;
-
-			case READ_FROM_GPU:
+			case GPU_CORE_PKG:
 				stats_per_socket[i].dram = -1;
 				stats_per_socket[i].gpu = read_gpu(i);
+				stats_per_socket[i].core = read_core(i);
+				stats_per_socket[i].pkg = read_pkg(i);
 				break;
-
 			case UNDEFINED_ARCHITECTURE:
 				fprintf(stderr,"ERROR: Architecture not found: %X\n",cpu_model);
 				break;
 		}
-		gettimeofday(&timestamp,NULL);
-		stats_per_socket[i].timestamp = timestamp;
+		int socket = (i+1);
+		stats_per_socket[i].socket = socket;
+		gettimeofday(&(stats_per_socket[i].timestamp),NULL);
 	}
 }
 
@@ -124,11 +121,10 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg]) {
 void ProfileInitAllCores(int num_readings) {
 	int i;
 	char msr_filename[BUFSIZ];
-	// int core = 0;
 
 	num_pkg = getSocketNum(); 
 	cpu_model = get_cpu_model();
-	power_domains_supported = get_power_domains_supported(cpu_model,NULL);
+	power_domains_supported = get_power_domains_supported(cpu_model);
 	uint64_t num_pkg_thread = get_num_pkg_thread();
 
 	/*only two domains are supported for parameters check*/
@@ -137,9 +133,6 @@ void ProfileInitAllCores(int num_readings) {
 	msr_fds = (int *) malloc(num_pkg * sizeof(int) * num_cores);
 	
 	for(i = 0; i < num_cores; i++) {
-		// if(i > 0) {
-		// 	core += num_pkg_thread / 2; 	//measure the first core of each package
-		// }
 		sprintf(msr_filename, "/dev/cpu/%d/msr", i);
 		printf("%s\n",msr_filename);
 		msr_fds[i] = open(msr_filename, O_RDWR);

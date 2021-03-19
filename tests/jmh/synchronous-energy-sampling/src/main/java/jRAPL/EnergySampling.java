@@ -44,12 +44,12 @@ public class EnergySampling {
         @Setup(Level.Trial)
         public void doSetup() {
             monitor = new SyncEnergyMonitor();
-			monitor.init();
+			monitor.activate();
         }
 
         @TearDown(Level.Trial)
         public void doTearDown() {
-			monitor.dealloc();
+			monitor.deactivate();
         }
     }
 

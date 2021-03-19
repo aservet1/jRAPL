@@ -20,13 +20,13 @@ public final class EnergyDiff extends EnergySample
 		return this.elapsedTime;
 	}
 
-	public static String dumpHeader() {
-		return EnergySample.dumpHeader() + "elapsedTime";
+	public static String csvHeader() {
+		return EnergySample.csvHeader() + "elapsedTime";
 	}
 
 	@Override
-	public String dump() {
-		return super.dump() + (
+	public String csv() {
+		return super.csv() + (
 					(this.elapsedTime == null)
 					? ("null") : (Long.toString(Utils.durationToUsec(elapsedTime)))
 				);
