@@ -40,7 +40,7 @@ public class AsyncMonitorCallback extends Callback {
 	public void start(String benchmark) {
 		super.start(benchmark);
 		m.activate();
-		m.setSamplingRate(0);
+		m.setSamplingRate(1);
 		m.start();
 	}
 
