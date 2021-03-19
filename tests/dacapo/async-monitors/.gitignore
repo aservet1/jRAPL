@@ -9,3 +9,4 @@ scratch
 # generated raw data results
 *.metadata.json
 *.csv
+*.stats.json
