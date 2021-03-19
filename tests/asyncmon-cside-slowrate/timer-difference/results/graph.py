@@ -41,6 +41,19 @@ for duration in statparse:
     ax.set_xticks(xpos)
     ax.set_xticklabels(['java','c'])
     ax.set_title("timer comparison for "+str(duration)+" msec")
-    plt.savefig('time-comapre-'+str(duration))
+    plt.savefig('time-compare-'+str(duration))
     #plt.show()
     plt.clf()
+
+diffs = {}
+for duration in statparse:
+	diffs[duration] = statparse[duration]['c']['avg'] - statparse[duration]['java']['avg']
+x = sorted(list(diffs.keys()))
+y = [diffs[d] for d in x]
+plt.scatter(x,y)
+plt.xticks(x)
+plt.xlabel('sleep time')
+plt.ylabel('disparity in result: c minus java (usec)')
+plt.title('average c time minus average java time')
+plt.savefig('c-java-avg-difference')
+#plt.show()
