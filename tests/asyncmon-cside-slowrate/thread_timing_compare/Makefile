@@ -19,4 +19,4 @@ $(LIB): $(CFILE)
 	rm $(OFILES)
 	javac $(JAVAFILE).java -d .
 clean:
-	rm -rf $(LIB) $(OFILES) $(CDRIVER) *.class thread_timing_compare
+	rm -rf $(LIB) $(OFILES) $(CDRIVER) threadtimer

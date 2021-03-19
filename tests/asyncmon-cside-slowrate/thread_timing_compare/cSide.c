@@ -29,7 +29,7 @@ pthread_t tid;
 void* run() {
 	exitflag = false;
 	while (!exitflag) {
-		sleep_msec(10);
+		sleep_msec(0);
 		count++;
 	}
 	printf("count: %d\n", count);
@@ -37,12 +37,12 @@ void* run() {
 }
 
 JNIEXPORT void JNICALL
-Java_jnithread_JniPthread_start(JNIEnv *env, jclass cls) {
+Java_threadtimer_CSide_start(JNIEnv *env, jclass cls) {
 	pthread_create(&tid, NULL, run, NULL);
 }
 
 JNIEXPORT void JNICALL
-Java_jnithread_JniPthread_stop(JNIEnv *env, jclass cls) {
+Java_threadtimer_CSide_stop(JNIEnv *env, jclass cls) {
 	exitflag = true;
 	pthread_join(tid,NULL);
 }

@@ -1,10 +1,7 @@
-package thread_timer_compare;
+package threadtimer;
 
 public class ThreadCompare
 {
-	public native static void start();
-	public native static void stop();
-
 	public static void main(String[] args) throws InterruptedException
 	{
 		if (args.length == 0) {
@@ -22,11 +19,16 @@ public class ThreadCompare
 			Thread.sleep(n);
 			j.stop();
 		} else {
-			start();
+			CSide.start();
 			Thread.sleep(n);
-			stop();
+			CSide.stop();
 		}
 	}
+}
+
+class CSide {
+	public native static void start();
+	public native static void stop();
 }
 
 class JavaSide implements Runnable {
@@ -54,7 +56,7 @@ class JavaSide implements Runnable {
 		exitflag = false;
 		while (!exitflag) {
 			try {
-				Thread.sleep(10);
+				Thread.sleep(0);
 				count++;
 			} catch (InterruptedException ex) {
 				System.out.println("hey that thing happened. yikes! :)");
