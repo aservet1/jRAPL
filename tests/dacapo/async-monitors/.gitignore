@@ -9,3 +9,5 @@ scratch
 # generated raw data results
 *.metadata.json
 *.csv
+*.stats.json
+jolteon-results.tar.gz
