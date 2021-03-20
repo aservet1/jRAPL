@@ -93,9 +93,5 @@ public abstract class EnergySample
 		return s;
 	}
 
-	public double[] getPrimitiveSample() {
-		return primitiveSample.clone();
-	}
-
 }
 
