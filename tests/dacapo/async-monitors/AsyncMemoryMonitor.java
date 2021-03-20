@@ -1,17 +1,11 @@
 
-package jrapltesting;
-
 import java.time.Instant;
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import jrapl.*;
+import java.io.*;
 
-//@TODO consider making an abstract AsyncMonitor class, unless you
-// think it would be too clunky and that you wouldn't need more than
-// this and the C side one, in which case it would be confusing, also
-// you may or may not even release the MemoryMonitor to JRAPL's final
-// product anyway
-public class AsyncMemoryMonitor implements Runnable,AsyncMonitor {
+public class AsyncMemoryMonitor implements Runnable {
 	private ArrayList<Long> samples;
 	private int samplingRate = 10;
 	private volatile boolean exit = false;
@@ -20,20 +14,19 @@ public class AsyncMemoryMonitor implements Runnable,AsyncMonitor {
 
 	private Instant birth;
 	private Instant death;
-	private Duration lifetime;
+	private Duration lifetime = null;
 
 	public AsyncMemoryMonitor() {
 		samples = new ArrayList<Long>();
 	}
 
-	/*private long memoryDiff()
-	{
-		long before = runtime.totalMemory() - runtime.freeMemory();
-		try { Thread.sleep(samplingRate); }
-		catch (Exception e) { System.out.println("thread sleep error in AsyncMemoryMonitor"); }
-		long after = runtime.totalMemory() - runtime.freeMemory();
-		return after - before;
-	}*/
+	public void setSamplingRate(int s) {
+		samplingRate = s;
+	}
+
+	public int getSamplingRate() {
+		return samplingRate;
+	}
 
 	private long memoryUsed() {
 		return runtime.totalMemory() - runtime.freeMemory();
@@ -42,10 +35,9 @@ public class AsyncMemoryMonitor implements Runnable,AsyncMonitor {
 	public void run() {
 		while(!exit) {
 			samples.add(memoryUsed());
-			if (!exit) try {
+			try {
 				Thread.sleep(samplingRate);
 			} catch (Exception e) { }
-			//System.out.print(".");
 		}
 	}
 
@@ -71,6 +63,12 @@ public class AsyncMemoryMonitor implements Runnable,AsyncMonitor {
 	public Duration getLifetime()
 	{
 		return lifetime;
+	}
+
+	private static long durationToUsec(Duration duration) {
+		Instant i = Instant.ofEpochMilli(1000000); // arbitrary Instant point
+		Instant isubbed = i.minus(duration);
+		return ChronoUnit.MICROS.between(isubbed, i);
 	}
 
 	public void reset() {
@@ -112,5 +110,42 @@ public class AsyncMemoryMonitor implements Runnable,AsyncMonitor {
 		s += "lifetime: " + this.lifetime.toMillis() + " msec";
 		return s;
 	}
+
+	public void writeFile(String fileName) { // JSON
+		BufferedWriter writer = null;
+		try {
+			writer = new BufferedWriter ( // write to stdout if filename is null
+									(fileName == null)
+										? new OutputStreamWriter(System.out)
+										: new FileWriter(new File(fileName))
+									);
+			writer.write("{\"samples\":[");
+			for (int i = 0; i < samples.size()-1; i++) {
+				writer.write(String.format("%d,", samples.get(i)));
+			} writer.write(Long.toString(samples.get(samples.size()-1)));
+			writer.write(String.format("],\"lifetime\":%d,\"numSamples\":%d }",
+										durationToUsec(getLifetime()),samples.size()));
+			writer.flush();
+			if (fileName != null) writer.close();
+		} catch (IOException e) {
+			System.out.println("error writing " + fileName);
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String[] args) throws InterruptedException {
+		AsyncMemoryMonitor m = new AsyncMemoryMonitor();
+		m.setSamplingRate(10);
+
+		m.start();
+		Thread.sleep(1000);
+		m.stop();
+
+		m.writeFile(null);
+	}
+
 }
+
+
+
 
