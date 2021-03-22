@@ -65,7 +65,7 @@ public class AsyncMonitorCallback extends Callback {
 		currentIter++;
 		if (currentIter > WARMUPS) {
 			// System.out.println(m);
-			energyMonitor.writeFileMetadata(null);
+			energyMonitor.writeFileMetadata(null); System.out.println();
 			String fileNameBase = String.format("%s/%s_%d_%s", System.getProperty("resultDir"), benchmark, (currentIter-WARMUPS), monitorType);
 			energyMonitor.writeFileMetadata(fileNameBase+".metadata.json");
 			energyMonitor.writeFileCSV(fileNameBase+".csv");
