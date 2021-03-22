@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function usage() {
-	echo "usage: $1 <iterations> <warmups> <result directory name>"
+	echo "usage: $1 <monitoring memory? true|false> <iterations> <warmups> <result directory name>"
 	exit 1
 }
 
@@ -10,23 +10,25 @@ dacapo_jar="dacapo-evaluation-git+309e1fa.jar"
 jRAPL_jar="jRAPL-1.0.jar"
 classpath="$dacapo_jar:$jRAPL_jar:."
 
-[ $# != 3 ] && usage $0
+[ $# != 4 ] && usage $0
 
-iterations=$1
-warmups=$2
-resultDir=$3
+monitoringMemory=$1
+iterations=$2
+warmups=$3
+resultDir=$4
 
-rm -rf $resultDir && mkdir $resultDir
+#rm -rf $resultDir && mkdir $resultDir
 
 for benchmark in $(cat 'all-benchmarks.txt')
 do
 	echo "@@@ Doing benchmark $benchmark @@@"
 
-	for type in c-linklist java c-dynamicarray
+	for monitorType in c-linklist java c-dynamicarray
 	do
-		sudo java -Dwarmups=$warmups -DmonitorType=$type \
-			-DresultDir=$resultDir \
-			-cp $classpath Harness $benchmark -c $mycallback -n $iterations
+		scripts/run-dacapo.sh $benchmark $monitoringMemory $iterations $warmups $monitorType $resultDir
+		#sudo java -DmonitoringMemory=$monitoringMemory -Dwarmups=$warmups \
+		#	-DresultDir=$resultDir -DmonitorType=$type \
+		#	-cp $classpath Harness $benchmark -c $mycallback -n $iterations
 	done
 
 done
