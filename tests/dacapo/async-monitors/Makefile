@@ -1,5 +1,8 @@
 
-javafiles = AsyncMonitorCallback.java AsyncMemoryMonitor.java
+javafiles = AsyncMonitorCallback.java \
+			AsyncMemoryMonitor.java \
+			BenchmarkTimer.java
+
 classfiles = $(javafiles:.java=.class)
 
 dacapo-jar = dacapo-evaluation-git+309e1fa.jar

@@ -1,0 +1,41 @@
+avrora:		7.922 sec
+
+batik:		11.862 sec
+
+biojava:	20.620 sec
+
+cassandra:	6.275 sec
+
+eclipse:	38.059 sec
+
+fop:		4.255 sec
+
+graphchi:	1.796 sec
+
+h2:		13.190 sec
+
+h2o:		35.656 sec
+
+jme:		11.183 sec
+
+jython:		16.806 sec
+
+kafka:		20.1339 sec
+
+luindex:	1.503 sec
+
+lusearch:	2.788 sec
+
+pmd:		20.029 sec
+
+sunflow:	16.852 sec
+
+tomcat:		11.905 sec
+
+tradebeans:	20.868 sec
+
+tradesoap:	10.460 sec
+
+xalan:		20.718 sec
+
+zxing:		5.490 sec
