@@ -123,8 +123,8 @@ public class AsyncMemoryMonitor implements Runnable {
 			for (int i = 0; i < samples.size()-1; i++) {
 				writer.write(String.format("%d,", samples.get(i)));
 			} writer.write(Long.toString(samples.get(samples.size()-1)));
-			writer.write(String.format("],\"lifetime\":%d,\"numSamples\":%d }",
-										durationToUsec(getLifetime()),samples.size()));
+			writer.write(String.format("],\"lifetime\":%d,\"numSamples\":%d, \"samplingRate\": %d }",
+										durationToUsec(getLifetime()),samples.size(),samplingRate)); //@TODO maybe have a less ugly, more modular way of generating the JSON string
 			writer.flush();
 			if (fileName != null) writer.close();
 		} catch (IOException e) {

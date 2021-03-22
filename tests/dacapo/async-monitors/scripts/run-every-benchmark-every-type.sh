@@ -17,18 +17,12 @@ iterations=$2
 warmups=$3
 resultDir=$4
 
-#rm -rf $resultDir && mkdir $resultDir
-
 for benchmark in $(cat 'all-benchmarks.txt')
 do
 	echo "@@@ Doing benchmark $benchmark @@@"
 
-	for monitorType in c-linklist java c-dynamicarray
-	do
+	for monitorType in c-linklist java c-dynamicarray; do
 		scripts/run-dacapo.sh $benchmark $monitoringMemory $iterations $warmups $monitorType $resultDir
-		#sudo java -DmonitoringMemory=$monitoringMemory -Dwarmups=$warmups \
-		#	-DresultDir=$resultDir -DmonitorType=$type \
-		#	-cp $classpath Harness $benchmark -c $mycallback -n $iterations
 	done
 
 done

@@ -46,7 +46,10 @@ public class AsyncMonitorCallback extends Callback {
 		energyMonitor.activate();
 		energyMonitor.setSamplingRate(1);
 		energyMonitor.start();
-		if (checkingMemory) memoryMonitor.start();
+		if (checkingMemory) {
+			memoryMonitor.setSamplingRate(1); // the idea behind this sampling rate is to track the increase in memory with around every additional sample
+			memoryMonitor.start();
+		}
 	}
 
 	@Override
