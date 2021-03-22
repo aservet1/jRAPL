@@ -52,8 +52,6 @@ int getNumSamples(AsyncEnergyMonitor* monitor) {
 AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, int storageType) {
 	AsyncEnergyMonitor* monitor = (AsyncEnergyMonitor*)malloc(sizeof(AsyncEnergyMonitor));
 
-	pthread_t thread;
-	monitor->thread = thread;
 	monitor->exit = false;
 	monitor->samplingRate = samplingRate;
 	monitor->storageType = storageType;
@@ -106,12 +104,12 @@ void* run(void* monitor_arg) {
 }
 
 void start(AsyncEnergyMonitor *monitor) {
-	pthread_create(&(monitor->thread), NULL, run, monitor);
+	pthread_create(&(monitor->tid), NULL, run, monitor);
 }
 
 void stop(AsyncEnergyMonitor *monitor) {
 	monitor->exit = true;
-	pthread_join(monitor->thread,NULL);
+	pthread_join(monitor->tid,NULL);
 }
 
 void reset(AsyncEnergyMonitor* monitor) {

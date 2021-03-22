@@ -11,7 +11,7 @@
 #define LINKED_LIST_STORAGE 2
 
 typedef struct AsyncEnergyMonitor {
-	pthread_t thread;
+	pthread_t tid;
 	int samplingRate;
 	//int nSamples;
 	bool exit;
