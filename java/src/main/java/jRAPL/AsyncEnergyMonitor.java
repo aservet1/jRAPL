@@ -5,6 +5,9 @@ import java.time.Instant;
 import java.time.Duration;
 
 import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.File;
 import java.io.IOException;
 
 import java.util.Arrays; // just for the test driver, and debug. should eventually not actually be used in user-facing code, if we can make that happen. for modularity and cleanliness :)
@@ -121,12 +124,17 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 				"{\"samplingRate\": %d, \"lifetime\": %d, \"numSamples\": %d }",
 				samplingRate, lifetime, numSamples);
 		try {
-			FileWriter writer = new FileWriter(fileName);
+			BufferedWriter writer = new BufferedWriter (
+							(fileName == null)
+								? new OutputStreamWriter(System.out)
+								: new FileWriter(new File(fileName))
+							);
+			//FileWriter writer = new FileWriter(fileName);
 			writer.write(json);
 			writer.flush();
-			writer.close();
+			if (fileName != null) writer.close();
 		} catch (IOException ex) {
-			System.err.printf("error in writeToFileMetaInfo(%s)",fileName);
+			System.err.printf("error in writeToFileMetaInfo(%s)\n",fileName);
 			ex.printStackTrace();
 		}
 	}
