@@ -8,40 +8,49 @@ import pandas as pd
 from collections import Counter
 from statistics import StatisticsError
 
-'''------------------------------------------------------------------------------------------'''
+'''-----------------------------------------------------------------------------'''
 
-def filter_zero_columns(dataframe): #delete columnds that are 0.0 down the entire line
+def filter_zero_columns(dataframe): #delete columns that are 0.0 down the line. on jolteon, this happens for core
     for column in dataframe:
         if sum(dataframe[column]) == 0.0:
             del dataframe[column]
 
-def zero_intervals(l):
-    result = list()
-    z = 0
-    for i in range(1,len(l)):
-        if l[i]-l[i-1] == 0:
-            z += 1
-        else:
-            result.append(z)
-            z = 0
-    if z:
-        result.append(z)
-    return dict(Counter(result))
+#def zero_intervals(l):
+#    result = list()
+#    z = 0
+#    for i in range(1,len(l)):
+#        if l[i]-l[i-1] == 0:
+#            z += 1
+#        else:
+#            result.append(z)
+#            z = 0
+#    if z:
+#        result.append(z)
+#    return dict(Counter(result))
 
 def diff_list(l):
     return [ float(float(l[i]) - float(l[i-1])) for i in range(1,len(l))]
-def avg_nonzero_energy_increase(energy):
-    try:
-    	return statistics.mean([ n for n in diff_list(energy) if n != 0])
-    except StatisticsError:
-        return 0
-def stdev_nonzero_energy_increase(energy):
-    try:
-        return statistics.stdev([ n for n in diff_list(energy) if n != 0 ])
-    except StatisticsError:
-        return 0
 
-'''------------------------------------------------------------------------------------------'''
+def dict_to_list(l): #convert from dict<int,double> to list<double>
+    return [ l[i] for i in l ]
+
+def avg_time_between_samples(ts):
+    return statistics.mean( diff_list(ts) )
+def stdev_time_between_samples(ts):
+    return statistics.stdev( diff_list(ts) )
+
+def avg_energy_sample(energy):
+    try:
+        return statistics.mean(  diff_list(energy) )
+    except StatisticsError:
+        return 0
+def stdev_energy_sample(energy):
+    try:
+        return statistics.stdev( diff_list(energy) )
+    except StatisticsError:
+        return 0
+    
+'''-----------------------------------------------------------------------------'''
 
 if len(sys.argv) != 2:
 	print("usage: python3 "+sys.argv[0]+" <folder containing the data that you intend to process and generate results for>")
@@ -51,7 +60,7 @@ results_dir = sys.argv[1]# 'jolteon-results-subset'
 os.chdir(results_dir)
 
 datafiles = os.listdir()
-datafilenames = list(set([ name.split('.')[0] for name in datafiles]))
+datafilenames = list(set([ name.split('.')[0] for name in datafiles])) #remove file extension
 
 for filename in sorted(datafilenames):
     print("<=< started working on '"+filename+"'")
@@ -83,18 +92,24 @@ for filename in sorted(datafilenames):
     
 
     for socket in result['persocket']: # filling out the actual computations in result{}
-        timestamps = result['persocket'][socket]['timestamp']
+        timestamps = dict_to_list(result['persocket'][socket]['timestamp'])
         del result['persocket'][socket]['timestamp']
+        
         power_domains = list(result['persocket'][socket])
         for powd in power_domains:
             energy = result['persocket'][socket][powd]
-            energy = [ energy[i] for i in energy ] #convert from dict<int,double> to list<double>
+            energy = dict_to_list(energy)
             result['persocket'][socket][powd] = dict()
-            result['persocket'][socket][powd]['zero-intervals'] = zero_intervals(energy)
-            result['persocket'][socket][powd]['nonzero-energy-increase'] = dict()
-            result['persocket'][socket][powd]['nonzero-energy-increase']['avg'] = avg_nonzero_energy_increase(energy)
-            result['persocket'][socket][powd]['nonzero-energy-increase']['stdev'] = stdev_nonzero_energy_increase(energy)
+            #result['persocket'][socket][powd]['zero-intervals'] = zero_intervals(energy)
+            result['persocket'][socket][powd]['energy-per-sample'] = dict()
+            result['persocket'][socket][powd]['energy-per-sample']['avg'] = avg_energy_sample(energy)
+            result['persocket'][socket][powd]['energy-per-sample']['stdev'] = stdev_energy_sample(energy)
 
+        result['persocket'][socket]['time-between-samples'] = {}
+        result['persocket'][socket]['time-between-samples']['avg'] = avg_time_between_samples(timestamps)
+        result['persocket'][socket]['time-between-samples']['stdev'] = stdev_time_between_samples(timestamps)
+            
+            
     with open(filename+'.stats.json','w') as fh:
         fh.write(json.dumps(result))
 
