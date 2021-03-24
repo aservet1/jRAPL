@@ -11,3 +11,4 @@ scratch
 *.csv
 *.stats.json
 jolteon-results.tar.gz
+*_MEMORY.json

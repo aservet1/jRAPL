@@ -9,7 +9,7 @@ h2
 h2o
 jme
 jython
-kafka
+## kafka # kafka always fails
 luindex
 lusearch
 pmd

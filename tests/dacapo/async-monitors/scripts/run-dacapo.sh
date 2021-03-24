@@ -11,7 +11,7 @@ dacapo_jar="dacapo-evaluation-git+309e1fa.jar"
 jRAPL_jar="jRAPL-1.0.jar"
 classpath="$dacapo_jar:$jRAPL_jar:."
 
-[ $# != 6 ] && usage $0
+[ $# != 6 ] && usage $0 $@
 
 benchmark=$1
 monitoringMemory=$2
@@ -20,7 +20,7 @@ warmups=$4
 monitorType=$5
 resultDir=$6
 
-rm -rf $resultDir && mkdir $resultDir
+#rm -rf $resultDir && mkdir $resultDir
 
 sudo java -DmonitoringMemory=$monitoringMemory -Dwarmups=$warmups \
 			-DmonitorType=$monitorType -DresultDir=$resultDir \
