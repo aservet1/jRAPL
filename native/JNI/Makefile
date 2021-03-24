@@ -17,7 +17,7 @@ JNIEXPORTS = \
 		RuntimeTestUtils.c
 OFILES = $(JNIEXPORTS:.c=.o)
 
-CFLAGS = -fPIC -g -c -Wall
+CFLAGS = -fPIC -g -c -Wall -O3
 
 all: $(JNI_LIB)
 	cp $(JNI_LIB) ../../java/src/main/resources/native # make sure to modularize this variable name
