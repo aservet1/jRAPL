@@ -1,7 +1,6 @@
 
 javafiles = AsyncMonitorCallback.java \
 			AsyncMemoryMonitor.java \
-			BenchmarkTimer.java
 
 classfiles = $(javafiles:.java=.class)
 
