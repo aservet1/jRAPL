@@ -62,7 +62,7 @@ os.chdir(results_dir)
 datafiles = os.listdir()
 datafilenames = list(set([ name.split('.')[0] for name in datafiles])) #remove file extension
 
-for filename in sorted(datafilenames):
+for filename in sorted([ _ for _ in datafilenames if not _.endswith("MEMORY") ]):
     print("<=< started working on '"+filename+"'")
     filename_parts = filename.split('_')
     benchmark = filename_parts[0]
