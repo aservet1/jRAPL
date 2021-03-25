@@ -34,21 +34,21 @@ def diff_list(l):
 def dict_to_list(d): #convert from dict<int,double> to list<double>
     return [ d[k] for k in d.keys() ]
 
-def avg_time_between_samples(ts):
-    return statistics.mean( diff_list(ts) )
-def stdev_time_between_samples(ts):
-    return statistics.stdev( diff_list(ts) )
-
-def avg_energy_sample(energy):
-    try:
-        return statistics.mean(  diff_list(energy) )
-    except StatisticsError:
-        return 0
-def stdev_energy_sample(energy):
-    try:
-        return statistics.stdev( diff_list(energy) )
-    except StatisticsError:
-        return 0
+#def avg_time_between_samples(ts):
+#    return statistics.mean( diff_list(ts) )
+#def stdev_time_between_samples(ts):
+#    return statistics.stdev( diff_list(ts) )
+#
+#def avg_energy_sample(energy):
+#    try:
+#        return statistics.mean(  diff_list(energy) )
+#    except StatisticsError:
+#        return 0
+#def stdev_energy_sample(energy):
+#    try:
+#        return statistics.stdev( diff_list(energy) )
+#    except StatisticsError:
+#        return 0
     
 '''-----------------------------------------------------------------------------'''
 
@@ -99,15 +99,19 @@ for filename in sorted(datafilenames):
         for powd in power_domains:
             energy = result['persocket'][socket][powd]
             energy = dict_to_list(energy)
+            energy = diff_list(energy)
             result['persocket'][socket][powd] = dict()
             #result['persocket'][socket][powd]['zero-intervals'] = zero_intervals(energy)
             result['persocket'][socket][powd]['energy-per-sample'] = dict()
-            result['persocket'][socket][powd]['energy-per-sample']['avg'] = avg_energy_sample(energy)
-            result['persocket'][socket][powd]['energy-per-sample']['stdev'] = stdev_energy_sample(energy)
+            result['persocket'][socket][powd]['energy-per-sample']['raw'] = energy
+            result['persocket'][socket][powd]['energy-per-sample']['avg'] = statistics.mean(energy)
+            result['persocket'][socket][powd]['energy-per-sample']['stdev'] = statistics.stdev(energy)
 
+        time = diff_list(timestamps)
         result['persocket'][socket]['time-between-samples'] = {}
-        result['persocket'][socket]['time-between-samples']['avg'] = avg_time_between_samples(timestamps)
-        result['persocket'][socket]['time-between-samples']['stdev'] = stdev_time_between_samples(timestamps)
+        result['persocket'][socket]['time-between-samples']['raw'] = time
+        result['persocket'][socket]['time-between-samples']['avg'] = statistics.mean(time)
+        result['persocket'][socket]['time-between-samples']['stdev'] = statistics.stdev(time)
             
             
     with open(filename+'.stats.json','w') as fh:
