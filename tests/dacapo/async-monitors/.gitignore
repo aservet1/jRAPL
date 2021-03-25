@@ -10,5 +10,5 @@ scratch
 *.metadata.json
 *.csv
 *.stats.json
+*.memory.json
 jolteon-results.tar.gz
-*_MEMORY.json
