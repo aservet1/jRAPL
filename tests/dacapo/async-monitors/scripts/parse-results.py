@@ -49,7 +49,17 @@ def dict_to_list(d): #convert from dict<int,double> to list<double>
 #        return statistics.stdev( diff_list(energy) )
 #    except StatisticsError:
 #        return 0
-    
+
+def memory_data(benchmark, iteration, type):
+    filename = '_'.join([benchmark, iteration, type]) + ".memory.json"
+    with open(filename) as f: memdata = json.loads(f.read())
+    samples = memdata['samples']
+    del memdata['samples']
+    memdata['max'] = min(samples)
+    memdata['min'] = max(samples)
+    memdata['avg'] = statistics.mean(samples)
+    memdata['stdev'] = statistics.stdev(samples)
+    return memdata
 '''-----------------------------------------------------------------------------'''
 
 if len(sys.argv) != 2:
@@ -71,16 +81,20 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
 
     with open(filename+'.metadata.json') as fh:
         metadata = json.loads(fh.read())
-        metadata['benchmark'] = benchmark
+        metadata['benchmark'] = benchmark # add these next 3 items to the metadata
         metadata['iteration'] = iteration
         metadata['monitor_type'] = monitor_type
 
+    result = {}
+    result['metadata'] = metadata
+
+    result['memory'] = dict()
+    result['memory']['jraplon']  = memory_data(result['metadata']['benchmark'], result['metadata']['iteration'], result['metadata']['monitor_type'])
+    result['memory']['jraploff'] = memory_data(result['metadata']['benchmark'], result['metadata']['iteration'], 'nojrapl')
+
+
     data = pd.read_csv(filename+'.csv')
     filter_zero_columns(data)
-
-    result = {}
-
-    result['metadata'] = metadata
 
     result['persocket'] = dict()
     num_sockets = max(data['socket'])
@@ -103,13 +117,15 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
             result['persocket'][socket][powd] = dict()
             #result['persocket'][socket][powd]['zero-intervals'] = zero_intervals(energy)
             result['persocket'][socket][powd]['energy-per-sample'] = dict()
-            result['persocket'][socket][powd]['energy-per-sample']['raw'] = energy
+            #result['persocket'][socket][powd]['energy-per-sample']['raw'] = energy
+            result['persocket'][socket][powd]['energy-per-sample']['num_samples'] = len(energy)
             result['persocket'][socket][powd]['energy-per-sample']['avg'] = statistics.mean(energy)
             result['persocket'][socket][powd]['energy-per-sample']['stdev'] = statistics.stdev(energy)
 
         time = diff_list(timestamps)
         result['persocket'][socket]['time-between-samples'] = {}
-        result['persocket'][socket]['time-between-samples']['raw'] = time
+        #result['persocket'][socket]['time-between-samples']['raw'] = time
+        result['persocket'][socket]['time-between-samples']['num_samples'] = len(time)
         result['persocket'][socket]['time-between-samples']['avg'] = statistics.mean(time)
         result['persocket'][socket]['time-between-samples']['stdev'] = statistics.stdev(time)
             
