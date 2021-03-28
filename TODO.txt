@@ -1,14 +1,10 @@
 
 << Have done by next week ## wednesday #:
-	get 2 socket support down on jolteon -- like just the simple 1 string solution instead of breaking the string into 2 pieces when processing AsyncEnergyMonitor data
-		make async monitors writeToFile or lastKSamples as multisocket things instead of breaking it up into per-socket things for each sample
-	Implement some of the small, easily doable 'jRAPL improvements' that you came up with during the hackathon (like add a getter for timestamp)
-	collect graphs on the dacapo things @ 0.00ms sampling rate
-		avg nonero energy increase
-		zero intervals
-		time between nonzero reading
-		number of samples collected
-		(someday) -- memory footprint of Cside implementations vs javaside implementations
+	graph aggregated min, max, avg, std of memory.
+	graph jmh's time-each-sample thing
+<< Near future:
+	in Java, assess the memory of an object -- to compare between footprint of Object Sample and Primitive Sample
+
 
 
 Update the UML
@@ -17,17 +13,6 @@ IDEA for AsyncMonitor: set a maxCapacityUntilDump and when arraylist gets that f
 like you can have a second thread monitoring the capacity and then dumping as necessary. idk if it's a problem to implicitly spawn a second
 thread. there might be a conventional method to deal with things growing in memory too often.
 
-
-Make sure Java code is neat and well documented (at least the already written documentation is up to date),
-	since we're pretty much done refactoring the core utilities, so it's important for it to be legible for presenting it
-
-for AsyncMonitor experiments, add another info thing youre tracking for 'number of microseconds between nonzero readings'
-  and make that a third plot for each dram/core/gpu/pkg (again, best to do it all in one fig
-  of 4 subplots)
-
-run thread experiments with 5 and 10 and 20 ms delay
-
 make the AsyncMonitor run a set number of operations   instead of start/stop wait loop
-make the AsyncMonitor run a set number of milliseconds instead of start/stop wait loop
 
 "timer" implemntation on the C side -- could make the sleep_milliseconds() function more accurate
