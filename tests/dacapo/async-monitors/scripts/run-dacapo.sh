@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function usage() {
-	echo "usage: $1 <benchmark> <monitoring memory? true|false> <iterations> <warmups> <monitorType> <result directory name>"
+	echo "usage: $1 <benchmark> <monitoring energy? true|false> <iterations> <warmups> <monitorType> <result directory name>"
 	echo "monitorType = java|c-linklist|c-dynamicarray"
 	exit 1
 }
@@ -14,7 +14,7 @@ classpath="$dacapo_jar:$jRAPL_jar:."
 [ $# != 6 ] && usage $0 $@
 
 benchmark=$1
-monitoringMemory=$2
+monitoringEnergy=$2
 iterations=$3
 warmups=$4
 monitorType=$5
@@ -22,7 +22,7 @@ resultDir=$6
 
 #rm -rf $resultDir && mkdir $resultDir
 
-sudo java -DmonitoringMemory=$monitoringMemory -Dwarmups=$warmups \
+sudo java -DmonitoringEnergy=$monitoringEnergy -Dwarmups=$warmups \
 			-DmonitorType=$monitorType -DresultDir=$resultDir \
 			-cp $classpath Harness \
 			$benchmark -c $mycallback -n $iterations

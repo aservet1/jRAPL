@@ -11,25 +11,24 @@ function usage() {
 
 iterations=15
 warmups=5
-resultDirBase=$1
+resultDir=$1
 
-rm -rf $resultDirBase ${resultDirBase}_MEMORY && mkdir $resultDirBase ${resultDirBase}_MEMORY
+#rm -rf $resultDirBase ${resultDirBase}_MEMORY && mkdir $resultDirBase ${resultDirBase}_MEMORY
+rm -rf $resultDir && mkdir $resultDir
 
 benchmarks=$(sed 's/#.*$//g' all-benchmarks.txt)
-#echo $benchmarks
 for benchmark in $benchmarks
 do
 	for monitorType in c-linklist java c-dynamicarray
 	do
-		for monitoringMemory in 'true' 'false'
+		for monitoringEnergy in 'true' 'false'
 		do
-			[ $monitoringMemory = 'true' ] && \
-				resultDir="${resultDirBase}_MEMORY" || \
-				resultDir="${resultDirBase}"
-
-			echo "@@@ Monitoring memory: $monitoringMemory @@@"
+			#[ $monitoringEnergy = 'true' ] && \
+			#	resultDir="${resultDirBase}_MEMORY" || \
+			#	resultDir="${resultDirBase}"
+			echo "@@@ Monitoring memory: $monitoringEnergy @@@"
 			scripts/run-dacapo.sh \
-				$benchmark $monitoringMemory $iterations \
+				$benchmark $monitoringEnergy $iterations \
 				$warmups $monitorType $resultDir
 		done
 	done
