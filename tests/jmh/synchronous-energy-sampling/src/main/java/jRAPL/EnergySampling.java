@@ -54,6 +54,9 @@ public class EnergySampling {
     }
 
 	@Benchmark
+	@Warmup(iterations = 1)
+	@Fork(1)
+	@Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeNativeGetSample(MyState state, Blackhole b) {
@@ -61,6 +64,9 @@ public class EnergySampling {
 	}
 
 	@Benchmark
+	@Warmup(iterations = 1)
+	@Fork(1)
+	@Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeGetSample(MyState state, Blackhole b) {
@@ -68,6 +74,9 @@ public class EnergySampling {
 	}
 	
 	@Benchmark
+	@Warmup(iterations = 1)
+	@Fork(1)
+	@Measurement(iterations = 1)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeGetPrimitiveSample(MyState state, Blackhole b) {
