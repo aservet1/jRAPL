@@ -34,7 +34,14 @@ public class AsyncMemoryMonitor implements Runnable {
 
 	public void run() {
 		while(!exit) {
-			samples.add(memoryUsed());
+			long m = memoryUsed();
+			if (m >= 0) { //@TODO: for some whacky reason, we get a negative value occasionally.
+						  //this happened about 90 out of the last 9374973 or so times we ran
+						  // it, so we're just going to discard them. however, might be good to
+						  // figure out why that's happening and if it means the monitoring method
+						  // is untrustworthy
+				samples.add(memoryUsed());
+			}
 			try {
 				Thread.sleep(samplingRate);
 			} catch (Exception e) { }
@@ -119,12 +126,8 @@ public class AsyncMemoryMonitor implements Runnable {
 										? new OutputStreamWriter(System.out)
 										: new FileWriter(new File(fileName))
 									);
-			writer.write("{\"samples\":[");
-			for (int i = 0; i < samples.size()-1; i++) {
-				writer.write(String.format("%d,", samples.get(i)));
-			} writer.write(Long.toString(samples.get(samples.size()-1)));
-			writer.write(String.format("],\"lifetime\":%d,\"numSamples\":%d, \"samplingRate\": %d }",
-										durationToUsec(getLifetime()),samples.size(),samplingRate)); //@TODO maybe have a less ugly, more modular way of generating the JSON string
+			writer.write(String.format("{\"samples\":%s,\"lifetime\":%d,\"num_samples\":%d, \"sampling_rate\": %d }", // snake_case because output is most likely to be parsed by python, so going with those conventions
+						samples.toString(), durationToUsec(getLifetime()), samples.size(), samplingRate));
 			writer.flush();
 			if (fileName != null) writer.close();
 		} catch (IOException e) {
