@@ -146,29 +146,33 @@ public class ReadMSR {
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeReadDRAM(StateDRAM state) {
+	public void timeReadDRAM(StateDRAM state, Blackhole b) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.DRAM));
+		Util.busyWait(b);
 	}
 
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeReadPKG(StatePKG state) {
+	public void timeReadPKG(StatePKG state, Blackhole b) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.PKG));
+		Util.busyWait(b);
 	}
 
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeReadGPU(StateGPU state) {
+	public void timeReadGPU(StateGPU state, Blackhole b) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.GPU));
+		Util.busyWait(b);
 	}
 
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeReadCORE(StateCORE state) {
+	public void timeReadCORE(StateCORE state, Blackhole b) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.CORE));
+		Util.busyWait(b);
 	}
 
 }
