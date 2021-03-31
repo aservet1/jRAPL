@@ -170,7 +170,7 @@ public class JavaSideCalls {
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeProfileInit(ProfileInitState pis) throws InterruptedException {
+	public void timeProfileInit(ProfileInitState pis, Blackhole b) throws InterruptedException {
 		pis.setBefore();
 		EnergyManager.profileInit();
 		pis.setAfter();
@@ -181,7 +181,7 @@ public class JavaSideCalls {
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeProfileDealloc(ProfileDeallocState pds) throws InterruptedException{
+	public void timeProfileDealloc(ProfileDeallocState pds, Blackhole b) throws InterruptedException{
 		pds.setBefore();
 		EnergyManager.profileDealloc();
 		pds.setAfter();
