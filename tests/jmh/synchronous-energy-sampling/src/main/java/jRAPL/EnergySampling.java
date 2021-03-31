@@ -61,6 +61,7 @@ public class EnergySampling {
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeNativeGetSample(MyState state, Blackhole b) {
 		b.consume(EnergyMonitor.energyStatCheck());
+		
 	}
 
 	@Benchmark
