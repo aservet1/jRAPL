@@ -18,8 +18,8 @@ def aggr_stdev(sample_sizes, stdevs):
 def aggregate_memory_stats(memory_data):
 
     mem_stats = {}
-    mem_stats['avg']   = aggr_mean([dat['num_samples'] for dat in memory_data], [dat['avg'] for dat in memory_data])
-    mem_stats['stdev'] = aggr_stdev([dat['num_samples'] for dat in memory_data], [dat['avg'] for dat in memory_data])
+    mem_stats['avg']   = aggr_mean([dat['numSamples'] for dat in memory_data], [dat['avg'] for dat in memory_data])
+    mem_stats['stdev'] = aggr_stdev([dat['numSamples'] for dat in memory_data], [dat['avg'] for dat in memory_data])
     mem_stats['global_min'] = min( [ dat['min'] for dat in memory_data] )
     mem_stats['global_max'] = max( [ dat['max'] for dat in memory_data] )
     mem_stats['avg_min'] = statistics.mean( [ dat['min'] for dat in memory_data ] )
@@ -67,7 +67,7 @@ for bench in benchmarks:
 
         aggregated['metadata'] = data[0]['metadata'] # copy over the first [metadata] block to keep common fields, over-write the aggregated fields
         aggregated['metadata']['lifetime'] = statistics.mean([ dat['metadata']['lifetime'] for dat in data ])
-        aggregated['metadata']['numSamples'] = statistics.mean([ dat['metadata']['num_samples'] for dat in data ])
+        aggregated['metadata']['numSamples'] = statistics.mean([ dat['metadata']['numSamples'] for dat in data ])
         aggregated['metadata']['iteration'] = 'AGGREGATE'
 
         aggregated['memory'] = {}
