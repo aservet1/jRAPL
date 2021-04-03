@@ -9,6 +9,8 @@ function usage() {
 
 [ $# != 1 ] && usage $0
 
+make
+
 iterations=15
 warmups=5
 resultDir=$1
