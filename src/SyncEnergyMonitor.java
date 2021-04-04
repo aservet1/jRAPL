@@ -23,6 +23,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		String energyString = EnergyMonitor.energyStatCheck(socket);
 		Instant birthday = Instant.now();
 		double[] statsArray = EnergyStringParser.toPrimitiveArray(energyString);
+		System.out.println(Arrays.toString(statsArray));
 		return new EnergyStats(socket, statsArray, birthday);
 	}
 

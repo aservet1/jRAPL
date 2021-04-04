@@ -63,9 +63,10 @@ public final class ArchSpec {
 		//s += "readingDRAM: " + readingDRAM + "\n";
 		//s += "readingGPU: " + readingGPU + "\n";
 		s += "NUM_SOCKETS: " + NUM_SOCKETS + "\n";
+		s += "NUM_STATS_PER_SOCKET: " + NUM_STATS_PER_SOCKET + "\n";
 		s += "RAPL_WRAPAROUND: " + RAPL_WRAPAROUND + "\n";
 		s += "CPU_MODEL: " + Integer.toHexString(CPU_MODEL) + "\n";
-		s += "CPU_MODEL_NAME: " + CPU_MODEL_NAME;
+		s += "CPU_MODEL_NAME: " + CPU_MODEL_NAME + "\n";
 		s += "ENERGY_STATS_STRING_FORMAT: " + ENERGY_STATS_STRING_FORMAT;
 		return s;
 	}

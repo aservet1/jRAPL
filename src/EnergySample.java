@@ -1,5 +1,7 @@
 package jrapl;
 
+import java.util.Arrays;
+
 import java.time.Instant;
 import java.time.Duration;
 
@@ -80,10 +82,11 @@ public abstract class EnergySample
 	}
 	
 	public String dump() {
-		
+		System.out.println(Arrays.toString(stats));	
 		String joinedStats = new String();
 		int i = 0;
-		for (; i < stats.length-1; i++) joinedStats += String.format("%4f", stats[i]) + ",";
+		for (; i < stats.length-1; i++)
+			joinedStats += String.format("%4f", stats[i]) + ",";
 		joinedStats += String.format("%4f",stats[i]);
 
 		return String.join(
