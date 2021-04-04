@@ -5,14 +5,16 @@
 #include <jni.h>
 #include "EnergyStats.h"
 
-int ProfileInit();
-void EnergyStatCheck(EnergyStats stats_per_socket[]);
+#define ALL_SOCKETS 0 // requesting reading for socket 0 means requesting readings for all sockets
+
+void ProfileInit();
+void EnergyStatCheck(EnergyStats stats_per_socket[], int whichSocket);
 void ProfileDealloc();
 
-jint Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls);
-jint Java_jrapl_ArchSpec_GetSocketNum(JNIEnv *env, jclass jcls);
-jint Java_jrapl_ArchSpec_DramOrGpu(JNIEnv * env, jclass jcls);
-jstring Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *env, jclass jcls);
-void Java_jrapl_JRAPL_ProfileDealloc(JNIEnv * env, jclass jcls);
+void Java_jrapl_EnergyManager_profileInit(JNIEnv *env, jclass jcls);
+jint Java_jrapl_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls);
+jint Java_jrapl_ArchSpec_dramOrGpu(JNIEnv * env, jclass jcls);
+jstring Java_jrapl_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls, jint whichSocket);
+void Java_jrapl_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls);
 
 #endif //CPUSCALER_H

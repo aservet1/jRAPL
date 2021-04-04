@@ -1,33 +1,55 @@
 #include <stdio.h>
-#include <unistd.h> 
+#include <unistd.h>
+#include <stdlib.h>
+
+#include "EnergyStats.h"
 #include "CPUScaler.h"
 #include "AsyncEnergyMonitorCSide.h"
+#include "arch_spec.h"
 
-/////////////////////// \\\\\\\\\\\\\\\\\\\\|
- ///  DO NOT DELETE WHAT IS IN THIS     \\\ |
- ///  COMMENT SECTION SAVE IT TO THE    \\\ |
- ///  JAVA THREAD TEST DRIVER FILE WHEN \\\ |
- ///  YOU GET THE OPPORTUNITY           \\\ |
-/////////////////////// \\\\\\\\\\\\\\\\\\\\|
-
-void run_cthread(int samplingRate, int argc, const char* argv[])
+void sleep_print(int seconds)
 {
-	int iterations = atoi(argv[1]);
-
-	pthread_t thread;	
-	AsyncEnergyMonitor* collector = newAsyncEnergyMonitor(samplingRate, thread);
-	start(collector);
-	sleep(5);
-	stop(collector);
-	writeToFile(collector, (argc>1)?argv[1]:NULL );
-	freeAsyncEnergyMonitor(collector);
-
+	for (int s = 1; s <= seconds; s++) {
+		printf("%d\n",s);
+		sleep(1);
+	}
 }
-/////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 int main(int argc, const char* argv[])
 {
 	ProfileInit();
-	run_cthread(100,argc,argv);
+
+	//EnergyStats stats[getSocketNum()];
+	//EnergyStatCheck(stats,1);
+	//char ener_string[512];
+	//energy_stats_to_string(stats[0],ener_string);
+	//printf("%s\n",ener_string);
+	
+	//AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,DYNAMIC_ARRAY_STORAGE);
+	AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,LINKED_LIST_STORAGE);
+	start(m);
+	sleep_print(3);
+	//sleep(5);
+	stop(m);
+	writeToFile(m,NULL);
+
+	int k = 7;
+	EnergyStats* lastk = (EnergyStats*)malloc(sizeof(EnergyStats)*k);
+	//EnergyStats lastk[k];
+
+	printf("lastk pre-init: %p\n",lastk);
+	lastKSamples(k,m,lastk);
+	printf("lastk pos-init: %p\n",lastk);
+
+	printf(":)\n --\n");
+	for (int i = 0; i < k; i++) {
+		char ener_string[512];
+		energy_stats_csv_string(lastk[i],ener_string);
+		printf("%s\n",ener_string);
+	}
+
+	free(lastk); lastk = NULL;
+	freeAsyncEnergyMonitor(m);
+
 	ProfileDealloc();
 }

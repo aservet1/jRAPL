@@ -16,13 +16,13 @@
 
 #define MSR_DRAM_ENERGY_UNIT 0.000015
 
-static int architecture_category; //TODO - get better name for this variable
+static int power_domains_supported;
 static uint32_t cpu_model;
 static rapl_msr_unit rapl_unit;
 static rapl_msr_parameter *parameters;
 static int *fd;
 static uint64_t num_pkg;
-
+static int wraparound_energy = -1;
 
 rapl_msr_unit get_rapl_unit()
 {
@@ -32,17 +32,15 @@ rapl_msr_unit get_rapl_unit()
 	return rapl_unit;
 }
 
-
-int ProfileInit()
+void ProfileInit()
 {
 	int i;
 	char msr_filename[BUFSIZ];
 	int core = 0;
-	int wraparound_energy;
 
-	num_pkg = getSocketNum();
+	num_pkg = getSocketNum(); 
 	cpu_model = get_cpu_model();
-	architecture_category = get_architecture_category(cpu_model);
+	power_domains_supported = get_power_domains_supported(cpu_model,NULL);
 	uint64_t num_pkg_thread = get_num_pkg_thread();
 
 	/*only two domains are supported for parameters check*/
@@ -59,99 +57,84 @@ int ProfileInit()
 
 	rapl_unit = get_rapl_unit();
 	wraparound_energy = get_wraparound_energy(rapl_unit.energy);
-	return wraparound_energy;
-}
-
-/** <Alejandro's Interpretation>
- *	Sets up an an energy profile.
- *	reads and stores CPU model, socketnum. calculates wraparound energy.
- *  the 'fd' array is an array of which msr regs. num msr regs is number of packages the computer has
- *  initializes the rapl unit (stuff holding the conversions to translate msr data sections into meaningful 'human-readable' stuff)
- */
-JNIEXPORT jint JNICALL Java_jrapl_JRAPL_ProfileInit(JNIEnv *env, jclass jcls) {
-
-	int wraparound_energy = ProfileInit();
-
-	return wraparound_energy;
-}
-
-/** <Alejandro's Interpretation>
- *	Return number of CPU sockets
- */
-JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_GetSocketNum(JNIEnv *env, jclass jcls) {
-	return (jint)getSocketNum(); 
-}
-
-JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_DramOrGpu(JNIEnv * env, jclass jcls) {
-	return get_architecture_category(get_cpu_model());
 }
 
 
-/** <Alejandro's Interpretation>
- *	Reads energy info from MSRs into EnergyStats structs. Fills an array of structs, one per socket 
- */
-void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg])
+static inline double read_Package(int socket)
 {
+	double result = read_msr(fd[socket], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
+	return (double) result * rapl_unit.energy;
+}
+static inline double read_Core(int socket)
+{
+	double result = read_msr(fd[socket], MSR_PP0_ENERGY_STATUS);
+	return (double) result * rapl_unit.energy;
+}
+static inline double read_Gpu(int socket)
+{
+	double result = read_msr(fd[socket],MSR_PP1_ENERGY_STATUS);
+	return (double) result * rapl_unit.energy;
+}
+static inline double read_Dram(int socket)
+{
+	double result = read_msr(fd[socket],MSR_DRAM_ENERGY_STATUS);
+	if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
+		return (double) result * MSR_DRAM_ENERGY_UNIT;
+	} else {
+		return (double) result * rapl_unit.energy;
+	}
+}
+
+void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg], int whichSocket)
+{
+	if (whichSocket > num_pkg || whichSocket < 0) {
+		fprintf(
+			stderr,
+			"ERROR: invalid socket requested to read for EnergyStatCheck: %d\n",
+			whichSocket
+		);
+		exit(1);
+	}
+
 	struct timeval timestamp;
-	double pkg[num_pkg];
-	double pp0[num_pkg]; //cpu
-	double pp1[num_pkg]; //gpu
-	double dram[num_pkg];
-	double result = 0.0;
 
-	for (int i = 0; i < num_pkg; i++) {
-		pkg[i] = -1; pp0[i] = -1; pp1[i] = -1; dram[i] = -1; //sentintel values for no energy read into them bc we only read one of dram or gpu
+	int start = whichSocket == ALL_SOCKETS ? 0 : whichSocket-1;
+	for (int i = start; i < num_pkg; i++)
+	{
+		stats_per_socket[i].socket = i+1;
+		stats_per_socket[i].pkg = read_Package(i);
+		stats_per_socket[i].core = read_Core(i);
 
-		result = read_msr(fd[i], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
-		pkg[i] = (double) result * rapl_unit.energy;
+		switch(power_domains_supported) {
+			case READ_FROM_DRAM_AND_GPU:
+				stats_per_socket[i].dram = read_Dram(i);
+				stats_per_socket[i].gpu = read_Gpu(i);
+				break;
 
-		result = read_msr(fd[i], MSR_PP0_ENERGY_STATUS);
-		pp0[i] = (double) result * rapl_unit.energy;
-
-
-		switch(architecture_category) {
 			case READ_FROM_DRAM:
-				result = read_msr(fd[i],MSR_DRAM_ENERGY_STATUS);
-				if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
-					dram[i] =(double)result*MSR_DRAM_ENERGY_UNIT;
-				} else {
-					dram[i] =(double)result*rapl_unit.energy;
-				}
-
-				/*Insert socket number*/
-
+				stats_per_socket[i].dram = read_Dram(i);
+				stats_per_socket[i].gpu = -1;
 				break;
+
 			case READ_FROM_GPU:
-				result = read_msr(fd[i],MSR_PP1_ENERGY_STATUS);
-				pp1[i] = (double) result *rapl_unit.energy;
-
-
+				stats_per_socket[i].dram = -1;
+				stats_per_socket[i].gpu = read_Gpu(i);
 				break;
+
 			case UNDEFINED_ARCHITECTURE:
-				printf("Architecture not found\n");
+				fprintf(stderr,"ERROR: Architecture not found: %X\n",cpu_model);
 				break;
-
 		}
 
-		stats_per_socket[i].socket = i + 1;
-		stats_per_socket[i].pkg = pkg[i];
-		stats_per_socket[i].cpu = pp0[i];
-		stats_per_socket[i].gpu = pp1[i];
-		stats_per_socket[i].dram = dram[i];
 		gettimeofday(&timestamp,NULL);
 		stats_per_socket[i].timestamp = timestamp;
+
+		if (whichSocket != ALL_SOCKETS) break;
 	}
 
 }
 
-/** <Alejandro's Interpretation>
- *  Takes the energy info and packages it into a formatted string to pass to Java
- *    dram#gpu#cpu#pkg@
- *  Each socket will have the above format, multi socket machines will look like
- *    socket1@socket2@socket3@ etc
- *  Excludes the timestamp because Java will do its own timestamp upon receiving this information
- */
-static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info[512])
+static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info[512], int whichSocket)
 {
   	bzero(ener_info, 512);
 	int offset = 0;
@@ -159,32 +142,16 @@ static void copy_to_string(EnergyStats stats_per_socket[num_pkg], char ener_info
 	char buffer[100];
 	int buffer_len;
 
-	for(int i = 0; i < num_pkg; i++){
+	int start = whichSocket == ALL_SOCKETS ? 0 : whichSocket-1;
+	for (int i = start; i < num_pkg; i++) {
 		EnergyStats stats = stats_per_socket[i];
-		bzero(buffer, 100);
-		sprintf(buffer, "%f#%f#%f#%f@", stats.dram, stats.gpu, stats.cpu, stats.pkg);
+		energy_stats_to_string(stats, buffer);
 		buffer_len = strlen(buffer);
 		memcpy(ener_info + offset, buffer, buffer_len);
 		offset += buffer_len;
+
+		if (whichSocket != ALL_SOCKETS) break;
 	}
-}
-
-/** <Alejandro's Interpretation>
- * Read EnergyStats into EnergyStats struct (one struct per socket) and convert the structs
- * you have into a string to pass up to Java
- */
-JNIEXPORT jstring JNICALL Java_jrapl_EnergyCheckUtils_EnergyStatCheck(JNIEnv *env, jclass jcls) {
-	
-	char ener_info[512];
-	EnergyStats stats_per_socket[num_pkg];
-
-	EnergyStatCheck(stats_per_socket);
-	copy_to_string(stats_per_socket, ener_info);
-
-	jstring ener_string = (*env)->NewStringUTF(env, ener_info);
-  	
-	return ener_string;
-
 }
 
 void ProfileDealloc()
@@ -193,10 +160,33 @@ void ProfileDealloc()
 	free(parameters);
 }
 
-/** <Alejandro's Interpretation>
- * Free memory allocated by profile init function
- */
-JNIEXPORT void JNICALL Java_jrapl_JRAPL_ProfileDealloc(JNIEnv * env, jclass jcls) {
+JNIEXPORT void JNICALL Java_jrapl_EnergyManager_profileInit(JNIEnv *env, jclass jcls)
+{	
+	ProfileInit();
+}
+
+//assumes profile has already been inited. @TODO try to get this to be independent of profileinit and move it into arch_spec.c
+JNIEXPORT jint JNICALL Java_jrapl_ArchSpec_getWraparoundEnergy(JNIEnv* env, jclass jcls)
+{
+	return (jint)wraparound_energy;
+}
+
+JNIEXPORT jstring JNICALL Java_jrapl_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls, jint whichSocket) {
+	
+	char ener_info[512];
+	EnergyStats stats_per_socket[num_pkg];
+
+	EnergyStatCheck(stats_per_socket, whichSocket);
+	copy_to_string(stats_per_socket, ener_info, whichSocket);
+	
+	
+	jstring ener_string = (*env)->NewStringUTF(env, ener_info);
+  	
+	return ener_string;
+
+}
+
+JNIEXPORT void JNICALL Java_jrapl_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls) {
 
 	ProfileDealloc();
 

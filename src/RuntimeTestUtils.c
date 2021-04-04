@@ -19,7 +19,7 @@ static int* fd;
 
 JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_InitCSideTiming(JNIEnv* env, jclass jcls, jint power_domain){
 	num_pkg = getSocketNum();
-	dram_or_gpu = get_architecture_category(get_cpu_model());
+	dram_or_gpu = get_power_domains_supported(get_cpu_model(),NULL);
 	fd = (int*)malloc(sizeof(int)*num_pkg);
 	char msr_filename[BUFSIZ];
 	for (int i = 0; i < num_pkg; i++) {
@@ -34,7 +34,7 @@ JNIEXPORT void JNICALL Java_jrapltesting_RuntimeTestUtils_DeallocCSideTiming(JNI
 JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeProfileInit(JNIEnv* env, jclass jcls){
 
 	STARTSTAMP;
-	Java_jrapl_JRAPL_ProfileInit(env, jcls);
+	Java_jrapl_EnergyManager_profileInit(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
@@ -42,15 +42,15 @@ JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeProfileInit(J
 JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeGetSocketNum(JNIEnv* env, jclass jcls){
 
 	STARTSTAMP;
-	Java_jrapl_ArchSpec_GetSocketNum(env, jcls);
+	Java_jrapl_ArchSpec_getSocketNum(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
 
-JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls){
+JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls, jint whichSocket){
 
 	STARTSTAMP;
-	Java_jrapl_EnergyCheckUtils_EnergyStatCheck(env, jcls);
+	Java_jrapl_EnergyMonitor_energyStatCheck(env, jcls, whichSocket);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
@@ -58,14 +58,14 @@ JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeEnergyStatChe
 JNIEXPORT jlong JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeProfileDealloc(JNIEnv* env, jclass jcls){
 
 	STARTSTAMP;
-	Java_jrapl_JRAPL_ProfileDealloc(env, jcls);
+	Java_jrapl_EnergyManager_profileDealloc(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
 
 #define DRAM 1
 #define GPU 2
-#define CPU 3
+#define CORE 3
 #define PKG 4
 
 #define RETURN_EMPTY_ARRAY						\
@@ -94,7 +94,7 @@ JNIEXPORT jlongArray JNICALL Java_jrapltesting_RuntimeTestUtils_usecTimeMSRRead(
 			}
 			which_msr = MSR_PP1_ENERGY_STATUS;
 			break;
-		case CPU:
+		case CORE:
 			which_msr = MSR_PP0_ENERGY_STATUS;
 			break;
 		case PKG:

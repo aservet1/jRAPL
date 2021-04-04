@@ -1,29 +1,32 @@
 package jrapl;
 
+import java.util.Arrays;
+
 import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.io.FileWriter;
 
-/** <h1> DOCUMENTATION OUT OF DATE </h1>
-*	Reads and stores sytem energy consumption in a background thread.
-*	<br>Meant to record the progression of energy consumption of a program run in the main thread.
-*	<br>Spawns a therad between <code>this.start()</code> and <code>this.stop()</code>.
-*	<br>Every individual energy sample is the energy consumed (joules) over the course of a set millisecond sampling rate
-*	<br>Energy read from three power domains: DRAM or GPU (depending on CPU model), CPU core, CPU package
-*/
-public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
+import java.time.Instant;
+import java.time.Duration;
+
+public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Runnable
 {
-	private ArrayList<EnergyDiff> samples; 
+	private ArrayList<String> samples; 
 	private int samplingRate; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
+
+	protected final ArrayList<Instant> timestamps; //TODO -- decide if you want to have a boolean that enables whether or not you do want to collect timestamps
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1> Initializes sample collector with a default sampling rate setting of 10 milliseconds */
 	public AsyncEnergyMonitorJavaSide()
 	{
 		samplingRate = 10;
-		samples = new ArrayList<EnergyDiff>();
+		timestamps = new ArrayList<Instant>();
+		samples = new ArrayList<String>();
 	}
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
@@ -33,7 +36,8 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	public AsyncEnergyMonitorJavaSide(int s)
 	{
 		samplingRate = s;
-		samples = new ArrayList<EnergyDiff>();
+		timestamps = new ArrayList<Instant>();
+		samples = new ArrayList<String>();
 	}
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
@@ -45,11 +49,11 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	*/	
 	public void run()
 	{
-		while (!exit)
-		{
-			EnergyDiff[] diffs = readSample();
-			for (EnergyDiff d : diffs)
-				samples.add(d);
+		while (!exit) {
+			String energyString = EnergyMonitor.energyStatCheck(0);
+			samples.add(energyString);
+			timestamps.add(Instant.now());
+			try { Thread.sleep(samplingRate); } catch (Exception e) {}
 		}
 	}
 
@@ -59,6 +63,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	*/
 	public void start()
 	{
+		super.start();
 		t = new Thread(this);
 		t.start();
 	}
@@ -68,6 +73,7 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	*/
 	public void stop()
 	{
+		super.stop();
 		exit = true;
 		try {
 			 t.join();
@@ -83,36 +89,49 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	*	<br>Call this if you intend to reuse the same object for energy collection after already using it.
 	*	<br>Clears out the current list of samples stored in the object.
 	*/
-	public void reInit()
+	public void reset()
 	{
+		super.reset();
 		exit = false;
 		samples.clear();
+		timestamps.clear();
 	}
 
-	/** <h1> DOCUMENTATION OUT OF DATE </h1>
-	*	Returns K most recent stored samples. Each samples is a double[] of the form
-	*	<br>[dram/gpu energy, core energy, package energy].
-	*	<br>If K is greater than the amount of samples, returns all samples
-	*	@param k Number of most recent samples
-	*	@return An array of the K most recent samples.
-	*/
-	public EnergyDiff[] getLastKSamples(int k)
+	public String[] getLastKSamples(int k) 
 	{
 		int start = samples.size() - k;
-		int array_index = 0;
+		int arrayIndex = 0;
 
 		if (start < 0) {
 			start = 0;
 			k = samples.size();
 		}
 		
-		EnergyDiff[] samples_array = new EnergyDiff[k];
-
+		String[] samplesArray = new String[k];
 		for (int i = start; i < samples.size(); i++)
-			samples_array[array_index++] = samples.get(i);
-		return samples_array;
+			samplesArray[arrayIndex++] = samples.get(i);
+		
+		return samplesArray;
 	}
-	
+
+	public Instant[] getLastKTimestamps(int k) 
+	{
+		int start = timestamps.size() - k;
+		int arrayIndex = 0;
+		if (start < 0) {
+			start = 0;
+			k = timestamps.size();
+		}
+
+		Instant[] timestampsArray = new Instant[k];
+
+		for (int i = start; i < timestamps.size(); i++)
+			timestampsArray[arrayIndex++] = timestamps.get(i);
+
+		return timestampsArray;
+
+	}
+
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
 	*	Gets the sampling rate for the thread to collect samples.
 	*	@return The sampling rate (in milliseconds)
@@ -148,11 +167,32 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	*/
 	public void writeToFile(String fileName)
 	{
-		FileWriter writer = null;
+		BufferedWriter writer = null;
 		try {
-			writer = new FileWriter(new File(fileName));
-			writer.write(this.toString());
-			writer.close();
+			writer = new BufferedWriter ( // write to stdout if filename is null
+									(fileName == null)
+										? new OutputStreamWriter(System.out)
+										: new FileWriter(new File(fileName))
+									);
+
+			writer.write("samplingRate: " + samplingRate + " milliseconds\n");
+			writer.write("socket,"+ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]+",timestamp(usec since epoch)\n");
+			for (int i = 0; i < samples.size(); i++) {
+				String energyString = samples.get(i);
+				String[] perSocketStrings = energyString.split("@");
+				long usecs = Duration.between(Instant.EPOCH, timestamps.get(i)).toNanos()/1000;
+				for (int _i = 0; _i < perSocketStrings.length; _i++) {
+					int socket = _i+1;
+					writer.write(
+						Integer.toString(socket) + "," 
+						+ perSocketStrings[_i] + "," 
+						+ Long.toString(usecs) + "\n"
+					);
+				}
+			}
+			writer.flush();
+			if (fileName != null)
+				writer.close(); // only close if you were writing to an actual file, otherwise you would be closing System.out
 		} catch (IOException e) {
 			System.out.println("error writing " + fileName);
 			e.printStackTrace();
@@ -160,40 +200,35 @@ public class AsyncEnergyMonitorJavaSide extends JRAPL implements Runnable
 	}
 
 	/** <h1> DOCUMENTATION OUT OF DATE </h1>
-	*	CSV format of all data collected. First two lines are the sampling rate and a header describing which power domain
-	*	each column's energy samples represent
-	*	<br>Format:
-	*	<br>  samplingRate: xxx (ms)
-	*	<br>  socket,dram,gpu,cpu,pkg
-	*	<br>  x,xxx,xxx,xxx,xxx
-	*	<br>  x,xxx,xxx,xxx,xxx
-	*	<br>  x,xxx,xxx,xxx,xxx
-	*	<br>  x,xxx,xxx,xxx,xxx
-	*	<br>	... et cetera ...
-	*	<br>  note that only one of "dram" and "gpu" will be listed for the first column, depending on your CPU model
-		<br>  each entry per line is tab delimited
-	*	@return Human readable interpretation of the data stored in the object
 	*/
 	public String toString()
 	{
 		String s = "";
 		s += "samplingRate: " + samplingRate + " milliseconds\n";
-		s += "socket,dram,gpu,cpu,pkg,timestamp,elapsed-time\n";
-		for (EnergyDiff d : samples)
-			s += d.commaSeparated() + "\n";
+		s += "lifetime: " + Long.toString(getLifetime().toMillis()) + " milliseconds\n";
+		s += "number of samples: " + Integer.toString(getNumReadings()) + "\n";
+
 		return s;
 	}
-	
-	private EnergyDiff[] readSample()
-	{
-		EnergyStats[] before = EnergyStats.get();
-		try { Thread.sleep(samplingRate); } catch (Exception e) {} //park support or lock support
-		EnergyStats[] after  = EnergyStats.get();
-		EnergyDiff[] sample = new EnergyDiff[NUM_SOCKETS];
-		for (int i = 0; i < sample.length; i++){
-			sample[i] = after[i].difference(before[i]);
-		}
-		return sample;
-	}
 
+	public static void main(String[] args) throws InterruptedException
+	{
+		int rate = (args.length > 0) ? Integer.parseInt(args[0]) : 10;
+		AsyncEnergyMonitorJavaSide aemonj = new AsyncEnergyMonitorJavaSide(rate);
+		aemonj.init();	
+	
+		aemonj.start();
+		Thread.sleep(3000);
+		aemonj.stop();
+
+		System.out.println(aemonj);
+		//aemonj.writeToFile("tmep");
+		int k = 5;
+		System.out.println(Arrays.deepToString(aemonj.getLastKSamples_Arrays(k)));
+		System.out.println();
+		System.out.println(Arrays.toString(aemonj.getLastKTimestamps(k)));
+
+		aemonj.dealloc();
+	}
+	
 }

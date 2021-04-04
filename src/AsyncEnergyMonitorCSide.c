@@ -6,12 +6,16 @@
 #include <assert.h>
 #include <errno.h>
 #include <jni.h>
-#include <sys/time.h>
+
 #include "EnergyStats.h"
 #include "AsyncEnergyMonitorCSide.h"
 #include "CPUScaler.h"
 #include "arch_spec.h"
 
+#include "CSideDataStorage.h"
+
+#define USING_DYNAMIC_ARRAY	monitor->storageType == DYNAMIC_ARRAY_STORAGE
+#define USING_LINKED_LIST	monitor->storageType == LINKED_LIST_STORAGE
 
 int sleep_millisecond(long msec){
 	struct timespec ts;
@@ -33,128 +37,197 @@ int sleep_millisecond(long msec){
 	return res;
 }
 
-static EnergySampleList* newEnergySampleList(unsigned long long capacity)
+AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, int storageType)
 {
-	EnergySampleList* list = (EnergySampleList*)malloc(sizeof(EnergySampleList));
-	list->capacity = capacity;
-	list->nItems = 0;
-	list->items = (EnergyStats*)malloc(sizeof(EnergyStats)*capacity);
-	return list;
-}
+	AsyncEnergyMonitor* monitor = (AsyncEnergyMonitor*)malloc(sizeof(AsyncEnergyMonitor));
 
-
-AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, pthread_t thread)
-{
-	AsyncEnergyMonitor* collector = (AsyncEnergyMonitor*)malloc(sizeof(AsyncEnergyMonitor));
-	collector->thread = thread;
-	collector->exit = false;
-	collector->samplingRate = samplingRate;
-	collector->samples = newEnergySampleList(16); 
-	return collector;
-}
-
-static void freeEnergySampleList(EnergySampleList* list)
-{
-	free(list->items);
-	free(list);
-}
-
-void freeAsyncEnergyMonitor(AsyncEnergyMonitor* collector)
-{
-	freeEnergySampleList(collector->samples);
-	free(collector);
-}
-
-static void storeEnergySample(AsyncEnergyMonitor *collector, EnergyStats stats)
-{
-	EnergySampleList *samples = collector->samples;
-	if (samples->nItems >= samples->capacity)
-	{
-		samples->capacity *= 2;
-		samples->items = realloc(samples->items, samples->capacity*sizeof(EnergyStats));
-		assert(samples->items != NULL);
+	pthread_t thread;
+	monitor->thread = thread;
+	monitor->exit = false;
+	monitor->samplingRate = samplingRate;
+	monitor->storageType = storageType;
+	if (USING_DYNAMIC_ARRAY) {
+		monitor->samples_dynarr = newDynamicArray(16);
+		monitor->samples_linklist = NULL;
 	}
-	samples->items[samples->nItems++] = stats;
+	if (USING_LINKED_LIST) {
+		monitor->samples_dynarr = NULL;
+		monitor->samples_linklist = newLinkedList();
+	}
+	return monitor;
 }
 
-void* run(void* collector_param){
-	AsyncEnergyMonitor* collector = (AsyncEnergyMonitor*)collector_param;
+void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor)
+{
+	if (USING_DYNAMIC_ARRAY) {
+		freeDynamicArray(monitor->samples_dynarr);
+		monitor->samples_dynarr = NULL;
+	}
+	if (USING_LINKED_LIST) {
+		freeLinkedList(monitor->samples_linklist);
+		monitor->samples_linklist = NULL;
+	}
+	free(monitor);
+	monitor = NULL;
+}
+
+static void storeEnergySample(AsyncEnergyMonitor *monitor, EnergyStats stats)
+{
+	if (USING_DYNAMIC_ARRAY)
+		addItem_DynamicArray(monitor->samples_dynarr, stats);
+	if (USING_LINKED_LIST)
+		addItem_LinkedList(monitor->samples_linklist, stats);
+}
+
+void* run(void* monitor_arg)
+{
+	AsyncEnergyMonitor* monitor = (AsyncEnergyMonitor*)monitor_arg;
 
 	int sockets = getSocketNum();
-	EnergyStats before_stats[sockets];
-	EnergyStats after_stats[sockets];
+	EnergyStats stats[sockets];
 
-	while (!collector->exit)
+	while (!monitor->exit)
 	{
-		EnergyStatCheck(before_stats); 
-		sleep_millisecond(collector->samplingRate);
-		EnergyStatCheck(after_stats);
-
+		EnergyStatCheck(stats,ALL_SOCKETS); 
 		for (int i = 0; i < sockets; i++) {
-			EnergyStats diff = energyStatsSubtract(after_stats[i], before_stats[i]);
-			storeEnergySample(collector,diff);
+			storeEnergySample(monitor,stats[i]);
 		}
+		sleep_millisecond(monitor->samplingRate);
 	}
 	return NULL;
 }
 
-
-void start(AsyncEnergyMonitor *collector){
-	pthread_create(&(collector->thread), NULL, run, collector);
+void start(AsyncEnergyMonitor *monitor){
+	pthread_create(&(monitor->thread), NULL, run, monitor);
 }
 
-void stop(AsyncEnergyMonitor *collector){
-	collector->exit = true;
-	pthread_join(collector->thread,NULL);
+void stop(AsyncEnergyMonitor *monitor){
+	monitor->exit = true;
+	pthread_join(monitor->thread,NULL);
 }
 
-void reset(AsyncEnergyMonitor* collector){
-	collector->exit = false;
-	collector->samples->nItems = 0;
-}
-
-void writeToFile(AsyncEnergyMonitor *collector, const char* filepath){
-	FILE * outfile = (filepath) ? fopen(filepath,"w") : stdout;
-	
-	EnergyStats* items = collector->samples->items;
-	int nItems = collector->samples->nItems;
-	EnergyStats current;
-	fprintf(outfile,"samplingRate: %d milliseconds\n",collector->samplingRate);
-	fprintf(outfile,"socket,dram,gpu,cpu,pkg,timestamp seconds/microseconds\n");
-	for (int i = 0; i < nItems; i++) {
-		current = items[i];
-		fprintf(outfile,"%d,%f,%f,%f,%f,%ld/%ld\n", current.socket, current.dram, 
-				current.gpu, current.cpu, current.pkg, 
-				current.timestamp.tv_sec, current.timestamp.tv_usec);
+void reset(AsyncEnergyMonitor* monitor){
+	monitor->exit = false;
+	if (USING_DYNAMIC_ARRAY) {
+		freeDynamicArray(monitor->samples_dynarr);
+		monitor->samples_dynarr = newDynamicArray(16);
 	}
+	else if (USING_LINKED_LIST) {
+		freeLinkedList(monitor->samples_linklist);
+		monitor->samples_linklist = newLinkedList();
+	}
+}
+
+void writeToFile(AsyncEnergyMonitor *monitor, const char* filepath){
+	FILE * outfile = (filepath) ? fopen(filepath,"w") : stdout;
+
+	fprintf(outfile,"samplingRate: %d milliseconds\n",monitor->samplingRate);
+	fprintf(outfile,"socket,dram,gpu,core,pkg,timestamp,seconds/microseconds\n");
+	
+	if (USING_DYNAMIC_ARRAY)
+		writeToFile_DynamicArray(outfile, monitor->samples_dynarr);
+	if (USING_LINKED_LIST)
+		writeToFile_LinkedList(outfile, monitor->samples_linklist);
+
 	if (filepath) fclose(outfile);
 }
 
-/////////// JNI Calls Down Here /////////////
-/*
-static AsyncEnergyMonitor* jniCollector; //managed by JNI function calls
-static pthread_t* thread;
 
-JNIEXPORT void Java_jrapl_AsyncEnergyMonitorCSide_freeCollector(JNIEnv* env, jclass jcls)
-{
-	freeAsyncEnergyMonitor(jniCollector);
+// for some reason return_array needs to be allocated on the heap, passing a
+//  stack-allocated array copies everything into the array, but then alters
+//  the pointer to something that segfaults when you try to access it. but this
+//  fills and works just fine when it's heap-allocated
+//
+// Ok so sometimes it works fine when stack-allocated but still...leave this
+//  note here until you find out what's going on / how to prevent the issue
+//  from happening
+void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats* return_array) {
+
+	int nItems = (
+		(USING_DYNAMIC_ARRAY) ?
+		monitor->samples_dynarr->nItems : monitor->samples_linklist->nItems
+	);
+
+	int start = nItems-k;
+
+	if (start < 0) {
+		start = 0;
+		k = nItems;
+	}
+	
+	int returnArrayIndex = 0;
+
+	if (USING_DYNAMIC_ARRAY) {
+		for (int i = start; i < monitor->samples_dynarr->nItems; i++) {
+			return_array[returnArrayIndex++] = monitor->samples_dynarr->items[i];
+		}
+	}
+
+	if (USING_LINKED_LIST) { // turns out extracting lastK from this type of data structure is a but tricky...
+		LinkedList* list = monitor->samples_linklist;
+		// find which node contains last k'th element (the same as the start'th element)
+		LinkNode* current = list->head;
+		int current_upperbound = NODE_CAPACITY;
+		while (current_upperbound < start) {
+			current = current->next;
+			current_upperbound += NODE_CAPACITY;
+		}
+		// copy over the relevant parts of this node
+		current_upperbound = (current == list->tail) ? list->nItemsAtTail : NODE_CAPACITY;
+
+		for (int i = start % NODE_CAPACITY ; i < current_upperbound; i++) {
+			return_array[returnArrayIndex++] = current->items[i];
+		}
+		current = current->next;
+		while (current != NULL) {
+			current_upperbound = (current != list->tail)
+				? NODE_CAPACITY
+				: list->nItemsAtTail;
+			for ( int i = 0; i < current_upperbound; i++ ) {
+				return_array[returnArrayIndex++] = current->items[i];
+			}
+			current = current->next;
+		}
+	}
+	//printf("return_array at end of function: %p\n",return_array);
+
+	//if (USING_DYNAMIC_ARRAY) {
+	//	int start = monitor->samples_dynarr->nItems-k;
+	//	int arrayIndex = 0;
+
+	//	if (start < 0) {
+	//		start = 0;
+	//		k = monitor->samples_dynarr->nItems;
+	//	}
+
+	//	for (int i = start; i < monitor->samples_dynarr->nItems; i++)
+	//		return_array[arrayIndex++] = monitor->samples_dynarr->items[i];
+
+	//	return;
+
+	//}
+	//else if (USING_LINKED_LIST) {
+
+	//	int upperbound = NODE_CAPACITY;
+	//	LinkNode* current = monitor->samples_linklist->head;
+	//	while ( upperbound < k ) {
+	//		current = current->next;
+	//		upperBound += NODE_CAPACITY;
+	//	}	
+
+	//}
 }
 
-JNIEXPORT void Java_jrapl_AsyncEnergyMonitorCSide_startCollecting(JNIEnv* env, jclass jcls, jint samplingRate)
-{
-	printf("hello w0rld\n");
-	jniCollector = newAsyncEnergyMonitor(samplingRate, thread);
-	start(jniCollector);
-}
 
-JNIEXPORT void Java_jrapl_AsyncEnergyMonitorCSide_stopCollecting(JNIEnv* env, jclass jcls)
-{
-	stop(jniCollector);
-	printf("goodbye w0rld\n");
-}
 
-JNIEXPORT void Java_jrapl_AsyncEnergyMonitorCSide_writeToFile(JNIEnv* env, jclass jcls, jstring filePath)
-{
-	writeToFile(jniCollector, (const char*)filePath);
-}
-*/
+
+
+
+
+
+
+
+
+
+
+
