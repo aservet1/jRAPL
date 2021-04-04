@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"jrapl","l":"ArchSpec"},{"p":"jrapl","l":"AsyncEnergyMonitorCSide"},{"p":"jrapl","l":"AsyncEnergyMonitorJavaSide"},{"p":"jrapl","l":"EnergyCheckUtils"},{"p":"jrapl","l":"EnergyControlUtils"},{"p":"jrapl","l":"JRAPL"},{"p":"jrapl","l":"NativeUtils"},{"p":"jrapl","l":"PerfCheckUtils"}]

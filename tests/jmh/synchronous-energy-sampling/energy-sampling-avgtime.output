@@ -1,0 +1,180 @@
+# WARNING: JMH lock is ignored by user request, make sure no other JMH instances are running
+# JMH version: 1.27
+# VM version: JDK 11.0.9, OpenJDK 64-Bit Server VM, 11.0.9+11-Ubuntu-0ubuntu1.20.04
+# VM invoker: /usr/lib/jvm/java-11-openjdk-amd64/bin/java
+# VM options: -Djmh.ignoreLock=true
+# JMH blackhole mode: full blackhole + dont-inline hint
+# Warmup: 5 iterations, 10 s each
+# Measurement: 5 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: com.aservet.EnergySampling.testGetObjectSample
+
+# Run progress: 0.00% complete, ETA 00:16:40
+# Fork: 1 of 5
+# Warmup Iteration   1: 5.134 us/op
+# Warmup Iteration   2: 4.916 us/op
+# Warmup Iteration   3: 4.898 us/op
+# Warmup Iteration   4: 4.988 us/op
+# Warmup Iteration   5: 4.976 us/op
+Iteration   1: 4.954 us/op
+Iteration   2: 4.848 us/op
+Iteration   3: 4.731 us/op
+Iteration   4: 5.330 us/op
+Iteration   5: 4.691 us/op
+
+# Run progress: 10.00% complete, ETA 00:15:02
+# Fork: 2 of 5
+# Warmup Iteration   1: 5.676 us/op
+# Warmup Iteration   2: 5.830 us/op
+# Warmup Iteration   3: 7.250 us/op
+# Warmup Iteration   4: 4.851 us/op
+# Warmup Iteration   5: 4.707 us/op
+Iteration   1: 4.567 us/op
+Iteration   2: 13.633 us/op
+Iteration   3: 5.221 us/op
+Iteration   4: 4.685 us/op
+Iteration   5: 4.688 us/op
+
+# Run progress: 20.00% complete, ETA 00:13:22
+# Fork: 3 of 5
+# Warmup Iteration   1: 4.761 us/op
+# Warmup Iteration   2: 4.691 us/op
+# Warmup Iteration   3: 4.719 us/op
+# Warmup Iteration   4: 4.715 us/op
+# Warmup Iteration   5: 5.797 us/op
+Iteration   1: 6.846 us/op
+Iteration   2: 4.924 us/op
+Iteration   3: 4.722 us/op
+Iteration   4: 4.651 us/op
+Iteration   5: 7.983 us/op
+
+# Run progress: 30.00% complete, ETA 00:11:41
+# Fork: 4 of 5
+# Warmup Iteration   1: 8.079 us/op
+# Warmup Iteration   2: 4.771 us/op
+# Warmup Iteration   3: 9.676 us/op
+# Warmup Iteration   4: 4.999 us/op
+# Warmup Iteration   5: 5.520 us/op
+Iteration   1: 9.684 us/op
+Iteration   2: 11.469 us/op
+Iteration   3: 5.082 us/op
+Iteration   4: 6.031 us/op
+Iteration   5: 4.668 us/op
+
+# Run progress: 40.00% complete, ETA 00:10:01
+# Fork: 5 of 5
+# Warmup Iteration   1: 13.073 us/op
+# Warmup Iteration   2: 4.748 us/op
+# Warmup Iteration   3: 4.764 us/op
+# Warmup Iteration   4: 10.601 us/op
+# Warmup Iteration   5: 15.190 us/op
+Iteration   1: 6.606 us/op
+Iteration   2: 10.848 us/op
+Iteration   3: 4.673 us/op
+Iteration   4: 4.834 us/op
+Iteration   5: 5.380 us/op
+
+
+Result "com.aservet.EnergySampling.testGetObjectSample":
+  6.230 ±(99.9%) 1.885 us/op [Average]
+  (min, avg, max) = (4.567, 6.230, 13.633), stdev = 2.516
+  CI (99.9%): [4.345, 8.115] (assumes normal distribution)
+
+
+# JMH version: 1.27
+# VM version: JDK 11.0.9, OpenJDK 64-Bit Server VM, 11.0.9+11-Ubuntu-0ubuntu1.20.04
+# VM invoker: /usr/lib/jvm/java-11-openjdk-amd64/bin/java
+# VM options: -Djmh.ignoreLock=true
+# JMH blackhole mode: full blackhole + dont-inline hint
+# Warmup: 5 iterations, 10 s each
+# Measurement: 5 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: com.aservet.EnergySampling.testGetPrimitiveSample
+
+# Run progress: 50.00% complete, ETA 00:08:21
+# Fork: 1 of 5
+# Warmup Iteration   1: 5.280 us/op
+# Warmup Iteration   2: 7.173 us/op
+# Warmup Iteration   3: 5.073 us/op
+# Warmup Iteration   4: 5.016 us/op
+# Warmup Iteration   5: 5.042 us/op
+Iteration   1: 5.967 us/op
+Iteration   2: 5.449 us/op
+Iteration   3: 5.110 us/op
+Iteration   4: 5.619 us/op
+Iteration   5: 5.816 us/op
+
+# Run progress: 60.00% complete, ETA 00:06:41
+# Fork: 2 of 5
+# Warmup Iteration   1: 6.416 us/op
+# Warmup Iteration   2: 5.321 us/op
+# Warmup Iteration   3: 5.133 us/op
+# Warmup Iteration   4: 5.123 us/op
+# Warmup Iteration   5: 5.432 us/op
+Iteration   1: 6.492 us/op
+Iteration   2: 14.142 us/op
+Iteration   3: 14.333 us/op
+Iteration   4: 7.469 us/op
+Iteration   5: 5.311 us/op
+
+# Run progress: 70.00% complete, ETA 00:05:00
+# Fork: 3 of 5
+# Warmup Iteration   1: 5.361 us/op
+# Warmup Iteration   2: 6.596 us/op
+# Warmup Iteration   3: 5.186 us/op
+# Warmup Iteration   4: 5.243 us/op
+# Warmup Iteration   5: 5.234 us/op
+Iteration   1: 5.148 us/op
+Iteration   2: 5.389 us/op
+Iteration   3: 5.213 us/op
+Iteration   4: 8.355 us/op
+Iteration   5: 5.436 us/op
+
+# Run progress: 80.00% complete, ETA 00:03:20
+# Fork: 4 of 5
+# Warmup Iteration   1: 7.521 us/op
+# Warmup Iteration   2: 5.258 us/op
+# Warmup Iteration   3: 5.702 us/op
+# Warmup Iteration   4: 5.381 us/op
+# Warmup Iteration   5: 6.035 us/op
+Iteration   1: 5.920 us/op
+Iteration   2: 5.579 us/op
+Iteration   3: 5.418 us/op
+Iteration   4: 5.422 us/op
+Iteration   5: 6.191 us/op
+
+# Run progress: 90.00% complete, ETA 00:01:40
+# Fork: 5 of 5
+# Warmup Iteration   1: 5.800 us/op
+# Warmup Iteration   2: 5.454 us/op
+# Warmup Iteration   3: 5.407 us/op
+# Warmup Iteration   4: 8.642 us/op
+# Warmup Iteration   5: 6.041 us/op
+Iteration   1: 5.572 us/op
+Iteration   2: 8.055 us/op
+Iteration   3: 6.979 us/op
+Iteration   4: 8.553 us/op
+Iteration   5: 11.452 us/op
+
+
+Result "com.aservet.EnergySampling.testGetPrimitiveSample":
+  6.976 ±(99.9%) 1.971 us/op [Average]
+  (min, avg, max) = (5.110, 6.976, 14.333), stdev = 2.631
+  CI (99.9%): [5.005, 8.947] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:16:42
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                              Mode  Cnt  Score   Error  Units
+EnergySampling.testGetObjectSample     avgt   25  6.230 ± 1.885  us/op
+EnergySampling.testGetPrimitiveSample  avgt   25  6.976 ± 1.971  us/op

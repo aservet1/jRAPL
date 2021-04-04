@@ -1,0 +1,18 @@
+
+<< Have done by next week ## wednesday #:
+	graph aggregated min, max, avg, std of memory.
+	graph jmh's time-each-sample thing
+<< Near future:
+	in Java, assess the memory of an object -- to compare between footprint of Object Sample and Primitive Sample
+
+
+
+Update the UML
+
+IDEA for AsyncMonitor: set a maxCapacityUntilDump and when arraylist gets that full, start (another) thread to dump to file and clear out the current thing. to not puollute RAM too much. idk, maybe.
+like you can have a second thread monitoring the capacity and then dumping as necessary. idk if it's a problem to implicitly spawn a second
+thread. there might be a conventional method to deal with things growing in memory too often.
+
+make the AsyncMonitor run a set number of operations   instead of start/stop wait loop
+
+"timer" implemntation on the C side -- could make the sleep_milliseconds() function more accurate

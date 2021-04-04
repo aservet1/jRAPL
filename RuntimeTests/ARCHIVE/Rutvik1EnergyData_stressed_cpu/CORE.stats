@@ -1,9 +1,0 @@
-Average energy change per non-zero reading: 0.0025555558106460873
-Stdev of non-zero readings: 0.0006165358453318036
-Average num readings between non-zero readings: 1.4954208569360916
-Stdev of num of readings between non-zero readings: 1.7562128381327005
-Average time between non-zero readings: 100.84505776957053μ
-Stdev of time between non-zero readings: 73.83986482885774μ
-
-Total energy consumed: 102.40878800002065
-Total time taken: 4041164

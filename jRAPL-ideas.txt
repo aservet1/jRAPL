@@ -1,0 +1,2 @@
+jrapl ideas:
+	EnergySample.dumps() vs EnergySample.loads()

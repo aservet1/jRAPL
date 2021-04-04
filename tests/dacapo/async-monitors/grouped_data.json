@@ -1,0 +1,296 @@
+{
+	"avrora": {
+		"java": {
+			"avg_samples": 1158841.7,
+			"avg_lifetime": 27223.5
+		},
+		"c-linklist": {
+			"avg_samples": 742644,
+			"avg_lifetime": 30443.3
+		},
+		"c-dynamicarray": {
+			"avg_samples": 744138,
+			"avg_lifetime": 30543.7
+		}
+	},
+	"batik": {
+		"java": {
+			"avg_samples": 760679.6,
+			"avg_lifetime": 13529.2
+		},
+		"c-linklist": {
+			"avg_samples": 355010,
+			"avg_lifetime": 13133.5
+		},
+		"c-dynamicarray": {
+			"avg_samples": 349773.2,
+			"avg_lifetime": 12782.4
+		}
+	},
+	"biojava": {
+		"java": {
+			"avg_samples": 1445251.8,
+			"avg_lifetime": 25973
+		},
+		"c-linklist": {
+			"avg_samples": 620530.8,
+			"avg_lifetime": 23807.5
+		},
+		"c-dynamicarray": {
+			"avg_samples": 690463,
+			"avg_lifetime": 26581.1
+		}
+	},
+	"cassandra": {
+		"java": {
+			"avg_samples": 225516.3,
+			"avg_lifetime": 5096
+		},
+		"c-linklist": {
+			"avg_samples": 125618.8,
+			"avg_lifetime": 5116.1
+		},
+		"c-dynamicarray": {
+			"avg_samples": 127630.4,
+			"avg_lifetime": 5151.2
+		}
+	},
+	"eclipse": {
+		"java": {
+			"avg_samples": 1252401,
+			"avg_lifetime": 24433.6
+		},
+		"c-linklist": {
+			"avg_samples": 666442.4,
+			"avg_lifetime": 25304
+		},
+		"c-dynamicarray": {
+			"avg_samples": 708037,
+			"avg_lifetime": 26885.7
+		}
+	},
+	"fop": {
+		"java": {
+			"avg_samples": 61391.3,
+			"avg_lifetime": 1224.1
+		},
+		"c-linklist": {
+			"avg_samples": 34428.6,
+			"avg_lifetime": 1327.4
+		},
+		"c-dynamicarray": {
+			"avg_samples": 30437.6,
+			"avg_lifetime": 1173.5
+		}
+	},
+	"graphchi": {
+		"java": {
+			"avg_samples": 95907.3,
+			"avg_lifetime": 2143.6
+		},
+		"c-linklist": {
+			"avg_samples": 55065.2,
+			"avg_lifetime": 2193.5
+		},
+		"c-dynamicarray": {
+			"avg_samples": 57739.2,
+			"avg_lifetime": 2303.2
+		}
+	},
+	"h2": {
+		"java": {
+			"avg_samples": 1385391.3,
+			"avg_lifetime": 30068
+		},
+		"c-linklist": {
+			"avg_samples": 772958.4,
+			"avg_lifetime": 30641.3
+		},
+		"c-dynamicarray": {
+			"avg_samples": 772903.8,
+			"avg_lifetime": 30923
+		}
+	},
+	"h2o": {
+		"java": {
+			"avg_samples": 1959840.7,
+			"avg_lifetime": 40465
+		},
+		"c-linklist": {
+			"avg_samples": 1058328.4,
+			"avg_lifetime": 41029.8
+		},
+		"c-dynamicarray": {
+			"avg_samples": 1072377,
+			"avg_lifetime": 41382
+		}
+	},
+	"jme": {
+		"java": {
+			"avg_samples": 246282.1,
+			"avg_lifetime": 7122.5
+		},
+		"c-linklist": {
+			"avg_samples": 187336,
+			"avg_lifetime": 7493.7
+		},
+		"c-dynamicarray": {
+			"avg_samples": 190902.4,
+			"avg_lifetime": 7485.4
+		}
+	},
+	"jython": {
+		"java": {
+			"avg_samples": 625545.7,
+			"avg_lifetime": 10866.8
+		},
+		"c-linklist": {
+			"avg_samples": 258799,
+			"avg_lifetime": 9562.4
+		},
+		"c-dynamicarray": {
+			"avg_samples": 246795.2,
+			"avg_lifetime": 9359.4
+		}
+	},
+	"kafka": {
+		"java": {
+			"avg_samples": 263928,
+			"avg_lifetime": 5463.9
+		},
+		"c-linklist": {
+			"avg_samples": 130869.6,
+			"avg_lifetime": 5256.2
+		},
+		"c-dynamicarray": {
+			"avg_samples": 134193.6,
+			"avg_lifetime": 5469.6
+		}
+	},
+	"luindex": {
+		"java": {
+			"avg_samples": 75251.5,
+			"avg_lifetime": 1521.4
+		},
+		"c-linklist": {
+			"avg_samples": 37692.6,
+			"avg_lifetime": 1466.6
+		},
+		"c-dynamicarray": {
+			"avg_samples": 37707.4,
+			"avg_lifetime": 1489
+		}
+	},
+	"lusearch": {
+		"java": {
+			"avg_samples": 14602.3,
+			"avg_lifetime": 538.5
+		},
+		"c-linklist": {
+			"avg_samples": 11756.4,
+			"avg_lifetime": 518.1
+		},
+		"c-dynamicarray": {
+			"avg_samples": 10898.6,
+			"avg_lifetime": 493.7
+		}
+	},
+	"pmd": {
+		"java": {
+			"avg_samples": 890936.9,
+			"avg_lifetime": 15729.4
+		},
+		"c-linklist": {
+			"avg_samples": 440858.6,
+			"avg_lifetime": 16764.9
+		},
+		"c-dynamicarray": {
+			"avg_samples": 394190,
+			"avg_lifetime": 14799.2
+		}
+	},
+	"sunflow": {
+		"java": {
+			"avg_samples": 247508.8,
+			"avg_lifetime": 5632.3
+		},
+		"c-linklist": {
+			"avg_samples": 140470.8,
+			"avg_lifetime": 4793.6
+		},
+		"c-dynamicarray": {
+			"avg_samples": 158473.4,
+			"avg_lifetime": 5377.5
+		}
+	},
+	"tomcat": {
+		"java": {
+			"avg_samples": 150933.1,
+			"avg_lifetime": 3617.5
+		},
+		"c-linklist": {
+			"avg_samples": 90944.6,
+			"avg_lifetime": 3584.4
+		},
+		"c-dynamicarray": {
+			"avg_samples": 90054.2,
+			"avg_lifetime": 3556.8
+		}
+	},
+	"tradebeans": {
+		"java": {
+			"avg_samples": 1706929.9,
+			"avg_lifetime": 30338.3
+		},
+		"c-linklist": {
+			"avg_samples": 825557.4,
+			"avg_lifetime": 30870.9
+		},
+		"c-dynamicarray": {
+			"avg_samples": 836806.2,
+			"avg_lifetime": 31110.1
+		}
+	},
+	"tradesoap": {
+		"java": {
+			"avg_samples": 378554.4,
+			"avg_lifetime": 6845.1
+		},
+		"c-linklist": {
+			"avg_samples": 168118.2,
+			"avg_lifetime": 6490.6
+		},
+		"c-dynamicarray": {
+			"avg_samples": 169873.2,
+			"avg_lifetime": 6538.4
+		}
+	},
+	"xalan": {
+		"java": {
+			"avg_samples": 494813.2,
+			"avg_lifetime": 11694.8
+		},
+		"c-linklist": {
+			"avg_samples": 316538,
+			"avg_lifetime": 12173.7
+		},
+		"c-dynamicarray": {
+			"avg_samples": 316146.2,
+			"avg_lifetime": 12182.6
+		}
+	},
+	"zxing": {
+		"java": {
+			"avg_samples": 66074.6,
+			"avg_lifetime": 1334.3
+		},
+		"c-linklist": {
+			"avg_samples": 34779.6,
+			"avg_lifetime": 1322.3
+		},
+		"c-dynamicarray": {
+			"avg_samples": 35013.4,
+			"avg_lifetime": 1319.3
+		}
+	}
+}
