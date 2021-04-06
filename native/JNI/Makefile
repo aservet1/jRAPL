@@ -18,7 +18,7 @@ JNIEXPORTS = \
 OFILES = $(JNIEXPORTS:.c=.o)
 
 COMPILER = clang
-CFLAGS = -fPIC -g -c -Wall -O1
+CFLAGS = -fPIC -g -c -Wall
 
 all: $(JNI_LIB)
 	cp $(JNI_LIB) ../../java/src/main/resources/native # make sure to modularize this variable name
