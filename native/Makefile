@@ -16,7 +16,7 @@ CDRIVER = cdriver
 MAKELOG = .makelog
 
 COMPILER = clang
-CFLAGS = -fPIC -g -c -Wall -O1
+CFLAGS = -fPIC -g -c -Wall
 JAVA_HOME = $(shell readlink -f /usr/bin/javac | sed "s:bin/javac::")
 JAVA_INCLUDE = $(JAVA_HOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
