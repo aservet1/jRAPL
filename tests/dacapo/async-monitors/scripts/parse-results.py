@@ -43,6 +43,7 @@ def memory_data(benchmark, iteration, type):
     memdata['min'] = max(samples)
     memdata['avg'] = statistics.mean(samples)
     memdata['stdev'] = statistics.stdev(samples)
+    memdata['median'] = statistics.median(samples)
     return memdata
 '''-----------------------------------------------------------------------------'''
 

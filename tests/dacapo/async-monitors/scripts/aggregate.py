@@ -24,6 +24,7 @@ def aggregate_memory_stats(memory_data):
     mem_stats['global_max'] = max( [ dat['max'] for dat in memory_data] )
     mem_stats['avg_min'] = statistics.mean( [ dat['min'] for dat in memory_data ] )
     mem_stats['avg_max'] = statistics.mean( [ dat['max'] for dat in memory_data ] )
+    mem_stats['median'] = statistics.median( [ dat['median'] for dat in memory_data ] )
     return mem_stats
 
 """
