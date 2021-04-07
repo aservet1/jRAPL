@@ -16,7 +16,6 @@ def aggr_stdev(sample_sizes, stdevs):
     return math.sqrt(sum([ (sample_sizes[i]*(stdevs[i]**2)) for i in range(len(sample_sizes)) ]) / sum (sample_sizes))
 
 def aggregate_memory_stats(memory_data):
-
     mem_stats = {}
     mem_stats['avg']   = aggr_mean([dat['numSamples'] for dat in memory_data], [dat['avg'] for dat in memory_data])
     mem_stats['stdev'] = aggr_stdev([dat['numSamples'] for dat in memory_data], [dat['avg'] for dat in memory_data])
@@ -24,7 +23,8 @@ def aggregate_memory_stats(memory_data):
     mem_stats['global_max'] = max( [ dat['max'] for dat in memory_data] )
     mem_stats['avg_min'] = statistics.mean( [ dat['min'] for dat in memory_data ] )
     mem_stats['avg_max'] = statistics.mean( [ dat['max'] for dat in memory_data ] )
-    mem_stats['median'] = statistics.median( [ dat['median'] for dat in memory_data ] )
+    mem_stats['median_median'] = statistics.median( [ dat['median'] for dat in memory_data ] )
+    mem_stats['average_median'] = statistics.mean( [ dat['median'] for dat in memory_data ] )
     return mem_stats
 
 """
