@@ -58,8 +58,9 @@ datafiles = os.listdir()
 datafilenames = list(set([ name.split('.')[0] for name in datafiles])) #remove file extension
 
 for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")]): # potentially find a better way to gracefully deal with memory data files
-    print("<=< started working on '"+filename+"'")
     filename_parts = filename.split('_')
+    if len(filename_parts) != 3: continue
+    print("<=< started working on '"+filename+"'")
     benchmark = filename_parts[0]
     iteration = filename_parts[1]
     monitor_type = filename_parts[2]
