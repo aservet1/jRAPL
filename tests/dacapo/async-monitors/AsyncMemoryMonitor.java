@@ -7,6 +7,8 @@ import java.io.*;
 
 public class AsyncMemoryMonitor implements Runnable {
 	private ArrayList<Long> samples;
+	private ArrayList<Instant> timestamps;
+
 	private int samplingRate = 10;
 	private volatile boolean exit = false;
 	private static final Runtime runtime = Runtime.getRuntime();
@@ -18,6 +20,7 @@ public class AsyncMemoryMonitor implements Runnable {
 
 	public AsyncMemoryMonitor() {
 		samples = new ArrayList<Long>();
+		timestamps = new ArrayList<Instant>();
 	}
 
 	public void setSamplingRate(int s) {
@@ -41,6 +44,7 @@ public class AsyncMemoryMonitor implements Runnable {
 						  // figure out why that's happening and if it means the monitoring method
 						  // is untrustworthy
 				samples.add(memoryUsed());
+				timestamps.add(Instant.now());
 			}
 			try {
 				Thread.sleep(samplingRate);
@@ -118,6 +122,16 @@ public class AsyncMemoryMonitor implements Runnable {
 		return s;
 	}
 
+	private ArrayList<Long> timestampsInMilliseconds() {
+		ArrayList<Long> ts = new ArrayList<>();
+		
+		long bias = timestamps.get(0).toEpochMilli();
+
+		for (Instant i : timestamps)
+			ts.add(i.toEpochMilli() - bias);
+		return ts;
+	}
+
 	public void writeFile(String fileName) { // JSON
 		BufferedWriter writer = null;
 		try {
@@ -126,8 +140,12 @@ public class AsyncMemoryMonitor implements Runnable {
 										? new OutputStreamWriter(System.out)
 										: new FileWriter(new File(fileName))
 									);
-			writer.write(String.format("{\"samples\":%s,\"lifetime\":%d,\"num_samples\":%d, \"sampling_rate\": %d }", // snake_case because output is most likely to be parsed by python, so going with those conventions
-						samples.toString(), durationToUsec(getLifetime()), samples.size(), samplingRate));
+			writer.write(String.format(
+				"{\"samples\":%s,\"timestamps\":%s,\"lifetime\":%d,\"num_samples\":"
+				+"%d, \"sampling_rate\": %d }", // snake_case because output is most likely to be parsed by python, so going with those conventions
+				samples.toString(), timestampsInMilliseconds().toString(), durationToUsec(getLifetime()),
+				samples.size(), samplingRate ));
+
 			writer.flush();
 			if (fileName != null) writer.close();
 		} catch (IOException e) {
