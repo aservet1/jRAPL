@@ -17,7 +17,7 @@ JNIEXPORTS = \
 		RuntimeTestUtils.c
 OFILES = $(JNIEXPORTS:.c=.o)
 
-COMPILER = clang
+COMPILER = gcc
 CFLAGS = -fPIC -g -c -Wall
 
 all: $(JNI_LIB)

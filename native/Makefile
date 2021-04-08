@@ -15,7 +15,7 @@ OFILES = $(CFILES:.c=.o)
 CDRIVER = cdriver
 MAKELOG = .makelog
 
-COMPILER = clang
+COMPILER = gcc
 CFLAGS = -fPIC -g -c -Wall
 JAVA_HOME = $(shell readlink -f /usr/bin/javac | sed "s:bin/javac::")
 JAVA_INCLUDE = $(JAVA_HOME)/include
