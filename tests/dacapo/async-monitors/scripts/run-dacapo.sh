@@ -1,8 +1,9 @@
 #!/bin/bash
 
 function usage() {
-	echo "usage: $1 <benchmark> <monitoring energy? true|false> <iterations> <warmups> <monitorType> <result directory name>"
-	echo "monitorType = java|c-linklist|c-dynamicarray"
+	echo "usage: $1 <benchmark> <monitoringEnergy> <iterations> <warmups> <monitorType> <result directory name>"
+	echo "  monitorType = [java|c-linklist|c-dynamicarray]"
+	echo "  monitoringEnergy = [true|false]"
 	exit 1
 }
 
@@ -20,10 +21,12 @@ warmups=$4
 monitorType=$5
 resultDir=$6
 
-#rm -rf $resultDir && mkdir $resultDir
+source scripts/benchmark_size_assoc
+size=${benchmark_size_assoc[$benchmark]}
 
 sudo java -DmonitoringEnergy=$monitoringEnergy -Dwarmups=$warmups \
 			-DmonitorType=$monitorType -DresultDir=$resultDir \
 			-cp $classpath Harness \
-			$benchmark -c $mycallback -n $iterations
+			$benchmark -c $mycallback -n $iterations \
+			-s $size
 

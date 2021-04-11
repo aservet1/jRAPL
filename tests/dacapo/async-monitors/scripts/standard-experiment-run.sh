@@ -9,26 +9,22 @@ function usage() {
 
 [ $# != 1 ] && usage $0
 
-make
+make clean all
 
 iterations=15
 warmups=5
 resultDir=$1
 
-#rm -rf $resultDirBase ${resultDirBase}_MEMORY && mkdir $resultDirBase ${resultDirBase}_MEMORY
 rm -rf $resultDir && mkdir $resultDir
 
-benchmarks=$(sed 's/#.*$//g' all-benchmarks.txt)
+benchmarks=$(sed 's/#.*$//g' benchmarks.txt)
 for benchmark in $benchmarks
 do
 	for monitorType in c-linklist java c-dynamicarray
 	do
 		for monitoringEnergy in 'true' 'false'
 		do
-			#[ $monitoringEnergy = 'true' ] && \
-			#	resultDir="${resultDirBase}_MEMORY" || \
-			#	resultDir="${resultDirBase}"
-			echo "@@@ Monitoring memory: $monitoringEnergy @@@"
+			echo "@@@ Monitoring energy (jRAPL monitor active): $monitoringEnergy @@@"
 			scripts/run-dacapo.sh \
 				$benchmark $monitoringEnergy $iterations \
 				$warmups $monitorType $resultDir
