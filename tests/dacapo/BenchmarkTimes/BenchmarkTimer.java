@@ -14,10 +14,6 @@ import java.time.Duration;
 	precise, since it's only one shot with no warmups. But it'll be a general idea of how long
 	they are, like 1 second as opposed to 30. */
 
-// @TODO -- this doesn't belong in the same place as the async monitor tests,
-//    just here for convenience for now. but in the most modular sense, this
-//    would be in its own subdirectory of the 'tests/dacapo/' directory
-
 public class BenchmarkTimer extends Callback {
 	
 	private Instant startStamp, stopStamp;
@@ -26,7 +22,6 @@ public class BenchmarkTimer extends Callback {
 		Instant i = Instant.ofEpochMilli(1000000); // arbitrary Instant point
 		Instant isubbed = i.minus(duration);
 		return ChronoUnit.MILLIS.between(isubbed, i);
-		//return ChronoUnit.MICROS.between(isubbed, i);
 	}
 
 	public BenchmarkTimer(CommandLineArgs args) {
@@ -53,7 +48,7 @@ public class BenchmarkTimer extends Callback {
 		try {
 			writer = new BufferedWriter(new FileWriter("benchmark-times.log", true));
 			writer.write(
-				String.format("%s: %d msec\n", benchmark,
+				String.format("%s: %d msec", benchmark,
 					durationToMillis(Duration.between(startStamp,stopStamp)) ));
 			writer.newLine();
 			writer.flush();

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+declare -A benchmark_size_assoc
+
+benchmark_size_assoc[avrora]='large'
+benchmark_size_assoc[batik]='large'  #'huge'
+benchmark_size_assoc[biojava]='default'
+benchmark_size_assoc[cassandra]='default'
+benchmark_size_assoc[eclipse]='large'
+benchmark_size_assoc[fop]='default'
+benchmark_size_assoc[graphchi]='default' #'large' #'huge'
+benchmark_size_assoc[h2]='large' #'huge'
+benchmark_size_assoc[h2o]='default'
+benchmark_size_assoc[jme]='default'
+benchmark_size_assoc[jython]='default'
+benchmark_size_assoc[kafka]='default'
+benchmark_size_assoc[luindex]='default'  #'large' #'huge'
+benchmark_size_assoc[lusearch]='default'  #'large' #'huge'
+benchmark_size_assoc[pmd]='large'
+benchmark_size_assoc[sunflow]='large'
+benchmark_size_assoc[tomcat]='large'
+benchmark_size_assoc[tradebeans]='huge'
+benchmark_size_assoc[tradesoap]='huge'
+benchmark_size_assoc[xalan]='default'
+benchmark_size_assoc[zxing]='default'
