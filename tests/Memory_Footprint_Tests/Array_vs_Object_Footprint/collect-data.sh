@@ -11,6 +11,11 @@ do
 	for representation in $representations
 	do
 		sudo java jrapltesting.MemoryTestUtils $representation 20000 2> /dev/null > "$dataFolder/$representation$n.dump"
+for n in {1..10}
+do
+	for representation in $representations
+	do
+		sudo java jrapltesting.MemoryTestUtils $representation 5000 2> /dev/null > "$dataFolder/$representation$n.dump"
 		echo -n "did $representation$n  "
 	done
 	echo ''
