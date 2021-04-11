@@ -6,8 +6,9 @@ function usage() {
 	echo "usage: $1 <result directory>"
 	exit 1
 }
-
 [ $# != 1 ] && usage $0
+
+sudo -v
 
 make clean all
 
@@ -20,14 +21,30 @@ rm -rf $resultDir && mkdir $resultDir
 benchmarks=$(sed 's/#.*$//g' benchmarks.txt)
 for benchmark in $benchmarks
 do
+	monitoringEnergy=true
 	for monitorType in c-linklist java c-dynamicarray
 	do
-		for monitoringEnergy in 'true' 'false'
-		do
-			echo "@@@ Monitoring energy (jRAPL monitor active): $monitoringEnergy @@@"
-			scripts/run-dacapo.sh \
-				$benchmark $monitoringEnergy $iterations \
-				$warmups $monitorType $resultDir
-		done
+		scripts/run-dacapo.sh \
+			$benchmark $monitoringEnergy $iterations \
+			$warmups $monitorType $resultDir
 	done
+	monitoringEnergy=false
+	scripts/run-dacapo.sh \
+		$benchmark $monitoringEnergy $iterations \
+		$warmups _aAe_ $resultDir
+	
 done
+
+# benchmarks=$(sed 's/#.*$//g' benchmarks.txt)
+# for benchmark in $benchmarks
+# do
+# 	for monitorType in c-linklist java c-dynamicarray
+# 	do
+# 		for monitoringEnergy in 'true' 'false'
+# 		do
+# 			scripts/run-dacapo.sh \
+# 				$benchmark $monitoringEnergy $iterations \
+# 				$warmups $monitorType $resultDir
+# 		done
+# 	done
+# done
