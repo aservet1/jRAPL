@@ -32,6 +32,7 @@ echo "@run_da apo.sh@ @  iterations -> $iterations @ @"
 echo "@r n_daca o.s  @@@ warmups -> $warmups @.@"
 echo " run dac po. h@  @ monitorType -> $monitorType @ @"
 echo "@r n_d capo. h@@ @ resultDir -> $resultDir @.@"
+echo "@run_dacapo.sh@@@@ size -> $size @ @"
 
 sudo java -DmonitoringEnergy=$monitoringEnergy -Dwarmups=$warmups \
 			-DmonitorType=$monitorType -DresultDir=$resultDir \

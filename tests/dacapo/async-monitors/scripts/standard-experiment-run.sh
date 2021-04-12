@@ -9,6 +9,7 @@ function usage() {
 [ $# != 1 ] && usage $0
 
 sudo -v
+sudo echo 'hello w0rld :))'
 
 make clean all
 
@@ -24,12 +25,12 @@ do
 	monitoringEnergy=true
 	for monitorType in c-linklist java c-dynamicarray
 	do
-		scripts/run-dacapo.sh \
+		sudo scripts/run-dacapo.sh \
 			$benchmark $monitoringEnergy $iterations \
 			$warmups $monitorType $resultDir
 	done
 	monitoringEnergy=false
-	scripts/run-dacapo.sh \
+	sudo scripts/run-dacapo.sh \
 		$benchmark $monitoringEnergy $iterations \
 		$warmups _aAe_ $resultDir
 	
