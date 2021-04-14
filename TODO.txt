@@ -1,10 +1,19 @@
 
 << Have done by next week ## wednesday #:
-	graph aggregated min, max, avg, std of memory.
-	graph jmh's time-each-sample thing
-<< Near future:
-	in Java, assess the memory of an object -- to compare between footprint of Object Sample and Primitive Sample
+	- do one time series trace of jraplOn / jraplOff memory for sunflow
+	- % difference when displaying comparative memory data
+	- make graphs for the jmh time each sample result
+	- make the aggregate memory-stats-per-benchmark table a good graphic instead of a bad LaTeX dump
+	- figure out why optimization messes things up
+		- does compiling with clang cause a segfault on non debian machine?
+		- where does the clang segfault happen? it's somewhere in AsyncEnergyMonitorCSide. easy enough to fix?
+		- what exactly is the problem with clang and debian?
 
+<< Near future:
+	- java version of sizeof(object) -- to compare between footprint of Object Sample and Primitive Sample
+
+<< General Thoughts and Stuff to Eventually do:
+	- EnergyStamp (now what EnergyStats is) ; EnergyStats (holds whatever aggregate you want, plus maybe a String identifying it and an instant/duration object) ; EnergyLapse (or other better name for EnergyDiff)
 
 
 Update the UML
