@@ -8,9 +8,6 @@ import json
 import pandas as pd
 from sys import argv
 
-#from tabulate import tabulate
-
-
 # %%
 def json_from_file(filename): # assumes the file is in JSON format
     with open(filename) as f:
@@ -20,11 +17,13 @@ def json_from_file(filename): # assumes the file is in JSON format
 def no_dupes(l): # abstract ou[ d['metadata']['benchmark'] for d in data ]t the whole weird list/set method of removing duplicates
     return list(set(l))
 
-
-def diff_tuple(a,b,r=4):
+def diff_tuple(a,b,round_to=4):
     diff = a-b
     percent_diff = (diff/b) * 100
-    return  ( round(float(percent_diff),r) , round(float(diff),r) )
+    return  ( round(float(percent_diff),round_to) , round(float(diff),round_to) )
+
+def percent_difference(a,b):
+    return ((a-b) / ((a+b)/2) )*100
 
 def memory_comparison(memdata):
     jraplon  = memdata['jraplon']
@@ -33,9 +32,10 @@ def memory_comparison(memdata):
 
     """should i be subtracting stdev? its not in the current list, but if i add it as an item of the list then itll work in just fine"""
 
-    for v in ['avg' , 'median_median' , 'average_median' , 'global_min' , 'global_max' , 'avg_min' , 'avg_max' ]:
-        tup = diff_tuple(jraplon[v],jraploff[v])
-        res[v] = tup #"(%.4f,  %.4f)" % (tup[0],tup[1])
+    for stat in ['avg' , 'median_median' , 'average_median' , 'global_min' , 'global_max' , 'avg_min' , 'avg_max' ]:
+        # tup = diff_tuple(jraplon[stat],jraploff[stat])
+        # res[stat] = tup
+        res[stat] = percent_difference(jraplon[stat],jraploff[stat])
     return res
 
 #def monitor_ranking(data):
@@ -53,7 +53,6 @@ if len(argv) != 2:
     exit(2)
 data_directory = argv[1]
 os.chdir(data_directory)
-
 
 # %%
 filenames = [ _ for _ in os.listdir() if _.endswith('.aggregate-stats.json') ]
@@ -76,9 +75,7 @@ for d in data:
     if not monitor_type in data_table[benchmark]:
         data_table[benchmark][monitor_type] = {}
     data_table[benchmark][monitor_type] = memory_comparison(d['memory'])
-    print(benchmark,monitor_type)
     #data_table[benchmark]['monitor_rank'] = monitor_ranking(data_table[benchmark])
-
 
 # %%
 os.mkdir('latex')
@@ -86,11 +83,6 @@ for benchmark in data_table:
     fname = "latex/"+benchmark+"_memory-comparison.tex"
     with open(fname,'w') as fh:
         df = pd.DataFrame.from_dict(data_table[benchmark])
-        fh.write(df.to_latex())#tabulate(df, headers='keys',tablefmt='latex') )
+        fh.write(df.to_latex())
         print("wrote "+fname)
-
-
-# %%
-
-
 
