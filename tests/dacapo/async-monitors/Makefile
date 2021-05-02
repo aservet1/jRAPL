@@ -1,6 +1,7 @@
 
 javafiles = AsyncMonitorCallback.java \
 			AsyncMemoryMonitor.java \
+			NoDacapoCallback.java
 
 classfiles = $(javafiles:.java=.class)
 
