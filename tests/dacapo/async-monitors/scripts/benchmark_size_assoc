@@ -7,7 +7,7 @@
 declare -A benchmark_size_assoc
 
 benchmark_size_assoc[avrora]='large'
-benchmark_size_assoc[batik]='large'
+benchmark_size_assoc[batik]='default'
 benchmark_size_assoc[biojava]='default'
 benchmark_size_assoc[cassandra]='default'
 benchmark_size_assoc[eclipse]='large'
@@ -23,7 +23,7 @@ benchmark_size_assoc[lusearch]='default'
 benchmark_size_assoc[pmd]='large'
 benchmark_size_assoc[sunflow]='large'
 benchmark_size_assoc[tomcat]='large'
-benchmark_size_assoc[tradebeans]='huge'
+benchmark_size_assoc[tradebeans]='default'
 benchmark_size_assoc[tradesoap]='huge'
 benchmark_size_assoc[xalan]='default'
 benchmark_size_assoc[zxing]='default'

@@ -13,7 +13,7 @@ sudo echo 'hello w0rld :))'
 
 make clean all
 
-iterations=15
+iterations=25
 warmups=5
 resultDir=$1
 
