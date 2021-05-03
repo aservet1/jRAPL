@@ -5,6 +5,8 @@ public class EnergyManager
 	private boolean active = false;
 
 	private static boolean libraryLoaded = false;
+
+	//TODO make this atomic, or make a synchronized increment function for thread safety
 	private static int energyManagersActive = 0; // counter for shared resource
 
 	// package-private so they can be called in JMH test methods
