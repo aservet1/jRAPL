@@ -46,6 +46,7 @@ def general_aggregate(data):
 
 	return res
 
+'''----------------------------------------------------------------------------------------------------'''
 
 if len(argv) != 2:
     print("usage: " + argv[0] + " directory with .stats.json files to aggregate")
@@ -53,7 +54,7 @@ if len(argv) != 2:
 
 data_directory = argv[1]
 os.chdir(data_directory)
-benchmarks = list(set([ fname.split('_')[0] for fname in os.listdir() ]))
+benchmarks = sorted(list(set([ fname.split('_')[0] for fname in os.listdir() ])))
 
 for bench in benchmarks:
     for monitor_type in ['c-linklist', 'c-dynamicarray', 'java']:
