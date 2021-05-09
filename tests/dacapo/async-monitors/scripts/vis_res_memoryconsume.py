@@ -44,17 +44,14 @@ nojrapl_avg = []
 nojrapl_std = []
 
 for benchmark in data:
+    if benchmark == 'h2': continue
     labels.append(benchmark)
     #d_ = data[benchmark]
     java_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['memory']['jraplon']['avg'] )
     java_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['memory']['jraplon']['stdev'])
 
-    if benchmark == 'h2': # h2 never has c-linklist data for some reason
-        c_ll_avg.append(0)
-        c_ll_std.append(0)
-    else:
-        c_ll_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['memory']['jraplon']['avg'] )
-        c_ll_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['memory']['jraplon']['stdev'] )
+    c_ll_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['memory']['jraplon']['avg'] )
+    c_ll_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['memory']['jraplon']['stdev'] )
 
     c_da_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['memory']['jraplon']['avg'] )
     c_da_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['memory']['jraplon']['stdev'] )
