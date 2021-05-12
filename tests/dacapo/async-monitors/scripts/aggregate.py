@@ -54,11 +54,12 @@ if len(argv) != 2:
 
 data_directory = argv[1]
 os.chdir(data_directory)
-benchmarks = sorted(list(set([ fname.split('_')[0] for fname in os.listdir() ])))
+benchmarks = sorted(list(set([ fname.split('_')[0] for fname in os.listdir() if fname.endswith('.stats.json')])))
 
 for bench in benchmarks:
     for monitor_type in ['c-linklist', 'c-dynamicarray', 'java']:
         filenames = [ f for f in os.listdir() if f.startswith(bench) and f.endswith('.stats.json')]
+        #print(bench,monitor_type,filenames)
         fhs = [open(f) for f in filenames]
         data = [json.loads(fh.read()) for fh in fhs]
         data = [d for d in data if d['metadata']['monitor_type'] == monitor_type ]
@@ -82,7 +83,7 @@ for bench in benchmarks:
 
         outfilename = aggregated['metadata']['benchmark'] + "_" + aggregated['metadata']['monitor_type'] + ".aggregate-stats.json"
         with open(outfilename,'w') as outfile: outfile.write(json.dumps(aggregated))
-        print(" >> wrote to outfile: " + outfilename)
+        print(" >> wrote to outfile: " + outfilename ) #+ '-------------\n')
 
 
 
