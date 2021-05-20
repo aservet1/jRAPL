@@ -44,20 +44,23 @@ c_ll_std = []
 nojrapl_avg = []
 nojrapl_std = []
 
+def get_by_monitor_type(data, monitor_type):
+    return [ d for d in data[benchmark] if d['metadata']['monitor_type'] == monitor_type ][0]['memory']
+
 for benchmark in data:
     if benchmark == 'h2': continue
 
-    javg = [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['memory']['jraplon']['avg']
-    jstd = [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['memory']['jraplon']['stdev']
+    javg = get_by_monitor_type(data, 'java')['jraplon']['avg']
+    jstd = get_by_monitor_type(data, 'java')['jraplon']['stdev']
 
-    clavg = [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['memory']['jraplon']['avg'] 
-    clstd = [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['memory']['jraplon']['stdev']
+    clavg = get_by_monitor_type(data, 'c-linklist')['jraplon']['avg'] 
+    clstd = get_by_monitor_type(data, 'c-linklist')['jraplon']['stdev']
 
-    cdavg = [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['memory']['jraplon']['avg']  
-    cdstd = [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['memory']['jraplon']['stdev']
+    cdavg = get_by_monitor_type(data, 'c-dynamicarray')['jraplon']['avg']  
+    cdstd = get_by_monitor_type(data, 'c-dynamicarray')['jraplon']['stdev']
 
-    nojavg = [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['memory']['jraploff']['avg']
-    nojstd = [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['memory']['jraploff']['stdev']
+    nojavg = get_by_monitor_type(data, 'c-dynamicarray')['jraploff']['avg']
+    nojstd = get_by_monitor_type(data, 'c-dynamicarray')['jraploff']['stdev']
 
     def percent_diff(a,b):
         return (a-b)/((a+b)/2)
@@ -81,10 +84,6 @@ for benchmark in data:
     c_da_avg.append( percent_diff(cdavg, nojavg) )
     c_da_std.append( percent_diff_stdev(cdavg, nojavg, cdstd, nojstd) )
 
-    # monitor_type is arbitrary for nojrapl, its the same for all of them, given a benchmark
-    #nojrapl_avg.append(  )
-    #nojrapl_std.append(  )
-
 bar_width = 0.25
 mpl.rcParams['figure.dpi'] = 600
 r1 = np.arange(len(c_ll_avg))
@@ -105,3 +104,17 @@ fig = plt.gcf()
 fig.set_size_inches(12,25)
 #plt.show()
 plt.savefig('memory-comparison-bar')
+
+## Now to average across all benchmarks and make a bar graph with error bars of the 3
+
+
+
+
+
+
+
+
+
+
+
+
