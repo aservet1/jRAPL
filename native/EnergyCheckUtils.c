@@ -27,23 +27,28 @@ static int wraparound_energy = -1;
 static int num_cores;
 
 // only valid after ProfileInit() has been called. otherwise ignore it
-int* get_msr_fds() {
+int*
+get_msr_fds() {
 	return msr_fds;
 }
 
-static inline double read_pkg(int i) {
+static inline double
+read_pkg(int i) {
 	double result = read_msr(msr_fds[i], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
 	return (double) result * rapl_unit.energy;
 }
-static inline double read_core(int i) {
+static inline double
+read_core(int i) {
 	double result = read_msr(msr_fds[i], MSR_PP0_ENERGY_STATUS);
 	return (double) result * rapl_unit.energy;
 }
-static inline double read_gpu(int i) {
+static inline double
+read_gpu(int i) {
 	double result = read_msr(msr_fds[i],MSR_PP1_ENERGY_STATUS);
 	return (double) result * rapl_unit.energy;
 }
-static inline double read_dram(int i) {
+static inline double
+read_dram(int i) {
 	double result = read_msr(msr_fds[i],MSR_DRAM_ENERGY_STATUS);
 	if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
 		return (double) result * MSR_DRAM_ENERGY_UNIT;
@@ -52,7 +57,8 @@ static inline double read_dram(int i) {
 	}
 }
 
-void ProfileInit() {
+void
+ProfileInit() {
 	char msr_filename[BUFSIZ];
 	int core = 0;
 
@@ -79,14 +85,16 @@ void ProfileInit() {
 }
 
 
-void ProfileDealloc() {
+void
+ProfileDealloc() {
 	for (int i = 0; i < num_pkg; i++) {
 		close(msr_fds[i]);
 	} free(msr_fds); msr_fds = NULL;
 	free(parameters); parameters = NULL;
 }
 
-void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg]) {
+void
+EnergyStatCheck(EnergyStats stats_per_socket[num_pkg]) {
 	for (int i = 0; i < num_pkg; i++) {
 		switch(power_domains_supported) {
 			case DRAM_GPU_CORE_PKG:
@@ -118,7 +126,8 @@ void EnergyStatCheck(EnergyStats stats_per_socket[num_pkg]) {
 }
 
 // just for test purposes, not part of real RAPL implementation
-void ProfileInitAllCores(int num_readings) {
+void
+ProfileInitAllCores(int num_readings) {
 	int i;
 	char msr_filename[BUFSIZ];
 
@@ -159,7 +168,8 @@ void ProfileInitAllCores(int num_readings) {
 }
 
 // just for test purposes, not part of real RAPL implementation
-void ProfileDeallocAllCores() {
+void
+ProfileDeallocAllCores() {
 	for (int i = 0; i < num_cores; i++) {
 		close(msr_fds[i]);
 	} free(msr_fds); msr_fds = NULL;
