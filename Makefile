@@ -1,16 +1,26 @@
+
+NATIVE_SRC = src/native
+JAVA_SRC = src/java
+
+DRIVER_OUTPUT_FILES = \
+	AsyncMonitor-C-metainfo.json \
+	AsyncMonitor-Java-metainfo.json \
+	AsyncMonitor-C.csv \
+	AsyncMonitor-Java.csv \
+
 all:
 	make nativeLib
 	make javaLib
 
 nativeLib: ## Compile native .so
-	(cd native && make)
-	(cd native/JNI && make)
+	(cd $(NATIVE_SRC) && make)
+	(cd $(NATIVE_SRC)/JNI && make)
 
 javaLib: ## Build java .jar
-	(cd java && mvn clean install)
+	(cd $(JAVA_SRC) && mvn clean install)
 
 clean:
-	(cd native && make clean)
-	(cd native/JNI && make clean)
-	(cd java && mvn clean)
-	rm -f AsyncMonitor-C.csv AsyncMonitor-Java.csv AsyncMonitor-C-metainfo.json AsyncMonitor-Java-metainfo.json
+	(cd $(NATIVE_SRC) && make clean)
+	(cd $(NATIVE_SRC)/JNI && make clean)
+	(cd $(JAVA_SRC) && mvn clean)
+	rm -f $(DRIVER_OUTPUT_FILES)

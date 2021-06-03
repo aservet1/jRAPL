@@ -7,6 +7,9 @@ JNI_LIB = libJNIRAPL.so
 NATIVE_FILES_LOCATION = ..
 NATIVE_LIB = $(NATIVE_FILES_LOCATION)/libNativeRAPL.a
 
+MAVEN_RESOURCES = ../../../src/java/src/main/resources/native
+  # where maven will find the native library in the JavaSide compilation
+
 INCLUDE_FLAGS = -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) -I$(NATIVE_FILES_LOCATION) 
 
 JNIEXPORTS = \
@@ -17,16 +20,16 @@ JNIEXPORTS = \
 		RuntimeTestUtils.c
 OFILES = $(JNIEXPORTS:.c=.o)
 
-COMPILER = gcc
+CC = gcc
 CFLAGS = -fPIC -g -c -Wall
 
 all: $(JNI_LIB)
-	cp $(JNI_LIB) ../../java/src/main/resources/native # make sure to modularize this variable name
+	cp $(JNI_LIB) $(MAVEN_RESOURCES)
 
 $(JNI_LIB): $(JNIEXPORTS)
-	$(COMPILER) $(CFLAGS) $(INCLUDE_FLAGS) $(JNIEXPORTS) $(JNIEXPORTS)
-	$(COMPILER) -g -Wall $(INCLUDE_FLAGS) -shared -Wl,-soname,$(JNI_LIB) -o $(JNI_LIB) $(OFILES) -L $(NATIVE_FILES_LOCATION) -lc -lNativeRAPL
+	$(CC) $(CFLAGS) $(INCLUDE_FLAGS) $(JNIEXPORTS) $(JNIEXPORTS)
+	$(CC) -g -Wall $(INCLUDE_FLAGS) -shared -Wl,-soname,$(JNI_LIB) -o $(JNI_LIB) $(OFILES) -L $(NATIVE_FILES_LOCATION) -lc -lNativeRAPL
 clean:
 	rm -f $(JNI_LIB) $(OFILES) $(CDRIVER)
-	rm -f ../../java/src/main/resources/native/$(JNI_LIB) # make sure to modularize this variable name
+	rm -f $(MAVEN_RESOURCES)/$(JNI_LIB)
 
