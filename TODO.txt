@@ -1,18 +1,20 @@
 
-<< Have done by next week ## wednesday #:
-	graph aggregated min, max, avg, std of memory.
-	graph jmh's time-each-sample thing
-<< Near future:
-	in Java, assess the memory of an object -- to compare between footprint of Object Sample and Primitive Sample
+<< Immediate Todos:
+	Update the paper with all experiment data by tonight
+	Redo the memory experiments but once you un-implement the SocketNum field per struct
 
+<< Semi Immediate Todos:
+	Do experiments on dynamically choosing the size of the LinkNodes
 
-
-Update the UML
-
-IDEA for AsyncMonitor: set a maxCapacityUntilDump and when arraylist gets that full, start (another) thread to dump to file and clear out the current thing. to not puollute RAM too much. idk, maybe.
-like you can have a second thread monitoring the capacity and then dumping as necessary. idk if it's a problem to implicitly spawn a second
-thread. there might be a conventional method to deal with things growing in memory too often.
-
-make the AsyncMonitor run a set number of operations   instead of start/stop wait loop
+<< Other Todos:
+	Update the UML
 
 "timer" implemntation on the C side -- could make the sleep_milliseconds() function more accurate
+
+Ideas for future development:
+	- Make C run on a schedule instead of sleeping, so sampling overhead of 130-170usec (on jolteon, at least) isn't an issue for high rates.
+		- See timer implementation, or the thing Timur sent: https://github.com/jvm-profiling-tools/async-profiler/blob/master/src/itimer.cpp
+
+	- Make the AsyncMonitor have an 'auto dump' file, then have it dump its content to file (on a separate thread) and clear out.
+		To make it not indefinitely grow in memory
+	- AsyncMonitor runs a set number of samples at a rate, instead of a start/stop wait loop
