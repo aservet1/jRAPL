@@ -98,7 +98,7 @@ public class JavaSideCalls {
 				});
 				myScatterWriter.flush();
 				myScatterWriter.close();
-				System.out.println("Successfully wrote to the file.");
+				System.out.println("Successfully wrote to the file");
 			} catch (IOException e) {
 				System.out.println("An error occurred.");
 				e.printStackTrace();
@@ -170,34 +170,36 @@ public class JavaSideCalls {
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeProfileInit(ProfileInitState pis) throws InterruptedException {
+	public void timeProfileInit(ProfileInitState pis, Blackhole b) throws InterruptedException {
 		pis.setBefore();
 		EnergyManager.profileInit();
 		pis.setAfter();
 		pis.addValue();
-		TimeUnit.MICROSECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+		Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeProfileDealloc(ProfileDeallocState pds) throws InterruptedException{
+	public void timeProfileDealloc(ProfileDeallocState pds, Blackhole b) throws InterruptedException{
 		pds.setBefore();
 		EnergyManager.profileDealloc();
 		pds.setAfter();
 		pds.addValue();
-		TimeUnit.MICROSECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+		Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
+	@Fork(1) @Warmup(iterations = 5)
+	@Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeEnergyStatCheck(Blackhole b, EnergyStatCheckState escs) throws InterruptedException {
 		escs.setBefore();
 		b.consume(EnergyMonitor.energyStatCheck());
 		escs.setAfter();
 		escs.addValue();
-		TimeUnit.MICROSECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+		int i = 0;
+		Util.busyWait(b); // busy wait repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
 }

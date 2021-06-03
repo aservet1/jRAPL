@@ -164,25 +164,25 @@ public class CSideCalls {
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeProfileInit(ProfileInitState pis) throws InterruptedException {
+	public void timeProfileInit(ProfileInitState pis, Blackhole b) throws InterruptedException {
 		pis.addValue(RuntimeTestUtils.usecTimeProfileInit());
-		TimeUnit.MICROSECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+		Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeProfileDealloc(ProfileDeallocState pds) throws InterruptedException {
+	public void timeProfileDealloc(ProfileDeallocState pds, Blackhole b) throws InterruptedException {
 		pds.addValue(RuntimeTestUtils.usecTimeProfileDealloc());
-		TimeUnit.MICROSECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+		Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
 	@Benchmark
 	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeEnergyStatCheck(EnergyStatCheckState s) throws InterruptedException {
+	public void timeEnergyStatCheck(EnergyStatCheckState s, Blackhole b) throws InterruptedException {
 		s.addValue(RuntimeTestUtils.usecTimeEnergyStatCheck());
-		TimeUnit.MICROSECONDS.sleep(1); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+		Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
 
 }

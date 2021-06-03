@@ -1,20 +1,30 @@
 
 << Immediate Todos:
-	Update the paper with all experiment data by tonight
-	Redo the memory experiments but once you un-implement the SocketNum field per struct
+	- Update the paper with all experiment data by tonight
+	- Redo the memory experiments but once you un-implement the SocketNum field per struct
+		- make graphs for the jmh time each sample result
 
 << Semi Immediate Todos:
-	Do experiments on dynamically choosing the size of the LinkNodes
+	- Do experiments on dynamically choosing the size of the LinkNodes. Could be based on sampling rate, so you know how many mallocs per second to do.
+	- Run experiments on several computers
+	- Properly calculate wraparound...
 
 << Other Todos:
-	Update the UML
-
-"timer" implemntation on the C side -- could make the sleep_milliseconds() function more accurate
+	- Update the UML
+	- figure out why -O{1,2,3} flags mess things up. Almost positive it's bc it optimizes out the assembly code required to getSocketNum() (as per my gdb run)
+		- does compiling with clang cause a segfault on non debian machine?
+		- where does the clang segfault happen? it's somewhere in AsyncEnergyMonitorCSide. easy enough to fix?
+		- what exactly is the problem with clang and debian?
+	- make sure you re-run the experiments if you can figure out 
 
 Ideas for future development:
+	- Naming Conventions to Edit (and make sure they're good):
+		; EnergyStamp (now what EnergyStats is)
+		; EnergyStats (holds whatever aggregate you want, plus maybe a String identifying it and an instant/duration object)
+		; EnergySample (for EnergyDiff)
+
 	- Make C run on a schedule instead of sleeping, so sampling overhead of 130-170usec (on jolteon, at least) isn't an issue for high rates.
 		- See timer implementation, or the thing Timur sent: https://github.com/jvm-profiling-tools/async-profiler/blob/master/src/itimer.cpp
-
 	- Make the AsyncMonitor have an 'auto dump' file, then have it dump its content to file (on a separate thread) and clear out.
 		To make it not indefinitely grow in memory
 	- AsyncMonitor runs a set number of samples at a rate, instead of a start/stop wait loop

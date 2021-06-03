@@ -8,40 +8,44 @@ import pandas as pd
 from collections import Counter
 from statistics import StatisticsError
 
-'''------------------------------------------------------------------------------------------'''
+'''-----------------------------------------------------------------------------'''
 
-def filter_zero_columns(dataframe): #delete columnds that are 0.0 down the entire line
+def filter_zero_columns(dataframe): #delete columns that are 0.0 down the line. on jolteon, this happens for core
     for column in dataframe:
         if sum(dataframe[column]) == 0.0:
             del dataframe[column]
 
-def zero_intervals(l):
-    result = list()
-    z = 0
-    for i in range(1,len(l)):
-        if l[i]-l[i-1] == 0:
-            z += 1
-        else:
-            result.append(z)
-            z = 0
-    if z:
-        result.append(z)
-    return dict(Counter(result))
+#def zero_intervals(l):
+#    result = list()
+#    z = 0
+#    for i in range(1,len(l)):
+#        if l[i]-l[i-1] == 0:
+#            z += 1
+#        else:
+#            result.append(z)
+#            z = 0
+#    if z:
+#        result.append(z)
+#    return dict(Counter(result))
 
 def diff_list(l):
     return [ float(float(l[i]) - float(l[i-1])) for i in range(1,len(l))]
-def avg_nonzero_energy_increase(energy):
-    try:
-    	return statistics.mean([ n for n in diff_list(energy) if n != 0])
-    except StatisticsError:
-        return 0
-def stdev_nonzero_energy_increase(energy):
-    try:
-        return statistics.stdev([ n for n in diff_list(energy) if n != 0 ])
-    except StatisticsError:
-        return 0
 
-'''------------------------------------------------------------------------------------------'''
+def dict_to_list(d): #convert from dict<int,double> to list<double>
+    return [ d[k] for k in d.keys() ]
+
+def memory_data(benchmark, iteration, type):
+    filename = '_'.join([benchmark, iteration, type]) + ".memory.json"
+    with open(filename) as f: memdata = json.loads(f.read())
+    samples = memdata['samples']
+    del memdata['samples']
+    memdata['max'] = min(samples)
+    memdata['min'] = max(samples)
+    memdata['avg'] = statistics.mean(samples)
+    memdata['stdev'] = statistics.stdev(samples)
+    memdata['median'] = statistics.median(samples)
+    return memdata
+'''-----------------------------------------------------------------------------'''
 
 if len(sys.argv) != 2:
 	print("usage: python3 "+sys.argv[0]+" <folder containing the data that you intend to process and generate results for>")
@@ -51,27 +55,32 @@ results_dir = sys.argv[1]# 'jolteon-results-subset'
 os.chdir(results_dir)
 
 datafiles = os.listdir()
-datafilenames = list(set([ name.split('.')[0] for name in datafiles]))
+datafilenames = list(set([ name.split('.')[0] for name in datafiles])) #remove file extension
 
-for filename in sorted(datafilenames):
-    print("<=< started working on '"+filename+"'")
+for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")]): # potentially find a better way to gracefully deal with memory data files
     filename_parts = filename.split('_')
+    if len(filename_parts) != 3: continue
+    print("<=< started working on '"+filename+"'")
     benchmark = filename_parts[0]
     iteration = filename_parts[1]
     monitor_type = filename_parts[2]
 
     with open(filename+'.metadata.json') as fh:
         metadata = json.loads(fh.read())
-        metadata['benchmark'] = benchmark
+        metadata['benchmark'] = benchmark # add these next 3 items to the metadata
         metadata['iteration'] = iteration
         metadata['monitor_type'] = monitor_type
 
+    result = {}
+    result['metadata'] = metadata
+
+    result['memory'] = dict()
+    result['memory']['jraplon']  = memory_data(result['metadata']['benchmark'], result['metadata']['iteration'], result['metadata']['monitor_type'])
+    result['memory']['jraploff'] = memory_data(result['metadata']['benchmark'], result['metadata']['iteration'], 'nojrapl')
+
+
     data = pd.read_csv(filename+'.csv')
     filter_zero_columns(data)
-
-    result = {}
-
-    result['metadata'] = metadata
 
     result['persocket'] = dict()
     num_sockets = max(data['socket'])
@@ -83,18 +92,27 @@ for filename in sorted(datafilenames):
     
 
     for socket in result['persocket']: # filling out the actual computations in result{}
-        timestamps = result['persocket'][socket]['timestamp']
+        timestamps = dict_to_list(result['persocket'][socket]['timestamp'])
         del result['persocket'][socket]['timestamp']
+        
         power_domains = list(result['persocket'][socket])
         for powd in power_domains:
             energy = result['persocket'][socket][powd]
-            energy = [ energy[i] for i in energy ] #convert from dict<int,double> to list<double>
+            energy = dict_to_list(energy)
+            energy = diff_list(energy)
             result['persocket'][socket][powd] = dict()
-            result['persocket'][socket][powd]['zero-intervals'] = zero_intervals(energy)
-            result['persocket'][socket][powd]['nonzero-energy-increase'] = dict()
-            result['persocket'][socket][powd]['nonzero-energy-increase']['avg'] = avg_nonzero_energy_increase(energy)
-            result['persocket'][socket][powd]['nonzero-energy-increase']['stdev'] = stdev_nonzero_energy_increase(energy)
+            result['persocket'][socket][powd]['energy-per-sample'] = dict()
+            result['persocket'][socket][powd]['energy-per-sample']['num_samples'] = len(energy)
+            result['persocket'][socket][powd]['energy-per-sample']['avg'] = statistics.mean(energy)
+            result['persocket'][socket][powd]['energy-per-sample']['stdev'] = statistics.stdev(energy)
 
+        time = diff_list(timestamps)
+        result['persocket'][socket]['time-between-samples'] = {}
+        result['persocket'][socket]['time-between-samples']['num_samples'] = len(time)
+        result['persocket'][socket]['time-between-samples']['avg'] = statistics.mean(time)
+        result['persocket'][socket]['time-between-samples']['stdev'] = statistics.stdev(time)
+            
+            
     with open(filename+'.stats.json','w') as fh:
         fh.write(json.dumps(result))
 
