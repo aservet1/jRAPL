@@ -77,20 +77,20 @@ plt.savefig('sampling-efficiency_perbench')
 ## Now to average across all benchmarks and make a bar graph with error bars of the 3 ##
 
 overall_java_avg = statistics.mean (java_samples_per_ms)
-#overall_java_std = statistics.stdev()
+overall_java_std = statistics.stdev(java_samples_per_ms)
 
 overall_c_ll_avg = statistics.mean (c_ll_samples_per_ms)
-#overall_c_ll_std = statistics.stdev()
+overall_c_ll_std = statistics.stdev(c_ll_samples_per_ms)
 
 overall_c_da_avg = statistics.mean (c_da_samples_per_ms)
-#overall_c_da_std = statistics.stdev()
+overall_c_da_std = statistics.stdev(c_da_samples_per_ms)
 
 labels = ['java','c-linklist','c-dynamicarray']
 
 plt.clf()
 plt.bar(x=[0,1,2], \
     height=[overall_java_avg, overall_c_ll_avg, overall_c_da_avg], \
-    #yerr=[overall_java_std, overall_c_ll_std, overall_c_da_std], \
+    yerr=  [overall_java_std, overall_c_ll_std, overall_c_da_std], \
     tick_label=labels \
 )
 
@@ -104,3 +104,11 @@ fig.set_size_inches(5,5)
 #plt.show()
 plt.savefig('sampling-efficiency_overall')
 
+print('overall_java_avg: '+str(overall_java_avg))
+print('overall_java_std: '+str(overall_java_std))
+print()
+print('overall_c_ll_avg: '+str(overall_c_ll_avg))
+print('overall_c_ll_std: '+str(overall_c_ll_std))
+print()
+print('overall_c_da_avg: '+str(overall_c_da_avg))
+print('overall_c_da_std: '+str(overall_c_da_std))
