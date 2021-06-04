@@ -36,9 +36,10 @@ unit = unit[0]
 print(labels)
 print(means)
 print(errors)
-print(unit)
+print('units:',unit)
 
 plt.bar(range(len(labels)), means, yerr=errors, tick_label=labels)
 plt.ylabel('average runtime: '+str(unit))
 plt.xlabel('sampling version')
-plt.show()
+plt.title('average runtime for synchronous energy sampling')
+plt.savefig('sync-samples-runtime')
