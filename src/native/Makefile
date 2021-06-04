@@ -13,7 +13,6 @@ CFILES = \
 
 OFILES = $(CFILES:.c=.o)
 CDRIVER = cdriver
-MAKELOG = .makelog
 
 COMPILER = gcc
 CFLAGS = -fPIC -g -c -Wall
@@ -33,4 +32,4 @@ $(CDRIVER): $(LIB) $(CFILES) $(CDRIVER).c
 	#get to a point where you can compile cdriver without depending on setting the 'where is JNI' flag, since the goal of this set of files is to be JNI-independent and just the core C RAPL utilities that can get ported to Java with separate wrapper files, so this core library can in the future be ported to even another language like Go or something
 
 clean:
-	rm -f $(LIB) $(OFILES) $(CDRIVER) $(MAKELOG)
+	rm -f $(LIB) $(OFILES) $(CDRIVER)

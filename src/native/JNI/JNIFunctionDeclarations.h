@@ -11,7 +11,7 @@
     I don't think there'd be any reason to extract out JNIEXPORT calls to call directly in
     another C file. It would make more sense most of the time to just use the Pure-C stuff
     in the libNativeRAPL.a library. But if you need the actual JNI wrapper stuff, feel free
-    to add to this file, and make sure this documentation blub is accurately describing what's
+    to add to this file, and make sure this documentation blurb is accurately describing what's
     going on with this file and where it's being used. */
 
 void Java_jRAPL_EnergyManager_profileInit(JNIEnv *env, jclass jcls);

@@ -16,7 +16,8 @@
 #define USING_DYNAMIC_ARRAY	monitor->storageType == DYNAMIC_ARRAY_STORAGE
 #define USING_LINKED_LIST	monitor->storageType == LINKED_LIST_STORAGE
 
-int sleep_millisecond(long msec) {
+int
+sleep_millisecond(long msec) {
 	struct timespec ts;
 	int res;
 
@@ -35,15 +36,18 @@ int sleep_millisecond(long msec) {
 	return res;
 }
 
-void setSamplingRate(AsyncEnergyMonitor* monitor, int s) {
+void
+setSamplingRate(AsyncEnergyMonitor* monitor, int s) {
 	monitor->samplingRate = s;
 }
 
-int getSamplingRate(AsyncEnergyMonitor* monitor) {
+int
+getSamplingRate(AsyncEnergyMonitor* monitor) {
 	return monitor->samplingRate;
 }
 
-int getNumSamples(AsyncEnergyMonitor* monitor) {
+int
+getNumSamples(AsyncEnergyMonitor* monitor) {
 	int n;
 	if (USING_DYNAMIC_ARRAY) n = monitor->samples_dynarr->nItems;
 	else if (USING_LINKED_LIST) n = monitor->samples_linklist->nItems;
@@ -52,7 +56,8 @@ int getNumSamples(AsyncEnergyMonitor* monitor) {
 	return n / ((int)getSocketNum()); // stores each individual reading, but we want to think of samples as a group of readings per socket
 }
 
-AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, int storageType) {
+AsyncEnergyMonitor*
+newAsyncEnergyMonitor(int samplingRate, int storageType) {
 	AsyncEnergyMonitor* monitor = (AsyncEnergyMonitor*)malloc(sizeof(AsyncEnergyMonitor));
 
 	monitor->exit = false;
@@ -69,7 +74,8 @@ AsyncEnergyMonitor* newAsyncEnergyMonitor(int samplingRate, int storageType) {
 	return monitor;
 }
 
-void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor) {
+void
+freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor) {
 	if (USING_DYNAMIC_ARRAY) {
 		freeDynamicArray(monitor->samples_dynarr);
 		monitor->samples_dynarr = NULL;
@@ -82,14 +88,16 @@ void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor) {
 	monitor = NULL;
 }
 
-static void storeEnergySample(AsyncEnergyMonitor *monitor, EnergyStats stats) {
+static void
+storeEnergySample(AsyncEnergyMonitor *monitor, EnergyStats stats) {
 	if (USING_DYNAMIC_ARRAY)
 		addItem_DynamicArray(monitor->samples_dynarr, stats);
 	else if (USING_LINKED_LIST)
 		addItem_LinkedList(monitor->samples_linklist, stats);
 }
 
-void* run(void* monitor_arg) {
+void*
+run(void* monitor_arg) {
 	AsyncEnergyMonitor* monitor = (AsyncEnergyMonitor*)monitor_arg;
 
 	int sockets = getSocketNum();
@@ -106,16 +114,19 @@ void* run(void* monitor_arg) {
 	return NULL;
 }
 
-void start(AsyncEnergyMonitor *monitor) {
+void
+start(AsyncEnergyMonitor *monitor) {
 	pthread_create(&(monitor->tid), NULL, run, monitor);
 }
 
-void stop(AsyncEnergyMonitor *monitor) {
+void
+stop(AsyncEnergyMonitor *monitor) {
 	monitor->exit = true;
 	pthread_join(monitor->tid,NULL);
 }
 
-void reset(AsyncEnergyMonitor* monitor) {
+void
+reset(AsyncEnergyMonitor* monitor) {
 	monitor->exit = false;
 	if (USING_DYNAMIC_ARRAY) {
 		freeDynamicArray(monitor->samples_dynarr);
@@ -127,7 +138,8 @@ void reset(AsyncEnergyMonitor* monitor) {
 	}
 }
 
-void writeFileCSV(AsyncEnergyMonitor *monitor, const char* filepath) {
+void
+writeFileCSV(AsyncEnergyMonitor *monitor, const char* filepath) {
 	FILE * outfile = (filepath) ? fopen(filepath,"w") : stdout;
 
 	if (!outfile) {
@@ -153,7 +165,8 @@ void writeFileCSV(AsyncEnergyMonitor *monitor, const char* filepath) {
 // Ok so sometimes it works fine when stack-allocated but still...leave this
 //  note here until you find out what's going on / how to prevent the issue
 //  from happening
-void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats* return_buffer) {
+void
+lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats* return_buffer) {
 
 	int nItems = (
 		(USING_DYNAMIC_ARRAY) ?

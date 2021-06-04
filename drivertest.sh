@@ -6,7 +6,7 @@ sudo -v
 
 printf "\nhello w0rld\n\n";
 
-runDriver="sudo java -cp java/target/jRAPL-1.0.jar "
+runDriver="sudo java -cp src/java/target/jRAPL-1.0.jar "
 
 for driver in 'ArchSpec' 'SyncEnergyMonitor' 'AsyncEnergyMonitor C' 'AsyncEnergyMonitor Java'
 do
