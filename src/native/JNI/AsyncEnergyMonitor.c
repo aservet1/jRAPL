@@ -48,7 +48,6 @@ Java_jRAPL_AsyncEnergyMonitorCSide_getLastKSamplesNative(JNIEnv* env, jclass jcl
 	if (monitor->samples_linklist) assert( k <= monitor->samples_linklist->nItems );
 
 	EnergyStats samples[k];
-	
 	lastKSamples(k, monitor, samples);
 
 	char sample_strings[512*(k+1)];
@@ -75,8 +74,7 @@ Java_jRAPL_AsyncEnergyMonitorCSide_getLastKTimestampsNative(JNIEnv* env, jclass 
 	lastKSamples(k, monitor, samples);
 
 	long fill[k];
-	for (int i = 0; i < k; i++)
-	{
+	for (int i = 0; i < k; i++) {
 		struct timeval ts = samples[i].timestamp;
 		fill[i] = ts.tv_sec * 1000000 + ts.tv_usec;
 	}

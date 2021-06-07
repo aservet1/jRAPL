@@ -5,8 +5,7 @@
 
 #include "CSideDataStorage.h"
 
-DynamicArray* newDynamicArray(int capacity)
-{
+DynamicArray* newDynamicArray(int capacity) {
 	DynamicArray* list = (DynamicArray*)malloc(sizeof(DynamicArray));
 	list->capacity = capacity;
 	list->nItems = 0;
@@ -14,8 +13,7 @@ DynamicArray* newDynamicArray(int capacity)
 	return list;
 }
 
-void freeDynamicArray(DynamicArray* list)
-{
+void freeDynamicArray(DynamicArray* list) {
 	free(list->items);
 	list->items = NULL;
 	free(list);

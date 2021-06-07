@@ -52,8 +52,11 @@ getNumSamples(AsyncEnergyMonitor* monitor) {
 	if (USING_DYNAMIC_ARRAY) n = monitor->samples_dynarr->nItems;
 	else if (USING_LINKED_LIST) n = monitor->samples_linklist->nItems;
 	else n = -1;
-	// printf(">>| %d, %ld, %d\n", n, getSocketNum(), n/(int)getSocketNum());
-	return n / ((int)getSocketNum()); // stores each individual reading, but we want to think of samples as a group of readings per socket
+	return n / ((int)getSocketNum()); /*
+		the data structure stores each individual reading,
+		but we want to think of samples as a group of
+		readings per socket
+	*/
 }
 
 AsyncEnergyMonitor*
