@@ -28,3 +28,5 @@ Ideas for future development:
 	- Make the AsyncMonitor have an 'auto dump' file, then have it dump its content to file (on a separate thread) and clear out.
 		To make it not indefinitely grow in memory
 	- AsyncMonitor runs a set number of samples at a rate, instead of a start/stop wait loop
+
+	- EnergySample.dumps() and EnergySample.loads()
