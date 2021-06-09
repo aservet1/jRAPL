@@ -34,7 +34,7 @@ multiply_string_by_socket_num(char buffer[], char string[]) {
 void
 get_energy_stats_jni_string_format(char buffer[512]) {
 	char* string;
-	switch (get_power_domains_supported(get_cpu_model())) {
+	switch (get_power_domains_supported(get_micro_architecture())) {
 		case DRAM_GPU_CORE_PKG:
 			string = "dram,gpu,core,pkg@";
 			break;
@@ -55,7 +55,7 @@ get_energy_stats_jni_string_format(char buffer[512]) {
 
 int
 energy_stats_to_jni_string(EnergyStats estats, char* ener_string) {
-	switch (get_power_domains_supported(get_cpu_model())) {
+	switch (get_power_domains_supported(get_micro_architecture())) {
 		case DRAM_GPU_CORE_PKG:
 			return sprintf(ener_string, "%.4f,%.4f,%.4f,%.4f@",
 				estats.dram,
@@ -98,7 +98,7 @@ energy_stats_csv_header(char csv_header[512]) {
 
 int
 energy_stats_csv_string(EnergyStats estats, char* csv_string) {
-	switch (get_power_domains_supported(get_cpu_model())) {
+	switch (get_power_domains_supported(get_micro_architecture())) {
 		case DRAM_GPU_CORE_PKG:
 			return sprintf(csv_string, "%d,%.4f,%.4f,%.4f,%.4f,%ld",
 				estats.socket,

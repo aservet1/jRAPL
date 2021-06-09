@@ -3,7 +3,7 @@
 #ifndef _ARCH_SPEC_H
 #define _ARCH_SPEC_H
 #include "MSR.h"
-#include "CpuModels.h"
+#include "MicroArchitectures.h"
 
 #define CPUID				\
     __asm__ volatile ("cpuid"   	\
@@ -31,7 +31,7 @@ typedef struct cpuid_info_t {
   *	None of these are global variables any more
   *
   *	extern uint32_t eax, ebx, ecx, edx;
-  *	extern uint32_t cpu_model;
+  *	extern uint32_t micro_architecture;
   *
   *	int read_time = 0;
   *	uint64_t max_pkg = 0;
@@ -53,7 +53,7 @@ typedef struct cpuid_info_t {
   */
 
 uint32_t
-get_cpu_model(void);
+get_micro_architecture(void);
 
 void
 parse_apic_id(cpuid_info_t info_l0, cpuid_info_t info_l1, APIC_ID_t *my_id);
@@ -80,13 +80,12 @@ rapl_msr_unit
 get_rapl_unit();
 
 int 
-get_power_domains_supported(uint32_t cpu_model);
+get_power_domains_supported(uint32_t micro_architecture);
 
 /*
     These macros possible return values of
-    get_power_domains_supported. The values
-    are arbitary as long as they are distinct
-    from one other.
+    get_power_domains_supported. The actual values
+    are arbitary as long as they are distinct.
 */
 #define UNDEFINED_ARCHITECTURE 0xA0U
 #define DRAM_GPU_CORE_PKG 0xA1U

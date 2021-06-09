@@ -5,14 +5,14 @@ public final class ArchSpec {
 	public static final int NUM_SOCKETS;	
 	public static final int NUM_STATS_PER_SOCKET;
 	public static final int RAPL_WRAPAROUND;
-	public static final int CPU_MODEL;
-	public static final String CPU_MODEL_NAME;
+	public static final int MICRO_ARCHITECTURE;
+	public static final String MICRO_ARCHITECTURE_NAME;
 	public static final String ENERGY_STATS_STRING_FORMAT;
 
 	public native static int getSocketNum();
 	public native static int getWraparoundEnergy();
-	public native static String getCpuModelName();
-	public native static int getCpuModel();
+	public native static String getMicroArchitectureName();
+	public native static int getMicroArchitecture();
 	public native static String energyStatsStringFormat();
 
 	// the indexes of where power domains are in the returned array of energy stats
@@ -32,8 +32,8 @@ public final class ArchSpec {
 		EnergyManager m = new EnergyManager();	// to make sure that native access has been set up at this point.
 		m.activate();								// is dealloc'd by the end of this static block since it has no other use
 		
-		CPU_MODEL = getCpuModel();
-		CPU_MODEL_NAME = getCpuModelName();
+		MICRO_ARCHITECTURE = getMicroArchitecture();
+		MICRO_ARCHITECTURE_NAME = getMicroArchitectureName();
 
 		NUM_SOCKETS = getSocketNum();
 		RAPL_WRAPAROUND = getWraparoundEnergy();
@@ -76,8 +76,8 @@ public final class ArchSpec {
 	public static String infoString() {
 		return String.join(
 			"\n",
-			"CPU_MODEL: " + Integer.toHexString(CPU_MODEL),
-			"CPU_MODEL_NAME: " + CPU_MODEL_NAME,
+			"MICRO_ARCHITECTURE: " + Integer.toHexString(MICRO_ARCHITECTURE),
+			"MICRO_ARCHITECTURE_NAME: " + MICRO_ARCHITECTURE_NAME,
 			"",
 			"NUM_SOCKETS: " + NUM_SOCKETS,
 			"RAPL_WRAPAROUND: " + RAPL_WRAPAROUND,

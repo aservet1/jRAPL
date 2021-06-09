@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-/** Prints the hex id for your cpu model. Exctracted from jRAPL's ArchSpec code */
+/** Prints the hex id for your micro_architecture. Exctracted from jRAPL's ArchSpec code */
 
 #define CPUID				\
     __asm__ volatile ("cpuid"   	\
@@ -11,7 +11,7 @@
 			"=d" (edx)	\
 			: "0" (eax), "2" (ecx))
 uint32_t
-get_cpu_model(void)
+get_micro_architecture(void)
 {
 	uint32_t eax, ebx, ecx, edx;
     eax = 0x01;
@@ -22,5 +22,5 @@ get_cpu_model(void)
 
 
 int main() {
-	printf("cpu model: %x\n",get_cpu_model());
+	printf("micro_architecture: %x\n",get_micro_architecture());
 }

@@ -30,14 +30,14 @@ Java_jRAPL_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls) {
 }
 
 JNIEXPORT jint JNICALL
-Java_jRAPL_ArchSpec_getCpuModel(JNIEnv* env, jclass jcls) {
-	return get_cpu_model();
+Java_jRAPL_ArchSpec_getMicroArchitecture(JNIEnv* env, jclass jcls) {
+	return get_micro_architecture();
 }
 
 JNIEXPORT jstring JNICALL
-Java_jRAPL_ArchSpec_getCpuModelName(JNIEnv* env, jclass jcls) {
+Java_jRAPL_ArchSpec_getMicroArchitectureName(JNIEnv* env, jclass jcls) {
 	const char* name;
-	switch(get_cpu_model()) {
+	switch(get_micro_architecture()) {
 		case KABYLAKE:			name = "KABYLAKE";			break;
 		case BROADWELL:			name = "BROADWELL";			break;
 		case SANDYBRIDGE_EP:	name = "SANDYBRIDGE_EP";	break;
@@ -52,7 +52,7 @@ Java_jRAPL_ArchSpec_getCpuModelName(JNIEnv* env, jclass jcls) {
 		case BROADWELL2:		name = "BROADWELL2";		break;
 		case HASWELL2:			name = "HASWELL2";			break;
 		case SKYLAKE1:			name = "SKYLAKE1";			break;
-		default: name = "UNDEFINED_ARCHITECTURE";
+		default: name = "UNDEFINED_MICROARCHITECTURE";
 	}
 	return (*env)->NewStringUTF(env, name);
 }
