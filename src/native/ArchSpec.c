@@ -28,7 +28,7 @@ get_rapl_unit(int msr_fd)
 -	-	Bits 23-16: Number of logical processors per physical processor; two for the Pentium 4 processor supporting Hyper-Threading Technology
  */
 uint32_t
-get_cpu_model(void)
+get_micro_architecture(void)
 {
 	uint32_t eax, ebx, ecx, edx;
     eax = 0x01;
@@ -155,8 +155,8 @@ getSocketNum() {
 }
 
 int
-get_power_domains_supported(uint32_t cpu_model) {
-	switch (cpu_model) {
+get_power_domains_supported(uint32_t micro_architecture) {
+	switch (micro_architecture) {
 		case KABYLAKE:			case BROADWELL:
 		
 			return DRAM_GPU_CORE_PKG;

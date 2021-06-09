@@ -31,7 +31,7 @@ copy_to_string(EnergyStats stats_per_socket[num_sockets], char ener_info[512]) {
 JNIEXPORT void JNICALL
 Java_jRAPL_EnergyManager_profileInit(JNIEnv *env, jclass jcls) {
 	num_sockets = getSocketNum();
-	power_domains_supported = get_power_domains_supported(get_cpu_model()); // this variable is not necessary to store in this file scope, or is it?
+	power_domains_supported = get_power_domains_supported(get_micro_architecture()); // this variable is not necessary to store in this file scope, or is it?
 	ProfileInit();
 }
 
