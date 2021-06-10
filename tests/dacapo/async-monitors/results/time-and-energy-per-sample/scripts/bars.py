@@ -1,4 +1,4 @@
-# 3 plots: energy per dram&pkg, time per sample
+# 3 plots: energy per sample for dram, energy per sample for pkg, time per sample
 
 import json
 from sys import argv
