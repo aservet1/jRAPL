@@ -5,7 +5,7 @@ jRAPL is a computer energy monitoring API in Java. RAPL stands for Running Avera
 and set power limits. jRAPL uses the energy monitoring technology and implements it in Java, abstracting out low-level details about register reading and how to
 access the data.
 
-I am developing this library as part of a research project for energy aware programming at my university. The (original)[https://github.com/kliu20/jRAPL]
+I am developing this library as part of a research project for energy aware programming at my university. The [original](https://github.com/kliu20/jRAPL)
 version of jRAPL was made several years ago by one of my team members, used for several projects that were going on at the time. I'm taking his existing
 code and expanding on it, adding improvements and making it a standalone general purpose library for the research community to be able to use.
 
