@@ -107,4 +107,4 @@ MICRO_ARCHITECTURE_NAME: KABYLAKE
 If `MICRO_ARCHITECTURE` says something like `UNDEFINED_ARCHITECTURE`, feel free to open a pull request with whatever your output was and I'll update, if possible.
 
 ### Contact
-Any questions, feel free to email. Alejandro Servetto {aservet1@binghamton.edu} or {a.l.servetto@gmail.com}
+Any questions, feel free to email. Alejandro Servetto {aservet1@binghamton.edu}
