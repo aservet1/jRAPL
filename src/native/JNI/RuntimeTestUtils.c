@@ -19,7 +19,7 @@ static int* fd;
 
 JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_initCSideTiming(JNIEnv* env, jclass jcls) {
 	num_sockets = getSocketNum();
-	power_domains_supported = get_power_domains_supported(get_cpu_model());
+	power_domains_supported = get_power_domains_supported(get_micro_architecture());
 	fd = (int *) malloc(num_sockets * sizeof(int));
 	uint64_t num_pkg_thread = get_num_pkg_thread();
 	char msr_filename[BUFSIZ];

@@ -20,13 +20,13 @@ static rapl_msr_parameter* parameters = NULL;
 static int* msr_fds = NULL;
 
 static int power_domains_supported;
-static uint32_t cpu_model;
+static uint32_t micro_architecture;
 static rapl_msr_unit rapl_unit;
 static uint64_t num_pkg;
 static int wraparound_energy = -1;
 static int num_cores;
 
-// only valid after ProfileInit() has been called. otherwise ignore it
+// only valid after ProfileInit() has been called. it's set to NULL in all other cases
 int*
 get_msr_fds() {
 	return msr_fds;
@@ -50,7 +50,7 @@ read_gpu(int i) {
 static inline double
 read_dram(int i) {
 	double result = read_msr(msr_fds[i],MSR_DRAM_ENERGY_STATUS);
-	if (cpu_model == BROADWELL || cpu_model == BROADWELL2) {
+	if (micro_architecture == BROADWELL || micro_architecture == BROADWELL2) {
 		return (double) result * MSR_DRAM_ENERGY_UNIT;
 	} else {
 		return (double) result * rapl_unit.energy;
@@ -63,8 +63,8 @@ ProfileInit() {
 	int core = 0;
 
 	num_pkg = getSocketNum(); 
-	cpu_model = get_cpu_model();
-	power_domains_supported = get_power_domains_supported(cpu_model);
+	micro_architecture = get_micro_architecture();
+	power_domains_supported = get_power_domains_supported(micro_architecture);
 	uint64_t num_pkg_thread = get_num_pkg_thread();
 
 	/*only two domains are supported for parameters check*/
@@ -116,7 +116,7 @@ EnergyStatCheck(EnergyStats stats_per_socket[num_pkg]) {
 				stats_per_socket[i].pkg = read_pkg(i);
 				break;
 			case UNDEFINED_ARCHITECTURE:
-				fprintf(stderr,"ERROR: Architecture not found: %X\n",cpu_model);
+				fprintf(stderr,"ERROR: MicroArchitecture not supported: %X\n",micro_architecture);
 				break;
 		}
 		int socket = (i+1);
@@ -132,8 +132,8 @@ ProfileInitAllCores(int num_readings) {
 	char msr_filename[BUFSIZ];
 
 	num_pkg = getSocketNum(); 
-	cpu_model = get_cpu_model();
-	power_domains_supported = get_power_domains_supported(cpu_model);
+	micro_architecture = get_micro_architecture();
+	power_domains_supported = get_power_domains_supported(micro_architecture);
 	uint64_t num_pkg_thread = get_num_pkg_thread();
 
 	/*only two domains are supported for parameters check*/

@@ -1,7 +1,6 @@
 
 javafiles = AsyncMonitorCallback.java \
-			AsyncMemoryMonitor.java \
-			NoDacapoCallback.java
+			AsyncMemoryMonitor.java
 
 classfiles = $(javafiles:.java=.class)
 
@@ -10,7 +9,7 @@ jRAPL-jar = jRAPL-1.0.jar
 classpath = $(dacapo-jar):$(jRAPL-jar):.
 
 all:
-	cp ~/jRAPL/java/target/$(jRAPL-jar) .
+	cp ~/jRAPL/src/java/target/$(jRAPL-jar) .
 	javac -cp $(classpath) $(javafiles)
 
 clean:
