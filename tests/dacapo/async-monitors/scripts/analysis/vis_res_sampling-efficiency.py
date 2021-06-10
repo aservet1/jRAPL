@@ -38,7 +38,7 @@ c_ll_samples_per_ms = []
 c_da_samples_per_ms = []
 
 for benchmark in data:
-    if benchmark == 'h2': continue
+    if benchmark == 'h2': continue #h2 has buggy results, try this again when you re-run your stuff
 
     def get_by_monitor_type(data, monitor_type):
         return [ d for d in data[benchmark] if d['metadata']['monitor_type'] == monitor_type ][0]
