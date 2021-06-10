@@ -52,7 +52,7 @@ public class EnergyStatsUpdateTime {
 		private ArrayList<EnergyStats> samples = new ArrayList<>(65536); // come up with the most optimal initial size
 		
 		private int currentIteration = 0; // track how many iterations we've done, so we can tell if it's in the warmup phase or not
-		private final int WARMUP_ITERATIONS = 5;
+		private final int WARMUP_ITERATIONS = 5; // if you change this, make sure you change the benchmark warmup annotations!
 
 		@Setup(Level.Trial)
 		public void setup() {
@@ -111,7 +111,7 @@ public class EnergyStatsUpdateTime {
 	@Benchmark
 	@Fork(1)
 	@Warmup(iterations = 5)
-	@Measurement(iterations = 5)
+	@Measurement(iterations = 15)
 	@BenchmarkMode(Mode.Throughput)
 	public void postProcessAddSample(State_ state) {
 		state.addSample();
