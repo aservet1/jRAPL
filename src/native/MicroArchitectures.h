@@ -18,7 +18,7 @@
 #define BROADWELL	0xD4U
 #define BROADWELL2	0x4FU
 
-#define APOLLOLAKE	0x5CU //alejandro's computer
+#define APOLLOLAKE	0x5CU // alejandro's computer
 #define COFFEELAKE2	0x9eU // rutvik's first computer
 #define KABYLAKE	0x8eU
 //#define KABYLAKE_v2 0x9eU //KABYLAKE has 2 cpu model numbers to it (im unsure if this is true, since 0x9e is COFFEELAKE2...)
