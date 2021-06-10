@@ -105,7 +105,7 @@ which will print out a few architecture-specific parameters. The relevant output
 MICRO_ARCHITECTURE: 8e
 MICRO_ARCHITECTURE_NAME: KABYLAKE
 ```
-If `MICRO_ARCHITECTURE` says something like `UNDEFINED_ARCHITECTURE`, it won't work on your machine.
+If `MICRO_ARCHITECTURE_NAME` says something like `UNDEFINED_ARCHITECTURE`, it won't work on your machine.
 Feel free to open a pull request with whatever your output was and I'll update, if possible.
 
 ### Contact
