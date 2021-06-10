@@ -98,13 +98,15 @@ versions where all the computations are done and stored in native code. The API 
 implementation is.
 
 ## Checking if it works on your machine
-To see if your computer's architecture is supported, run `sudo java -cp src/java/target/jRAPL-1.0.jar jRAPL.ArchSpec`, which will print out a few architecture
-specific parameters. The relevant output will be something like:
+To see if your computer's architecture is supported, run 
+```sudo java -cp src/java/target/jRAPL-1.0.jar jRAPL.ArchSpec```
+which will print out a few architecture-specific parameters. The relevant output will be something like:
 ```
 MICRO_ARCHITECTURE: 8e
 MICRO_ARCHITECTURE_NAME: KABYLAKE
 ```
-If `MICRO_ARCHITECTURE` says something like `UNDEFINED_ARCHITECTURE`, feel free to open a pull request with whatever your output was and I'll update, if possible.
+If `MICRO_ARCHITECTURE` says something like `UNDEFINED_ARCHITECTURE`, it won't work on your machine.
+Feel free to open a pull request with whatever your output was and I'll update, if possible.
 
 ### Contact
 Any questions, feel free to email. Alejandro Servetto {aservet1@binghamton.edu}
