@@ -15,6 +15,14 @@ see where it can be optimized, and for a technical writeup of the new developmen
 Because this is still under development, I don't have robust documentation on all of the features and how it works. I have the basics listed below for if
 anyone wants to use it right now for what it is, but there is still development that needs to be done.
 
+## Performance Tests
+I'm currently running several runtime and memory overhead tests on the tool. All of the code for that is in the `tests` directory. That part is still
+very ad-hoc and under development. Once it's all done, it'll be organized into a way where all of the experiments can be run and the results can be
+reported on any system with little to no prior configuration.
+
+I have some runtime micro-benchmarks done with the [Java MicroBenchmark Harness](https://github.com/openjdk/jmh) and some longer-term benchmarks
+to observe memory footprint and some other performance metrics with the [DaCapo Benchmark Suite](http://dacapobench.sourceforge.net/).
+
 ## How to build
 Right now, it's all made by a Makefile at the top level directory. I'll have a more sophisticated build by release time, if necessary.
 You can do `make clean` and `make all`. It triggers other makefiles to build the native library, found in `src/native` and calls Maven to compile the Java
