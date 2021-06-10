@@ -5,7 +5,7 @@ jRAPL is a computer energy monitoring API in Java. RAPL stands for Running Avera
 and set power limits. jRAPL uses the energy monitoring technology and implements it in Java, abstracting out low-level details about register reading and how to
 access the data.
 
-I am developing this library as part of a research project for energy aware programming at my university. The (original)[https://github.com/kliu20/jRAPL]
+I am developing this library as part of a research project for energy aware programming at my university. The [original](https://github.com/kliu20/jRAPL)
 version of jRAPL was made several years ago by one of my team members, used for several projects that were going on at the time. I'm taking his existing
 code and expanding on it, adding improvements and making it a standalone general purpose library for the research community to be able to use.
 
@@ -98,16 +98,15 @@ versions where all the computations are done and stored in native code. The API 
 implementation is.
 
 ## Checking if it works on your machine
-To see if your computer's architecture is supported, run `sudo java -cp src/java/target/jRAPL-1.0.jar jRAPL.ArchSpec`, which will print out a few architecture
-specific parameters. The relevant output will be something like:
+To see if your computer's architecture is supported, run 
+```sudo java -cp src/java/target/jRAPL-1.0.jar jRAPL.ArchSpec```
+which will print out a few architecture-specific parameters. The relevant output will be something like:
 ```
 MICRO_ARCHITECTURE: 8e
 MICRO_ARCHITECTURE_NAME: KABYLAKE
 ```
-If `MICRO_ARCHITECTURE` says something like `UNDEFINED_ARCHITECTURE`, feel free to open a pull request with whatever your output was and I'll update, if possible.
-
-Some classes have sample `main()` drivers that you can execute, for example `sudo java -cp jRAPL-1.0.jar jRAPL.SyncEnergyMonitor`.
-
+If `MICRO_ARCHITECTURE_NAME` says something like `UNDEFINED_ARCHITECTURE`, it won't work on your machine.
+Feel free to open a pull request with whatever your output was and I'll update, if possible.
 
 ### Contact
-Any questions, feel free to email. Alejandro Servetto {aservet1@binghamton.edu} or {a.l.servetto@gmail.com}
+Any questions, feel free to email. Alejandro Servetto {aservet1@binghamton.edu}
