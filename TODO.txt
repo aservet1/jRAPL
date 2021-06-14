@@ -30,3 +30,7 @@ Ideas for future development:
 	- AsyncMonitor runs a set number of samples at a rate, instead of a start/stop wait loop
 
 	- EnergySample.dumps() and EnergySample.loads()
+
+	- Instead of returning an EnergyStats object as a human readable string across the JNI, serialize the raw bits of the struct, return that
+		as a string, and then write a java-side parsing function. That's probably going to be hard to write but the string brought across will
+		be smaller, and it'll probably be less computation overall, unless if the Java hella-optimizes string splitting and atoi type computations

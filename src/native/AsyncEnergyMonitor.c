@@ -52,24 +52,26 @@ getNumSamples(AsyncEnergyMonitor* monitor) {
 	if (USING_DYNAMIC_ARRAY) n = monitor->samples_dynarr->nItems;
 	else if (USING_LINKED_LIST) n = monitor->samples_linklist->nItems;
 	else n = -1;
-	// printf(">>| %d, %ld, %d\n", n, getSocketNum(), n/(int)getSocketNum());
-	return n / ((int)getSocketNum()); // stores each individual reading, but we want to think of samples as a group of readings per socket
+	return n / ((int)getSocketNum()); /*
+		the data structure stores each individual reading,
+		but we want to think of samples as a group of
+		readings per socket
+	*/
 }
 
 AsyncEnergyMonitor*
-newAsyncEnergyMonitor(int samplingRate, int storageType) {
+newAsyncEnergyMonitor(int samplingRate, int storageType, size_t initialStorageSize) { // size_parameter is array size for DynArr and node capacity for LinkedList
 	AsyncEnergyMonitor* monitor = (AsyncEnergyMonitor*)malloc(sizeof(AsyncEnergyMonitor));
-
 	monitor->exit = false;
 	monitor->samplingRate = samplingRate;
 	monitor->storageType = storageType;
 	if (USING_DYNAMIC_ARRAY) {
-		monitor->samples_dynarr = newDynamicArray(64);
+		monitor->samples_dynarr = newDynamicArray(initialStorageSize*getSocketNum()); // while the lists store items as individual EnergyStats objs, they're conceptually grouped as EnergyStats readings for all sockets. so an 'item' in the underlying data structure is one EnergyStats struct. but an 'item' from the perspective of the user is a list of EnergyStats structs, each pertaining to the readings of a given socket. the structs are stored in order, so the first one is for socket1, the second one is for socket2, etc.
 		monitor->samples_linklist = NULL;
 	}
 	if (USING_LINKED_LIST) {
 		monitor->samples_dynarr = NULL;
-		monitor->samples_linklist = newLinkedList();
+		monitor->samples_linklist = newLinkedList(initialStorageSize*getSocketNum());
 	}
 	return monitor;
 }
@@ -103,9 +105,10 @@ run(void* monitor_arg) {
 	int sockets = getSocketNum();
 	EnergyStats stats[sockets];
 
-	while (!monitor->exit)
-	{
+	while (!monitor->exit) {
 		EnergyStatCheck(stats); 
+		// char tmpbuf[512]; energy_stats_csv_string(stats, tmpbuf); printf("~ %s --\n", tmpbuf);
+		// printf("~ %f %f %f %f ->\n", stats[0].dram, stats[0].gpu, stats[0].core, stats[0].pkg);
 		for (int i = 0; i < sockets; i++) {
 			storeEnergySample(monitor,stats[i]);
 		}
@@ -133,8 +136,9 @@ reset(AsyncEnergyMonitor* monitor) {
 		monitor->samples_dynarr = newDynamicArray(16);
 	}
 	else if (USING_LINKED_LIST) {
+		size_t node_capacity = monitor->samples_linklist->node_capacity;
 		freeLinkedList(monitor->samples_linklist);
-		monitor->samples_linklist = newLinkedList();
+		monitor->samples_linklist = newLinkedList(node_capacity);
 	}
 }
 
@@ -157,7 +161,7 @@ writeFileCSV(AsyncEnergyMonitor *monitor, const char* filepath) {
 }
 
 
-// for some reason return_array needs to be allocated on the heap, passing a
+// For some reason return_array needs to be allocated on the heap, passing a
 //  stack-allocated array copies everything into the array, but then alters
 //  the pointer to something that segfaults when you try to access it. but this
 //  fills and works just fine when it's heap-allocated
@@ -192,21 +196,21 @@ lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats* return_buffer) {
 		LinkedList* list = monitor->samples_linklist;
 		// find which node contains last k'th element (the same as the start'th element)
 		LinkNode* current = list->head;
-		int current_upperbound = NODE_CAPACITY;
+		int current_upperbound = list->node_capacity;
 		while (current_upperbound < start) {
 			current = current->next;
-			current_upperbound += NODE_CAPACITY;
+			current_upperbound += list->node_capacity;
 		}
 		// copy over the relevant parts of this node
-		current_upperbound = (current == list->tail) ? list->nItemsAtTail : NODE_CAPACITY;
+		current_upperbound = (current == list->tail) ? list->nItemsAtTail : list->node_capacity;
 
-		for (int i = start % NODE_CAPACITY ; i < current_upperbound; i++) {
+		for (int i = start % list->node_capacity ; i < current_upperbound; i++) {
 			return_buffer[returnArrayIndex++] = current->items[i];
 		}
 		current = current->next;
 		while (current != NULL) {
 			current_upperbound = (current != list->tail)
-				? NODE_CAPACITY
+				? list->node_capacity
 				: list->nItemsAtTail;
 			for ( int i = 0; i < current_upperbound; i++ ) {
 				return_buffer[returnArrayIndex++] = current->items[i];
