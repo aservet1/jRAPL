@@ -4,10 +4,10 @@
 #include <sys/time.h>
 
 typedef struct {
-	float pkg;
 	float dram;
 	float gpu; //pp1
 	float core;//pp0
+	float pkg;
 	unsigned long timestamp;
 } EnergyStats;
 
