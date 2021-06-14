@@ -117,25 +117,25 @@ energy_stats_csv_header(char csv_header[512]) {
 	const char* format;
 	switch(get_power_domains_supported(get_micro_architecture())) {
 		case DRAM_GPU_CORE_PKG:
-			format = "dram_socket%d,gpu_socket_%d,core_socket%d,pkg_socket%d";
+			format = "dram_socket%d,gpu_socket_%d,core_socket%d,pkg_socket%d,";
 			for (int s = 1; s <= num_sockets; s++) {
 				offset += sprintf(csv_header + offset, format, s,s,s,s);
-				if (s <= num_sockets-1) offset += sprintf(csv_header+offset,",");
-			}
+				// if (s <= num_sockets-1) offset += sprintf(csv_header+offset,",");
+			} sprintf(csv_header + offset, "timestamp");
 			return;
 		case DRAM_CORE_PKG:
-			format = "dram_socket%d,core_socket%d,pkg_socket%d";
+			format = "dram_socket%d,core_socket%d,pkg_socket%d,";
 			for (int s = 1; s <= num_sockets; s++) {
 				offset += sprintf(csv_header + offset, format, s,s,s);
-				if (s <= num_sockets-1) offset += sprintf(csv_header+offset,",");
-			}
+				// if (s <= num_sockets-1) offset += sprintf(csv_header+offset,",");
+			} sprintf(csv_header + offset, "timestamp");
 			return;
 		case GPU_CORE_PKG:
-			format = "gpu_socket_%d,core_socket%d,pkg_socket%d";
+			format = "gpu_socket_%d,core_socket%d,pkg_socket%d,";
 			for (int s = 1; s <= num_sockets; s++) {
 				offset += sprintf(csv_header + offset, format, s,s,s);
-				if (s <= num_sockets-1) offset += sprintf(csv_header+offset,",");
-			}
+				// if (s <= num_sockets-1) offset += sprintf(csv_header+offset,",");
+			} sprintf(csv_header + offset, "timestamp");
 			return;
 		default:
 			sprintf(csv_header, "undefined_architecture");
