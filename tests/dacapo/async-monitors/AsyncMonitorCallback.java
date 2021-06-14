@@ -1,4 +1,3 @@
-
 import org.dacapo.harness.CommandLineArgs;   
 import org.dacapo.harness.Callback;      
 import java.io.*;
@@ -17,11 +16,10 @@ public class AsyncMonitorCallback extends Callback {
 	private AsyncEnergyMonitor energyMonitor;
 	private AsyncMemoryMonitor memoryMonitor;
 	private boolean monitoringEnergy;
-	
+
 	public AsyncMonitorCallback(CommandLineArgs args) {
 		super(args);
 		monitoringEnergy = System.getProperty("monitoringEnergy").equals("true");
-		
 		if (monitoringEnergy) {
 			monitorType = System.getProperty("monitorType");
 			System.out.printf("monitorType = %s\n", monitorType);
@@ -39,6 +37,7 @@ public class AsyncMonitorCallback extends Callback {
 					System.err.println(String.format("Invalid option for monitorType: '%s'",monitorType));
 					System.exit(1);
 			}
+			energyMonitor.activate();
 		}
 		memoryMonitor = new AsyncMemoryMonitor();
 	}
@@ -68,8 +67,13 @@ public class AsyncMonitorCallback extends Callback {
 		super.complete(benchmark, valid);
 		currentIter++;
 		if (currentIter > WARMUPS) {
-			String fileNameBase = String.format("%s/%s_%d_%s", System.getProperty("resultDir"), benchmark, (currentIter-WARMUPS), monitorType != null? monitorType : "nojrapl");
-			
+			String fileNameBase = String.format(
+				"%s/%s_%d_%s",
+				System.getProperty("resultDir"),
+				benchmark,
+				(currentIter-WARMUPS),
+				monitorType != null? monitorType : "nojrapl"
+			);
 			if (monitoringEnergy) {
 				energyMonitor.writeFileMetadata(null); System.out.printf(" -- monitorType: %s\n",monitorType);
 				energyMonitor.writeFileMetadata(fileNameBase+".metadata.json");
@@ -79,8 +83,14 @@ public class AsyncMonitorCallback extends Callback {
 		}
 		if (monitoringEnergy) {
 			energyMonitor.reset();
+		} memoryMonitor.reset();
+	}
+	@Override
+	public boolean runAgain() {
+		boolean doRun = super.runAgain();
+		if (!doRun && monitoringEnergy) {
 			energyMonitor.deactivate();
 		}
-		memoryMonitor.reset();
+		return doRun;
 	}
 }
