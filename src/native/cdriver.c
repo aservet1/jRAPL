@@ -27,8 +27,21 @@ void pkg_power_sampleread() {
 	close(fd);
 }
 
+typedef struct OldEnergyStats {
+	char socket;
+	double dram;
+	double gpu;
+	double core;
+	double pkg;
+	struct timeval timestamp;
+} OldEnergyStats;
+
 int main(int argc, const char* argv[])
 {
+	printf(" . %ld\n",sizeof(EnergyStats));
+	printf(" . %ld\n",sizeof(OldEnergyStats));
+	exit(0);
+
 	ProfileInit();
 
 	//AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,DYNAMIC_ARRAY_STORAGE);
