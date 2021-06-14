@@ -23,6 +23,8 @@ warmups=$4
 monitorType=$5
 resultDir=$6
 
+mkdir -p resultDir
+
 source scripts/benchmark_size_assoc
 size=${benchmark_size_assoc[$benchmark]}
 
