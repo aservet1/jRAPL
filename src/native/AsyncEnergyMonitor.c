@@ -52,8 +52,11 @@ getNumSamples(AsyncEnergyMonitor* monitor) {
 	if (USING_DYNAMIC_ARRAY) n = monitor->samples_dynarr->nItems;
 	else if (USING_LINKED_LIST) n = monitor->samples_linklist->nItems;
 	else n = -1;
-	// printf(">>| %d, %ld, %d\n", n, getSocketNum(), n/(int)getSocketNum());
-	return n / ((int)getSocketNum()); // stores each individual reading, but we want to think of samples as a group of readings per socket
+	return n / ((int)getSocketNum()); /*
+		the data structure stores each individual reading,
+		but we want to think of samples as a group of
+		readings per socket
+	*/
 }
 
 AsyncEnergyMonitor*
@@ -103,9 +106,10 @@ run(void* monitor_arg) {
 	int sockets = getSocketNum();
 	EnergyStats stats[sockets];
 
-	while (!monitor->exit)
-	{
+	while (!monitor->exit) {
 		EnergyStatCheck(stats); 
+		// char tmpbuf[512]; energy_stats_csv_string(stats, tmpbuf); printf("~ %s --\n", tmpbuf);
+		// printf("~ %f %f %f %f ->\n", stats[0].dram, stats[0].gpu, stats[0].core, stats[0].pkg);
 		for (int i = 0; i < sockets; i++) {
 			storeEnergySample(monitor,stats[i]);
 		}
@@ -157,7 +161,7 @@ writeFileCSV(AsyncEnergyMonitor *monitor, const char* filepath) {
 }
 
 
-// for some reason return_array needs to be allocated on the heap, passing a
+// For some reason return_array needs to be allocated on the heap, passing a
 //  stack-allocated array copies everything into the array, but then alters
 //  the pointer to something that segfaults when you try to access it. but this
 //  fills and works just fine when it's heap-allocated
