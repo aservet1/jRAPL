@@ -24,8 +24,8 @@ I have some runtime micro-benchmarks done with the [Java MicroBenchmark Harness]
 to observe memory footprint and some other performance metrics with the [DaCapo Benchmark Suite](http://dacapobench.sourceforge.net/).
 
 ## How to build
-Right now, it's all made by a Makefile at the top level directory. I'll have a more sophisticated build by release time, if necessary.
-You can do `make clean` and `make all`. It triggers other makefiles to build the native library, found in `src/native` and calls Maven to compile the Java
+Right now, it's all made by a shell script at the top level, and then Maven plus a few Makefiles. I'll have a more sophisticated build by the time the project is done.
+You can do `./build.sh` and `./build clean`. It triggers other makefiles to build the native library, found in `src/native` and calls Maven to compile the Java
 files in `src/java`. The final JAR is in `src/java/target/jRAPL-1.0.jar`, which you can move anywhere you want to include in your project and import the
 relevant modules.
 
