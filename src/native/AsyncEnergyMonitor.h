@@ -23,7 +23,7 @@ typedef struct AsyncEnergyMonitor {
 
 } AsyncEnergyMonitor;
 
-AsyncEnergyMonitor* newAsyncEnergyMonitor(int delay, int storageType);
+AsyncEnergyMonitor* newAsyncEnergyMonitor(int delay, int storageType, size_t initialStorageSize);
 void start(AsyncEnergyMonitor *monitor);
 void stop(AsyncEnergyMonitor *monitor);
 void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor);

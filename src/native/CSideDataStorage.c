@@ -6,7 +6,7 @@
 #include "ArchSpec.h"
 #include "CSideDataStorage.h"
 
-DynamicArray* newDynamicArray(int capacity) {
+DynamicArray* newDynamicArray(size_t capacity) {
 	DynamicArray* list = (DynamicArray*)malloc(sizeof(DynamicArray));
 	list->capacity = capacity;
 	list->nItems = 0;
@@ -22,16 +22,18 @@ void freeDynamicArray(DynamicArray* list) {
 }
 
 LinkNode*
-newLinkNode() {
+newLinkNode(size_t capacity) {
 	LinkNode* node = malloc(sizeof(LinkNode));
 	node->next = NULL;
+	node->items = (EnergyStats*)malloc(sizeof(EnergyStats)*capacity);
 	return node;
 }
 
 LinkedList*
-newLinkedList() {
-	LinkNode* node = newLinkNode();
+newLinkedList(size_t node_capacity) {
+	LinkNode* node = newLinkNode(node_capacity);
 	LinkedList* list = malloc(sizeof(LinkedList));
+	list->node_capacity = node_capacity;
 	list->head = node;
 	list->tail = node;
 	list->nItemsAtTail = 0;
@@ -46,10 +48,12 @@ freeLinkedList(LinkedList* l) {
 	LinkNode* current = l->head->next;
 	LinkNode* prev = l->head;
 	while(current != NULL) {
+		free(prev->items);
 		free(prev);
 		prev = current;
 		current = current->next;
 	}
+	free(prev->items);
 	free(prev); //free(l->head); //free(l->tail);
 	l->head = NULL;
 	l->tail = NULL;
@@ -59,8 +63,8 @@ freeLinkedList(LinkedList* l) {
 
 void
 addItem_LinkedList(LinkedList* l, EnergyStats stats) { // add to tail
-	if (l->nItemsAtTail == NODE_CAPACITY) {
-		l->tail->next = newLinkNode();
+	if (l->nItemsAtTail == l->node_capacity) {
+		l->tail->next = newLinkNode(l->node_capacity);
 		l->tail = l->tail->next;
 		l->nItemsAtTail = 0;
 	}
@@ -99,7 +103,7 @@ writeFileCSV_LinkedList(FILE* outfile, LinkedList* l) {
 	EnergyStats multisocket_sample_buffer[num_sockets];
 	char csv_line_buffer[512];
 	for (int global_index = 0; global_index < l->nItems; global_index++) {
-		local_index = global_index % NODE_CAPACITY;
+		local_index = global_index % l->node_capacity;
 		if (local_index == 0 && global_index != 0) {
 			current = current->next;
 			// printf(" --\n"); // delimits between the contents of each node (useful to uncomment for debugging)

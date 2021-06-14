@@ -8,8 +8,8 @@
 static AsyncEnergyMonitor* monitor = NULL;
 
 JNIEXPORT void JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_activateNative(JNIEnv* env, jclass jcls, jint samplingRate, jint storageType) {
-	monitor = newAsyncEnergyMonitor(samplingRate, storageType);
+Java_jRAPL_AsyncEnergyMonitorCSide_activateNative(JNIEnv* env, jclass jcls, jint samplingRate, jint storageType, jint initialSize) {
+	monitor = newAsyncEnergyMonitor(samplingRate, storageType, initialSize);
 }
 
 JNIEXPORT void JNICALL

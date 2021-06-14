@@ -27,25 +27,12 @@ void pkg_power_sampleread() {
 	close(fd);
 }
 
-typedef struct OldEnergyStats {
-	char socket;
-	double dram;
-	double gpu;
-	double core;
-	double pkg;
-	struct timeval timestamp;
-} OldEnergyStats;
-
 int main(int argc, const char* argv[])
 {
-	printf(" . %ld\n",sizeof(EnergyStats));
-	printf(" . %ld\n",sizeof(OldEnergyStats));
-	exit(0);
-
 	ProfileInit();
 
-	//AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,DYNAMIC_ARRAY_STORAGE);
-	AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,LINKED_LIST_STORAGE);
+	AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,DYNAMIC_ARRAY_STORAGE,64);
+	// AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,LINKED_LIST_STORAGE,64);
 	start(m);
 	sleep_print(3);
 	//sleep(5);
@@ -53,8 +40,8 @@ int main(int argc, const char* argv[])
 	writeFileCSV(m,NULL);
 
 	int k = 7;
-	EnergyStats* lastk = (EnergyStats*)malloc(sizeof(EnergyStats)*k);
-	//EnergyStats lastk[k];
+	//EnergyStats* lastk = (EnergyStats*)malloc(sizeof(EnergyStats)*k);
+	EnergyStats lastk[k];
 
 	printf("lastk pre-init: %p\n",lastk);
 	lastKSamples(k,m,lastk);
@@ -72,7 +59,7 @@ int main(int argc, const char* argv[])
 		printf("%s\n", csv_string_buffer);
 	}
 
-	free(lastk); lastk = NULL;
+	//free(lastk); lastk = NULL;
 	freeAsyncEnergyMonitor(m);
 
 	ProfileDealloc();

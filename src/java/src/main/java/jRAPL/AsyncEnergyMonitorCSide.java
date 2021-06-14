@@ -8,7 +8,7 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	private native static void startNative();
 	private native static void stopNative();
 	private native static void resetNative();
-	private native static void activateNative(int samplingRate, int storageType);
+	private native static void activateNative(int samplingRate,int storageType,int size_parameter);
 	private native static void deactivateNative();
 	private native static void writeFileCSVNative(String filePath);
 	private native static String getLastKSamplesNative(int k);
@@ -17,20 +17,23 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	private native static void setSamplingRateNative(int s);
 	private native static int getSamplingRateNative();
 
-	// correspond to '#define' macros written in AsyncEnergyMonitor.h
+	// these correspond to '#define' macros written in AsyncEnergyMonitor.h
 	private static final int DYNAMIC_ARRAY_STORAGE = 1;
 	private static final int LINKED_LIST_STORAGE = 2;
 
+	// @TODO make these final ?
 	private int samplingRate;
 	private int storageType;
+	private int initialSize = 128;
 
 	public AsyncEnergyMonitorCSide() { 
 		samplingRate = 10;
 		storageType = DYNAMIC_ARRAY_STORAGE;
 	}
 
-	public AsyncEnergyMonitorCSide(int s, String storageTypeString) {
+	public AsyncEnergyMonitorCSide(int s, String storageTypeString, int size) {
 		samplingRate = s;
+		initialSize = size;
 		switch (storageTypeString) {
 			case "DYNAMIC_ARRAY":
 				storageType = DYNAMIC_ARRAY_STORAGE;
@@ -60,7 +63,7 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	@Override //from EnergyManager
 	public void activate() {
 		super.activate();
-		activateNative(samplingRate,storageType);
+		activateNative(samplingRate,storageType,initialSize);
 	}
 
 	@Override
@@ -98,7 +101,7 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 		long[] usecValues = getLastKTimestampsNative(k);
 		Instant[] instantValues = new Instant[usecValues.length];
 		for (int i = 0; i < usecValues.length; i++)
-			instantValues[i] = Instant.EPOCH.plus(usecValues[i], ChronoUnit.MICROS);
+			instantValues[i] = Instant.EPOCH.plus(usecValues[i], ChronoUnit.MICROS); //@TODO this should probably be defined as usecToInstant in Utils.java
 		return instantValues;
 	}
 

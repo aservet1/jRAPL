@@ -4,32 +4,31 @@
 
 #include "EnergyStats.h"
 
-#define NODE_CAPACITY 100 //customize later, or maybe not
 typedef struct LinkNode {
-	EnergyStats items[NODE_CAPACITY];
+	EnergyStats *items;
 	struct LinkNode* next;
 } LinkNode;
 
 typedef struct LinkedList {
+	size_t node_capacity;
 	LinkNode* head;
 	LinkNode* tail;
 	int nItemsAtTail;
 	int nItems;
-	// only tail node can have variable items, so only track them. all other ones are full to NODE_CAPACITY
 } LinkedList;
 
-LinkedList* newLinkedList();
+LinkedList* newLinkedList(size_t capacity);
 void freeLinkedList(LinkedList* esll);
 void addItem_LinkedList(LinkedList* l, EnergyStats e); // add to tail
 void writeFileCSV_LinkedList(FILE* outfile, LinkedList* l);
 
 typedef struct DynamicArray {
 	EnergyStats* items;
-	unsigned long long capacity;
-	unsigned long long nItems;
+	size_t capacity;
+	size_t nItems;
 } DynamicArray;
 
-DynamicArray* newDynamicArray(int capacity);
+DynamicArray* newDynamicArray(size_t capacity);
 void freeDynamicArray(DynamicArray* list);
 void addItem_DynamicArray(DynamicArray* a, EnergyStats e);
 void writeFileCSV_DynamicArray(FILE* outfile, DynamicArray* a);
