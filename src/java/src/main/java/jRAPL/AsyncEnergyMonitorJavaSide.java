@@ -114,7 +114,6 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 			timestampsArray[arrayIndex++] = timestamps.get(i);
 
 		return timestampsArray;
-
 	}
 
 	@Override
@@ -141,7 +140,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 										? new OutputStreamWriter(System.out)
 										: new FileWriter(new File(fileName))
 									);
-			writer.write("socket,"+ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]+",timestamp\n");
+			writer.write(EnergyStats.csvHeader());//"socket,"+ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]+",timestamp\n");
 			for (int i = 0; i < samples.size(); i++) {
 				String energyString = samples.get(i);
 				String[] perSocketStrings = energyString.split("@");

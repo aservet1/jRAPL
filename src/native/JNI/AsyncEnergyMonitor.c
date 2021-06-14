@@ -54,7 +54,7 @@ Java_jRAPL_AsyncEnergyMonitorCSide_getLastKSamplesNative(JNIEnv* env, jclass jcl
 	bzero(sample_strings, 512*(k+1));
 
 	int offset = 0;
-	for (int i = 0; i < k; i++) {
+	for (int i = 0; i < k; i++) { //TODO This doesn't account for multiple samples per socket
 		EnergyStats e = samples[i];
 		char string[512];
 		energy_stats_to_jni_string(e, string);
@@ -74,10 +74,7 @@ Java_jRAPL_AsyncEnergyMonitorCSide_getLastKTimestampsNative(JNIEnv* env, jclass 
 	lastKSamples(k, monitor, samples);
 
 	long fill[k];
-	for (int i = 0; i < k; i++) {
-		struct timeval ts = samples[i].timestamp;
-		fill[i] = ts.tv_sec * 1000000 + ts.tv_usec;
-	}
+	for (int i = 0; i < k; i++) fill[i] = samples[i].timestamp;
 
 	int size = k;
 	jlongArray result = (*env)->NewLongArray(env, size);

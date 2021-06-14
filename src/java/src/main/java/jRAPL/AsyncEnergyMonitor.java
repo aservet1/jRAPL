@@ -169,7 +169,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		if (args[0].equalsIgnoreCase("Java")) {
 			m = new AsyncEnergyMonitorJavaSide();
 		} else if (args[0].equalsIgnoreCase("C")) {
-			m = new AsyncEnergyMonitorCSide();
+			m = new AsyncEnergyMonitorCSide("LINKED_LIST");
 		} else {
 			System.out.println("invalid args[0]: "+args[0]);
 			System.exit(2);
