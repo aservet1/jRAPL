@@ -46,7 +46,6 @@ public class AsyncMonitorCallback extends Callback {
 	public void start(String benchmark) {
 		super.start(benchmark);
 		if (monitoringEnergy) {
-			energyMonitor.activate();
 			energyMonitor.setSamplingRate(1);
 			energyMonitor.start();
 		}
