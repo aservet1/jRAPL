@@ -10,8 +10,8 @@ import java.io.FileWriter;
 import java.time.Instant;
 import java.time.Duration;
 
-public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Runnable
-{
+public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Runnable {
+
 	private ArrayList<String> samples;
 	private int samplingRate; // milliseconds
 	private volatile boolean exit = false;
@@ -35,7 +35,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	public void activate() {
 		super.activate();
 	}
-	
+
 	@Override
 	public void deactivate() {
 		super.deactivate();
@@ -50,7 +50,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 			String energyString = EnergyMonitor.energyStatCheck();
 			samples.add(energyString);
 			timestamps.add(Instant.now());
-			try { Thread.sleep(samplingRate); } catch (Exception e) {}
+			try { Thread.sleep(samplingRate); } catch (Exception e) {  }
 		}
 	}
 
@@ -91,7 +91,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 			start = 0;
 			k = samples.size();
 		}
-		
+
 		String[] samplesArray = new String[k];
 		for (int i = start; i < samples.size(); i++)
 			samplesArray[arrayIndex++] = samples.get(i);
@@ -136,20 +136,17 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		BufferedWriter writer = null;
 		try {
 			writer = new BufferedWriter ( // write to stdout if filename is null
-									(fileName == null)
-										? new OutputStreamWriter(System.out)
-										: new FileWriter(new File(fileName))
-									);
-			writer.write(EnergyStats.csvHeader());//"socket,"+ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]+",timestamp\n");
+				(fileName == null) ? new OutputStreamWriter(System.out) : new FileWriter(new File(fileName))
+			);
+			writer.write(EnergyStats.csvHeader()+"\n");       //"socket,"+ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]+",timestamp\n");
 			for (int i = 0; i < samples.size(); i++) {
-				String energyString = samples.get(i);
-				String[] perSocketStrings = energyString.split("@");
-				long usecs = Utils.timestampToUsec(timestamps.get(i));
-				for (int socket = 1; socket <= perSocketStrings.length; socket++) {
-					writer.write (
-						String.format("%d,%s,%d\n", socket, perSocketStrings[socket-1], usecs)
-					);
-				}
+				writer.write(
+					String.format(
+						"%s%d\n",
+						samples.get(i).replace("@",","),
+						Utils.timestampToUsec(timestamps.get(i))
+					)
+				);
 			}
 			writer.flush();
 			if (fileName != null) writer.close();

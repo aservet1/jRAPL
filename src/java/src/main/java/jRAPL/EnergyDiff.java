@@ -1,10 +1,9 @@
-
 package jRAPL;
 
 import java.time.Duration;
 
-public final class EnergyDiff extends EnergySample
-{
+public final class EnergyDiff extends EnergySample {
+
 	private Duration elapsedTime = null; //time between the two EnergyStamps
 
 	public EnergyDiff(double[] primitiveSample, Duration elapsedTime) {

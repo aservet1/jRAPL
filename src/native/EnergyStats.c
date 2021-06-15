@@ -191,7 +191,7 @@ energy_stats_csv_string(EnergyStats estats[], char* csv_string) {
 	for (int i = 0; i < sockets; i++) {
 		switch (power_domains) {
 			case DRAM_GPU_CORE_PKG:
-				offset += sprintf(csv_string+offset, "%.4f,%.4f,%.4f,%.4f",
+				offset += sprintf(csv_string+offset, "%.4f,%.4f,%.4f,%.4f,",
 					estats[i].dram,
 					estats[i].gpu,
 					estats[i].core,
@@ -199,14 +199,14 @@ energy_stats_csv_string(EnergyStats estats[], char* csv_string) {
 				);
 				break;
 			case GPU_CORE_PKG:
-				offset += sprintf(csv_string+offset, "%.4f,%.4f,%.4f",
+				offset += sprintf(csv_string+offset, "%.4f,%.4f,%.4f,",
 					estats[i].gpu,
 					estats[i].core,
 					estats[i].pkg
 				);
 				break;
 			case DRAM_CORE_PKG:
-				offset += sprintf(csv_string+offset, "%.4f,%.4f,%.4f",
+				offset += sprintf(csv_string+offset, "%.4f,%.4f,%.4f,",
 					estats[i].dram,
 					estats[i].core,
 					estats[i].pkg
@@ -216,5 +216,5 @@ energy_stats_csv_string(EnergyStats estats[], char* csv_string) {
 				assert(0 && "error occurred in energy_stats_csv_string");
 		}
 	}
-	sprintf(csv_string+offset, ",%ld", estats[0].timestamp);
+	sprintf(csv_string+offset, "%ld", estats[0].timestamp);
 }

@@ -169,7 +169,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		if (args[0].equalsIgnoreCase("Java")) {
 			m = new AsyncEnergyMonitorJavaSide();
 		} else if (args[0].equalsIgnoreCase("C")) {
-			m = new AsyncEnergyMonitorCSide("LINKED_LIST");
+			m = new AsyncEnergyMonitorCSide(args[1]);
 		} else {
 			System.out.println("invalid args[0]: "+args[0]);
 			System.exit(2);
@@ -189,8 +189,10 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		System.out.println();
 		System.out.println(Arrays.toString(m.getLastKSamples(m.getNumSamples())));
 
-		m.writeFileMetadata("AsyncMonitor-"+args[0]+"-metainfo.json");
-		m.writeFileCSV("AsyncMonitor-"+args[0]+".csv");
+		String name = args[0] + ((args.length == 1) ? "" : args[1]);
+
+		m.writeFileMetadata("AsyncMonitor-"+name+"-metainfo.json");
+		m.writeFileCSV("AsyncMonitor-"+name+".csv");
 
 		m.reset();
 		m.deactivate();

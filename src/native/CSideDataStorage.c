@@ -102,7 +102,7 @@ writeFileCSV_LinkedList(FILE* outfile, LinkedList* l) {
 	int num_sockets = getSocketNum();
 	EnergyStats multisocket_sample_buffer[num_sockets];
 	char csv_line_buffer[512];
-	for (int global_index = 0; global_index < l->nItems; global_index++) {
+	for (int global_index = 0; global_index < l->nItems; global_index+=num_sockets) {
 		local_index = global_index % l->node_capacity;
 		if (local_index == 0 && global_index != 0) {
 			current = current->next;
