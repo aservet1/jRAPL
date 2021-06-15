@@ -3,12 +3,12 @@ NATIVE_SRC = src/native
 JAVA_SRC = src/java
 
 DRIVER_OUTPUT_FILES = \
-	AsyncMonitor-CLINKED_LIST-metainfo.json \
 	AsyncMonitor-CLINKED_LIST.csv \
-	AsyncMonitor-Java-metainfo.json \
-	AsyncMonitor-CDYNAMIC_ARRAY-metainfo.json \
+	AsyncMonitor-CLINKED_LIST-metainfo.json \
 	AsyncMonitor-CDYNAMIC_ARRAY.csv \
+	AsyncMonitor-CDYNAMIC_ARRAY-metainfo.json \
 	AsyncMonitor-Java.csv \
+	AsyncMonitor-Java-metainfo.json \
 
 all:
 	make nativeLib
@@ -24,7 +24,7 @@ javaLib: ## Build java .jar
 clean-driver-output:
 	rm -f $(DRIVER_OUTPUT_FILES)
 
-clean:
+clean: clean-driver-output
 	(cd $(NATIVE_SRC) && make clean)
 	(cd $(NATIVE_SRC)/JNI && make clean)
 	(cd $(JAVA_SRC) && mvn clean)
