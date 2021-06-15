@@ -47,7 +47,7 @@ public class ReadMSR {
 
 		protected String NAME;
 
-		private HashMap<Long, Long> scatter = new HashMap<>();
+		private HashMap<Long, Long> histogram = new HashMap<>();
 
 
 		protected final int WARMUPS = 5;
@@ -72,7 +72,7 @@ public class ReadMSR {
 			if (getIter() >= startIter) {
 				for (int socket = 1; socket <= ArchSpec.NUM_SOCKETS; socket++) {
 					long microSeconds = runtimePerSocket[socket-1];
-					scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
+					histogram.put(microSeconds, histogram.containsKey(microSeconds) ? histogram.get(microSeconds)+1 : 1);
 				}
 			}
 		}
@@ -89,18 +89,18 @@ public class ReadMSR {
 			RuntimeTestUtils.deallocCSideTiming();
 			try {
 				System.out.println("Successfully wrote to the file.");
-				FileWriter myScatterWriter = new FileWriter("readMSR_"+NAME+"_scatter.data");
-				scatter.forEach((k, v) -> {
+				FileWriter myHistogramWriter = new FileWriter("readMSR_"+NAME+"_histogram.data");
+				histogram.forEach((k, v) -> {
 					try {
-						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
+						myHistogramWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
 					}
 					catch (IOException e) {
 						System.out.println("An error occurred.");
 						e.printStackTrace();
 					}
 				});
-				myScatterWriter.flush();
-				myScatterWriter.close();
+				myHistogramWriter.flush();
+				myHistogramWriter.close();
 				System.out.println("Successfully wrote to the file.");
 			} catch (IOException e) {
 				System.out.println("An error occurred.");

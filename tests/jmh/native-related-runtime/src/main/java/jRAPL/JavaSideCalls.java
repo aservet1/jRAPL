@@ -86,18 +86,18 @@ public class JavaSideCalls {
 		@TearDown(Level.Trial)
 		public void doFinalTeardown() {
 			try {
-				FileWriter myScatterWriter = new FileWriter("JavaSide_"+name+"_histogram.data");
+				FileWriter myHistogramWriter = new FileWriter("JavaSide_"+name+"_histogram.data");
 				histogram.forEach((k, v) -> {
 					try {
-						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
+						myHistogramWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
 					}
 					catch (IOException e) {
 						System.out.println("An error occurred.");
 						e.printStackTrace();
 					}
 				});
-				myScatterWriter.flush();
-				myScatterWriter.close();
+				myHistogramWriter.flush();
+				myHistogramWriter.close();
 				System.out.println("Successfully wrote to the file");
 			} catch (IOException e) {
 				System.out.println("An error occurred.");

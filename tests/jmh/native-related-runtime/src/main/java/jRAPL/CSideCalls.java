@@ -83,18 +83,18 @@ public class CSideCalls {
 		public void doFinalTeardown() {
 			RuntimeTestUtils.deallocCSideTiming();
 			try {
-				FileWriter myScatterWriter = new FileWriter("CSide_"+name+"_histogram.data");
+				FileWriter myHistogramWriter = new FileWriter("CSide_"+name+"_histogram.data");
 				histogram.forEach((k, v) -> {
 					try {
-						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
+						myHistogramWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
 					}
 					catch (IOException e) {
 						System.out.println("An error occurred.");
 						e.printStackTrace();
 					}
 				});
-				myScatterWriter.flush();
-				myScatterWriter.close();
+				myHistogramWriter.flush();
+				myHistogramWriter.close();
 				System.out.println("Successfully wrote to the file.");
 			} catch (IOException e) {
 				System.out.println("An error occurred dumping hashmap to file.");
