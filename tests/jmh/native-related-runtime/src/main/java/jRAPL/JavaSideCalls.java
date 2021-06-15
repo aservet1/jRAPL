@@ -53,7 +53,7 @@ public class JavaSideCalls {
 		protected String name;
 
 		public void addValue() {
-			if (getIter() >= startIter) {
+			if (getIter() >= startIter) {  // don't add value if youre still in warmup
 				long microSeconds = (Duration.between(this.before, this.after).toNanos()) / 1000;
 				histogram.put(microSeconds, histogram.containsKey(microSeconds) ? histogram.get(microSeconds)+1 : 1);
 			}
@@ -67,6 +67,7 @@ public class JavaSideCalls {
 		
 
 		protected final int WARMUPS = 5;
+		// protected final int WARMUPS = 1;
 
 		private int iterNum = 0;
 		private int startIter;
@@ -86,7 +87,7 @@ public class JavaSideCalls {
 		@TearDown(Level.Trial)
 		public void doFinalTeardown() {
 			try {
-				FileWriter myHistogramWriter = new FileWriter("JavaSide_"+name+"_histogram.data");
+				FileWriter myHistogramWriter = new FileWriter("data/JavaSide_"+name+"_histogram.data");
 				histogram.forEach((k, v) -> {
 					try {
 						myHistogramWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
@@ -168,7 +169,9 @@ public class JavaSideCalls {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeProfileInit(ProfileInitState pis, Blackhole b) throws InterruptedException {
 		pis.setBefore();
@@ -179,7 +182,9 @@ public class JavaSideCalls {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeProfileDealloc(ProfileDeallocState pds, Blackhole b) throws InterruptedException{
 		pds.setBefore();
@@ -190,8 +195,9 @@ public class JavaSideCalls {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5)
-	@Measurement(iterations = 10)
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeEnergyStatCheck(Blackhole b, EnergyStatCheckState escs) throws InterruptedException {
 		escs.setBefore();

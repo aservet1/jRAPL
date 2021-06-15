@@ -51,6 +51,7 @@ public class ReadMSR {
 
 
 		protected final int WARMUPS = 5;
+		// protected final int WARMUPS = 1;
 
 		private int iterNum = 0;
 		private int startIter;
@@ -69,7 +70,7 @@ public class ReadMSR {
 
 
 		public void addValue(long[] runtimePerSocket) {
-			if (getIter() >= startIter) {
+			if (getIter() >= startIter) {  // don't add value if youre still in warmup
 				for (int socket = 1; socket <= ArchSpec.NUM_SOCKETS; socket++) {
 					long microSeconds = runtimePerSocket[socket-1];
 					histogram.put(microSeconds, histogram.containsKey(microSeconds) ? histogram.get(microSeconds)+1 : 1);
@@ -89,7 +90,7 @@ public class ReadMSR {
 			RuntimeTestUtils.deallocCSideTiming();
 			try {
 				System.out.println("Successfully wrote to the file.");
-				FileWriter myHistogramWriter = new FileWriter("readMSR_"+NAME+"_histogram.data");
+				FileWriter myHistogramWriter = new FileWriter("data/readMSR_"+NAME+"_histogram.data");
 				histogram.forEach((k, v) -> {
 					try {
 						myHistogramWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
@@ -144,7 +145,9 @@ public class ReadMSR {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeReadDRAM(StateDRAM state, Blackhole b) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.DRAM));
@@ -152,7 +155,9 @@ public class ReadMSR {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeReadPKG(StatePKG state, Blackhole b) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.PKG));
@@ -160,7 +165,9 @@ public class ReadMSR {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeReadGPU(StateGPU state, Blackhole b) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.GPU));
@@ -168,11 +175,12 @@ public class ReadMSR {
 	}
 
 	@Benchmark
-	@Fork(1) @Warmup(iterations = 5) @Measurement(iterations = 10)
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeReadCORE(StateCORE state, Blackhole b) {
 		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.CORE));
 		Util.busyWait(b);
 	}
-
 }
