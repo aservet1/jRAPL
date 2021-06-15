@@ -7,4 +7,4 @@ then
 	exit 2
 fi
 
-python3 make_scatter.py $1_*_scatter.data
+python3 make_histogram.py $1_*_histogram.data

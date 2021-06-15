@@ -46,13 +46,13 @@ public class CSideCalls {
 
 	@State(Scope.Thread)
     public static class State_ {
-		private HashMap<Long, Long> scatter = new HashMap();
+		private HashMap<Long, Long> histogram = new HashMap();
 
 		protected String name;
 
 		public void addValue(long microSeconds) { 
 			if (getIter() >= startIter) {
-				scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
+				histogram.put(microSeconds, histogram.containsKey(microSeconds) ? histogram.get(microSeconds)+1 : 1);
 			}
 		}
 
@@ -83,8 +83,8 @@ public class CSideCalls {
 		public void doFinalTeardown() {
 			RuntimeTestUtils.deallocCSideTiming();
 			try {
-				FileWriter myScatterWriter = new FileWriter("CSide_"+name+"_scatter.data");
-				scatter.forEach((k, v) -> {
+				FileWriter myScatterWriter = new FileWriter("CSide_"+name+"_histogram.data");
+				histogram.forEach((k, v) -> {
 					try {
 						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
 					}

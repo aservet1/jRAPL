@@ -45,7 +45,7 @@ public class JavaSideCalls {
 
 	@State(Scope.Thread)
 	public static class State_ {
-		protected HashMap<Long, Long> scatter = new HashMap();
+		protected HashMap<Long, Long> histogram = new HashMap();
 		
 		private Instant before;
 		private Instant after;
@@ -55,7 +55,7 @@ public class JavaSideCalls {
 		public void addValue() {
 			if (getIter() >= startIter) {
 				long microSeconds = (Duration.between(this.before, this.after).toNanos()) / 1000;
-				scatter.put(microSeconds, scatter.containsKey(microSeconds) ? scatter.get(microSeconds)+1 : 1);
+				histogram.put(microSeconds, histogram.containsKey(microSeconds) ? histogram.get(microSeconds)+1 : 1);
 			}
 		}
 		public void setBefore() {
@@ -86,8 +86,8 @@ public class JavaSideCalls {
 		@TearDown(Level.Trial)
 		public void doFinalTeardown() {
 			try {
-				FileWriter myScatterWriter = new FileWriter("JavaSide_"+name+"_scatter.data");
-				scatter.forEach((k, v) -> {
+				FileWriter myScatterWriter = new FileWriter("JavaSide_"+name+"_histogram.data");
+				histogram.forEach((k, v) -> {
 					try {
 						myScatterWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
 					}
