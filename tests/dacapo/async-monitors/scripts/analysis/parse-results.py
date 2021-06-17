@@ -82,25 +82,25 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
     energydata = pd.read_csv(filename+'.csv')
     filter_zero_columns(energydata)
 
-    result['measurements'] = dict()
+    result['time-energy'] = dict()
 
     timestamps = energydata['timestamp'].to_list()
     del energydata['timestamp']
 
-    result['measurements']['energy-per-sample'] = dict()
+    result['time-energy']['energy-per-sample'] = dict()
     power_domains = list(energydata.keys())
     for powd in power_domains:
         energy = diff_list(energydata[powd].to_list())
-        result['measurements']['energy-per-sample'][powd] = dict()
-        result['measurements']['energy-per-sample'][powd]['num_samples'] = len(energy)
-        result['measurements']['energy-per-sample'][powd]['avg'] = statistics.mean(energy)
-        result['measurements']['energy-per-sample'][powd]['stdev'] = statistics.stdev(energy)
+        result['time-energy']['energy-per-sample'][powd] = dict()
+        result['time-energy']['energy-per-sample'][powd]['num_samples'] = len(energy)
+        result['time-energy']['energy-per-sample'][powd]['avg'] = statistics.mean(energy)
+        result['time-energy']['energy-per-sample'][powd]['stdev'] = statistics.stdev(energy)
 
     time = diff_list(timestamps)
-    result['measurements']['time-between-samples'] = {}
-    result['measurements']['time-between-samples']['num_samples'] = len(time)
-    result['measurements']['time-between-samples']['avg'] = statistics.mean(time)
-    result['measurements']['time-between-samples']['stdev'] = statistics.stdev(time)
+    result['time-energy']['time-between-samples'] = {}
+    result['time-energy']['time-between-samples']['num_samples'] = len(time)
+    result['time-energy']['time-between-samples']['avg'] = statistics.mean(time)
+    result['time-energy']['time-between-samples']['stdev'] = statistics.stdev(time)
             
             
     with open(filename+'.stats.json','w') as fh:
