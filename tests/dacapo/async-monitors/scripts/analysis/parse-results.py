@@ -44,6 +44,7 @@ def memory_data(benchmark, iteration, type):
     memdata['avg'] = statistics.mean(samples)
     memdata['stdev'] = statistics.stdev(samples)
     memdata['median'] = statistics.median(samples)
+    del memdata['timestamps'] # might actually need this info, but for now i dont think its useful, and it just takes up space on my device
     return memdata
 '''-----------------------------------------------------------------------------'''
 
@@ -65,52 +66,41 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
     iteration = filename_parts[1]
     monitor_type = filename_parts[2]
 
+    result = {}
+
     with open(filename+'.metadata.json') as fh:
         metadata = json.loads(fh.read())
         metadata['benchmark'] = benchmark # add these next 3 items to the metadata
         metadata['iteration'] = iteration
         metadata['monitor_type'] = monitor_type
-
-    result = {}
-    result['metadata'] = metadata
+        result['metadata'] = metadata
 
     result['memory'] = dict()
     result['memory']['jraplon']  = memory_data(result['metadata']['benchmark'], result['metadata']['iteration'], result['metadata']['monitor_type'])
     result['memory']['jraploff'] = memory_data(result['metadata']['benchmark'], result['metadata']['iteration'], 'nojrapl')
 
+    energydata = pd.read_csv(filename+'.csv')
+    filter_zero_columns(energydata)
 
-    data = pd.read_csv(filename+'.csv')
-    filter_zero_columns(data)
+    result['measurements'] = dict()
 
-    result['persocket'] = dict()
-    num_sockets = max(data['socket'])
-    for i in range(num_sockets): # filling out the socket level of result{}
-        socket = i+1
-        current = data[data.socket.eq(socket)].to_dict()
-        del current['socket']
-        result['persocket'][socket] = current
-    
+    timestamps = energydata['timestamp'].to_list()
+    del energydata['timestamp']
 
-    for socket in result['persocket']: # filling out the actual computations in result{}
-        timestamps = dict_to_list(result['persocket'][socket]['timestamp'])
-        del result['persocket'][socket]['timestamp']
-        
-        power_domains = list(result['persocket'][socket])
-        for powd in power_domains:
-            energy = result['persocket'][socket][powd]
-            energy = dict_to_list(energy)
-            energy = diff_list(energy)
-            result['persocket'][socket][powd] = dict()
-            result['persocket'][socket][powd]['energy-per-sample'] = dict()
-            result['persocket'][socket][powd]['energy-per-sample']['num_samples'] = len(energy)
-            result['persocket'][socket][powd]['energy-per-sample']['avg'] = statistics.mean(energy)
-            result['persocket'][socket][powd]['energy-per-sample']['stdev'] = statistics.stdev(energy)
+    result['measurements']['energy-per-sample'] = dict()
+    power_domains = list(energydata.keys())
+    for powd in power_domains:
+        energy = diff_list(energydata[powd].to_list())
+        result['measurements']['energy-per-sample'][powd] = dict()
+        result['measurements']['energy-per-sample'][powd]['num_samples'] = len(energy)
+        result['measurements']['energy-per-sample'][powd]['avg'] = statistics.mean(energy)
+        result['measurements']['energy-per-sample'][powd]['stdev'] = statistics.stdev(energy)
 
-        time = diff_list(timestamps)
-        result['persocket'][socket]['time-between-samples'] = {}
-        result['persocket'][socket]['time-between-samples']['num_samples'] = len(time)
-        result['persocket'][socket]['time-between-samples']['avg'] = statistics.mean(time)
-        result['persocket'][socket]['time-between-samples']['stdev'] = statistics.stdev(time)
+    time = diff_list(timestamps)
+    result['measurements']['time-between-samples'] = {}
+    result['measurements']['time-between-samples']['num_samples'] = len(time)
+    result['measurements']['time-between-samples']['avg'] = statistics.mean(time)
+    result['measurements']['time-between-samples']['stdev'] = statistics.stdev(time)
             
             
     with open(filename+'.stats.json','w') as fh:
