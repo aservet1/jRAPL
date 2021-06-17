@@ -65,21 +65,26 @@ for bench in benchmarks:
         data = [d for d in data if d['metadata']['monitor_type'] == monitor_type ]
         for fh in fhs: fh.close()
 
-        # aggregate metadata (lifetime, numsamples. save monitor_type and benchmark), memory, and persocket->{{powerdomain-energy},time}
+        # aggregate metadata (lifetime, numsamples. save monitor_type and benchmark), memory, and time-energy->{{powerdomain-energy},time}
         aggregated = {}
 
         aggregated['metadata'] = data[0]['metadata'] # copy over the first [metadata] block to keep common fields, over-write the aggregated fields
-        aggregated['metadata']['lifetime'] = statistics.mean([ dat['metadata']['lifetime'] for dat in data ])
-        aggregated['metadata']['numSamples'] = statistics.mean([ dat['metadata']['numSamples'] for dat in data ])
+
+        for k in ['lifetime','numSamples']:
+            dat = [ d['metadata'][k] for d in data ]
+            aggregated['metadata'][k] = dict()
+            aggregated['metadata'][k]['avg'] = statistics.mean(dat)
+            aggregated['metadata'][k]['stdev'] = statistics.stdev(dat)
+
         aggregated['metadata']['iteration'] = 'AGGREGATE'
 
         aggregated['memory'] = {}
         aggregated['memory']['jraplon' ] = aggregate_memory_stats([ dat['memory']['jraplon']  for dat in data ])
         aggregated['memory']['jraploff'] = aggregate_memory_stats([ dat['memory']['jraploff'] for dat in data ])
 
-        aggregated['persocket'] = {}
-        aggregated['persocket']['time-between-samples'] = {}
-        aggregated['persocket'] = general_aggregate( [ dat['persocket'] for dat in data ] )
+        aggregated['time-energy'] = {}
+        aggregated['time-energy']['time-between-samples'] = {}
+        aggregated['time-energy'] = general_aggregate( [ dat['time-energy'] for dat in data ] )
 
         outfilename = aggregated['metadata']['benchmark'] + "_" + aggregated['metadata']['monitor_type'] + ".aggregate-stats.json"
         with open(outfilename,'w') as outfile: outfile.write(json.dumps(aggregated))
