@@ -1,0 +1,3 @@
+Side experiment, generates a "memory used" time series for one run of an AsyncEnergyMonitor, to watch it grow.
+
+Probably not the best experimental environment. Was not rigorous, was just to see if I can unofficially observe a behavior.
