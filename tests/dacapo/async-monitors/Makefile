@@ -9,7 +9,7 @@ jRAPL-jar = jRAPL-1.0.jar
 classpath = $(dacapo-jar):$(jRAPL-jar):.
 
 all:
-	cp ~/jRAPL/src/java/target/$(jRAPL-jar) .
+	ln -s ../../../src/java/target/$(jRAPL-jar) .
 	javac -cp $(classpath) $(javafiles)
 
 clean:
