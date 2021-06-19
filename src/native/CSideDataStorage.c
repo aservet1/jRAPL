@@ -106,7 +106,7 @@ writeFileCSV_LinkedList(FILE* outfile, LinkedList* l) {
 		local_index = global_index % l->node_capacity;
 		if (local_index == 0 && global_index != 0) {
 			current = current->next;
-			// printf(" --\n"); // delimits between the contents of each node (useful to uncomment for debugging)
+			// fprintf(outfile," --\n"); // delimits between the contents of each node (useful to uncomment for debugging)
 		}
 
 		for (int j = 0; j < num_sockets; j++) {
