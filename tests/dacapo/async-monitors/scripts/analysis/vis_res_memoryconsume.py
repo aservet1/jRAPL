@@ -88,15 +88,15 @@ for benchmark in sorted(data.keys()):
 
     java_avg.append( percent_diff(javg, nojavg) )
     java_std.append( percent_diff_stdev(jstd, nojstd, javg, nojavg) )
-    java_numsamples.append( get_by_monitor_type(data, 'java')['metadata']['numSamples'] )
+    java_numsamples.append( get_by_monitor_type(data, 'java')['metadata']['numSamples']['avg'] )
 
     c_ll_avg.append( percent_diff(clavg, nojavg) )
     c_ll_std.append( percent_diff_stdev(clstd, nojstd, clavg, nojavg) )
-    c_ll_numsamples.append( get_by_monitor_type(data, 'c-linklist')['metadata']['numSamples'] )
+    c_ll_numsamples.append( get_by_monitor_type(data, 'c-linklist')['metadata']['numSamples']['avg'] )
 
     c_da_avg.append( percent_diff(cdavg, nojavg) )
     c_da_std.append( percent_diff_stdev(cdavg, nojavg, cdstd, nojstd) )
-    c_da_numsamples.append( get_by_monitor_type(data, 'c-dynamicarray')['metadata']['numSamples'] )
+    c_da_numsamples.append( get_by_monitor_type(data, 'c-dynamicarray')['metadata']['numSamples']['avg'] )
     print(' <( done with benchmark',benchmark)
 
 ## Make the all-benchmarks graph ##
@@ -141,6 +141,9 @@ def aggr_stdev(sample_sizes, stdevs):
     assert len(sample_sizes) == len(stdevs)
     return sqrt(sum([ (sample_sizes[i]*(stdevs[i]**2)) for i in range(len(sample_sizes)) ]) / sum (sample_sizes))
 
+print(java_avg)
+print(java_numsamples)
+
 overall_java_avg = aggr_mean (java_numsamples, java_avg)
 overall_java_std = aggr_stdev(java_numsamples, java_std)
 
@@ -154,10 +157,10 @@ labels = ['java','c-linklist','c-dynamicarray']
 
 plt.clf()
 plt.bar( \
-	x=[0,1,2], \
-    height=[overall_java_avg, overall_c_ll_avg, overall_c_da_avg], \
-    yerr=[overall_java_std, overall_c_ll_std, overall_c_da_std], \
-    tick_label=labels \
+	x = [0,1,2], \
+    height = [overall_java_avg, overall_c_ll_avg, overall_c_da_avg], \
+     yerr  = [overall_java_std, overall_c_ll_std, overall_c_da_std], \
+    tick_label = labels \
 )
 
 plt.xlabel('monitor type')
@@ -169,5 +172,3 @@ fig.set_size_inches(5,5)
 
 plt.savefig(os.path.join(result_dir,'memory-compare_overall'))
 print(" <.> done making the overall average graph")
-
-
