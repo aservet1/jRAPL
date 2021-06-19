@@ -1,22 +1,29 @@
 #!/usr/bin/env python3
 
-from sys import argv
-
-if len(argv) != 2:
-    print("provide target directory as command line argument")
-    exit(2)
-
 import os
 import json
-import pandas as pd
 import statistics
-import matplotlib.pyplot as plt
-import matplotlib as mpl
 import numpy as np
-import math
+import pandas as pd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from math import sqrt
+from sys import argv
 
-targetDir = argv[1]#'/home/alejandro/jRAPL/tests/dacapo/async-monitors/jolteon-results-subset'
-os.chdir(targetDir)
+try:
+	data_dir = argv[1]
+	result_dir = argv[2]
+except:
+	print("usage:",argv[0],"<directory with all the .aggregate-stats.json files>","<directory to output the plots>")
+	exit(2)
+
+if not (result_dir.startswith("/") or result_dir.startswith("~")):
+	result_dir = os.path.join(os.getcwd(),result_dir)
+if not os.path.isdir(result_dir):
+	print("directory",result_dir,"does not exist")
+	exit(2)
+
+os.chdir(data_dir)
 files = sorted([ f for f in os.listdir() if f.endswith('.aggregate-stats.json') ])
 
 data = []
@@ -71,10 +78,10 @@ for benchmark in sorted(data.keys()):
 
     def percent_diff_stdev(sa,sb,a,b): # uses propagation of error through the percent diff
         subtract = a-b
-        subtract_sd = math.sqrt((sa**2)+(sb**2))
+        subtract_sd = sqrt((sa**2)+(sb**2))
         average = (a+b)/2
-        average_sd = math.sqrt(.5**2 * sa**2 + .5**2 * sb**2)
-        return math.sqrt( ((subtract/average)**2) * ( (subtract_sd/subtract)**2 + (average_sd/average)**2 ))
+        average_sd = sqrt(.5**2 * sa**2 + .5**2 * sb**2)
+        return sqrt( ((subtract/average)**2) * ( (subtract_sd/subtract)**2 + (average_sd/average)**2 ))
 
 
     labels.append(benchmark)
@@ -110,12 +117,21 @@ plt.yticks([r + bar_width for r in range(len(c_ll_avg))], labels)
 plt.legend()
 fig = plt.gcf()
 fig.set_size_inches(12,25)
-#plt.show()
-plt.savefig('memory-compare_perbenchmark')
+
+plt.savefig(os.path.join(result_dir,'memory-compare_perbenchmark'))
 print(" <.> done making the per-benchmark graph")
 
-## Now to average across all benchmarks and make a bar graph with error bars of the 3 ##
-import math
+## ---------------------------------------------------------------------------------------------------------- ##
+## ---------------------------------------------------------------------------------------------------------- ##
+## ---------------------------------------------------------------------------------------------------------- ##
+## ---------------------------------------------------------------------------------------------------------- ##
+
+## ---------- Now to average across all benchmarks and make a bar graph with error bars of the 3 ------------ ##
+
+## ---------------------------------------------------------------------------------------------------------- ##
+## ---------------------------------------------------------------------------------------------------------- ##
+## ---------------------------------------------------------------------------------------------------------- ##
+## ---------------------------------------------------------------------------------------------------------- ##
 
 def aggr_mean(sample_sizes, averages):
     assert len(sample_sizes) == len(averages)
@@ -123,7 +139,7 @@ def aggr_mean(sample_sizes, averages):
 
 def aggr_stdev(sample_sizes, stdevs):
     assert len(sample_sizes) == len(stdevs)
-    return math.sqrt(sum([ (sample_sizes[i]*(stdevs[i]**2)) for i in range(len(sample_sizes)) ]) / sum (sample_sizes))
+    return sqrt(sum([ (sample_sizes[i]*(stdevs[i]**2)) for i in range(len(sample_sizes)) ]) / sum (sample_sizes))
 
 overall_java_avg = aggr_mean (java_numsamples, java_avg)
 overall_java_std = aggr_stdev(java_numsamples, java_std)
@@ -137,7 +153,8 @@ overall_c_da_std = aggr_stdev(c_da_numsamples, c_da_std)
 labels = ['java','c-linklist','c-dynamicarray']
 
 plt.clf()
-plt.bar(x=[0,1,2], \
+plt.bar( \
+	x=[0,1,2], \
     height=[overall_java_avg, overall_c_ll_avg, overall_c_da_avg], \
     yerr=[overall_java_std, overall_c_ll_std, overall_c_da_std], \
     tick_label=labels \
@@ -150,6 +167,7 @@ plt.title('% memory difference that each type of monitor added')
 fig = plt.gcf()
 fig.set_size_inches(5,5)
 
-#plt.show()
-plt.savefig('memory-compare_overall')
+plt.savefig(os.path.join(result_dir,'memory-compare_overall'))
+print(" <.> done making the overall average graph")
+
 
