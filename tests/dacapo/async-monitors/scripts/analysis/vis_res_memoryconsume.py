@@ -160,7 +160,8 @@ plt.bar( \
 	x = [0,1,2], \
     height = [overall_java_avg, overall_c_ll_avg, overall_c_da_avg], \
      yerr  = [overall_java_std, overall_c_ll_std, overall_c_da_std], \
-    tick_label = labels \
+    tick_label = labels, \
+    capsize = .5 \
 )
 
 plt.xlabel('monitor type')
@@ -172,3 +173,13 @@ fig.set_size_inches(5,5)
 
 plt.savefig(os.path.join(result_dir,'memory-compare_overall'))
 print(" <.> done making the overall average graph")
+
+with open(os.path.join(result_dir,'raw-overall-data.txt'),'w') as f:
+	f.write("overall_java_avg: "+str(overall_java_avg)+"\n")
+	f.write("overall_java_std: "+str(overall_java_std)+"\n")
+	f.write("\n")
+	f.write("overall_c_ll_avg: "+str(overall_c_ll_avg)+"\n")
+	f.write("overall_c_ll_std: "+str(overall_c_ll_std)+"\n")
+	f.write("\n")
+	f.write("overall_c_da_avg: "+str(overall_c_da_avg)+"\n")
+	f.write("overall_c_da_std: "+str(overall_c_da_std)+"\n")
