@@ -47,8 +47,8 @@ java_numsamples = []
 c_ll_numsamples = []
 c_da_numsamples = []
 
-for benchmark in data:
-    if benchmark == 'h2': continue
+for benchmark in sorted(data.keys()):
+    print(' )> doing benchmark',benchmark)
 
     def get_by_monitor_type(data, monitor_type):
         return [ d for d in data[benchmark] if d['metadata']['monitor_type'] == monitor_type ][0]
@@ -90,6 +90,7 @@ for benchmark in data:
     c_da_avg.append( percent_diff(cdavg, nojavg) )
     c_da_std.append( percent_diff_stdev(cdavg, nojavg, cdstd, nojstd) )
     c_da_numsamples.append( get_by_monitor_type(data, 'c-dynamicarray')['metadata']['numSamples'] )
+    print(' <( done with benchmark',benchmark)
 
 ## Make the all-benchmarks graph ##
 bar_width = 0.25
@@ -111,6 +112,7 @@ fig = plt.gcf()
 fig.set_size_inches(12,25)
 #plt.show()
 plt.savefig('memory-compare_perbenchmark')
+print(" <.> done making the per-benchmark graph")
 
 ## Now to average across all benchmarks and make a bar graph with error bars of the 3 ##
 import math

@@ -58,7 +58,7 @@ benchmarks = sorted(list(set([ fname.split('_')[0] for fname in os.listdir() if 
 
 for bench in benchmarks:
     for monitor_type in ['c-linklist', 'c-dynamicarray', 'java']:
-        filenames = [ f for f in os.listdir() if f.startswith(bench) and f.endswith('.stats.json')]
+        filenames = [ f for f in os.listdir() if (f.split('_')[0] == bench) and f.endswith('.stats.json')]
         #print(bench,monitor_type,filenames)
         fhs = [open(f) for f in filenames]
         data = [json.loads(fh.read()) for fh in fhs]
