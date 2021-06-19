@@ -8,7 +8,7 @@
 	- Do experiments on dynamically choosing the size of the LinkNodes. Could be based on sampling rate, so you know how many mallocs per second to do.
 	- Run experiments on several computers
 	- Properly calculate wraparound...
-	- CSide-GetLastK grabs the correct number of samples, but samples being individual structs, not structs grouped by socket
+	- CSide-GetLastK grabs the correct number of samples, but samples being individual structs, not structs grouped by socket. look at the occasional segfault related to this
 
 << Other Todos:
 	- Update the UML
