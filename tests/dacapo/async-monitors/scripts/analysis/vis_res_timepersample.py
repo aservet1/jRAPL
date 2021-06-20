@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 
 from sys import argv
-
-if len(argv) != 2:
-    print("provide target directory as command line argument")
-    exit(2)
-
 import os
 import json
 import pandas as pd
@@ -14,8 +9,19 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 
-targetDir = argv[1]#'/home/alejandro/jRAPL/tests/dacapo/async-monitors/jolteon-results-subset'
-os.chdir(targetDir)
+try:
+	data_dir = argv[1]
+	result_dir = argv[2]
+except:
+	print("usage:",argv[0],"<directory with all the .aggregate-stats.json files>","<directory to output the plots>")
+	exit(2)
+if not (result_dir.startswith("/") or result_dir.startswith("~")):
+	result_dir = os.path.join(os.getcwd(),result_dir)
+if not os.path.isdir(result_dir):
+	print("directory",result_dir,"does not exist")
+	exit(2)
+os.chdir(data_dir)
+
 files = sorted([ f for f in os.listdir() if f.endswith('.aggregate-stats.json') ])
 
 data = []
@@ -71,6 +77,4 @@ plt.legend()
 fig = plt.gcf()
 fig.set_size_inches(12,25)
 #plt.show()
-plt.savefig('timepersample-comparison-bar')
-
-print('REMEMBER! h2 was skipped because gathering the data on it is mad buggy')
+plt.savefig(os.path.join(result_dir,'timepersample-comparison-bar'))

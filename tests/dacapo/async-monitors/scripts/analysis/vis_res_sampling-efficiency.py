@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 
 from sys import argv
-
-if len(argv) != 2:
-    print("provide target directory as command line argument")
-    exit(2)
-
 import os
 import json
 import pandas as pd
@@ -15,8 +10,19 @@ import matplotlib as mpl
 import numpy as np
 import math
 
-targetDir = argv[1]
-os.chdir(targetDir)
+try:
+	data_dir = argv[1]
+	result_dir = argv[2]
+except:
+	print("usage:",argv[0],"<directory with all the .aggregate-stats.json files>","<directory to output the plots>")
+	exit(2)
+if not (result_dir.startswith("/") or result_dir.startswith("~")):
+	result_dir = os.path.join(os.getcwd(),result_dir)
+if not os.path.isdir(result_dir):
+	print("directory",result_dir,"does not exist")
+	exit(2)
+os.chdir(data_dir)
+
 files = sorted([ f for f in os.listdir() if f.endswith('.aggregate-stats.json') ])
 
 data = []
@@ -102,13 +108,15 @@ fig = plt.gcf()
 fig.set_size_inches(5,5)
 
 #plt.show()
-plt.savefig('sampling-efficiency_overall')
+plt.savefig( os.path.join(result_dir,'sampling-efficiency_overall') )
 
-print('overall_java_avg: '+str(overall_java_avg))
-print('overall_java_std: '+str(overall_java_std))
-print()
-print('overall_c_ll_avg: '+str(overall_c_ll_avg))
-print('overall_c_ll_std: '+str(overall_c_ll_std))
-print()
-print('overall_c_da_avg: '+str(overall_c_da_avg))
-print('overall_c_da_std: '+str(overall_c_da_std))
+with open( os.path.join(result_dir,'sampling-efficiency_overall.raw'), 'w' ) as f:
+	f.write('overall_java_avg: '+str(overall_java_avg)+"\n")
+	f.write('overall_java_std: '+str(overall_java_std)+"\n")
+	f.write("\n")
+	f.write('overall_c_ll_avg: '+str(overall_c_ll_avg)+"\n")
+	f.write('overall_c_ll_std: '+str(overall_c_ll_std)+"\n")
+	f.write("\n")
+	f.write('overall_c_da_avg: '+str(overall_c_da_avg)+"\n")
+	f.write('overall_c_da_std: '+str(overall_c_da_std)+"\n")
+

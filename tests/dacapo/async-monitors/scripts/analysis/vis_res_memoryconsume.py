@@ -141,9 +141,6 @@ def aggr_stdev(sample_sizes, stdevs):
     assert len(sample_sizes) == len(stdevs)
     return sqrt(sum([ (sample_sizes[i]*(stdevs[i]**2)) for i in range(len(sample_sizes)) ]) / sum (sample_sizes))
 
-print(java_avg)
-print(java_numsamples)
-
 overall_java_avg = aggr_mean (java_numsamples, java_avg)
 overall_java_std = aggr_stdev(java_numsamples, java_std)
 
