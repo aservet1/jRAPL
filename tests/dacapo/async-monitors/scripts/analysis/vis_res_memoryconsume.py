@@ -183,3 +183,5 @@ with open(os.path.join(result_dir,'raw-overall-data.txt'),'w') as f:
 	f.write("\n")
 	f.write("overall_c_da_avg: "+str(overall_c_da_avg)+"\n")
 	f.write("overall_c_da_std: "+str(overall_c_da_std)+"\n")
+
+print(" <.> done printing overall data")
