@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 
 from sys import argv
-
-if len(argv) != 2:
-    print("provide target directory as command line argument")
-    exit(2)
-
 import os
 import json
 import pandas as pd
