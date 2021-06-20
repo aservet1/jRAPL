@@ -35,10 +35,10 @@ for d in data:
     if not bench in x.keys(): x[bench] = [d]
     else: x[bench].append(d)
 data = x
+print(json.dumps(data))
 
-for powdomain in ['dram','pkg']:
-    for sock in ['1','2']:
-        print(powdomain,sock)
+for powdomain in data['avrora'][0]['time-energy']['energy-per-sample'].keys(): # [avrora] and [0] are arbirary keys, powdomain will be the same list regardless
+        print(powdomain)
         labels = []
         java_avg = []
         c_da_avg = []
@@ -50,19 +50,21 @@ for powdomain in ['dram','pkg']:
         c_ll_std = []
 
         for benchmark in data:
-            if benchmark == 'h2': continue
             print("  ",benchmark)
             
             labels.append(benchmark)
 
-            java_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['persocket'][sock][powdomain]['energy-per-sample']['avg'] )
-            java_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['persocket'][sock][powdomain]['energy-per-sample']['stdev'] )
+            def get_data_by_monitor_type(data, benchmark, type):
+                return [ d for d in data[benchmark] if d['metadata']['monitor_type'] == type][0]['time-energy']['energy-per-sample']
 
-            c_ll_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['persocket'][sock][powdomain]['energy-per-sample']['avg'] )
-            c_ll_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['persocket'][sock][powdomain]['energy-per-sample']['stdev'] )
+            java_avg.append( get_data_by_monitor_type(data, benchmark, 'java' )[powdomain]['avg']   )
+            java_std.append( get_data_by_monitor_type(data, benchmark, 'java' )[powdomain]['stdev'] )
 
-            c_da_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['persocket'][sock][powdomain]['energy-per-sample']['avg'] )
-            c_da_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['persocket'][sock][powdomain]['energy-per-sample']['stdev'] )
+            c_ll_avg.append( get_data_by_monitor_type(data, benchmark, 'c-linklist')[powdomain]['avg']   )
+            c_ll_std.append( get_data_by_monitor_type(data, benchmark, 'c-linklist')[powdomain]['stdev'] )
+
+            c_da_avg.append( get_data_by_monitor_type(data, benchmark, 'c-dynamicarray' )[powdomain]['avg']   )
+            c_da_std.append( get_data_by_monitor_type(data, benchmark, 'c-dynamicarray' )[powdomain]['stdev'] )
 
         plt.clf()
         bar_width = 0.25
@@ -82,4 +84,4 @@ for powdomain in ['dram','pkg']:
         fig = plt.gcf()
         fig.set_size_inches(12,25)
         #plt.show()
-        plt.savefig(os.path.join(result_dir,'enerpersample-comparison_'+powdomain+'_socket'+sock+'-bar'))
+        plt.savefig(os.path.join(result_dir,'enerpersample-comparison_'+powdomain+'-bar'))

@@ -47,18 +47,17 @@ c_da_std = []
 c_ll_std = []
 
 for benchmark in data:
-    if benchmark == 'h2': continue
 
     labels.append(benchmark)
 
-    java_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['persocket']['1']['time-between-samples']['avg'] )
-    java_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['persocket']['1']['time-between-samples']['stdev'] )
+    java_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['time-energy']['time-between-samples']['avg'] )
+    java_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['time-energy']['time-between-samples']['stdev'] )
 
-    c_ll_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['persocket']['1']['time-between-samples']['avg'] )
-    c_ll_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['persocket']['1']['time-between-samples']['stdev'] )
+    c_ll_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['time-energy']['time-between-samples']['avg'] )
+    c_ll_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['time-energy']['time-between-samples']['stdev'] )
 
-    c_da_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['persocket']['1']['time-between-samples']['avg'] )
-    c_da_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['persocket']['1']['time-between-samples']['stdev'] )
+    c_da_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['time-energy']['time-between-samples']['avg'] )
+    c_da_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['time-energy']['time-between-samples']['stdev'] )
 
 bar_width = 0.25
 mpl.rcParams['figure.dpi'] = 600
