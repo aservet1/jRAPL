@@ -1,14 +1,15 @@
 
 << Immediate Todos:
-	- Update the paper with all experiment data by tonight
-	- Redo the memory experiments but once you un-implement the SocketNum field per struct
-		- make graphs for the jmh time each sample result
+	- whats wrong with JMH JNI overhead / compare results to full runtime	
+	- finish the edits David asked for
+	- Properly graph sampling efficiency
+	- see your scrap paper list of todo
 
 << Semi Immediate Todos:
-	- Do experiments on dynamically choosing the size of the LinkNodes. Could be based on sampling rate, so you know how many mallocs per second to do.
 	- Run experiments on several computers
 	- Properly calculate wraparound...
 	- CSide-GetLastK grabs the correct number of samples, but samples being individual structs, not structs grouped by socket. look at the occasional segfault related to this
+	- Get a complete lists of the benchmarks / more info about dacapo-evalution-git+309e1fa.jar
 
 << Other Todos:
 	- Update the UML
@@ -16,7 +17,6 @@
 		- does compiling with clang cause a segfault on non debian machine?
 		- where does the clang segfault happen? it's somewhere in AsyncEnergyMonitorCSide. easy enough to fix?
 		- what exactly is the problem with clang and debian?
-	- make sure you re-run the experiments if you can figure out 
 
 Ideas for future development:
 	- Naming Conventions to Edit (and make sure they're good):
