@@ -3,7 +3,7 @@
 
 int
 core_num() {
-	return sysconf(_SC_NPROCESSORS_CONF); //passed in is number of configured processors
+	return sysconf(_SC_NPROCESSORS_CONF);
 }
 
 int main() {
