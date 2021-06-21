@@ -97,23 +97,24 @@ writeFileCSV_DynamicArray(FILE* outfile, DynamicArray* a) {
 
 void
 writeFileCSV_LinkedList(FILE* outfile, LinkedList* l) {
-	LinkNode* current = l->head;
 	int local_index = 0;
+	char csv_line_buffer[512];
 	int num_sockets = getSocketNum();
 	EnergyStats multisocket_sample_buffer[num_sockets];
-	char csv_line_buffer[512];
+
+	LinkNode* current = l->head;
 	for (int global_index = 0; global_index < l->nItems; global_index+=num_sockets) {
 		local_index = global_index % l->node_capacity;
+
 		if (local_index == 0 && global_index != 0) {
-			current = current->next;
-			// fprintf(outfile," --\n"); // delimits between the contents of each node (useful to uncomment for debugging)
+			current = current->next; // fprintf(outfile," --\n"); // delimits between the contents of each node (useful to uncomment for debugging)
 		}
 
-		for (int j = 0; j < num_sockets; j++) {
-			multisocket_sample_buffer[j] = current->items[local_index];
-		}
+		for (int j = 0; j < num_sockets; j++)
+			multisocket_sample_buffer[j] = current->items[local_index+j];
+
 		energy_stats_csv_string(multisocket_sample_buffer, csv_line_buffer);
-		fprintf(outfile,"%s\n",csv_line_buffer);
+		fprintf(outfile,"%s\n", csv_line_buffer);
 	}
 }
 
