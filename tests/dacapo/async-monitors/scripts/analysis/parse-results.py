@@ -15,19 +15,6 @@ def filter_zero_columns(dataframe): #delete columns that are 0.0 down the line. 
         if sum(dataframe[column]) == 0.0:
             del dataframe[column]
 
-#def zero_intervals(l):
-#    result = list()
-#    z = 0
-#    for i in range(1,len(l)):
-#        if l[i]-l[i-1] == 0:
-#            z += 1
-#        else:
-#            result.append(z)
-#            z = 0
-#    if z:
-#        result.append(z)
-#    return dict(Counter(result))
-
 def diff_list(l):
 	diffs = []
 	for i in range(1,len(l)):
@@ -36,9 +23,6 @@ def diff_list(l):
 		else: diffs.append(diff)
 	return diffs
     # return [ float(float(l[i]) - float(l[i-1])) for i in range(1,len(l))]
-
-def dict_to_list(d): #convert from dict<int,double> to list<double>
-    return [ d[k] for k in d.keys() ]
 
 def memory_data(benchmark, iteration, type):
     filename = '_'.join([benchmark, iteration, type]) + ".memory.json"
