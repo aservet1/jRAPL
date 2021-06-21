@@ -29,7 +29,13 @@ def filter_zero_columns(dataframe): #delete columns that are 0.0 down the line. 
 #    return dict(Counter(result))
 
 def diff_list(l):
-    return [ float(float(l[i]) - float(l[i-1])) for i in range(1,len(l))]
+	diffs = []
+	for i in range(1,len(l)):
+		diff = l[i] - l[i-1]
+		if diff < 0: print(".> caught negative diff:",diff,l[i],l[i-1]) # discard instances of wraparound, since theyre so infrequent for this experiment
+		else: diffs.append(diff)
+	return diffs
+    # return [ float(float(l[i]) - float(l[i-1])) for i in range(1,len(l))]
 
 def dict_to_list(d): #convert from dict<int,double> to list<double>
     return [ d[k] for k in d.keys() ]
