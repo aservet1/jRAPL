@@ -13,3 +13,6 @@ AsyncMonitor-CLINKED_LIST-metainfo.json
 
 .vscode
 .settings
+.classpath
+.factorypath
+.project

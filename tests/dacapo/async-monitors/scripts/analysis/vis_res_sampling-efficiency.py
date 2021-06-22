@@ -39,9 +39,13 @@ data = x
 
 labels = []
 
-java_samples_per_ms = []
-c_ll_samples_per_ms = []
-c_da_samples_per_ms = []
+java_samples_per_ms_AVG = []
+c_ll_samples_per_ms_AVG = []
+c_da_samples_per_ms_AVG = []
+
+java_samples_per_ms_STDEV = []
+c_ll_samples_per_ms_STDEV = []
+c_da_samples_per_ms_STDEV = []
 
 for benchmark in data:
 
@@ -54,9 +58,13 @@ for benchmark in data:
     c_ll_metadata = get_by_monitor_type(data,'c-linklist')['metadata']
     c_da_metadata = get_by_monitor_type(data,'c-dynamicarray')['metadata']
 
-    java_samples_per_ms.append( java_metadata['numSamples'] / java_metadata['lifetime'] )
-    c_ll_samples_per_ms.append( (c_ll_metadata['numSamples']/2) / c_ll_metadata['lifetime'] ) # MAKE SURE YOU KNOW WHEN THE /2 IS APPROPRIATE (when you re-run the tests, get rid of this, since the bug in the source code has been fixed)
-    c_da_samples_per_ms.append( (c_da_metadata['numSamples']/2) / c_da_metadata['lifetime'] )
+    java_samples_per_ms_AVG.append( java_metadata['numSamples']['avg'] / java_metadata['lifetime']['avg'] )
+    c_ll_samples_per_ms_AVG.append( c_ll_metadata['numSamples']['avg'] / c_ll_metadata['lifetime']['avg'] )
+    c_da_samples_per_ms_AVG.append( c_da_metadata['numSamples']['avg'] / c_da_metadata['lifetime']['avg'] )
+
+    java_samples_per_ms_STDEV.append( math.sqrt( (java_metadata['numSamples']['stdev']**2) / (java_metadata['lifetime']['avg']**2) ) )
+    c_ll_samples_per_ms_STDEV.append( math.sqrt( (c_ll_metadata['numSamples']['stdev']**2) / (c_ll_metadata['lifetime']['avg']**2) ) )
+    c_da_samples_per_ms_STDEV.append( math.sqrt( (c_da_metadata['numSamples']['stdev']**2) / (c_da_metadata['lifetime']['avg']**2) ) )
 
 ## Make the all-benchmarks graph ##
 bar_width = 0.25
@@ -66,9 +74,9 @@ r2 = [x + bar_width for x in r1]
 r3 = [x + bar_width for x in r2]
 
 plt.clf()
-plt.barh(r1, java_samples_per_ms, bar_width, color='#ffa600', edgecolor="white", label='Java')
-plt.barh(r2, c_da_samples_per_ms, bar_width, color='#003f5c', edgecolor="white", label='C Dynamic Array')
-plt.barh(r3, c_ll_samples_per_ms, bar_width, color='#bc5090', edgecolor="white", label='C Linked List')
+plt.barh(r1, java_samples_per_ms_AVG, bar_width, yerror=java_samples_per_ms_STDEV, color='#ffa600', edgecolor="white", label='Java')
+plt.barh(r2, c_da_samples_per_ms_AVG, bar_width, yerror=c_da_samples_per_ms_STDEV, color='#003f5c', edgecolor="white", label='C Dynamic Array')
+plt.barh(r3, c_ll_samples_per_ms_AVG, bar_width, yerror=c_ll_samples_per_ms_STDEV, color='#bc5090', edgecolor="white", label='C Linked List')
 
 plt.ylabel('Benchmark', fontweight='bold')
 plt.xlabel('samples per ms', fontweight='bold')
@@ -78,8 +86,17 @@ fig = plt.gcf()
 fig.set_size_inches(12,25)
 #plt.show()
 plt.savefig('sampling-efficiency_perbench')
+print("THERES MORE! but exiting now");exit(1)
 
 ## Now to average across all benchmarks and make a bar graph with error bars of the 3 ##
+''' https://math.stackexchange.com/questions/1547141/aggregating-standard-deviation-to-a-summary-point?fbclid=IwAR3GpT8cNoNbMHntA1dKhWKHGXvBj2W-t7NQU29qoqtsg37uZKZgkeDM-aE <-- formulas for aggr_mean and aggr_stdev '''
+def aggr_mean(sample_sizes, averages):
+    assert len(sample_sizes) == len(averages)
+    return sum([ (sample_sizes[i]*averages[i]) for i in range(len(sample_sizes)) ]) / sum(sample_sizes)
+def aggr_stdev(sample_sizes, stdevs):
+    assert len(sample_sizes) == len(stdevs)
+    return math.sqrt(sum([ (sample_sizes[i]*(stdevs[i]**2)) for i in range(len(sample_sizes)) ]) / sum (sample_sizes))
+
 
 overall_java_avg = statistics.mean (java_samples_per_ms)
 overall_java_std = statistics.stdev(java_samples_per_ms)
