@@ -49,8 +49,8 @@ class Utils {
     public static String csvPrimitiveArray(double[] a) {
 		String s = new String();
 		int i; for (i = 0; i < a.length-1; i++) {
-			s += String.format("%.4f",a[i]) + ",";
-		} s += String.format("%.4f",a[i]);
+			s += String.format("%.6f",a[i]) + ",";
+		} s += String.format("%.6f",a[i]);
 		return s;
 		//String s = new String();
 		//int i; for (i = 0; i < a.length-1; i++) {

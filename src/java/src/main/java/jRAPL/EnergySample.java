@@ -31,7 +31,7 @@ public abstract class EnergySample
 	protected String csv() {
 		String s = new String();
 		for (int i = 0; i < primitiveSample.length; i++) {
-			s += String.format("%.4f,",primitiveSample[i]);
+			s += String.format("%.6f,",primitiveSample[i]);
 		}
 		return s;
 	}
@@ -88,7 +88,7 @@ public abstract class EnergySample
 	public String dump() {
 		String s = new String();
 		for (int i = 0; i < primitiveSample.length; i++) {
-			s += String.format("%.4f,",primitiveSample[i]);
+			s += String.format("%.6f,",primitiveSample[i]);
 		}
 		return s;
 	}

@@ -77,20 +77,20 @@ int
 energy_stats_to_jni_string(EnergyStats estats, char* ener_string) {
 	switch (get_power_domains_supported(get_micro_architecture())) {
 		case DRAM_GPU_CORE_PKG:
-			return sprintf(ener_string, "%.4f,%.4f,%.4f,%.4f@",
+			return sprintf(ener_string, "%.6f,%.6f,%.6f,%.6f@",
 				estats.dram,
 				estats.gpu,
 				estats.core,
 				estats.pkg
 			);
 		case GPU_CORE_PKG:
-			return sprintf(ener_string, "%.4f,%.4f,%.4f@",
+			return sprintf(ener_string, "%.6f,%.6f,%.6f@",
 				estats.gpu,
 				estats.core,
 				estats.pkg
 			);
 		case DRAM_CORE_PKG:
-			return sprintf(ener_string, "%.4f,%.4f,%.4f@",
+			return sprintf(ener_string, "%.6f,%.6f,%.6f@",
 				estats.dram,
 				estats.core,
 				estats.pkg
@@ -152,7 +152,7 @@ energy_stats_csv_header(char csv_header[512]) {
 // energy_stats_csv_string(EnergyStats estats, int socket, char* csv_string) {
 // 	switch (get_power_domains_supported(get_micro_architecture())) {
 // 		case DRAM_GPU_CORE_PKG:
-// 			return sprintf(csv_string, "%d,%.4f,%.4f,%.4f,%.4f,%ld",
+// 			return sprintf(csv_string, "%d,%.6f,%.6f,%.6f,%.6f,%ld",
 // 				socket,
 // 				estats.dram,
 // 				estats.gpu,
@@ -161,7 +161,7 @@ energy_stats_csv_header(char csv_header[512]) {
 // 				estats.timestamp
 // 			);
 // 		case GPU_CORE_PKG:
-// 			return sprintf(csv_string, "%d,%.4f,%.4f,%.4f,%ld",
+// 			return sprintf(csv_string, "%d,%.6f,%.6f,%.6f,%ld",
 // 				socket,
 // 				estats.gpu,
 // 				estats.core,
@@ -169,7 +169,7 @@ energy_stats_csv_header(char csv_header[512]) {
 // 				estats.timestamp
 // 			);
 // 		case DRAM_CORE_PKG:
-// 			return sprintf(csv_string, "%d,%.4f,%.4f,%.4f,%ld",
+// 			return sprintf(csv_string, "%d,%.6f,%.6f,%.6f,%ld",
 // 				socket,
 // 				estats.dram,
 // 				estats.core,
@@ -191,7 +191,7 @@ energy_stats_csv_string(EnergyStats estats[], char* csv_string) {
 	for (int i = 0; i < sockets; i++) {
 		switch (power_domains) {
 			case DRAM_GPU_CORE_PKG:
-				offset += sprintf(csv_string+offset, "%.4f,%.4f,%.4f,%.4f,",
+				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,%.6f,",
 					estats[i].dram,
 					estats[i].gpu,
 					estats[i].core,
@@ -199,14 +199,14 @@ energy_stats_csv_string(EnergyStats estats[], char* csv_string) {
 				);
 				break;
 			case GPU_CORE_PKG:
-				offset += sprintf(csv_string+offset, "%.4f,%.4f,%.4f,",
+				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,",
 					estats[i].gpu,
 					estats[i].core,
 					estats[i].pkg
 				);
 				break;
 			case DRAM_CORE_PKG:
-				offset += sprintf(csv_string+offset, "%.4f,%.4f,%.4f,",
+				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,",
 					estats[i].dram,
 					estats[i].core,
 					estats[i].pkg
