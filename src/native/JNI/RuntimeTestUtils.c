@@ -112,3 +112,14 @@ JNIEXPORT jlongArray JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeMSRRead(JNIEnv*
 	(*env)->SetLongArrayRegion(env, result, 0, num_sockets, fill);
 	return result;
 }
+
+struct timeval tvStart, tvStop;
+JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_ctimeStart(JNIEnv* env, jclass jcls) {
+	gettimeofday(&tvStart,0);
+}
+JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_ctimeStop(JNIEnv* env, jclass jcls) {
+	gettimeofday(&tvStop,0);
+}
+JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_ctimeElapsedUsec(JNIEnv* env, jclass jcls) {
+	return (jlong) ((tvStop.tv_sec*1000000+tvStop.tv_usec) - (tvStart.tv_sec*1000000+tvStart.tv_usec));
+}

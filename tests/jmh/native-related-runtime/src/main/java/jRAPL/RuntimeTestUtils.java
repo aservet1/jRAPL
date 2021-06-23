@@ -1,10 +1,5 @@
 package jRAPL;
 
-import java.util.Arrays;
-import java.text.ParseException;
-import java.time.Duration;
-import java.time.Instant;
-
 public class RuntimeTestUtils
 {
 	// constants that align with macros defined on the C side,
@@ -22,4 +17,7 @@ public class RuntimeTestUtils
 	public native static long usecTimeProfileDealloc();
 	public native static long[] usecTimeMSRRead(int powerDomain);
 
+	public native static void ctimeStart();
+	public native static void ctimeStop();
+	public native static long ctimeElapsedUsec();
 }

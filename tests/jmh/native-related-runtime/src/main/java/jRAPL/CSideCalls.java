@@ -46,7 +46,7 @@ public class CSideCalls {
 
 	@State(Scope.Thread)
     public static class State_ {
-		private HashMap<Long, Long> histogram = new HashMap();
+		private HashMap<Long, Long> histogram = new HashMap<Long, Long>();
 
 		protected String name;
 
@@ -104,25 +104,25 @@ public class CSideCalls {
 		}
 	}
 
-	@State(Scope.Thread)
-    public static class ProfileInitState extends State_ {
-		@Setup(Level.Iteration)
-		public void incrementIteration() {
-			this.incrementIter();
-		}
+	// @State(Scope.Thread)
+    // public static class ProfileInitState extends State_ {
+	// 	@Setup(Level.Iteration)
+	// 	public void incrementIteration() {
+	// 		this.incrementIter();
+	// 	}
 
-		@Setup(Level.Trial)
-		public void doInitalSetup() {
-			super.doInitialSetup();
-			name = "ProfileInit";
-		}
+	// 	@Setup(Level.Trial)
+	// 	public void doInitalSetup() {
+	// 		super.doInitialSetup();
+	// 		name = "ProfileInit";
+	// 	}
 
-        @TearDown(Level.Invocation)
-        public void doTearDown() throws InterruptedException {
-			EnergyManager.profileDealloc();
-        }
+    //     @TearDown(Level.Invocation)
+    //     public void doTearDown() throws InterruptedException {
+	// 		EnergyManager.profileDealloc();
+    //     }
 
-    }
+    // }
 	@State(Scope.Thread)
     public static class EnergyStatCheckState extends State_ {
 		@Setup(Level.Iteration)
@@ -143,44 +143,6 @@ public class CSideCalls {
 
     }
 
-	@State(Scope.Thread)
-	public static class ProfileDeallocState extends State_ {
-		@Setup(Level.Iteration)
-		public void incrementIteration() {
-			this.incrementIter();
-		}
-
-		@Setup(Level.Trial)
-		public void doInitalSetup() {
-			super.doInitialSetup();
-			name = "ProfileDealloc";
-		}
-		@Setup(Level.Invocation)
-		public void doSetup(){
-			EnergyManager.profileInit();
-		}
-	}
-
-	@Benchmark
-	@Fork(1)
-	@Warmup(iterations = 5) @Measurement(iterations = 25)
-	// @Warmup(iterations = 1) @Measurement(iterations = 3)
-	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeProfileInit(ProfileInitState pis, Blackhole b) throws InterruptedException {
-		pis.addValue(RuntimeTestUtils.usecTimeProfileInit());
-		Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
-	}
-
-	@Benchmark
-	@Fork(1)
-	@Warmup(iterations = 5) @Measurement(iterations = 25)
-	// @Warmup(iterations = 1) @Measurement(iterations = 3)
-	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeProfileDealloc(ProfileDeallocState pds, Blackhole b) throws InterruptedException {
-		pds.addValue(RuntimeTestUtils.usecTimeProfileDealloc());
-		Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
-	}
-
 	@Benchmark
 	@Fork(1)
 	@Warmup(iterations = 5) @Measurement(iterations = 25)
@@ -190,5 +152,44 @@ public class CSideCalls {
 		s.addValue(RuntimeTestUtils.usecTimeEnergyStatCheck());
 		Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
 	}
+
+
+	// @State(Scope.Thread)
+	// public static class ProfileDeallocState extends State_ {
+	// 	@Setup(Level.Iteration)
+	// 	public void incrementIteration() {
+	// 		this.incrementIter();
+	// 	}
+
+	// 	@Setup(Level.Trial)
+	// 	public void doInitalSetup() {
+	// 		super.doInitialSetup();
+	// 		name = "ProfileDealloc";
+	// 	}
+	// 	@Setup(Level.Invocation)
+	// 	public void doSetup(){
+	// 		EnergyManager.profileInit();
+	// 	}
+	// }
+
+	// @Benchmark
+	// @Fork(1)
+	// // @Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
+	// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	// public void timeProfileInit(ProfileInitState pis, Blackhole b) throws InterruptedException {
+	// 	pis.addValue(RuntimeTestUtils.usecTimeProfileInit());
+	// 	Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+	// }
+
+	// @Benchmark
+	// @Fork(1)
+	// // @Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
+	// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	// public void timeProfileDealloc(ProfileDeallocState pds, Blackhole b) throws InterruptedException {
+	// 	pds.addValue(RuntimeTestUtils.usecTimeProfileDealloc());
+	// 	Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+	// }
 
 }
