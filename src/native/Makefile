@@ -8,6 +8,7 @@ CFILES = \
  		EnergyStats.c \
 		AsyncEnergyMonitor.c \
 		CSideDataStorage.c \
+		Utils.c \
 		\
 		DVFS.c \
 

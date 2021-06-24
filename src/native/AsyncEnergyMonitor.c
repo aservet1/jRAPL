@@ -1,40 +1,19 @@
 #include <stdio.h>
-#include <time.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
-#include <errno.h>
 
 #include "EnergyStats.h"
 #include "AsyncEnergyMonitor.h"
 #include "EnergyCheckUtils.h"
 #include "ArchSpec.h"
+#include "Utils.h"
 
 #include "CSideDataStorage.h"
 
 #define USING_DYNAMIC_ARRAY	monitor->storageType == DYNAMIC_ARRAY_STORAGE
 #define USING_LINKED_LIST	monitor->storageType == LINKED_LIST_STORAGE
-
-int
-sleep_millisecond(long msec) {
-	struct timespec ts;
-	int res;
-
-	if (msec < 0) {
-		errno = EINVAL;
-		return -1;
-	}
-
-	ts.tv_sec = msec / 1000;
-	ts.tv_nsec = (msec % 1000) * 1000000;
-
-	do {
-		res = nanosleep(&ts, &ts);
-	} while (res && errno == EINTR);
-
-	return res;
-}
 
 void
 setSamplingRate(AsyncEnergyMonitor* monitor, int s) {

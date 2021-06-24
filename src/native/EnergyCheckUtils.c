@@ -13,6 +13,7 @@
 #include "ArchSpec.h"
 #include "MSR.h"
 #include "EnergyStats.h"
+#include "Utils.h"
 
 #define MSR_DRAM_ENERGY_UNIT 0.000015
 
@@ -92,12 +93,6 @@ ProfileDealloc() {
 	free(parameters); parameters = NULL;
 }
 
-static inline unsigned long // this shouldn't need to be defined anywhere else...keep this in mind
-usec_since_epoch() {
-	struct timeval t; gettimeofday(&t,0);
-	return t.tv_sec * 1000000UL + t.tv_usec;
-}
-
 void
 EnergyStatCheck(EnergyStats stats_per_socket[num_sockets]) {
 	switch(power_domains_supported) {
@@ -130,6 +125,13 @@ EnergyStatCheck(EnergyStats stats_per_socket[num_sockets]) {
 
 		case UNDEFINED_ARCHITECTURE:
 			fprintf(stderr,"ERROR: MicroArchitecture not supported: %X\n", micro_architecture);
+			for (int i = 0; i < num_sockets; i++) {
+				stats_per_socket[i].dram = -1;
+				stats_per_socket[i].gpu = -1;
+				stats_per_socket[i].core = -1;
+				stats_per_socket[i].pkg = -1;
+				stats_per_socket[i].timestamp = usec_since_epoch();
+			} break;
 			break;
 	}
 }

@@ -1,7 +1,7 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <fcntl.h>
-#include<sys/time.h>
+#include <sys/time.h>
 
 #include "ArchSpec.h"
 #include "EnergyCheckUtils.h"
@@ -12,6 +12,7 @@
 #define STOPSTAMP	gettimeofday(&end, NULL); timersub(&end, &start, &diff);
 #define DIFF_USEC	diff.tv_sec*1000000 + diff.tv_usec
 
+// global static timestamp variables make this not thread safe
 static struct timeval start, end, diff;
 static int num_sockets;
 static int power_domains_supported;

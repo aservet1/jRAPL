@@ -4,6 +4,7 @@
 #include <assert.h>
 #include "EnergyStats.h"
 #include "AsyncEnergyMonitor.h"
+#include "Utils.h"
 
 static AsyncEnergyMonitor* monitor = NULL;
 
