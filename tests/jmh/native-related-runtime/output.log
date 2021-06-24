@@ -1,0 +1,457 @@
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for jRAPL:native-related-runtime:jar:1.0
+[WARNING] 'dependencies.dependency.systemPath' for jRAPL:jRAPL:jar should not point at files within the project directory, ${project.basedir}/../../../src/java/target/jRAPL-1.0.jar will be unresolvable by dependent projects @ line 69, column 38
+[WARNING] 'dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: jRAPL:jRAPL:jar -> duplicate declaration of version 1.0 @ line 65, column 15
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building JMH benchmark sample: Java 1.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ native-related-runtime ---
+[INFO] Deleting /home/alejandro/jRAPL/tests/jmh/native-related-runtime/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ native-related-runtime ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/alejandro/jRAPL/tests/jmh/native-related-runtime/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.8.0:compile (default-compile) @ native-related-runtime ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 5 source files to /home/alejandro/jRAPL/tests/jmh/native-related-runtime/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ native-related-runtime ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/alejandro/jRAPL/tests/jmh/native-related-runtime/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.8.0:testCompile (default-testCompile) @ native-related-runtime ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.17:test (default-test) @ native-related-runtime ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ native-related-runtime ---
+[INFO] Building jar: /home/alejandro/jRAPL/tests/jmh/native-related-runtime/target/native-related-runtime-1.0.jar
+[INFO] 
+[INFO] --- maven-shade-plugin:3.2.1:shade (default) @ native-related-runtime ---
+[INFO] Including org.openjdk.jmh:jmh-core:jar:1.27 in the shaded jar.
+[INFO] Including net.sf.jopt-simple:jopt-simple:jar:4.6 in the shaded jar.
+[INFO] Including org.apache.commons:commons-math3:jar:3.2 in the shaded jar.
+[INFO] Replacing /home/alejandro/jRAPL/tests/jmh/native-related-runtime/target/benchmarks.jar with /home/alejandro/jRAPL/tests/jmh/native-related-runtime/target/native-related-runtime-1.0-shaded.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.5.1:install (default-install) @ native-related-runtime ---
+[INFO] Installing /home/alejandro/jRAPL/tests/jmh/native-related-runtime/target/native-related-runtime-1.0.jar to /home/alejandro/.m2/repository/jRAPL/native-related-runtime/1.0/native-related-runtime-1.0.jar
+[INFO] Installing /home/alejandro/jRAPL/tests/jmh/native-related-runtime/pom.xml to /home/alejandro/.m2/repository/jRAPL/native-related-runtime/1.0/native-related-runtime-1.0.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 5.469 s
+[INFO] Finished at: 2021-06-23T22:12:54-04:00
+[INFO] Final Memory: 19M/240M
+[INFO] ------------------------------------------------------------------------
+========================================
+  Copying all files from  to   
+========================================
+ inflated: META-INF/MANIFEST.MF
+  created: META-INF/
+  created: native/
+  created: jRAPL/
+  created: META-INF/maven/
+  created: META-INF/maven/jRAPL/
+  created: META-INF/maven/jRAPL/jRAPL/
+ inflated: native/libJNIRAPL.so
+ inflated: jRAPL/AsyncEnergyMonitorJavaSide.class
+ inflated: jRAPL/NativeUtils.class
+ inflated: jRAPL/DvfsEnergyController.class
+ inflated: jRAPL/DriverTmp.class
+ inflated: jRAPL/SyncEnergyMonitor.class
+ inflated: jRAPL/PowercapEnergyController.class
+ inflated: jRAPL/EnergyMonitor.class
+ inflated: jRAPL/ArchSpec.class
+ inflated: jRAPL/Utils.class
+ inflated: jRAPL/AsyncEnergyMonitor.class
+ inflated: jRAPL/EnergyManager.class
+ inflated: jRAPL/EnergySample.class
+ inflated: jRAPL/EnergyStats.class
+ inflated: jRAPL/AsyncEnergyMonitorCSide.class
+ inflated: jRAPL/EnergyDiff.class
+ inflated: jRAPL/EnergyController.class
+ inflated: META-INF/maven/jRAPL/jRAPL/pom.xml
+ inflated: META-INF/maven/jRAPL/jRAPL/pom.properties
+adding: jRAPL/(in = 0) (out= 0)(stored 0%)
+adding: jRAPL/AsyncEnergyMonitorJavaSide.class(in = 4672) (out= 2308)(deflated 50%)
+adding: jRAPL/NativeUtils.class(in = 4150) (out= 2232)(deflated 46%)
+adding: jRAPL/DvfsEnergyController.class(in = 403) (out= 276)(deflated 31%)
+adding: jRAPL/DriverTmp.class(in = 2488) (out= 1441)(deflated 42%)
+adding: jRAPL/SyncEnergyMonitor.class(in = 3374) (out= 1774)(deflated 47%)
+adding: jRAPL/PowercapEnergyController.class(in = 517) (out= 310)(deflated 40%)
+adding: jRAPL/EnergyMonitor.class(in = 494) (out= 275)(deflated 44%)
+adding: jRAPL/ArchSpec.class(in = 3480) (out= 1944)(deflated 44%)
+adding: jRAPL/Utils.class(in = 4026) (out= 2004)(deflated 50%)
+adding: jRAPL/AsyncEnergyMonitor.class(in = 6846) (out= 3533)(deflated 48%)
+adding: jRAPL/EnergyManager.class(in = 2458) (out= 1289)(deflated 47%)
+adding: jRAPL/EnergySample.class(in = 3775) (out= 1761)(deflated 53%)
+adding: jRAPL/EnergyStats.class(in = 1769) (out= 871)(deflated 50%)
+adding: jRAPL/AsyncEnergyMonitorCSide.class(in = 3972) (out= 1906)(deflated 52%)
+adding: jRAPL/EnergyDiff.class(in = 2179) (out= 1060)(deflated 51%)
+adding: jRAPL/EnergyController.class(in = 288) (out= 208)(deflated 27%)
+adding: native/(in = 0) (out= 0)(stored 0%)
+adding: native/libJNIRAPL.so(in = 144032) (out= 50063)(deflated 65%)
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.openjdk.jmh.util.Utils (file:/home/alejandro/jRAPL/tests/jmh/native-related-runtime/target/benchmarks.jar) to field java.io.PrintStream.charOut
+WARNING: Please consider reporting this to the maintainers of org.openjdk.jmh.util.Utils
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+# JMH version: 1.27
+# VM version: JDK 11.0.2, Java HotSpot(TM) 64-Bit Server VM, 11.0.2+9-LTS
+# VM invoker: /usr/lib/jvm/java-11-oracle/bin/java
+# VM options: <none>
+# JMH blackhole mode: full blackhole + dont-inline hint
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: jRAPL.CSideCalls.timeEnergyStatCheck
+
+# Run progress: 0.00% complete, ETA 00:30:00
+# Fork: 1 of 1
+# Warmup Iteration   1: 41.377 us/op
+# Warmup Iteration   2: 41.367 us/op
+# Warmup Iteration   3: 41.303 us/op
+# Warmup Iteration   4: 41.396 us/op
+# Warmup Iteration   5: 41.381 us/op
+Iteration   1: 41.315 us/op
+Iteration   2: 41.549 us/op
+Iteration   3: 41.680 us/op
+Iteration   4: 41.596 us/op
+Iteration   5: 41.558 us/op
+Iteration   6: 41.599 us/op
+Iteration   7: 41.526 us/op
+Iteration   8: 41.585 us/op
+Iteration   9: 41.561 us/op
+Iteration  10: 41.626 us/op
+Iteration  11: 41.607 us/op
+Iteration  12: 41.211 us/op
+Iteration  13: 41.173 us/op
+Iteration  14: 41.199 us/op
+Iteration  15: 41.089 us/op
+Iteration  16: 41.076 us/op
+Iteration  17: 41.120 us/op
+Iteration  18: 41.080 us/op
+Iteration  19: 41.095 us/op
+Iteration  20: 41.080 us/op
+Iteration  21: 41.198 us/op
+Iteration  22: 41.180 us/op
+Iteration  23: 41.186 us/op
+Iteration  24: 41.096 us/op
+Iteration  25: Successfully wrote to the file.
+41.111 us/op
+
+
+Result "jRAPL.CSideCalls.timeEnergyStatCheck":
+  41.324 ±(99.9%) 0.171 us/op [Average]
+  (min, avg, max) = (41.076, 41.324, 41.680), stdev = 0.229
+  CI (99.9%): [41.153, 41.495] (assumes normal distribution)
+
+
+# JMH version: 1.27
+# VM version: JDK 11.0.2, Java HotSpot(TM) 64-Bit Server VM, 11.0.2+9-LTS
+# VM invoker: /usr/lib/jvm/java-11-oracle/bin/java
+# VM options: <none>
+# JMH blackhole mode: full blackhole + dont-inline hint
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: jRAPL.JavaSideCalls.timeEnergyStatCheck
+
+# Run progress: 16.67% complete, ETA 00:25:04
+# Fork: 1 of 1
+# Warmup Iteration   1: 73.413 us/op
+# Warmup Iteration   2: 73.652 us/op
+# Warmup Iteration   3: 72.490 us/op
+# Warmup Iteration   4: 72.111 us/op
+# Warmup Iteration   5: 70.632 us/op
+Iteration   1: 74.320 us/op
+Iteration   2: 73.651 us/op
+Iteration   3: 71.637 us/op
+Iteration   4: 73.029 us/op
+Iteration   5: 72.684 us/op
+Iteration   6: 74.233 us/op
+Iteration   7: 73.964 us/op
+Iteration   8: 73.309 us/op
+Iteration   9: 72.258 us/op
+Iteration  10: 74.016 us/op
+Iteration  11: 72.944 us/op
+Iteration  12: 72.281 us/op
+Iteration  13: 71.788 us/op
+Iteration  14: 74.297 us/op
+Iteration  15: 74.353 us/op
+Iteration  16: 73.624 us/op
+Iteration  17: 71.842 us/op
+Iteration  18: 74.304 us/op
+Iteration  19: 73.150 us/op
+Iteration  20: 74.031 us/op
+Iteration  21: 72.719 us/op
+Iteration  22: 73.119 us/op
+Iteration  23: 73.377 us/op
+Iteration  24: 72.319 us/op
+Iteration  25: Successfully wrote to the file
+71.938 us/op
+
+
+Result "jRAPL.JavaSideCalls.timeEnergyStatCheck":
+  73.168 ±(99.9%) 0.673 us/op [Average]
+  (min, avg, max) = (71.637, 73.168, 74.353), stdev = 0.899
+  CI (99.9%): [72.494, 73.841] (assumes normal distribution)
+
+
+# JMH version: 1.27
+# VM version: JDK 11.0.2, Java HotSpot(TM) 64-Bit Server VM, 11.0.2+9-LTS
+# VM invoker: /usr/lib/jvm/java-11-oracle/bin/java
+# VM options: <none>
+# JMH blackhole mode: full blackhole + dont-inline hint
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: jRAPL.ReadMSR.timeReadCORE
+
+# Run progress: 33.33% complete, ETA 00:20:03
+# Fork: 1 of 1
+# Warmup Iteration   1: 8.770 us/op
+# Warmup Iteration   2: 9.382 us/op
+# Warmup Iteration   3: 9.232 us/op
+# Warmup Iteration   4: 9.471 us/op
+# Warmup Iteration   5: 9.378 us/op
+Iteration   1: 9.674 us/op
+Iteration   2: 9.551 us/op
+Iteration   3: 9.554 us/op
+Iteration   4: 9.552 us/op
+Iteration   5: 9.566 us/op
+Iteration   6: 9.429 us/op
+Iteration   7: 9.354 us/op
+Iteration   8: 9.456 us/op
+Iteration   9: 9.408 us/op
+Iteration  10: 9.590 us/op
+Iteration  11: 9.569 us/op
+Iteration  12: 9.259 us/op
+Iteration  13: 9.512 us/op
+Iteration  14: 9.542 us/op
+Iteration  15: 9.137 us/op
+Iteration  16: 9.263 us/op
+Iteration  17: 9.516 us/op
+Iteration  18: 9.453 us/op
+Iteration  19: 9.369 us/op
+Iteration  20: 9.458 us/op
+Iteration  21: 9.319 us/op
+Iteration  22: 9.364 us/op
+Iteration  23: 9.152 us/op
+Iteration  24: 9.366 us/op
+Iteration  25: Successfully wrote to the file.
+Successfully wrote to the file.
+9.520 us/op
+
+
+Result "jRAPL.ReadMSR.timeReadCORE":
+  9.437 ±(99.9%) 0.103 us/op [Average]
+  (min, avg, max) = (9.137, 9.437, 9.674), stdev = 0.138
+  CI (99.9%): [9.334, 9.540] (assumes normal distribution)
+
+
+# JMH version: 1.27
+# VM version: JDK 11.0.2, Java HotSpot(TM) 64-Bit Server VM, 11.0.2+9-LTS
+# VM invoker: /usr/lib/jvm/java-11-oracle/bin/java
+# VM options: <none>
+# JMH blackhole mode: full blackhole + dont-inline hint
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: jRAPL.ReadMSR.timeReadDRAM
+
+# Run progress: 50.00% complete, ETA 00:15:02
+# Fork: 1 of 1
+# Warmup Iteration   1: 9.183 us/op
+# Warmup Iteration   2: 11.151 us/op
+# Warmup Iteration   3: 6.749 us/op
+# Warmup Iteration   4: 8.985 us/op
+# Warmup Iteration   5: 8.514 us/op
+Iteration   1: 8.770 us/op
+Iteration   2: 9.376 us/op
+Iteration   3: 7.013 us/op
+Iteration   4: 7.453 us/op
+Iteration   5: 6.689 us/op
+Iteration   6: 7.167 us/op
+Iteration   7: 7.026 us/op
+Iteration   8: 9.389 us/op
+Iteration   9: 9.340 us/op
+Iteration  10: 9.421 us/op
+Iteration  11: 9.219 us/op
+Iteration  12: 9.491 us/op
+Iteration  13: 9.572 us/op
+Iteration  14: 9.563 us/op
+Iteration  15: 9.523 us/op
+Iteration  16: 9.547 us/op
+Iteration  17: 9.558 us/op
+Iteration  18: 9.324 us/op
+Iteration  19: 9.502 us/op
+Iteration  20: 9.544 us/op
+Iteration  21: 9.459 us/op
+Iteration  22: 9.291 us/op
+Iteration  23: 9.417 us/op
+Iteration  24: 9.326 us/op
+Iteration  25: Successfully wrote to the file.
+Successfully wrote to the file.
+9.521 us/op
+
+
+Result "jRAPL.ReadMSR.timeReadDRAM":
+  8.940 ±(99.9%) 0.730 us/op [Average]
+  (min, avg, max) = (6.689, 8.940, 9.572), stdev = 0.975
+  CI (99.9%): [8.210, 9.670] (assumes normal distribution)
+
+
+# JMH version: 1.27
+# VM version: JDK 11.0.2, Java HotSpot(TM) 64-Bit Server VM, 11.0.2+9-LTS
+# VM invoker: /usr/lib/jvm/java-11-oracle/bin/java
+# VM options: <none>
+# JMH blackhole mode: full blackhole + dont-inline hint
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: jRAPL.ReadMSR.timeReadGPU
+
+# Run progress: 66.67% complete, ETA 00:10:01
+# Fork: 1 of 1
+# Warmup Iteration   1: 0.923 us/op
+# Warmup Iteration   2: 0.929 us/op
+# Warmup Iteration   3: 0.901 us/op
+# Warmup Iteration   4: 0.902 us/op
+# Warmup Iteration   5: 0.901 us/op
+Iteration   1: 1.025 us/op
+Iteration   2: 1.023 us/op
+Iteration   3: 1.021 us/op
+Iteration   4: 1.021 us/op
+Iteration   5: 1.021 us/op
+Iteration   6: 1.022 us/op
+Iteration   7: 1.021 us/op
+Iteration   8: 1.021 us/op
+Iteration   9: 1.021 us/op
+Iteration  10: 1.022 us/op
+Iteration  11: 1.021 us/op
+Iteration  12: 1.020 us/op
+Iteration  13: 1.043 us/op
+Iteration  14: 1.053 us/op
+Iteration  15: 1.050 us/op
+Iteration  16: 1.048 us/op
+Iteration  17: 1.046 us/op
+Iteration  18: 1.046 us/op
+Iteration  19: 1.048 us/op
+Iteration  20: 1.046 us/op
+Iteration  21: 1.046 us/op
+Iteration  22: 1.046 us/op
+Iteration  23: 1.047 us/op
+Iteration  24: 1.051 us/op
+Iteration  25: Successfully wrote to the file.
+Successfully wrote to the file.
+1.047 us/op
+
+
+Result "jRAPL.ReadMSR.timeReadGPU":
+  1.035 ±(99.9%) 0.010 us/op [Average]
+  (min, avg, max) = (1.020, 1.035, 1.053), stdev = 0.013
+  CI (99.9%): [1.025, 1.045] (assumes normal distribution)
+
+
+# JMH version: 1.27
+# VM version: JDK 11.0.2, Java HotSpot(TM) 64-Bit Server VM, 11.0.2+9-LTS
+# VM invoker: /usr/lib/jvm/java-11-oracle/bin/java
+# VM options: <none>
+# JMH blackhole mode: full blackhole + dont-inline hint
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: jRAPL.ReadMSR.timeReadPKG
+
+# Run progress: 83.33% complete, ETA 00:05:00
+# Fork: 1 of 1
+# Warmup Iteration   1: 9.615 us/op
+# Warmup Iteration   2: 9.525 us/op
+# Warmup Iteration   3: 9.264 us/op
+# Warmup Iteration   4: 9.207 us/op
+# Warmup Iteration   5: 9.099 us/op
+Iteration   1: 9.507 us/op
+Iteration   2: 9.165 us/op
+Iteration   3: 9.604 us/op
+Iteration   4: 9.605 us/op
+Iteration   5: 9.678 us/op
+Iteration   6: 9.686 us/op
+Iteration   7: 9.360 us/op
+Iteration   8: 9.362 us/op
+Iteration   9: 9.392 us/op
+Iteration  10: 9.612 us/op
+Iteration  11: 9.329 us/op
+Iteration  12: 9.468 us/op
+Iteration  13: 9.120 us/op
+Iteration  14: 9.379 us/op
+Iteration  15: 9.123 us/op
+Iteration  16: 9.354 us/op
+Iteration  17: 9.113 us/op
+Iteration  18: 9.582 us/op
+Iteration  19: 9.179 us/op
+Iteration  20: 9.610 us/op
+Iteration  21: 9.544 us/op
+Iteration  22: 9.603 us/op
+Iteration  23: 9.264 us/op
+Iteration  24: 9.377 us/op
+Iteration  25: Successfully wrote to the file.
+Successfully wrote to the file.
+9.316 us/op
+
+
+Result "jRAPL.ReadMSR.timeReadPKG":
+  9.413 ±(99.9%) 0.138 us/op [Average]
+  (min, avg, max) = (9.113, 9.413, 9.686), stdev = 0.184
+  CI (99.9%): [9.275, 9.551] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:30:04
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                                Mode  Cnt   Score   Error  Units
+jRAPL.CSideCalls.timeEnergyStatCheck     avgt   25  41.324 ± 0.171  us/op
+jRAPL.JavaSideCalls.timeEnergyStatCheck  avgt   25  73.168 ± 0.673  us/op
+jRAPL.ReadMSR.timeReadCORE               avgt   25   9.437 ± 0.103  us/op
+jRAPL.ReadMSR.timeReadDRAM               avgt   25   8.940 ± 0.730  us/op
+jRAPL.ReadMSR.timeReadGPU                avgt   25   1.035 ± 0.010  us/op
+jRAPL.ReadMSR.timeReadPKG                avgt   25   9.413 ± 0.138  us/op
+>> jmh done, now analyzing results
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
