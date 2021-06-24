@@ -121,8 +121,8 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 		// java generate JSON for the meta info object RIGHT HERE RIGHT NOW
 		String json = String.format( //@TODO make sure all of the metainfo points are here or if you need to gather more data to display
-				"{\"samplingRate\": %d, \"lifetime\": %d, \"numSamples\": %d }",
-				samplingRate, lifetime, numSamples);
+				"{\"samplingRate\": %d, \"lifetime\": %d, \"numSamples\": %d, \"energyWrapAround\": %f }",
+				samplingRate, lifetime, numSamples, (float)ArchSpec.RAPL_WRAPAROUND); //TODO make sure wraparound gets accurately calculated on the C side before you start using this
 		try {
 			BufferedWriter writer = new BufferedWriter (
 							(fileName == null)
