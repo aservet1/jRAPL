@@ -20,27 +20,8 @@ energy_stats_subtract(EnergyStats x, EnergyStats y) {
 // of what needs to happen, but it's poorly designed and probably hard for someone to edit without a lot of time to
 // figure out what's going on in this code. make sure to edit before jRAPL is declared "release-able"
 
-// string processing in C is annoying lol
-
-// static void label(char buffer[]) {
-// 	switch (get_power_domains_supported(get_micro_architecture())) {
-// 		case DRAM_GPU_CORE_PKG:
-// 			sprintf(buffer,"dram,gpu,core,pkg");
-// 			break;
-// 		case DRAM_CORE_PKG:
-// 			sorintf(buffer,"dram,core,pkg");
-// 			break;
-// 		case GPU_CORE_PKG:
-// 			sprintf(buffer,"gpu,core,pkg");
-// 			break;
-// 		default:
-// 			sprintf(buffer,"undefined");
-// 			return;
-// 	}
-// }
-
 static void
-multiply_string_by_socket_num(char buffer[], char string[]) {
+multiply_string_by_socket_num(char buffer[], char string[]) { //@TODO deprecate this, please
 	int socketnum = getSocketNum();
 	int string_len = strlen(string);
 	int offset = 0;
@@ -52,7 +33,7 @@ multiply_string_by_socket_num(char buffer[], char string[]) {
 }
 
 void
-get_energy_stats_jni_string_format(char buffer[512]) {
+get_energy_stats_jni_string_format(char buffer[512]) { //@TODO deprecate this, please
 	char* string;
 	switch (get_power_domains_supported(get_micro_architecture())) {
 		case DRAM_GPU_CORE_PKG:
@@ -72,40 +53,6 @@ get_energy_stats_jni_string_format(char buffer[512]) {
 	multiply_string_by_socket_num(buffer, string);
 	return;
 }
-
-int
-energy_stats_to_jni_string(EnergyStats estats, char* ener_string) {
-	switch (get_power_domains_supported(get_micro_architecture())) {
-		case DRAM_GPU_CORE_PKG:
-			return sprintf(ener_string, "%.6f,%.6f,%.6f,%.6f@",
-				estats.dram,
-				estats.gpu,
-				estats.core,
-				estats.pkg
-			);
-		case GPU_CORE_PKG:
-			return sprintf(ener_string, "%.6f,%.6f,%.6f@",
-				estats.gpu,
-				estats.core,
-				estats.pkg
-			);
-		case DRAM_CORE_PKG:
-			return sprintf(ener_string, "%.6f,%.6f,%.6f@",
-				estats.dram,
-				estats.core,
-				estats.pkg
-			);
-		default:
-			return -1;
-	}
-}
-
-// static void
-// replace_chars(char* buf, char search, char replace, int len) {
-// 	for (int i = 0; i < strlen(buf); i++)
-// 		if (buf[i] == search)
-// 			buf[i] = replace;
-// }
 
 // TODO see if there's a way you can get around that, to make the code more modular instead of a copy/paste for each case
 //	that you have to edit slightly
@@ -141,49 +88,10 @@ energy_stats_csv_header(char csv_header[512]) {
 			sprintf(csv_header, "undefined_architecture");
 			return;
 	}
-
-	// char buffer[512];
-	// get_energy_stats_jni_string_format(buffer);
-	// replace_chars(buffer, '@', ',', strlen(buffer));
-	// sprintf(csv_header, "%s%s", buffer, "timestamp");
 }
-
-// int
-// energy_stats_csv_string(EnergyStats estats, int socket, char* csv_string) {
-// 	switch (get_power_domains_supported(get_micro_architecture())) {
-// 		case DRAM_GPU_CORE_PKG:
-// 			return sprintf(csv_string, "%d,%.6f,%.6f,%.6f,%.6f,%ld",
-// 				socket,
-// 				estats.dram,
-// 				estats.gpu,
-// 				estats.core,
-// 				estats.pkg,
-// 				estats.timestamp
-// 			);
-// 		case GPU_CORE_PKG:
-// 			return sprintf(csv_string, "%d,%.6f,%.6f,%.6f,%ld",
-// 				socket,
-// 				estats.gpu,
-// 				estats.core,
-// 				estats.pkg,
-// 				estats.timestamp
-// 			);
-// 		case DRAM_CORE_PKG:
-// 			return sprintf(csv_string, "%d,%.6f,%.6f,%.6f,%ld",
-// 				socket,
-// 				estats.dram,
-// 				estats.core,
-// 				estats.pkg,
-// 				estats.timestamp
-// 			);
-// 		default:
-// 			return -1;
-// 	}
-// }
 
 void
 energy_stats_csv_string(EnergyStats estats[], char* csv_string) {
-// energy_stats_group_csv_string(EnergyStats estats[], char* csv_string) {
 	int offset = 0;
 	int power_domains = get_power_domains_supported(get_micro_architecture());
 

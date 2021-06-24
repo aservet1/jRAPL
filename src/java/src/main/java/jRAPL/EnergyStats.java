@@ -12,11 +12,6 @@ public final class EnergyStats extends EnergySample {
 		timestamp = ts;
 	}
 
-	public EnergyStats(double[] primitiveSample) {
-		super(primitiveSample);
-		timestamp = Instant.now();
-	}
-
 	public EnergyStats(EnergyStats other) {
 		super(other);
 		this.timestamp = other.timestamp;
