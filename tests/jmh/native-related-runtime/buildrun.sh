@@ -2,6 +2,8 @@
 
 #ignoreLock=-Djmh.ignoreLock=true
 
+sudo -v
+
 mvn clean install && ./transferjars.sh ../../../src/java/target/jRAPL-1.0.jar target/benchmarks.jar
 [ $? == 0 ] || exit
 
