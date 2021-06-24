@@ -46,10 +46,6 @@ class Utils {
 		//TODO this is readundant, kind of
     }
     
-	// public static EnergyStats stringToEnergyStats(String energyString, Instant timestamp) {
-	// 	return new EnergyStats(stringToPrimitiveSample(energyString), timestamp);
-    // }
-    
 	public static double[] subtractPrimitiveSamples(double[] a, double[] b) {
 		assert ( a.length == b.length );
 		double[] diff = new double[a.length];

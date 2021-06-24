@@ -34,7 +34,6 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 
 		System.out.println(" -- running with primitive array sample...");
 		double[] _before = monitor.getPrimitiveSample();
-		System.out.println(Arrays.toString(_before));
 		double[] _after;
 		double[] _diff;
 		for (int i = 0; i < 10; i++) {
