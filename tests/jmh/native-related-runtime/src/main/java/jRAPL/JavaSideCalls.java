@@ -66,8 +66,8 @@ public class JavaSideCalls {
 		// }
 		
 
-		// protected final int WARMUPS = 5;
-		protected final int WARMUPS = 1;
+		protected final int WARMUPS = 5;
+		// protected final int WARMUPS = 1;
 
 		private int iterNum = 0;
 		private int startIter;
@@ -148,8 +148,8 @@ public class JavaSideCalls {
 	}
 	@Benchmark
 	@Fork(1)
-	// @Warmup(iterations = 5) @Measurement(iterations = 25)
-	@Warmup(iterations = 1) @Measurement(iterations = 3)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeEnergyStatCheck(Blackhole b, EnergyStatCheckState escs) throws InterruptedException {
 		RuntimeTestUtils.ctimeStart();
