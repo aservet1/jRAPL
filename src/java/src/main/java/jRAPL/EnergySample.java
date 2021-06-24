@@ -9,7 +9,9 @@ public abstract class EnergySample
 	private final double[] primitiveSample;
 	
 	public EnergySample(double[] primitiveSample) {
-		this.primitiveSample = primitiveSample;
+		this.primitiveSample = Arrays.copyOfRange(
+			primitiveSample, 0, ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET
+		);
 	}
 	
 	public EnergySample(EnergySample other) {

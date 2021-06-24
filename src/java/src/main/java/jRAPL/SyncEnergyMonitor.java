@@ -3,6 +3,8 @@ package jRAPL;
 
 import java.time.Instant;
 
+import java.util.Arrays;
+
 public class SyncEnergyMonitor extends EnergyMonitor {
 
 	@Override
@@ -17,7 +19,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 
 	public EnergyStats getSample() {
 		String energyString = EnergyMonitor.energyStatCheck();
-		EnergyStats sample = Utils.stringToEnergyStats(energyString, Instant.now());
+		EnergyStats sample = Utils.stringToEnergyStats(energyString);
 		return sample;
 	}
 

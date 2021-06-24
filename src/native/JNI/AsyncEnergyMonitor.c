@@ -55,9 +55,9 @@ Java_jRAPL_AsyncEnergyMonitorCSide_getLastKSamplesNative(JNIEnv* env, jclass jcl
 
 	int offset = 0;
 	for (int i = 0; i < k; i++) { //TODO This doesn't account for multiple samples per socket
-		EnergyStats e = samples[i];
-		char string[512];
-		energy_stats_to_jni_string(e, string);
+		//EnergyStats e = samples[i];
+		char string[] = "4,2,0";
+		//energy_stats_csv_string(e, string);
 		char string2[512+10];
 		sprintf(string2,"%s_", string);
 		

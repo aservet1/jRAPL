@@ -106,9 +106,7 @@ run(void* monitor_arg) {
 	EnergyStats stats[sockets];
 
 	while (!monitor->exit) {
-		EnergyStatCheck(stats); 
-		// char tmpbuf[512]; energy_stats_csv_string(stats, tmpbuf); printf("~ %s --\n", tmpbuf);
-		// printf("~ %f %f %f %f ->\n", stats[0].dram, stats[0].gpu, stats[0].core, stats[0].pkg);
+		EnergyStatCheck(stats);
 		for (int i = 0; i < sockets; i++) {
 			storeEnergySample(monitor,stats[i]);
 		}
