@@ -113,12 +113,12 @@ JNIEXPORT jlongArray JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeMSRRead(JNIEnv*
 	return result;
 }
 
-struct timeval tvStart, tvStop;
+static struct timeval tvStart, tvStop;
 JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_ctimeStart(JNIEnv* env, jclass jcls) {
-	gettimeofday(&tvStart,0);
+	gettimeofday(&tvStart,0x0);
 }
 JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_ctimeStop(JNIEnv* env, jclass jcls) {
-	gettimeofday(&tvStop,0);
+	gettimeofday(&tvStop,0x0);
 }
 JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_ctimeElapsedUsec(JNIEnv* env, jclass jcls) {
 	return (jlong) ((tvStop.tv_sec*1000000+tvStop.tv_usec) - (tvStart.tv_sec*1000000+tvStart.tv_usec));
