@@ -54,9 +54,9 @@ WARNING: All illegal access operations will be denied in a future release
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time: 5.382 s
-[INFO] Finished at: 2021-06-24T11:57:19-04:00
-[INFO] Final Memory: 18M/240M
+[INFO] Total time: 5.469 s
+[INFO] Finished at: 2021-06-23T22:12:54-04:00
+[INFO] Final Memory: 19M/240M
 [INFO] ------------------------------------------------------------------------
 ========================================
   Copying all files from  to   
@@ -116,26 +116,52 @@ WARNING: All illegal access operations will be denied in a future release
 # VM invoker: /usr/lib/jvm/java-11-oracle/bin/java
 # VM options: <none>
 # JMH blackhole mode: full blackhole + dont-inline hint
-# Warmup: 1 iterations, 10 s each
-# Measurement: 3 iterations, 10 s each
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
 # Timeout: 10 min per iteration
 # Threads: 1 thread, will synchronize iterations
 # Benchmark mode: Average time, time/op
 # Benchmark: jRAPL.CSideCalls.timeEnergyStatCheck
 
-# Run progress: 0.00% complete, ETA 00:04:00
+# Run progress: 0.00% complete, ETA 00:30:00
 # Fork: 1 of 1
-# Warmup Iteration   1: 45.560 us/op
-Iteration   1: 45.415 us/op
-Iteration   2: 45.604 us/op
-Iteration   3: Successfully wrote to the file.
-45.710 us/op
+# Warmup Iteration   1: 41.377 us/op
+# Warmup Iteration   2: 41.367 us/op
+# Warmup Iteration   3: 41.303 us/op
+# Warmup Iteration   4: 41.396 us/op
+# Warmup Iteration   5: 41.381 us/op
+Iteration   1: 41.315 us/op
+Iteration   2: 41.549 us/op
+Iteration   3: 41.680 us/op
+Iteration   4: 41.596 us/op
+Iteration   5: 41.558 us/op
+Iteration   6: 41.599 us/op
+Iteration   7: 41.526 us/op
+Iteration   8: 41.585 us/op
+Iteration   9: 41.561 us/op
+Iteration  10: 41.626 us/op
+Iteration  11: 41.607 us/op
+Iteration  12: 41.211 us/op
+Iteration  13: 41.173 us/op
+Iteration  14: 41.199 us/op
+Iteration  15: 41.089 us/op
+Iteration  16: 41.076 us/op
+Iteration  17: 41.120 us/op
+Iteration  18: 41.080 us/op
+Iteration  19: 41.095 us/op
+Iteration  20: 41.080 us/op
+Iteration  21: 41.198 us/op
+Iteration  22: 41.180 us/op
+Iteration  23: 41.186 us/op
+Iteration  24: 41.096 us/op
+Iteration  25: Successfully wrote to the file.
+41.111 us/op
 
 
 Result "jRAPL.CSideCalls.timeEnergyStatCheck":
-  45.576 ±(99.9%) 2.729 us/op [Average]
-  (min, avg, max) = (45.415, 45.576, 45.710), stdev = 0.150
-  CI (99.9%): [42.847, 48.305] (assumes normal distribution)
+  41.324 ±(99.9%) 0.171 us/op [Average]
+  (min, avg, max) = (41.076, 41.324, 41.680), stdev = 0.229
+  CI (99.9%): [41.153, 41.495] (assumes normal distribution)
 
 
 # JMH version: 1.27
@@ -143,26 +169,52 @@ Result "jRAPL.CSideCalls.timeEnergyStatCheck":
 # VM invoker: /usr/lib/jvm/java-11-oracle/bin/java
 # VM options: <none>
 # JMH blackhole mode: full blackhole + dont-inline hint
-# Warmup: 1 iterations, 10 s each
-# Measurement: 3 iterations, 10 s each
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
 # Timeout: 10 min per iteration
 # Threads: 1 thread, will synchronize iterations
 # Benchmark mode: Average time, time/op
 # Benchmark: jRAPL.JavaSideCalls.timeEnergyStatCheck
 
-# Run progress: 16.67% complete, ETA 00:03:23
+# Run progress: 16.67% complete, ETA 00:25:04
 # Fork: 1 of 1
-# Warmup Iteration   1: 73.435 us/op
-Iteration   1: 74.771 us/op
-Iteration   2: 74.451 us/op
-Iteration   3: Successfully wrote to the file
-75.309 us/op
+# Warmup Iteration   1: 73.413 us/op
+# Warmup Iteration   2: 73.652 us/op
+# Warmup Iteration   3: 72.490 us/op
+# Warmup Iteration   4: 72.111 us/op
+# Warmup Iteration   5: 70.632 us/op
+Iteration   1: 74.320 us/op
+Iteration   2: 73.651 us/op
+Iteration   3: 71.637 us/op
+Iteration   4: 73.029 us/op
+Iteration   5: 72.684 us/op
+Iteration   6: 74.233 us/op
+Iteration   7: 73.964 us/op
+Iteration   8: 73.309 us/op
+Iteration   9: 72.258 us/op
+Iteration  10: 74.016 us/op
+Iteration  11: 72.944 us/op
+Iteration  12: 72.281 us/op
+Iteration  13: 71.788 us/op
+Iteration  14: 74.297 us/op
+Iteration  15: 74.353 us/op
+Iteration  16: 73.624 us/op
+Iteration  17: 71.842 us/op
+Iteration  18: 74.304 us/op
+Iteration  19: 73.150 us/op
+Iteration  20: 74.031 us/op
+Iteration  21: 72.719 us/op
+Iteration  22: 73.119 us/op
+Iteration  23: 73.377 us/op
+Iteration  24: 72.319 us/op
+Iteration  25: Successfully wrote to the file
+71.938 us/op
 
 
 Result "jRAPL.JavaSideCalls.timeEnergyStatCheck":
-  74.843 ±(99.9%) 7.903 us/op [Average]
-  (min, avg, max) = (74.451, 74.843, 75.309), stdev = 0.433
-  CI (99.9%): [66.940, 82.747] (assumes normal distribution)
+  73.168 ±(99.9%) 0.673 us/op [Average]
+  (min, avg, max) = (71.637, 73.168, 74.353), stdev = 0.899
+  CI (99.9%): [72.494, 73.841] (assumes normal distribution)
 
 
 # JMH version: 1.27
@@ -170,27 +222,53 @@ Result "jRAPL.JavaSideCalls.timeEnergyStatCheck":
 # VM invoker: /usr/lib/jvm/java-11-oracle/bin/java
 # VM options: <none>
 # JMH blackhole mode: full blackhole + dont-inline hint
-# Warmup: 1 iterations, 10 s each
-# Measurement: 3 iterations, 10 s each
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
 # Timeout: 10 min per iteration
 # Threads: 1 thread, will synchronize iterations
 # Benchmark mode: Average time, time/op
 # Benchmark: jRAPL.ReadMSR.timeReadCORE
 
-# Run progress: 33.33% complete, ETA 00:02:43
+# Run progress: 33.33% complete, ETA 00:20:03
 # Fork: 1 of 1
-# Warmup Iteration   1: 9.354 us/op
-Iteration   1: 9.818 us/op
-Iteration   2: 9.833 us/op
-Iteration   3: Successfully wrote to the file.
+# Warmup Iteration   1: 8.770 us/op
+# Warmup Iteration   2: 9.382 us/op
+# Warmup Iteration   3: 9.232 us/op
+# Warmup Iteration   4: 9.471 us/op
+# Warmup Iteration   5: 9.378 us/op
+Iteration   1: 9.674 us/op
+Iteration   2: 9.551 us/op
+Iteration   3: 9.554 us/op
+Iteration   4: 9.552 us/op
+Iteration   5: 9.566 us/op
+Iteration   6: 9.429 us/op
+Iteration   7: 9.354 us/op
+Iteration   8: 9.456 us/op
+Iteration   9: 9.408 us/op
+Iteration  10: 9.590 us/op
+Iteration  11: 9.569 us/op
+Iteration  12: 9.259 us/op
+Iteration  13: 9.512 us/op
+Iteration  14: 9.542 us/op
+Iteration  15: 9.137 us/op
+Iteration  16: 9.263 us/op
+Iteration  17: 9.516 us/op
+Iteration  18: 9.453 us/op
+Iteration  19: 9.369 us/op
+Iteration  20: 9.458 us/op
+Iteration  21: 9.319 us/op
+Iteration  22: 9.364 us/op
+Iteration  23: 9.152 us/op
+Iteration  24: 9.366 us/op
+Iteration  25: Successfully wrote to the file.
 Successfully wrote to the file.
-9.849 us/op
+9.520 us/op
 
 
 Result "jRAPL.ReadMSR.timeReadCORE":
-  9.833 ±(99.9%) 0.284 us/op [Average]
-  (min, avg, max) = (9.818, 9.833, 9.849), stdev = 0.016
-  CI (99.9%): [9.549, 10.117] (assumes normal distribution)
+  9.437 ±(99.9%) 0.103 us/op [Average]
+  (min, avg, max) = (9.137, 9.437, 9.674), stdev = 0.138
+  CI (99.9%): [9.334, 9.540] (assumes normal distribution)
 
 
 # JMH version: 1.27
@@ -198,27 +276,53 @@ Result "jRAPL.ReadMSR.timeReadCORE":
 # VM invoker: /usr/lib/jvm/java-11-oracle/bin/java
 # VM options: <none>
 # JMH blackhole mode: full blackhole + dont-inline hint
-# Warmup: 1 iterations, 10 s each
-# Measurement: 3 iterations, 10 s each
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
 # Timeout: 10 min per iteration
 # Threads: 1 thread, will synchronize iterations
 # Benchmark mode: Average time, time/op
 # Benchmark: jRAPL.ReadMSR.timeReadDRAM
 
-# Run progress: 50.00% complete, ETA 00:02:02
+# Run progress: 50.00% complete, ETA 00:15:02
 # Fork: 1 of 1
-# Warmup Iteration   1: 9.327 us/op
-Iteration   1: 9.780 us/op
-Iteration   2: 9.791 us/op
-Iteration   3: Successfully wrote to the file.
+# Warmup Iteration   1: 9.183 us/op
+# Warmup Iteration   2: 11.151 us/op
+# Warmup Iteration   3: 6.749 us/op
+# Warmup Iteration   4: 8.985 us/op
+# Warmup Iteration   5: 8.514 us/op
+Iteration   1: 8.770 us/op
+Iteration   2: 9.376 us/op
+Iteration   3: 7.013 us/op
+Iteration   4: 7.453 us/op
+Iteration   5: 6.689 us/op
+Iteration   6: 7.167 us/op
+Iteration   7: 7.026 us/op
+Iteration   8: 9.389 us/op
+Iteration   9: 9.340 us/op
+Iteration  10: 9.421 us/op
+Iteration  11: 9.219 us/op
+Iteration  12: 9.491 us/op
+Iteration  13: 9.572 us/op
+Iteration  14: 9.563 us/op
+Iteration  15: 9.523 us/op
+Iteration  16: 9.547 us/op
+Iteration  17: 9.558 us/op
+Iteration  18: 9.324 us/op
+Iteration  19: 9.502 us/op
+Iteration  20: 9.544 us/op
+Iteration  21: 9.459 us/op
+Iteration  22: 9.291 us/op
+Iteration  23: 9.417 us/op
+Iteration  24: 9.326 us/op
+Iteration  25: Successfully wrote to the file.
 Successfully wrote to the file.
-9.501 us/op
+9.521 us/op
 
 
 Result "jRAPL.ReadMSR.timeReadDRAM":
-  9.691 ±(99.9%) 2.999 us/op [Average]
-  (min, avg, max) = (9.501, 9.691, 9.791), stdev = 0.164
-  CI (99.9%): [6.692, 12.689] (assumes normal distribution)
+  8.940 ±(99.9%) 0.730 us/op [Average]
+  (min, avg, max) = (6.689, 8.940, 9.572), stdev = 0.975
+  CI (99.9%): [8.210, 9.670] (assumes normal distribution)
 
 
 # JMH version: 1.27
@@ -226,27 +330,53 @@ Result "jRAPL.ReadMSR.timeReadDRAM":
 # VM invoker: /usr/lib/jvm/java-11-oracle/bin/java
 # VM options: <none>
 # JMH blackhole mode: full blackhole + dont-inline hint
-# Warmup: 1 iterations, 10 s each
-# Measurement: 3 iterations, 10 s each
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
 # Timeout: 10 min per iteration
 # Threads: 1 thread, will synchronize iterations
 # Benchmark mode: Average time, time/op
 # Benchmark: jRAPL.ReadMSR.timeReadGPU
 
-# Run progress: 66.67% complete, ETA 00:01:21
+# Run progress: 66.67% complete, ETA 00:10:01
 # Fork: 1 of 1
-# Warmup Iteration   1: 0.919 us/op
-Iteration   1: 1.035 us/op
-Iteration   2: 1.008 us/op
-Iteration   3: Successfully wrote to the file.
+# Warmup Iteration   1: 0.923 us/op
+# Warmup Iteration   2: 0.929 us/op
+# Warmup Iteration   3: 0.901 us/op
+# Warmup Iteration   4: 0.902 us/op
+# Warmup Iteration   5: 0.901 us/op
+Iteration   1: 1.025 us/op
+Iteration   2: 1.023 us/op
+Iteration   3: 1.021 us/op
+Iteration   4: 1.021 us/op
+Iteration   5: 1.021 us/op
+Iteration   6: 1.022 us/op
+Iteration   7: 1.021 us/op
+Iteration   8: 1.021 us/op
+Iteration   9: 1.021 us/op
+Iteration  10: 1.022 us/op
+Iteration  11: 1.021 us/op
+Iteration  12: 1.020 us/op
+Iteration  13: 1.043 us/op
+Iteration  14: 1.053 us/op
+Iteration  15: 1.050 us/op
+Iteration  16: 1.048 us/op
+Iteration  17: 1.046 us/op
+Iteration  18: 1.046 us/op
+Iteration  19: 1.048 us/op
+Iteration  20: 1.046 us/op
+Iteration  21: 1.046 us/op
+Iteration  22: 1.046 us/op
+Iteration  23: 1.047 us/op
+Iteration  24: 1.051 us/op
+Iteration  25: Successfully wrote to the file.
 Successfully wrote to the file.
-1.016 us/op
+1.047 us/op
 
 
 Result "jRAPL.ReadMSR.timeReadGPU":
-  1.020 ±(99.9%) 0.261 us/op [Average]
-  (min, avg, max) = (1.008, 1.020, 1.035), stdev = 0.014
-  CI (99.9%): [0.758, 1.281] (assumes normal distribution)
+  1.035 ±(99.9%) 0.010 us/op [Average]
+  (min, avg, max) = (1.020, 1.035, 1.053), stdev = 0.013
+  CI (99.9%): [1.025, 1.045] (assumes normal distribution)
 
 
 # JMH version: 1.27
@@ -254,30 +384,56 @@ Result "jRAPL.ReadMSR.timeReadGPU":
 # VM invoker: /usr/lib/jvm/java-11-oracle/bin/java
 # VM options: <none>
 # JMH blackhole mode: full blackhole + dont-inline hint
-# Warmup: 1 iterations, 10 s each
-# Measurement: 3 iterations, 10 s each
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
 # Timeout: 10 min per iteration
 # Threads: 1 thread, will synchronize iterations
 # Benchmark mode: Average time, time/op
 # Benchmark: jRAPL.ReadMSR.timeReadPKG
 
-# Run progress: 83.33% complete, ETA 00:00:40
+# Run progress: 83.33% complete, ETA 00:05:00
 # Fork: 1 of 1
-# Warmup Iteration   1: 9.241 us/op
-Iteration   1: 9.677 us/op
-Iteration   2: 9.704 us/op
-Iteration   3: Successfully wrote to the file.
+# Warmup Iteration   1: 9.615 us/op
+# Warmup Iteration   2: 9.525 us/op
+# Warmup Iteration   3: 9.264 us/op
+# Warmup Iteration   4: 9.207 us/op
+# Warmup Iteration   5: 9.099 us/op
+Iteration   1: 9.507 us/op
+Iteration   2: 9.165 us/op
+Iteration   3: 9.604 us/op
+Iteration   4: 9.605 us/op
+Iteration   5: 9.678 us/op
+Iteration   6: 9.686 us/op
+Iteration   7: 9.360 us/op
+Iteration   8: 9.362 us/op
+Iteration   9: 9.392 us/op
+Iteration  10: 9.612 us/op
+Iteration  11: 9.329 us/op
+Iteration  12: 9.468 us/op
+Iteration  13: 9.120 us/op
+Iteration  14: 9.379 us/op
+Iteration  15: 9.123 us/op
+Iteration  16: 9.354 us/op
+Iteration  17: 9.113 us/op
+Iteration  18: 9.582 us/op
+Iteration  19: 9.179 us/op
+Iteration  20: 9.610 us/op
+Iteration  21: 9.544 us/op
+Iteration  22: 9.603 us/op
+Iteration  23: 9.264 us/op
+Iteration  24: 9.377 us/op
+Iteration  25: Successfully wrote to the file.
 Successfully wrote to the file.
-9.740 us/op
+9.316 us/op
 
 
 Result "jRAPL.ReadMSR.timeReadPKG":
-  9.707 ±(99.9%) 0.582 us/op [Average]
-  (min, avg, max) = (9.677, 9.707, 9.740), stdev = 0.032
-  CI (99.9%): [9.125, 10.289] (assumes normal distribution)
+  9.413 ±(99.9%) 0.138 us/op [Average]
+  (min, avg, max) = (9.113, 9.413, 9.686), stdev = 0.184
+  CI (99.9%): [9.275, 9.551] (assumes normal distribution)
 
 
-# Run complete. Total time: 00:04:04
+# Run complete. Total time: 00:30:04
 
 REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
 why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
@@ -286,12 +442,12 @@ the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from th
 Do not assume the numbers tell you what you want them to tell.
 
 Benchmark                                Mode  Cnt   Score   Error  Units
-jRAPL.CSideCalls.timeEnergyStatCheck     avgt    3  45.576 ± 2.729  us/op
-jRAPL.JavaSideCalls.timeEnergyStatCheck  avgt    3  74.843 ± 7.903  us/op
-jRAPL.ReadMSR.timeReadCORE               avgt    3   9.833 ± 0.284  us/op
-jRAPL.ReadMSR.timeReadDRAM               avgt    3   9.691 ± 2.999  us/op
-jRAPL.ReadMSR.timeReadGPU                avgt    3   1.020 ± 0.261  us/op
-jRAPL.ReadMSR.timeReadPKG                avgt    3   9.707 ± 0.582  us/op
+jRAPL.CSideCalls.timeEnergyStatCheck     avgt   25  41.324 ± 0.171  us/op
+jRAPL.JavaSideCalls.timeEnergyStatCheck  avgt   25  73.168 ± 0.673  us/op
+jRAPL.ReadMSR.timeReadCORE               avgt   25   9.437 ± 0.103  us/op
+jRAPL.ReadMSR.timeReadDRAM               avgt   25   8.940 ± 0.730  us/op
+jRAPL.ReadMSR.timeReadGPU                avgt   25   1.035 ± 0.010  us/op
+jRAPL.ReadMSR.timeReadPKG                avgt   25   9.413 ± 0.138  us/op
 >> jmh done, now analyzing results
 No handles with labels found to put in legend.
 No handles with labels found to put in legend.
