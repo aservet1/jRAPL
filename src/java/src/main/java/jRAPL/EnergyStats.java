@@ -7,14 +7,14 @@ public final class EnergyStats extends EnergySample {
 
 	private Instant timestamp;
 
+	// public EnergyStats(double[] primitiveSample) {
+	// 	super(primitiveSample);
+	// 	timestamp = Utils.usecToInstant(primitiveSample[primitiveSample.length-1]);
+	// }
+
 	public EnergyStats(double[] primitiveSample, Instant ts) {
 		super(primitiveSample);
 		timestamp = ts;
-	}
-
-	public EnergyStats(double[] primitiveSample) {
-		super(primitiveSample);
-		timestamp = Instant.now();
 	}
 
 	public EnergyStats(EnergyStats other) {

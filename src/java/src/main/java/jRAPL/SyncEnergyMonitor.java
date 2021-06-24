@@ -3,6 +3,8 @@ package jRAPL;
 
 import java.time.Instant;
 
+import java.util.Arrays;
+
 public class SyncEnergyMonitor extends EnergyMonitor {
 
 	@Override
@@ -17,7 +19,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 
 	public EnergyStats getSample() {
 		String energyString = EnergyMonitor.energyStatCheck();
-		EnergyStats sample = Utils.stringToEnergyStats(energyString, Instant.now());
+		EnergyStats sample = Utils.stringToEnergyStats(energyString);
 		return sample;
 	}
 
@@ -32,6 +34,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 
 		System.out.println(" -- running with primitive array sample...");
 		double[] _before = monitor.getPrimitiveSample();
+		System.out.println(Arrays.toString(_before));
 		double[] _after;
 		double[] _diff;
 		for (int i = 0; i < 10; i++) {

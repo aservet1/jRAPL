@@ -6,34 +6,49 @@ import java.time.Instant;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
+import java.util.Arrays;
+
 class Utils {
 
+	public static Instant usecToInstant(long usec) {
+		return Instant.EPOCH.plus(usec, ChronoUnit.MICROS);
+	}
 	public static long timestampToUsec(Instant timestamp) {
 		return ChronoUnit.MICROS.between(Instant.EPOCH, timestamp);
 	}
-
 	public static long durationToUsec(Duration duration) {
 		Instant i = Instant.ofEpochMilli(1000000); // arbitrary Instant point
 		Instant isubbed = i.minus(duration);
 		return ChronoUnit.MICROS.between(isubbed, i);
 	}
 
+	//@TODO consider if you want the timestamp to be part of the primitive sample. let's say no for now
     public static double[] stringToPrimitiveSample(String energyString) {
-		String[] stringVals = energyString.split("@|,");
-		double[] stats = new double[stringVals.length];
-		for (int i = 0; i < stringVals.length; i++)
-			stats[i] = Double.parseDouble(stringVals[i]);
+		String[] stringVals = energyString.split(",");
+		return stringArrayToDoubleArray(
+			Arrays.copyOfRange(stringVals,0,stringVals.length) // removes the last item
+		);
+	}
 
-		return stats;
+	private static double[] stringArrayToDoubleArray(String[] s) {
+		double[] d = new double[s.length];
+		for (int i = 0; i < s.length; i++)
+			d[i] = Double.parseDouble(s[i]);
+		return d;
 	}
 
 	public static EnergyStats stringToEnergyStats(String energyString) {
-		return new EnergyStats(stringToPrimitiveSample(energyString));
+		String[] parts = energyString.split(",");
+		String timestampString = parts[parts.length-1];
+		long usecs = Long.parseLong(timestampString);
+		Instant ts = usecToInstant(usecs);
+		return new EnergyStats(stringToPrimitiveSample(energyString), ts);
+		//TODO this is readundant, kind of
     }
     
-	public static EnergyStats stringToEnergyStats(String energyString, Instant timestamp) {
-		return new EnergyStats(stringToPrimitiveSample(energyString), timestamp);
-    }
+	// public static EnergyStats stringToEnergyStats(String energyString, Instant timestamp) {
+	// 	return new EnergyStats(stringToPrimitiveSample(energyString), timestamp);
+    // }
     
 	public static double[] subtractPrimitiveSamples(double[] a, double[] b) {
 		assert ( a.length == b.length );
@@ -48,15 +63,10 @@ class Utils {
     
     public static String csvPrimitiveArray(double[] a) {
 		String s = new String();
-		int i; for (i = 0; i < a.length-1; i++) {
+		int i; for (i = 0; i < ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET; i++) {
 			s += String.format("%.6f",a[i]) + ",";
 		} s += String.format("%.6f",a[i]);
 		return s;
-		//String s = new String();
-		//int i; for (i = 0; i < a.length-1; i++) {
-		//	s += String.format("%4f",a[i]) + ",";
-		//} s += String.format("%4f",a[i]);
-		//return s;
 	}
 
 	public static String csvPrimitiveArray(double[] a, Instant timestamp) {
