@@ -299,13 +299,14 @@ void get_msr_unit(rapl_msr_unit *unit_obj, uint64_t data) {
 }
 
 /* <--- Alejandro's Interpretation --->
- * Divide 1.0 by the energy unit. Prevents overflow (by keeping the value small, I guess?). Can be undone by the same operation of (1.0 / X).
+ * Calculates highest possible energy value the MSR can represent, by multiplying the highest possible
+ * value for a 32 bit register by the energy conversion unit. This is used when calculating energy difference
+ * across an instance of the register wrapping around.
  */
-/*Get wraparound value in order to prevent negative value*/
 double
 get_wraparound_energy(double energy_unit) {
-	//printf("Energy Unit: %f Wrap Around: %f\n", energy_unit, 1.0 / energy_unit);
-	return 1.0 / energy_unit;
+	uint32_t highest_possible_register_value = 0xFFFFFFFF;
+	return highest_possible_register_value * energy_unit;
 }
 
 /* <--- Alejandro's Interpretation --->
