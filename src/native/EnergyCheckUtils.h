@@ -10,8 +10,4 @@ void ProfileDealloc();
 
 int* get_msr_fds();
 
-// the below two are just to probe and test, not currently incorporated into the RAPL interface provided
-void ProfileInitAllCores(int num_readings);
-void ProfileDeallocAllCores();
-
 #endif //ENERGY_CHECK_UTILS_H
