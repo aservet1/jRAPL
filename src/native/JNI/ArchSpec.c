@@ -8,10 +8,10 @@
 #include "ArchSpec.h"
 #include "MSR.h"
 
-JNIEXPORT jint JNICALL
+JNIEXPORT jdouble JNICALL
 Java_jRAPL_ArchSpec_getWraparoundEnergy(JNIEnv* env, jclass jcls) {
 	int fd = open("/dev/cpu/0/msr",O_RDONLY);
-	int wraparound_energy = get_wraparound_energy(get_rapl_unit(fd).energy);
+	double wraparound_energy = get_wraparound_energy(get_rapl_unit(fd).energy);
 	close(fd);
 	return wraparound_energy;
 }

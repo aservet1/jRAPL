@@ -7,7 +7,6 @@
 
 << Semi Immediate Todos:
 	- Run experiments on several computers
-	- Properly calculate wraparound...
 	- CSide-GetLastK grabs the correct number of samples, but samples being individual structs, not structs grouped by socket. look at the occasional segfault related to this
 	- Get a complete lists of the benchmarks / more info about dacapo-evalution-git+309e1fa.jar
 

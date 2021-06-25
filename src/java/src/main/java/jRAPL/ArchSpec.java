@@ -4,13 +4,13 @@ public final class ArchSpec {
 
 	public static final int NUM_SOCKETS;	
 	public static final int NUM_STATS_PER_SOCKET;
-	public static final int RAPL_WRAPAROUND;
+	public static final double RAPL_WRAPAROUND;
 	public static final int MICRO_ARCHITECTURE;
 	public static final String MICRO_ARCHITECTURE_NAME;
 	public static final String ENERGY_STATS_STRING_FORMAT;
 
 	public native static int getSocketNum();
-	public native static int getWraparoundEnergy();
+	public native static double getWraparoundEnergy();
 	public native static String getMicroArchitectureName();
 	public native static int getMicroArchitecture();
 	public native static String energyStatsStringFormat();
@@ -25,7 +25,7 @@ public final class ArchSpec {
 	public static final int GPU_IDX;
 	public static final int CORE_IDX;
 	public static final int PKG_IDX;
-	//TODO -- there's a 5th possible power domain, right? like full motherboard energy or something
+	//@TODO -- there's a 5th possible power domain, right? like full motherboard energy or something
 
 	static {
 
