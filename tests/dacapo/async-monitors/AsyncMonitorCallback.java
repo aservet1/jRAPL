@@ -6,6 +6,8 @@ import jRAPL.AsyncEnergyMonitor;
 import jRAPL.AsyncEnergyMonitorCSide;
 import jRAPL.AsyncEnergyMonitorJavaSide;
 
+import java.time.Instant;
+
 public class AsyncMonitorCallback extends Callback {
 
 	//public static int MAX_ITERATIONS = 20;
@@ -83,6 +85,7 @@ public class AsyncMonitorCallback extends Callback {
 		if (monitoringEnergy) {
 			energyMonitor.reset();
 		} memoryMonitor.reset();
+		System.out.println(" .) iteration done at " + Instant.now());
 	}
 	@Override
 	public boolean runAgain() {
