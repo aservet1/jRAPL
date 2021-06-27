@@ -23,7 +23,7 @@ benchmarks=$(sed 's/#.*$//g' benchmarks.txt)
 for benchmark in $benchmarks
 do
 	monitoringEnergy=true
-	for monitorType in c-linklist java c-dynamicarray
+	for monitorType in c-dynamicarray c-linklist java
 	do
 		sudo scripts/run-dacapo.sh \
 			$benchmark $monitoringEnergy $iterations \
@@ -32,7 +32,7 @@ do
 	monitoringEnergy=false
 	sudo scripts/run-dacapo.sh \
 		$benchmark $monitoringEnergy $iterations \
-		$warmups _aAe_ $resultDir
+		$warmups no-monitor $resultDir
 	
 done
 
