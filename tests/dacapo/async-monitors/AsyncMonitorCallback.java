@@ -18,9 +18,11 @@ public class AsyncMonitorCallback extends Callback {
 	private AsyncEnergyMonitor energyMonitor;
 	private AsyncMemoryMonitor memoryMonitor;
 	private boolean monitoringEnergy;
+	private int samplingRate;
 
 	public AsyncMonitorCallback(CommandLineArgs args) {
 		super(args);
+		samplingRate = Integer.parseInt(System.getProperty("samplingRate")) ;
 		monitoringEnergy = System.getProperty("monitoringEnergy").equals("true");
 		if (monitoringEnergy) {
 			monitorType = System.getProperty("monitorType");
@@ -48,10 +50,10 @@ public class AsyncMonitorCallback extends Callback {
 	public void start(String benchmark) {
 		super.start(benchmark);
 		if (monitoringEnergy) {
-			energyMonitor.setSamplingRate(1);
+			energyMonitor.setSamplingRate(samplingRate);
 			energyMonitor.start();
 		}
-		memoryMonitor.setSamplingRate(1); // the idea behind this sampling rate is to track the increase in memory with around every additional sample
+		memoryMonitor.setSamplingRate(samplingRate); // the idea behind this sampling rate is to track the increase in memory with around every additional sample
 		memoryMonitor.start();
 		
 	}
