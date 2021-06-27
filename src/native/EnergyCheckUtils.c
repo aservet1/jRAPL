@@ -24,7 +24,7 @@ static int power_domains_supported;
 static uint32_t micro_architecture;
 static rapl_msr_unit rapl_unit;
 static uint64_t num_sockets;
-static int wraparound_energy = -1;
+static double wraparound_energy = -1; // TODO wait, is this not even being used here?
 
 // only valid after ProfileInit() has been called. it's set to NULL in all other cases
 int*
