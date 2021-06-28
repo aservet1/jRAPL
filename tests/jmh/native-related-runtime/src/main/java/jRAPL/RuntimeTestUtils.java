@@ -20,4 +20,8 @@ public class RuntimeTestUtils
 	public native static void ctimeStart();
 	public native static void ctimeStop();
 	public native static long ctimeElapsedUsec();
+
+	public native static void energyStatCheckNoReturnValue();
+	// public native static long usecTimeEnergyStatCheckNoBufferGuard();
+	public native static long timechecker();
 }

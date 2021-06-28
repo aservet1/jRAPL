@@ -146,6 +146,22 @@ public class JavaSideCalls {
 			name = "EnergyStatCheck";
 		}
 	}
+	@State(Scope.Thread)
+	public static class EnergyStatCheckNoReturnState extends State_ {
+
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
+
+		@Setup(Level.Trial)
+		public void initialSetup() {
+			this.setStartIter(WARMUPS+1);
+			EnergyManager.loadNativeLibrary();
+			EnergyManager.profileInit();
+			name = "EnergyStatCheckNoReturnValue";
+		}
+	}
 	@Benchmark
 	@Fork(1)
 	@Warmup(iterations = 5) @Measurement(iterations = 25)
@@ -154,6 +170,19 @@ public class JavaSideCalls {
 	public void timeEnergyStatCheck(Blackhole b, EnergyStatCheckState escs) throws InterruptedException {
 		RuntimeTestUtils.ctimeStart();
 		b.consume(EnergyMonitor.energyStatCheck());
+		RuntimeTestUtils.ctimeStop();
+		escs.addValue(RuntimeTestUtils.ctimeElapsedUsec());
+		Util.busyWait(b); // busy wait repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+		// int i = 0;
+	}
+	@Benchmark
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void timeEnergyStatCheckNoReturnValue(Blackhole b, EnergyStatCheckNoReturnState escs) throws InterruptedException {
+		RuntimeTestUtils.ctimeStart();
+		RuntimeTestUtils.energyStatCheckNoReturnValue();
 		RuntimeTestUtils.ctimeStop();
 		escs.addValue(RuntimeTestUtils.ctimeElapsedUsec());
 		Util.busyWait(b); // busy wait repeatedly accessing MSRs without break eventually shuts them down and causes register read error

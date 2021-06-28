@@ -6,6 +6,7 @@
 #include "ArchSpec.h"
 #include "EnergyCheckUtils.h"
 #include "JNIFunctionDeclarations.h"
+#include "Utils.h"
 
 //timestamping macros
 #define STARTSTAMP	gettimeofday(&start, NULL);
@@ -48,9 +49,37 @@ JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeProfileInit(JNIEnv* 
 	return DIFF_USEC;
 }
 
+// static int i = 0;
+// #define N 10
+// static jstring mybuffer[N]; // a place to dump them, so its not optimized out.
+static jstring str;
 JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls) {
 	STARTSTAMP;
-	Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls);
+	str = Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls);
+	STOPSTAMP;
+	// mybuffer[i++]=str;i%=N;
+	return DIFF_USEC;
+}
+// JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeEnergyStatCheckNoBufferGuard(JNIEnv* env, jclass jcls) {
+// 	STARTSTAMP;
+// 	str = Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls);
+// 	STOPSTAMP;
+// 	return DIFF_USEC;
+// }
+
+
+/**	This will be run and timed from the Java side. It's meant to show that there's no overhead to calling
+ *	void JNI functions. This should have the same runtime as usecTimeEnergyStatCheck(), even though the
+ *	timestamps for this one surround a Java call.
+ */
+JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_energyStatCheckNoReturnValue(JNIEnv* env, jclass jcls) {
+	str = Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls);
+	// mybuffer[i++]=str;i%=N; // this is bad, get rid of it if the whole buffer thing ends up being useless. if the buffer is necessary to prevent optimizations, find out how you can prevent optimization here but not make extra overhead happen
+}
+
+JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_timechecker(JNIEnv* env, jclass jcls) {
+	STARTSTAMP;
+	sleep_millisecond(15);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
