@@ -13,8 +13,9 @@ sudo echo 'hello w0rld :))'
 
 make clean all
 
-iterations=30 #25
 warmups=5
+iterations=30
+samplingRate=1
 resultDir=$1
 
 rm -rf $resultDir && mkdir $resultDir
@@ -27,7 +28,7 @@ do
 	do
 		sudo scripts/run-dacapo.sh \
 			$benchmark $monitoringEnergy $iterations \
-			$warmups $monitorType $resultDir
+			$warmups $monitorType $samplingRate $resultDir
 	done
 	monitoringEnergy=false
 	sudo scripts/run-dacapo.sh \

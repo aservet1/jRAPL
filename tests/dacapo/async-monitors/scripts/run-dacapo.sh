@@ -1,13 +1,14 @@
 #!/bin/bash
 
 function usage() {
-	echo "usage: $1 <benchmark> <monitoringEnergy> <iterations> <warmups> <monitorType> <result directory name>"
+	echo "usage: $1 <benchmark> <monitoringEnergy> <iterations> <warmups> <monitorType> <samplingRate> <result directory name>"
 	echo "  monitorType = [java|c-linklist|c-dynamicarray]"
 	echo "  monitoringEnergy = [true|false]"
+	echo "  iterations = total number of iterations, including warmups. 12 iters, 5 warmups means 7 trials with recorded data"
 	exit 1
 }
 
-[ $# != 6 ] && usage $0 $@
+[ $# != 7 ] && usage $0 $@
 
 sudo -v
 
@@ -21,7 +22,8 @@ monitoringEnergy=$2
 iterations=$3
 warmups=$4
 monitorType=$5
-resultDir=$6
+samplingRate=$6
+resultDir=$7
 
 mkdir -p $resultDir
 
@@ -38,6 +40,7 @@ echo "@run_dacapo.sh@@@@ size -> $size @ @"
 
 sudo java -DmonitoringEnergy=$monitoringEnergy -Dwarmups=$warmups \
 			-DmonitorType=$monitorType -DresultDir=$resultDir \
+			-DsamplingRate=$samplingRate \
 			-cp $classpath Harness \
 			$benchmark -c $mycallback -n $iterations \
 			-s $size
