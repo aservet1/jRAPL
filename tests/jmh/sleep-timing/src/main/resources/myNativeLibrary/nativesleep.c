@@ -1,6 +1,8 @@
 
 #include <time.h>
 #include <errno.h>
+#include <jni.h>
+#include <sys/time.h>
 
 //timestamping macros
 #define STARTSTAMP	gettimeofday(&start, NULL);
@@ -30,16 +32,15 @@ sleep_millisecond(long msec) {
 	return res;
 }
 
+JNIEXPORT void JNICALL
+Java_sleeping_Sleeping_cSleep(JNIEnv* env, jclass jcls, jint time) {
+	sleep_millisecond((int)time);
+}
+
 JNIEXPORT jlong JNICALL
-Java_jRAPL_Sleeping_cSleepTimed(JNIEnv* env, jclass jcls, jint time) {
+Java_sleeping_Sleeping_cSleepTimed(JNIEnv* env, jclass jcls, jint time) {
 	STARTSTAMP;
 	sleep_millisecond((int)time);
 	STOPSTAMP;
 	return DIFF_USEC;
-}
-
-
-JNIEXPORT void JNICALL
-Java_jRAPL_Sleeping_cSleep(JNIEnv* env, jclass jcls, jint time) {
-	sleep_millisecond((int)time);
 }

@@ -29,21 +29,41 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package sleeptiming;
+package sleeping;
 
 import org.openjdk.jmh.annotations.*;
 import java.util.concurrent.TimeUnit;
+import java.io.IOException;
+
+import java.util.ArrayList;
 
 public class Sleeping {
 
-	private static int TIME; static {
-		String timeString = null;
-		try {
-			timeString = System.getProperty("sleepTime");
-			TIME = Integer.parseInt(timeString);
-		} catch (NumberFormatException e) {
-			System.err.println("error: invalid sleepTime, "+timeString);
-			System.exit(1);
+	public native static void cSleep(int time);
+	public native static long cSleepTimed(int time);
+
+	@State(Scope.Thread)
+	public static class S {
+		private int TIME;
+		public ArrayList<Long> cSamples;
+		public S() {
+			TIME = Integer.parseInt(System.getProperty("sleepTime"));
+			cSamples = new ArrayList<>();
+			try {
+				NativeUtils.loadLibraryFromJar("/myNativeLibrary/nativesleep.so");
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.exit(15);
+			}
+		}
+		@TearDown(Level.Trial)
+		public void teardown() {
+			if (cSamples.size() != 0) {
+				long sum = 0;
+				for (long t : cSamples) sum += t;
+				long average = sum/cSamples.size();
+				System.out.println("...> C Timed Average: " + average);
+			}
 		}
 	}
 
@@ -53,7 +73,25 @@ public class Sleeping {
 	@Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeSleepOneMillisecond() throws InterruptedException {
-		Thread.sleep(TIME);
+	public void timeJSleep(S s) throws InterruptedException {
+		Thread.sleep(s.TIME);
+	}
+	@Benchmark
+	@Fork(1)
+	@Warmup(iterations = 2)
+	@Measurement(iterations = 3)
+	@BenchmarkMode(Mode.AverageTime)
+	@OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void timeCSleep(S s) throws InterruptedException {
+		cSleep(s.TIME);
+	}
+	@Benchmark
+	@Fork(1)
+	@Warmup(iterations = 2)
+	@Measurement(iterations = 3)
+	@BenchmarkMode(Mode.AverageTime)
+	@OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void timeCSleepWithC(S s) throws InterruptedException {
+		s.cSamples.add(cSleepTimed(s.TIME));
 	}
 }
