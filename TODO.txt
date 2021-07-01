@@ -16,6 +16,9 @@
 		- does compiling with clang cause a segfault on non debian machine?
 		- where does the clang segfault happen? it's somewhere in AsyncEnergyMonitorCSide. easy enough to fix?
 		- what exactly is the problem with clang and debian?
+	- cite the rapl-read.weebseeksjsndmfjee.edu stuff in your code. (we know this is legit because he did power measurement validation though external, also verifiable means`)
+		- where you got the MSR offsets from (and how you know they're correct)
+		- the table with the CPU microarchitectures and their supported power domains
 
 Ideas for future development:
 	- Naming Conventions to Edit (and make sure they're good):
