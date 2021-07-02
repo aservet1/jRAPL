@@ -74,9 +74,9 @@ r2 = [x + bar_width for x in r1]
 r3 = [x + bar_width for x in r2]
 
 plt.clf()
-plt.barh(r1, java_samples_per_ms_AVG, bar_width, yerror=java_samples_per_ms_STDEV, color='#ffa600', edgecolor="white", label='Java')
-plt.barh(r2, c_da_samples_per_ms_AVG, bar_width, yerror=c_da_samples_per_ms_STDEV, color='#003f5c', edgecolor="white", label='C Dynamic Array')
-plt.barh(r3, c_ll_samples_per_ms_AVG, bar_width, yerror=c_ll_samples_per_ms_STDEV, color='#bc5090', edgecolor="white", label='C Linked List')
+plt.barh(r1, java_samples_per_ms_AVG, bar_width, xerr=java_samples_per_ms_STDEV, color='#ffa600', edgecolor="white", label='Java')
+plt.barh(r2, c_da_samples_per_ms_AVG, bar_width, xerr=c_da_samples_per_ms_STDEV, color='#003f5c', edgecolor="white", label='C Dynamic Array')
+plt.barh(r3, c_ll_samples_per_ms_AVG, bar_width, xerr=c_ll_samples_per_ms_STDEV, color='#bc5090', edgecolor="white", label='C Linked List')
 
 plt.ylabel('Benchmark', fontweight='bold')
 plt.xlabel('samples per ms', fontweight='bold')
@@ -85,7 +85,7 @@ plt.legend()
 fig = plt.gcf()
 fig.set_size_inches(12,25)
 #plt.show()
-plt.savefig('sampling-efficiency_perbench')
+plt.savefig(os.path.join(result_dir,'sampling-efficiency_perbench'))
 print("THERES MORE! but exiting now");exit(1)
 
 ## Now to average across all benchmarks and make a bar graph with error bars of the 3 ##
