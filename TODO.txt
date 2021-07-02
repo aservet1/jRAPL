@@ -7,7 +7,7 @@
 
 << Semi Immediate Todos:
 	- Run experiments on several computers
-	- CSide-GetLastK needs to me made to work for a multi-socket machine
+	- CSide-GetLastK needs to me made to work for a multi-socket machine. Right not it just returns placeholder data...
 	- Get a complete lists of the benchmarks / more info about dacapo-evalution-git+309e1fa.jar
 
 << Other Todos:
