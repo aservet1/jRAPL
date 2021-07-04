@@ -1,8 +1,20 @@
 #!/bin/bash
-set -e
 
-sudo -v
+sudo -v; set -e
 
 mvn clean install
-sudo java -DhostName=$(hostname) -jar target/benchmarks.jar -rf json
-sudo mv jmh-result.json results/last-jmh-output_$(hostname).json
+
+hostName=$(hostname)
+outputDir=results
+
+mkdir -p $outputDir
+
+sudo java \
+	-DhostName=$hostName \
+	-jar target/benchmarks.jar \
+	-rf json
+
+sudo mv \
+	jmh-result.json \
+	$outputDir/last-jmh-output_$hostName.json
+
