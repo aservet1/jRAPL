@@ -17,13 +17,10 @@ dacapo_jar="dacapo-evaluation-git+309e1fa.jar"
 jRAPL_jar="jRAPL-1.0.jar"
 classpath="$dacapo_jar:$jRAPL_jar:."
 
-benchmark=$1
-monitoringEnergy=$2
-iterations=$3
-warmups=$4
-monitorType=$5
-samplingRate=$6
-resultDir=$7
+benchmark=$1;	monitoringEnergy=$2;	
+iterations=$3;	warmups=$4;	
+monitorType=$5;	samplingRate=$6;	
+resultDir=$7;	
 
 mkdir -p $resultDir
 
@@ -38,10 +35,15 @@ echo " run dac po. h@  @ monitorType -> $monitorType @ @"
 echo "@r n_d capo. h@@ @ resultDir -> $resultDir @.@"
 echo "@run_dacapo.sh@@@@ size -> $size @ @"
 
-sudo java -DmonitoringEnergy=$monitoringEnergy -Dwarmups=$warmups \
-			-DmonitorType=$monitorType -DresultDir=$resultDir \
-			-DsamplingRate=$samplingRate \
-			-cp $classpath Harness \
-			$benchmark -c $mycallback -n $iterations \
-			-s $size
+sudo java \
+	-DmonitoringEnergy=$monitoringEnergy \
+	-Dwarmups=$warmups \
+	-DmonitorType=$monitorType \
+	-DresultDir=$resultDir \
+	-DsamplingRate=$samplingRate \
+	-cp $classpath Harness \
+	  $benchmark \
+	-c $mycallback \
+	-n $iterations \
+	-s $size
 
