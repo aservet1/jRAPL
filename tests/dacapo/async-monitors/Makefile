@@ -8,7 +8,8 @@ classpath = $(dacapo-jar):$(jRAPL-jar):.
 
 all:
 	ln -s ../../../src/java/target/$(jRAPL-jar) .
+	ln -s ../$(dacapo-jar) .
 	javac -cp $(classpath) $(javafiles)
 
 clean:
-	rm -f $(classfiles) $(jRAPL-jar)
+	rm -f $(classfiles) $(jRAPL-jar) $(dacapo-jar)
