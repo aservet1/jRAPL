@@ -1,7 +1,6 @@
 package jRAPL;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 {
@@ -101,7 +100,7 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 		long[] usecValues = getLastKTimestampsNative(k);
 		Instant[] instantValues = new Instant[usecValues.length];
 		for (int i = 0; i < usecValues.length; i++)
-			instantValues[i] = Instant.EPOCH.plus(usecValues[i], ChronoUnit.MICROS); //@TODO this should probably be defined as usecToInstant in Utils.java
+			instantValues[i] = Utils.usecToInstant(usecValues[i]);
 		return instantValues;
 	}
 
