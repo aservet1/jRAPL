@@ -2,15 +2,11 @@
 
 import os
 import json
-import statistics
-import numpy as np
-import pandas as pd
-import matplotlib as mpl
-import matplotlib.pyplot as plt
 from math import sqrt
 from sys import argv
 
 from aggr_utils import aggr_mean, aggr_stdev
+from myutil import parse_cmdline_args
 
 def percent_diff(a,b):
     return (a-b)/((a+b)/2)
@@ -24,16 +20,19 @@ def percent_diff_stdev(sa,sb,a,b): # uses propagation of error through each step
 
 '''---------------------------------------------------------------------------------------------------'''
 
-outputfile = 'memory-percent-difference.json'
-data_dir = argv[1]
+print('.) starting')
+
+data_dir, result_dir = parse_cmdline_args(argv)
+input_file_extension = '.aggregate-perbench.json'
+outputfile = os.path.join(result_dir,'memory-percent-difference.json')
+
 os.chdir(data_dir)
-files = sorted([ f for f in os.listdir() if f.endswith('.aggregate-perbench.json') ])
+files = sorted([ f for f in os.listdir() if f.endswith(input_file_extension) ])
 
 data = []
 for fname in files:
     with open(fname) as f:
-        d = json.loads(f.read())
-        data.append(d)
+        data.append(json.loads(f.read()))
 tmp = {}
 for d in data:
     bench = d['metadata']['benchmark']
@@ -50,14 +49,14 @@ for benchmark in sorted(data.keys()):
     def get_by_monitor_type(data, monitor_type):
         return [ d for d in data[benchmark] if d['metadata']['monitor_type'] == monitor_type ][0]
 
-    javg = get_by_monitor_type(data, 'java')['memory']['jraplon']['avg']
-    jstd = get_by_monitor_type(data, 'java')['memory']['jraplon']['stdev']
+    javg = get_by_monitor_type(data,'java')['memory']['jraplon']['avg']
+    jstd = get_by_monitor_type(data,'java')['memory']['jraplon']['stdev']
 
-    clavg = get_by_monitor_type(data, 'c-linklist')['memory']['jraplon']['avg'] 
-    clstd = get_by_monitor_type(data, 'c-linklist')['memory']['jraplon']['stdev']
+    clavg = get_by_monitor_type(data,'c-linklist')['memory']['jraplon']['avg'] 
+    clstd = get_by_monitor_type(data,'c-linklist')['memory']['jraplon']['stdev']
 
-    cdavg = get_by_monitor_type(data, 'c-dynamicarray')['memory']['jraplon']['avg']  
-    cdstd = get_by_monitor_type(data, 'c-dynamicarray')['memory']['jraplon']['stdev']
+    cdavg = get_by_monitor_type(data,'c-dynamicarray')['memory']['jraplon']['avg']  
+    cdstd = get_by_monitor_type(data,'c-dynamicarray')['memory']['jraplon']['stdev']
 
     nojavg = get_by_monitor_type(data, 'c-dynamicarray')['memory']['jraploff']['avg']
     nojstd = get_by_monitor_type(data, 'c-dynamicarray')['memory']['jraploff']['stdev']
@@ -67,8 +66,6 @@ for benchmark in sorted(data.keys()):
     results['perbench'][benchmark]['java']['avg'] = percent_diff(javg, nojavg)
     results['perbench'][benchmark]['java']['stdev'] = percent_diff_stdev(jstd, nojstd, javg, nojavg)
     results['perbench'][benchmark]['java']['numSamples'] = get_by_monitor_type(data, 'java')['metadata']['numSamples']['avg']
-
-
 
     results['perbench'][benchmark]['c-linklist'] = {}
     results['perbench'][benchmark]['c-linklist']['avg'] = percent_diff(clavg, nojavg)
@@ -80,6 +77,10 @@ for benchmark in sorted(data.keys()):
     results['perbench'][benchmark]['c-dynamicarray']['avg'] = percent_diff(cdavg, nojavg)
     results['perbench'][benchmark]['c-dynamicarray']['stdev'] = percent_diff_stdev(cdstd, nojstd, cdavg, nojavg)
     results['perbench'][benchmark]['c-dynamicarray']['numSamples'] = get_by_monitor_type(data, 'c-dynamicarray')['metadata']['numSamples']['avg']
+
+    print('..) done with benchmark ' + benchmark)
+
+print('.) done with each benchmark')
 
 ## ---------- Now to average across all benchmarks  ------------ ##
 
@@ -106,5 +107,9 @@ results['overall']['c-linklist']['stdev'] = aggr_stdev(c_ll_numsamples, c_ll_std
 results['overall']['c-dynamicarray']['avg'] = aggr_mean (c_da_numsamples, c_da_avg)
 results['overall']['c-dynamicarray']['stdev'] = aggr_stdev(c_da_numsamples, c_da_std)
 
+print('.) done with overall')
+
 with open(outputfile,'w') as fd:
     json.dump(results,fd)
+
+print('.) wrote to outfile: ' + outputfile)
