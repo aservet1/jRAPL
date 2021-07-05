@@ -10,17 +10,9 @@ import matplotlib as mpl
 import numpy as np
 import math
 
-try:
-	data_dir = argv[1]
-	result_dir = argv[2]
-except:
-	print("usage:",argv[0],"<directory with all the .aggregate-stats.json files>","<directory to output the plots>")
-	exit(2)
-if not (result_dir.startswith("/") or result_dir.startswith("~")):
-	result_dir = os.path.join(os.getcwd(),result_dir)
-if not os.path.isdir(result_dir):
-	print("directory",result_dir,"does not exist")
-	exit(2)
+from myutil import parse_cmdline_args
+
+data_dir, result_dir = parse_cmdline_args(argv)
 os.chdir(data_dir)
 
 files = sorted([ f for f in os.listdir() if f.endswith('.aggregate-stats.json') ])
@@ -86,7 +78,6 @@ fig = plt.gcf()
 fig.set_size_inches(12,25)
 #plt.show()
 plt.savefig(os.path.join(result_dir,'sampling-efficiency_perbench'))
-print("THERES MORE! but exiting now");exit(1)
 
 ## Now to average across all benchmarks and make a bar graph with error bars of the 3 ##
 ''' https://math.stackexchange.com/questions/1547141/aggregating-standard-deviation-to-a-summary-point?fbclid=IwAR3GpT8cNoNbMHntA1dKhWKHGXvBj2W-t7NQU29qoqtsg37uZKZgkeDM-aE <-- formulas for aggr_mean and aggr_stdev '''
@@ -97,15 +88,13 @@ def aggr_stdev(sample_sizes, stdevs):
     assert len(sample_sizes) == len(stdevs)
     return math.sqrt(sum([ (sample_sizes[i]*(stdevs[i]**2)) for i in range(len(sample_sizes)) ]) / sum (sample_sizes))
 
-
-overall_java_avg = statistics.mean (java_samples_per_ms)
-overall_java_std = statistics.stdev(java_samples_per_ms)
-
-overall_c_ll_avg = statistics.mean (c_ll_samples_per_ms)
-overall_c_ll_std = statistics.stdev(c_ll_samples_per_ms)
-
-overall_c_da_avg = statistics.mean (c_da_samples_per_ms)
-overall_c_da_std = statistics.stdev(c_da_samples_per_ms)
+# TODO you should be doing these calculations in a separate 'overall aggregation' module.................
+overall_java_avg = aggr_mean (,java_samples_per_ms_AVG)
+overall_java_std = aggr_stdev(,java_samples_per_ms_STDEV)
+overall_c_ll_avg = aggr_mean (,c_ll_samples_per_ms_AVG)
+overall_c_ll_std = aggr_stdev(,c_ll_samples_per_ms_STDEV)
+overall_c_da_avg = aggr_mean (,c_da_samples_per_ms_AVG)
+overall_c_da_std = aggr_stdev(,c_da_samples_per_ms_STDEV)
 
 labels = ['java','c-linklist','c-dynamicarray']
 
