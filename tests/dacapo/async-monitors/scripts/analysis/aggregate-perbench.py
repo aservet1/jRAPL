@@ -16,7 +16,7 @@ if len(argv) != 2:
 
 data_directory = argv[1]
 os.chdir(data_directory)
-benchmarks = sorted(list(set([ fname.split('.')[0].split('_')[0] for fname in os.listdir() if fname.endswith(input_extension)])))
+benchmarks    = sorted(list(set([ fname.split('.')[0].split('_')[0]  for fname in os.listdir() if fname.endswith(input_extension) ])))
 monitor_types = sorted(list(set([ fname.split('.')[0].split('_')[-1] for fname in os.listdir() if fname.endswith(input_extension) ])))
 if not len(monitor_types) and not len(benchmarks):
     print("no files found with extension",input_extension)
@@ -37,10 +37,10 @@ for bench in benchmarks:
         aggregated['metadata'] = data[0]['metadata'] # copy over the first [metadata] block to keep common fields, over-write the aggregated fields
 
         for k in ['lifetime','numSamples']:
-            dat = [ d['metadata'][k] for d in data ]
+            d = [ d['metadata'][k] for d in data ]
             aggregated['metadata'][k] = dict()
-            aggregated['metadata'][k]['avg'] = statistics.mean(dat)
-            aggregated['metadata'][k]['stdev'] = statistics.stdev(dat)
+            aggregated['metadata'][k]['avg']   = statistics.mean (d)
+            aggregated['metadata'][k]['stdev'] = statistics.stdev(d)
 
         aggregated['metadata']['iteration'] = 'AGGREGATE_PERBENCH'
 
