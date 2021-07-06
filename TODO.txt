@@ -9,6 +9,7 @@
 	- Run experiments on several computers
 	- CSide-GetLastK needs to me made to work for a multi-socket machine. Right not it just returns placeholder data...
 	- Get a complete lists of the benchmarks / more info about dacapo-evalution-git+309e1fa.jar
+	- make all JSON dumps have camelCase key names, and fix analysis scripts to match those names
 
 << Other Todos:
 	- Update the UML
