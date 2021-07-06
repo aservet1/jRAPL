@@ -16,7 +16,7 @@ def aggregate_memory_stats(memory_data):
     mem_stats['avg']   = aggr_mean ([dat['num_samples'] for dat in memory_data], [dat['avg'] for dat in memory_data])
     mem_stats['stdev'] = aggr_stdev([dat['num_samples'] for dat in memory_data], [dat['avg'] for dat in memory_data])
     mem_stats['num_samples'] = statistics.mean( [ dat['num_samples'] for dat in memory_data ] )
-    ##.#.## -- Do not delete these! We will probably end up not includling these metrics, but we might!! Do not delete them unless they are confirmed useless! comprende??
+    ##.#.## -- Do not delete these! We will probably end up not includling these metrics, but we might!! Do not delete them unless they are confirmed useless!
     ##.#.## mem_stats['global_min'] = min( [ dat['min'] for dat in memory_data] )
     ##.#.## mem_stats['global_max'] = max( [ dat['max'] for dat in memory_data] )
     ##.#.## mem_stats['min'] = statistics.mean( [ dat['min'] for dat in memory_data ] )
