@@ -1,0 +1,13 @@
+what's wrong with your standard deviations?
+
+I'm uncertain about propagation of error.
+
+Where is propagation of error applied?
+	- aggregating for one benchmark across iterations. memory and general, which means time and energy per samp
+	- visualizing the results of memory consumption
+	- visualizing results of sampling efficiency
+		- defined here, but not applied. is that because im halfway through something in that one?
+
+You would really do well in modularizing the data processing even more. Don't do calculations in the graphing script. Have a calculation script for that specific metric. Then just make sure you define the prerequisite scripts that generate the target input files of that script. It's not absolutely necessary to do this, and the paper is a higher priority, but consider that this will help you write the paper better if you understand where everything is.
+
+But that's probably a waste of time at this point and you should just spend more time looking through the code spots that you listed above, and understand where the thing is applied. Come back to this idea when you do more graph generating. Right now, your priority is to be able to understand where aggr_stdev is used so you can fix up the blank todos that you have going on.

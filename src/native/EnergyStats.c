@@ -1,26 +1,27 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <sys/time.h>
 #include <strings.h>
 #include "EnergyStats.h"
 #include "ArchSpec.h"
 
 EnergyStats
-energy_stats_subtract(EnergyStats x, EnergyStats y) { //@TODO -- implement the wraparound for negative values
-	assert(x.socket == y.socket);
-	EnergyStats diff;
-	diff.socket = x.socket;
+energy_stats_subtract(EnergyStats x, EnergyStats y) {
+	EnergyStats diff; //@TODO -- implement the wraparound for negative values
 	diff.dram = (x.dram != -1 && y.dram != -1) ? x.dram - y.dram : -1;
-	diff.gpu = (x.gpu != -1 && y.gpu != -1) ? x.gpu - y.gpu : -1;
-	diff.core = x.core - y.core;
-	diff.pkg = x.pkg - y.pkg;
-	gettimeofday(&diff.timestamp,NULL); // right now, when you subtract two EnergyStats structs, the timestamp of the result is just a timestamp for its creation date
+	diff.core = (x.core != -1 && y.core != -1) ? x.core - y.core : -1;
+	diff.gpu  = (x.gpu  != -1 && y.gpu  != -1) ? x.gpu  - y.gpu  : -1;
+	diff.pkg  = (x.pkg  != -1 && y.pkg  != -1) ? x.pkg  - y.pkg  : -1;
+	diff.timestamp = x.timestamp - y.timestamp;	
 	return diff;
 }
 
+// TODO a whole lot of the ways I come up with formats and labels and stuff is pretty janky. it all works for the purposes
+// of what needs to happen, but it's poorly designed and probably hard for someone to edit without a lot of time to
+// figure out what's going on in this code. make sure to edit before jRAPL is declared "release-able"
+
 static void
-multiply_string_by_socket_num(char buffer[], char string[]) {
+multiply_string_by_socket_num(char buffer[], char string[]) { //@TODO deprecate this, please
 	int socketnum = getSocketNum();
 	int string_len = strlen(string);
 	int offset = 0;
@@ -32,7 +33,7 @@ multiply_string_by_socket_num(char buffer[], char string[]) {
 }
 
 void
-get_energy_stats_jni_string_format(char buffer[512]) {
+get_energy_stats_jni_string_format(char buffer[512]) { //@TODO deprecate this, please
 	char* string;
 	switch (get_power_domains_supported(get_micro_architecture())) {
 		case DRAM_GPU_CORE_PKG:
@@ -53,78 +54,75 @@ get_energy_stats_jni_string_format(char buffer[512]) {
 	return;
 }
 
-int
-energy_stats_to_jni_string(EnergyStats estats, char* ener_string) {
-	switch (get_power_domains_supported(get_micro_architecture())) {
+// TODO see if there's a way you can get around that, to make the code more modular instead of a copy/paste for each case
+//	that you have to edit slightly
+// because sprintf requires me to hard code the number of arguments, I have to violate the DRY principle for this function
+void
+energy_stats_csv_header(char csv_header[512]) { 
+	int num_sockets = getSocketNum();
+	int offset = 0;
+	const char* format;
+	switch(get_power_domains_supported(get_micro_architecture())) {
 		case DRAM_GPU_CORE_PKG:
-			return sprintf(ener_string, "%.4f,%.4f,%.4f,%.4f@",
-				estats.dram,
-				estats.gpu,
-				estats.core,
-				estats.pkg
-			);
-		case GPU_CORE_PKG:
-			return sprintf(ener_string, "%.4f,%.4f,%.4f@",
-				estats.gpu,
-				estats.core,
-				estats.pkg
-			);
+			format = "dram_socket%d,gpu_socket_%d,core_socket%d,pkg_socket%d,";
+			for (int s = 1; s <= num_sockets; s++) {
+				offset += sprintf(csv_header + offset, format, s,s,s,s);
+				// if (s <= num_sockets-1) offset += sprintf(csv_header+offset,",");
+			} sprintf(csv_header + offset, "timestamp");
+			return;
 		case DRAM_CORE_PKG:
-			return sprintf(ener_string, "%.4f,%.4f,%.4f@",
-				estats.dram,
-				estats.core,
-				estats.pkg
-			);
+			format = "dram_socket%d,core_socket%d,pkg_socket%d,";
+			for (int s = 1; s <= num_sockets; s++) {
+				offset += sprintf(csv_header + offset, format, s,s,s);
+				// if (s <= num_sockets-1) offset += sprintf(csv_header+offset,",");
+			} sprintf(csv_header + offset, "timestamp");
+			return;
+		case GPU_CORE_PKG:
+			format = "gpu_socket_%d,core_socket%d,pkg_socket%d,";
+			for (int s = 1; s <= num_sockets; s++) {
+				offset += sprintf(csv_header + offset, format, s,s,s);
+				// if (s <= num_sockets-1) offset += sprintf(csv_header+offset,",");
+			} sprintf(csv_header + offset, "timestamp");
+			return;
 		default:
-			return -1;
+			sprintf(csv_header, "undefined_architecture");
+			return;
 	}
-}
-
-static int
-index_of_char(char buffer[], char char_key) {
-	int i; for (i = 0; buffer[i] != char_key; i++);
-	return (buffer[i] == char_key) ? i : -1;
 }
 
 void
-energy_stats_csv_header(char csv_header[512]) {
-	char buffer[512];
-	get_energy_stats_jni_string_format(buffer);
-	int index = index_of_char(buffer,'@');
-	assert(index != -1 && "something went wrong in energy_stats_csv_header");
-	buffer[index] = '\0';
-	sprintf(csv_header, "%s,%s,%s", "socket", buffer, "timestamp");
-}
+energy_stats_csv_string(EnergyStats estats[], char* csv_string) {
+	int offset = 0;
+	int power_domains = get_power_domains_supported(get_micro_architecture());
 
-int
-energy_stats_csv_string(EnergyStats estats, char* csv_string) {
-	switch (get_power_domains_supported(get_micro_architecture())) {
-		case DRAM_GPU_CORE_PKG:
-			return sprintf(csv_string, "%d,%.4f,%.4f,%.4f,%.4f,%ld",
-				estats.socket,
-				estats.dram,
-				estats.gpu,
-				estats.core,
-				estats.pkg,
-				(estats.timestamp.tv_sec * 1000000) + estats.timestamp.tv_usec
-			);
-		case GPU_CORE_PKG:
-			return sprintf(csv_string, "%d,%.4f,%.4f,%.4f,%ld",
-				estats.socket,
-				estats.gpu,
-				estats.core,
-				estats.pkg,
-				(estats.timestamp.tv_sec * 1000000) + estats.timestamp.tv_usec
-			);
-		case DRAM_CORE_PKG:
-			return sprintf(csv_string, "%d,%.4f,%.4f,%.4f,%ld",
-				estats.socket,
-				estats.dram,
-				estats.core,
-				estats.pkg,
-				(estats.timestamp.tv_sec * 1000000) + estats.timestamp.tv_usec
-			);
-		default:
-			return -1;
+	int sockets = getSocketNum();
+	for (int i = 0; i < sockets; i++) {
+		switch (power_domains) {
+			case DRAM_GPU_CORE_PKG:
+				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,%.6f,",
+					estats[i].dram,
+					estats[i].gpu,
+					estats[i].core,
+					estats[i].pkg
+				);
+				break;
+			case GPU_CORE_PKG:
+				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,",
+					estats[i].gpu,
+					estats[i].core,
+					estats[i].pkg
+				);
+				break;
+			case DRAM_CORE_PKG:
+				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,",
+					estats[i].dram,
+					estats[i].core,
+					estats[i].pkg
+				);
+				break;
+			default:
+				assert(0 && "error occurred in energy_stats_csv_string");
+		}
 	}
+	sprintf(csv_string+offset, "%ld", estats[0].timestamp);
 }

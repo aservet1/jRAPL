@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 
 from sys import argv
-
-if len(argv) != 2:
-    print("provide target directory as command line argument")
-    exit(2)
-
 import os
 import json
 import pandas as pd
@@ -14,8 +9,19 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 
-targetDir = argv[1]#'/home/alejandro/jRAPL/tests/dacapo/async-monitors/jolteon-results-subset'
-os.chdir(targetDir)
+try:
+	data_dir = argv[1]
+	result_dir = argv[2]
+except:
+	print("usage:",argv[0],"<directory with all the .aggregate-stats.json files>","<directory to output the plots>")
+	exit(2)
+if not (result_dir.startswith("/") or result_dir.startswith("~")):
+	result_dir = os.path.join(os.getcwd(),result_dir)
+if not os.path.isdir(result_dir):
+	print("directory",result_dir,"does not exist")
+	exit(2)
+os.chdir(data_dir)
+
 files = sorted([ f for f in os.listdir() if f.endswith('.aggregate-stats.json') ])
 
 data = []
@@ -41,18 +47,17 @@ c_da_std = []
 c_ll_std = []
 
 for benchmark in data:
-    if benchmark == 'h2': continue
 
     labels.append(benchmark)
 
-    java_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['persocket']['1']['time-between-samples']['avg'] )
-    java_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['persocket']['1']['time-between-samples']['stdev'] )
+    java_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['time-energy']['time-between-samples']['avg'] )
+    java_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'java' ][0]['time-energy']['time-between-samples']['stdev'] )
 
-    c_ll_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['persocket']['1']['time-between-samples']['avg'] )
-    c_ll_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['persocket']['1']['time-between-samples']['stdev'] )
+    c_ll_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['time-energy']['time-between-samples']['avg'] )
+    c_ll_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-linklist' ][0]['time-energy']['time-between-samples']['stdev'] )
 
-    c_da_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['persocket']['1']['time-between-samples']['avg'] )
-    c_da_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['persocket']['1']['time-between-samples']['stdev'] )
+    c_da_avg.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['time-energy']['time-between-samples']['avg'] )
+    c_da_std.append( [ d for d in data[benchmark] if d['metadata']['monitor_type'] == 'c-dynamicarray' ][0]['time-energy']['time-between-samples']['stdev'] )
 
 bar_width = 0.25
 mpl.rcParams['figure.dpi'] = 600
@@ -71,6 +76,4 @@ plt.legend()
 fig = plt.gcf()
 fig.set_size_inches(12,25)
 #plt.show()
-plt.savefig('timepersample-comparison-bar')
-
-print('REMEMBER! h2 was skipped because gathering the data on it is mad buggy')
+plt.savefig(os.path.join(result_dir,'timepersample-comparison-bar'))

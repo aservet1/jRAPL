@@ -121,8 +121,8 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 		// java generate JSON for the meta info object RIGHT HERE RIGHT NOW
 		String json = String.format( //@TODO make sure all of the metainfo points are here or if you need to gather more data to display
-				"{\"samplingRate\": %d, \"lifetime\": %d, \"numSamples\": %d }",
-				samplingRate, lifetime, numSamples);
+				"{\"samplingRate\": %d, \"lifetime\": %d, \"numSamples\": %d, \"energyWrapAround\": %f }",
+				samplingRate, lifetime, numSamples, ArchSpec.RAPL_WRAPAROUND); //TODO make sure wraparound gets accurately calculated on the C side before you start using this
 		try {
 			BufferedWriter writer = new BufferedWriter (
 							(fileName == null)
@@ -169,13 +169,13 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		if (args[0].equalsIgnoreCase("Java")) {
 			m = new AsyncEnergyMonitorJavaSide();
 		} else if (args[0].equalsIgnoreCase("C")) {
-			m = new AsyncEnergyMonitorCSide();
+			m = new AsyncEnergyMonitorCSide(args[1]);
 		} else {
 			System.out.println("invalid args[0]: "+args[0]);
 			System.exit(2);
 		}
 		m.activate();
-		m.setSamplingRate(127);
+		m.setSamplingRate(12);
 
 		m.start();
 		sleepPrint(3000);
@@ -189,8 +189,10 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		System.out.println();
 		System.out.println(Arrays.toString(m.getLastKSamples(m.getNumSamples())));
 
-		m.writeFileMetadata("AsyncMonitor-"+args[0]+"-metainfo.json");
-		m.writeFileCSV("AsyncMonitor-"+args[0]+".csv");
+		String name = args[0] + ((args.length == 1) ? "" : args[1]);
+
+		m.writeFileMetadata("AsyncMonitor-"+name+"-metainfo.json");
+		m.writeFileCSV("AsyncMonitor-"+name+".csv");
 
 		m.reset();
 		m.deactivate();

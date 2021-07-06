@@ -3,6 +3,7 @@
 # after comments have been stripped out. newlines dont present any other
 # special meaning, it's allthe same whitespeace separating the single words
 
+luindex # im making this one go first (even though non alphabetical is cringe) because it runs quickly, so I can easily observe a full run and if any errors come up. avrora takes forever
 avrora
 batik
 biojava
@@ -15,7 +16,6 @@ h2o
 jme
 jython
 ## kafka # kafka always fails
-luindex
 lusearch
 pmd
 sunflow

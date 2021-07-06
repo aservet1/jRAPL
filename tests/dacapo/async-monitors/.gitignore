@@ -11,4 +11,5 @@ scratch
 *.csv
 *.stats.json
 *.memory.json
-*.aggregate-stats.json
+*.aggregate-perbench.json
+*.aggregate-permonitor.json

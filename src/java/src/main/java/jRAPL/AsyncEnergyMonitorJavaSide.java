@@ -10,24 +10,20 @@ import java.io.FileWriter;
 import java.time.Instant;
 import java.time.Duration;
 
-public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Runnable
-{
+public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Runnable {
+
 	private ArrayList<String> samples;
 	private int samplingRate; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
 
-	protected final ArrayList<Instant> timestamps;
-
 	public AsyncEnergyMonitorJavaSide() {
 		samplingRate = 10;
-		timestamps = new ArrayList<Instant>();
 		samples = new ArrayList<String>();
 	}
 
 	public AsyncEnergyMonitorJavaSide(int s) {
 		samplingRate = s;
-		timestamps = new ArrayList<Instant>();
 		samples = new ArrayList<String>();
 	}
 
@@ -35,7 +31,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	public void activate() {
 		super.activate();
 	}
-	
+
 	@Override
 	public void deactivate() {
 		super.deactivate();
@@ -49,8 +45,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		while (!exit) {
 			String energyString = EnergyMonitor.energyStatCheck();
 			samples.add(energyString);
-			timestamps.add(Instant.now());
-			try { Thread.sleep(samplingRate); } catch (Exception e) {}
+			try { Thread.sleep(samplingRate); } catch (Exception e) {  }
 		}
 	}
 
@@ -79,7 +74,6 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		super.reset();
 		exit = false;
 		samples.clear();
-		timestamps.clear();
 	}
 
 	@Override
@@ -91,7 +85,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 			start = 0;
 			k = samples.size();
 		}
-		
+
 		String[] samplesArray = new String[k];
 		for (int i = start; i < samples.size(); i++)
 			samplesArray[arrayIndex++] = samples.get(i);
@@ -100,21 +94,23 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	}
 
 	@Override
-	public Instant[] getLastKTimestamps(int k) {
-		int start = timestamps.size() - k;
+	public Instant[] getLastKTimestamps(int k) { // @TODO this should probably get deprecated, since samples.get(i) now has the full CSV string including the timestamp
+		int start = samples.size() - k;
 		int arrayIndex = 0;
 		if (start < 0) {
 			start = 0;
-			k = timestamps.size();
+			k = samples.size();
 		}
 
 		Instant[] timestampsArray = new Instant[k];
 
-		for (int i = start; i < timestamps.size(); i++)
-			timestampsArray[arrayIndex++] = timestamps.get(i);
+		for (int i = start; i < samples.size(); i++) {
+			String[] parts = samples.get(i).split(",");
+			long usec = Long.parseLong(parts[parts.length-1]);
+			timestampsArray[arrayIndex++] = Utils.usecToInstant(usec);
+		}
 
 		return timestampsArray;
-
 	}
 
 	@Override
@@ -137,21 +133,11 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		BufferedWriter writer = null;
 		try {
 			writer = new BufferedWriter ( // write to stdout if filename is null
-									(fileName == null)
-										? new OutputStreamWriter(System.out)
-										: new FileWriter(new File(fileName))
-									);
-			writer.write("socket,"+ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]+",timestamp\n");
-			for (int i = 0; i < samples.size(); i++) {
-				String energyString = samples.get(i);
-				String[] perSocketStrings = energyString.split("@");
-				long usecs = Utils.timestampToUsec(timestamps.get(i));
-				for (int socket = 1; socket <= perSocketStrings.length; socket++) {
-					writer.write (
-						String.format("%d,%s,%d\n", socket, perSocketStrings[socket-1], usecs)
-					);
-				}
-			}
+				(fileName == null) ? new OutputStreamWriter(System.out) : new FileWriter(new File(fileName))
+			);
+			writer.write(EnergyStats.csvHeader()+"\n");       //"socket,"+ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]+",timestamp\n");
+			for (String sample : samples)
+				writer.write(sample+"\n");
 			writer.flush();
 			if (fileName != null) writer.close();
 		} catch (IOException e) {

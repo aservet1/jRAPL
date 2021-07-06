@@ -1,17 +1,19 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <fcntl.h>
-#include<sys/time.h>
+#include <sys/time.h>
 
 #include "ArchSpec.h"
 #include "EnergyCheckUtils.h"
 #include "JNIFunctionDeclarations.h"
+#include "Utils.h"
 
 //timestamping macros
 #define STARTSTAMP	gettimeofday(&start, NULL);
 #define STOPSTAMP	gettimeofday(&end, NULL); timersub(&end, &start, &diff);
 #define DIFF_USEC	diff.tv_sec*1000000 + diff.tv_usec
 
+// global static timestamp variables make this not thread safe
 static struct timeval start, end, diff;
 static int num_sockets;
 static int power_domains_supported;
@@ -47,9 +49,37 @@ JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeProfileInit(JNIEnv* 
 	return DIFF_USEC;
 }
 
+// static int i = 0;
+// #define N 10
+// static jstring mybuffer[N]; // a place to dump them, so its not optimized out.
+static jstring str;
 JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls) {
 	STARTSTAMP;
-	Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls);
+	str = Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls);
+	STOPSTAMP;
+	// mybuffer[i++]=str;i%=N;
+	return DIFF_USEC;
+}
+// JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeEnergyStatCheckNoBufferGuard(JNIEnv* env, jclass jcls) {
+// 	STARTSTAMP;
+// 	str = Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls);
+// 	STOPSTAMP;
+// 	return DIFF_USEC;
+// }
+
+
+/**	This will be run and timed from the Java side. It's meant to show that there's no overhead to calling
+ *	void JNI functions. This should have the same runtime as usecTimeEnergyStatCheck(), even though the
+ *	timestamps for this one surround a Java call.
+ */
+JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_energyStatCheckNoReturnValue(JNIEnv* env, jclass jcls) {
+	str = Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls);
+	// mybuffer[i++]=str;i%=N; // this is bad, get rid of it if the whole buffer thing ends up being useless. if the buffer is necessary to prevent optimizations, find out how you can prevent optimization here but not make extra overhead happen
+}
+
+JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_timechecker(JNIEnv* env, jclass jcls) {
+	STARTSTAMP;
+	sleep_millisecond(15);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
@@ -111,4 +141,15 @@ JNIEXPORT jlongArray JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeMSRRead(JNIEnv*
 	if (result == NULL) return NULL;
 	(*env)->SetLongArrayRegion(env, result, 0, num_sockets, fill);
 	return result;
+}
+
+static struct timeval tvStart, tvStop;
+JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_ctimeStart(JNIEnv* env, jclass jcls) {
+	gettimeofday(&tvStart,0x0);
+}
+JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_ctimeStop(JNIEnv* env, jclass jcls) {
+	gettimeofday(&tvStop,0x0);
+}
+JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_ctimeElapsedUsec(JNIEnv* env, jclass jcls) {
+	return (jlong) ((tvStop.tv_sec*1000000+tvStop.tv_usec) - (tvStart.tv_sec*1000000+tvStart.tv_usec));
 }

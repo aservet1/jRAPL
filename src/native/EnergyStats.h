@@ -4,19 +4,16 @@
 #include <sys/time.h>
 
 typedef struct {
-	char socket;
-	double pkg;
-	double dram;
-	double gpu; //pp1
-	double core;//pp0
-	struct timeval timestamp;
+	float dram;
+	float gpu; //pp1
+	float core;//pp0
+	float pkg;
+	unsigned long timestamp;
 } EnergyStats;
 
 EnergyStats energy_stats_subtract(EnergyStats a, EnergyStats b);
-void get_energy_stats_jni_string_format(char format_buffer[512]);
-int energy_stats_to_string(EnergyStats estats, char* ener_string);
+void get_energy_stats_jni_string_format(char format_buffer[512]); //@TODO deprecate this, please
 void energy_stats_csv_header(char* csv_header);
-int energy_stats_csv_string(EnergyStats estats, char* csv_string);
-int energy_stats_to_jni_string(EnergyStats estats, char* ener_string);
+void energy_stats_csv_string(EnergyStats estats[], char* csv_string);
 
 #endif //ENERGY_STATS_H

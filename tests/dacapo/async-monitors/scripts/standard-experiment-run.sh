@@ -13,8 +13,9 @@ sudo echo 'hello w0rld :))'
 
 make clean all
 
-iterations=25
 warmups=5
+iterations=30
+samplingRate=1
 resultDir=$1
 
 rm -rf $resultDir && mkdir $resultDir
@@ -23,16 +24,16 @@ benchmarks=$(sed 's/#.*$//g' benchmarks.txt)
 for benchmark in $benchmarks
 do
 	monitoringEnergy=true
-	for monitorType in c-linklist java c-dynamicarray
+	for monitorType in c-dynamicarray c-linklist java
 	do
 		sudo scripts/run-dacapo.sh \
 			$benchmark $monitoringEnergy $iterations \
-			$warmups $monitorType $resultDir
+			$warmups $monitorType $samplingRate $resultDir
 	done
 	monitoringEnergy=false
 	sudo scripts/run-dacapo.sh \
 		$benchmark $monitoringEnergy $iterations \
-		$warmups _aAe_ $resultDir
+		$warmups no-monitor $resultDir
 	
 done
 

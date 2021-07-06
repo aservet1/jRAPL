@@ -1,2 +1,2 @@
-# sample output files are way too big for github and system specific anyways
-samples-collected.csv
+# sample output files are too big for github (over 100mB)
+samples-collected*.csv

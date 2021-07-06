@@ -1,4 +1,3 @@
-
 import org.dacapo.harness.CommandLineArgs;   
 import org.dacapo.harness.Callback;      
 import java.io.*;
@@ -6,6 +5,8 @@ import java.io.*;
 import jRAPL.AsyncEnergyMonitor;
 import jRAPL.AsyncEnergyMonitorCSide;
 import jRAPL.AsyncEnergyMonitorJavaSide;
+
+import java.time.Instant;
 
 public class AsyncMonitorCallback extends Callback {
 
@@ -17,11 +18,12 @@ public class AsyncMonitorCallback extends Callback {
 	private AsyncEnergyMonitor energyMonitor;
 	private AsyncMemoryMonitor memoryMonitor;
 	private boolean monitoringEnergy;
-	
+	private int samplingRate;
+
 	public AsyncMonitorCallback(CommandLineArgs args) {
 		super(args);
+		samplingRate = Integer.parseInt(System.getProperty("samplingRate")) ;
 		monitoringEnergy = System.getProperty("monitoringEnergy").equals("true");
-		
 		if (monitoringEnergy) {
 			monitorType = System.getProperty("monitorType");
 			System.out.printf("monitorType = %s\n", monitorType);
@@ -39,6 +41,7 @@ public class AsyncMonitorCallback extends Callback {
 					System.err.println(String.format("Invalid option for monitorType: '%s'",monitorType));
 					System.exit(1);
 			}
+			energyMonitor.activate();
 		}
 		memoryMonitor = new AsyncMemoryMonitor();
 	}
@@ -47,11 +50,10 @@ public class AsyncMonitorCallback extends Callback {
 	public void start(String benchmark) {
 		super.start(benchmark);
 		if (monitoringEnergy) {
-			energyMonitor.activate();
-			energyMonitor.setSamplingRate(1);
+			energyMonitor.setSamplingRate(samplingRate);
 			energyMonitor.start();
 		}
-		memoryMonitor.setSamplingRate(1); // the idea behind this sampling rate is to track the increase in memory with around every additional sample
+		memoryMonitor.setSamplingRate(samplingRate); // the idea behind this sampling rate is to track the increase in memory with around every additional sample
 		memoryMonitor.start();
 		
 	}
@@ -68,8 +70,13 @@ public class AsyncMonitorCallback extends Callback {
 		super.complete(benchmark, valid);
 		currentIter++;
 		if (currentIter > WARMUPS) {
-			String fileNameBase = String.format("%s/%s_%d_%s", System.getProperty("resultDir"), benchmark, (currentIter-WARMUPS), monitorType != null? monitorType : "nojrapl");
-			
+			String fileNameBase = String.format(
+				"%s/%s_%d_%s",
+				System.getProperty("resultDir"),
+				benchmark,
+				(currentIter-WARMUPS),
+				monitorType != null? monitorType : "nojrapl"
+			);
 			if (monitoringEnergy) {
 				energyMonitor.writeFileMetadata(null); System.out.printf(" -- monitorType: %s\n",monitorType);
 				energyMonitor.writeFileMetadata(fileNameBase+".metadata.json");
@@ -79,8 +86,15 @@ public class AsyncMonitorCallback extends Callback {
 		}
 		if (monitoringEnergy) {
 			energyMonitor.reset();
+		} memoryMonitor.reset();
+		System.out.println(" .) iteration done at " + Instant.now());
+	}
+	@Override
+	public boolean runAgain() {
+		boolean doRun = super.runAgain();
+		if (!doRun && monitoringEnergy) {
 			energyMonitor.deactivate();
 		}
-		memoryMonitor.reset();
+		return doRun;
 	}
 }

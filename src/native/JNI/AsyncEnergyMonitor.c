@@ -4,12 +4,13 @@
 #include <assert.h>
 #include "EnergyStats.h"
 #include "AsyncEnergyMonitor.h"
+#include "Utils.h"
 
 static AsyncEnergyMonitor* monitor = NULL;
 
 JNIEXPORT void JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_activateNative(JNIEnv* env, jclass jcls, jint samplingRate, jint storageType) {
-	monitor = newAsyncEnergyMonitor(samplingRate, storageType);
+Java_jRAPL_AsyncEnergyMonitorCSide_activateNative(JNIEnv* env, jclass jcls, jint samplingRate, jint storageType, jint initialSize) {
+	monitor = newAsyncEnergyMonitor(samplingRate, storageType, initialSize);
 }
 
 JNIEXPORT void JNICALL
@@ -48,17 +49,16 @@ Java_jRAPL_AsyncEnergyMonitorCSide_getLastKSamplesNative(JNIEnv* env, jclass jcl
 	if (monitor->samples_linklist) assert( k <= monitor->samples_linklist->nItems );
 
 	EnergyStats samples[k];
-	
 	lastKSamples(k, monitor, samples);
 
 	char sample_strings[512*(k+1)];
 	bzero(sample_strings, 512*(k+1));
 
 	int offset = 0;
-	for (int i = 0; i < k; i++) {
-		EnergyStats e = samples[i];
-		char string[512];
-		energy_stats_to_jni_string(e, string);
+	for (int i = 0; i < k; i++) { //TODO This doesn't account for multiple samples per socket
+		//EnergyStats e = samples[i];
+		char string[] = "4,2,0";
+		//energy_stats_csv_string(e, string);
 		char string2[512+10];
 		sprintf(string2,"%s_", string);
 		
@@ -75,11 +75,7 @@ Java_jRAPL_AsyncEnergyMonitorCSide_getLastKTimestampsNative(JNIEnv* env, jclass 
 	lastKSamples(k, monitor, samples);
 
 	long fill[k];
-	for (int i = 0; i < k; i++)
-	{
-		struct timeval ts = samples[i].timestamp;
-		fill[i] = ts.tv_sec * 1000000 + ts.tv_usec;
-	}
+	for (int i = 0; i < k; i++) fill[i] = samples[i].timestamp;
 
 	int size = k;
 	jlongArray result = (*env)->NewLongArray(env, size);

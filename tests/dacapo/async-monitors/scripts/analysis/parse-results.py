@@ -15,35 +15,30 @@ def filter_zero_columns(dataframe): #delete columns that are 0.0 down the line. 
         if sum(dataframe[column]) == 0.0:
             del dataframe[column]
 
-#def zero_intervals(l):
-#    result = list()
-#    z = 0
-#    for i in range(1,len(l)):
-#        if l[i]-l[i-1] == 0:
-#            z += 1
-#        else:
-#            result.append(z)
-#            z = 0
-#    if z:
-#        result.append(z)
-#    return dict(Counter(result))
-
-def diff_list(l):
-    return [ float(float(l[i]) - float(l[i-1])) for i in range(1,len(l))]
-
-def dict_to_list(d): #convert from dict<int,double> to list<double>
-    return [ d[k] for k in d.keys() ]
+def diff_list(l, wraparound = 0):
+	diffs = []
+	for i in range(1,len(l)):
+		diff = l[i] - l[i-1]
+		if diff < 0:
+			print(".> caught negative diff:",diff,l[i],l[i-1]) # discard instances of wraparound, since theyre so infrequent for this experiment.
+																# TODO: make sure that wraparound is included by the time you release this though
+			diff += wraparound
+		else: diffs.append(diff)
+	return diffs
+    # return [ float(float(l[i]) - float(l[i-1])) for i in range(1,len(l))]
 
 def memory_data(benchmark, iteration, type):
     filename = '_'.join([benchmark, iteration, type]) + ".memory.json"
     with open(filename) as f: memdata = json.loads(f.read())
     samples = memdata['samples']
     del memdata['samples']
-    memdata['max'] = min(samples)
-    memdata['min'] = max(samples)
+    ##.#.## -- Do not delete these! We will probably end up not includling these metrics, but we might!! Do not delete them unless they are confirmed useless!
+    ##.#.##memdata['max'] = min(samples)
+    ##.#.##memdata['min'] = max(samples)
+    ##.#.##memdata['median'] = statistics.median(samples)
     memdata['avg'] = statistics.mean(samples)
     memdata['stdev'] = statistics.stdev(samples)
-    memdata['median'] = statistics.median(samples)
+    del memdata['timestamps'] # this is useful for generating an individual time-series plot of the memory of an iteration. but not for here.
     return memdata
 '''-----------------------------------------------------------------------------'''
 
@@ -65,52 +60,41 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
     iteration = filename_parts[1]
     monitor_type = filename_parts[2]
 
+    result = {}
+
     with open(filename+'.metadata.json') as fh:
         metadata = json.loads(fh.read())
         metadata['benchmark'] = benchmark # add these next 3 items to the metadata
         metadata['iteration'] = iteration
         metadata['monitor_type'] = monitor_type
-
-    result = {}
-    result['metadata'] = metadata
+        result['metadata'] = metadata
 
     result['memory'] = dict()
     result['memory']['jraplon']  = memory_data(result['metadata']['benchmark'], result['metadata']['iteration'], result['metadata']['monitor_type'])
     result['memory']['jraploff'] = memory_data(result['metadata']['benchmark'], result['metadata']['iteration'], 'nojrapl')
 
+    energydata = pd.read_csv(filename+'.csv')
+    filter_zero_columns(energydata)
 
-    data = pd.read_csv(filename+'.csv')
-    filter_zero_columns(data)
+    result['time-energy'] = dict()
 
-    result['persocket'] = dict()
-    num_sockets = max(data['socket'])
-    for i in range(num_sockets): # filling out the socket level of result{}
-        socket = i+1
-        current = data[data.socket.eq(socket)].to_dict()
-        del current['socket']
-        result['persocket'][socket] = current
-    
+    timestamps = energydata['timestamp'].to_list()
+    del energydata['timestamp']
 
-    for socket in result['persocket']: # filling out the actual computations in result{}
-        timestamps = dict_to_list(result['persocket'][socket]['timestamp'])
-        del result['persocket'][socket]['timestamp']
-        
-        power_domains = list(result['persocket'][socket])
-        for powd in power_domains:
-            energy = result['persocket'][socket][powd]
-            energy = dict_to_list(energy)
-            energy = diff_list(energy)
-            result['persocket'][socket][powd] = dict()
-            result['persocket'][socket][powd]['energy-per-sample'] = dict()
-            result['persocket'][socket][powd]['energy-per-sample']['num_samples'] = len(energy)
-            result['persocket'][socket][powd]['energy-per-sample']['avg'] = statistics.mean(energy)
-            result['persocket'][socket][powd]['energy-per-sample']['stdev'] = statistics.stdev(energy)
+    result['time-energy']['energy-per-sample'] = dict()
+    power_domains = list(energydata.keys())
+    for powd in power_domains:
+        energy = diff_list(energydata[powd].to_list())
+        result['time-energy']['energy-per-sample'][powd] = dict()
+        result['time-energy']['energy-per-sample'][powd]['num_samples'] = len(energy)
+        result['time-energy']['energy-per-sample'][powd]['avg'] = statistics.mean(energy)
+        result['time-energy']['energy-per-sample'][powd]['stdev'] = statistics.stdev(energy)
 
-        time = diff_list(timestamps)
-        result['persocket'][socket]['time-between-samples'] = {}
-        result['persocket'][socket]['time-between-samples']['num_samples'] = len(time)
-        result['persocket'][socket]['time-between-samples']['avg'] = statistics.mean(time)
-        result['persocket'][socket]['time-between-samples']['stdev'] = statistics.stdev(time)
+    time = diff_list(timestamps)
+    result['time-energy']['time-between-samples'] = {}
+    result['time-energy']['time-between-samples']['num_samples'] = len(time)
+    result['time-energy']['time-between-samples']['avg'] = statistics.mean(time)
+    result['time-energy']['time-between-samples']['stdev'] = statistics.stdev(time)
             
             
     with open(filename+'.stats.json','w') as fh:

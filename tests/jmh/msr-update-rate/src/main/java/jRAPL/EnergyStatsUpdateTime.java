@@ -53,14 +53,16 @@ public class EnergyStatsUpdateTime {
 		
 		private int currentIteration = 0; // track how many iterations we've done, so we can tell if it's in the warmup phase or not
 		private final int WARMUP_ITERATIONS = 5; // if you change this, make sure you change the benchmark warmup annotations!
+		private String outfile;
 
 		@Setup(Level.Trial)
 		public void setup() {
+			outfile = String.format("results/samples-collected_%s.csv", System.getProperty("hostName"));
 			monitor = new SyncEnergyMonitor();
 			monitor.activate();
 			try {
 				boolean append = false;
-				FileWriter writer = new FileWriter("results/samples-collected.csv", false);
+				FileWriter writer = new FileWriter(outfile, false);
 				
 				writer.write (
 						EnergyStats.csvHeader()
@@ -89,7 +91,7 @@ public class EnergyStatsUpdateTime {
 			currentIteration += 1;
 			if (!warmup(currentIteration)) {
 				try {
-					FileWriter writer = new FileWriter("results/samples-collected.csv", true);
+					FileWriter writer = new FileWriter(outfile, true);
 					for (EnergyStats sample : samples)
 						writer.write(sample.csv()+"\n");
 					writer.flush();

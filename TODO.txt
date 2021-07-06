@@ -1,13 +1,15 @@
 
 << Immediate Todos:
-	- Update the paper with all experiment data by tonight
-	- Redo the memory experiments but once you un-implement the SocketNum field per struct
-		- make graphs for the jmh time each sample result
+	- finish the edits David asked for
+	- whats wrong with JMH JNI overhead
+	- compare JMH JNI overhead results to full runtime	
+	- Properly graph sampling efficiency
 
 << Semi Immediate Todos:
-	- Do experiments on dynamically choosing the size of the LinkNodes. Could be based on sampling rate, so you know how many mallocs per second to do.
 	- Run experiments on several computers
-	- Properly calculate wraparound...
+	- CSide-GetLastK needs to me made to work for a multi-socket machine. Right not it just returns placeholder data...
+	- Get a complete lists of the benchmarks / more info about dacapo-evalution-git+309e1fa.jar
+	- make all JSON dumps have camelCase key names, and fix analysis scripts to match those names
 
 << Other Todos:
 	- Update the UML
@@ -15,7 +17,9 @@
 		- does compiling with clang cause a segfault on non debian machine?
 		- where does the clang segfault happen? it's somewhere in AsyncEnergyMonitorCSide. easy enough to fix?
 		- what exactly is the problem with clang and debian?
-	- make sure you re-run the experiments if you can figure out 
+	- cite the rapl-read.weebseeksjsndmfjee.edu stuff in your code. (we know this is legit because he did power measurement validation though external, also verifiable means`)
+		- where you got the MSR offsets from (and how you know they're correct)
+		- the table with the CPU microarchitectures and their supported power domains
 
 Ideas for future development:
 	- Naming Conventions to Edit (and make sure they're good):
@@ -25,8 +29,14 @@ Ideas for future development:
 
 	- Make C run on a schedule instead of sleeping, so sampling overhead of 130-170usec (on jolteon, at least) isn't an issue for high rates.
 		- See timer implementation, or the thing Timur sent: https://github.com/jvm-profiling-tools/async-profiler/blob/master/src/itimer.cpp
-	- Make the AsyncMonitor have an 'auto dump' file, then have it dump its content to file (on a separate thread) and clear out.
+	- Make the AsyncMonitor have an 'auto dump' file, then have it dump its content to file (on a separate thread or executor, whatever that is) and clear out.
 		To make it not indefinitely grow in memory
 	- AsyncMonitor runs a set number of samples at a rate, instead of a start/stop wait loop
 
-	- EnergySample.dumps() and EnergySample.loads()
+	- EnergySample.dumps() and EnergySample.loads() from CSV
+
+	- Instead of returning an EnergyStats object as a human readable string across the JNI, serialize the raw bits of the struct, return that
+		as a string, and then write a java-side parsing function. That's probably going to be hard to write but the string brought across will
+		be smaller, and it'll probably be less computation overall, unless if the Java hella-optimizes string splitting and atoi type computations
+
+
