@@ -32,12 +32,13 @@ def memory_data(benchmark, iteration, type):
     with open(filename) as f: memdata = json.loads(f.read())
     samples = memdata['samples']
     del memdata['samples']
-    memdata['max'] = min(samples)
-    memdata['min'] = max(samples)
+    ##.#.## -- Do not delete these! We will probably end up not includling these metrics, but we might!! Do not delete them unless they are confirmed useless!
+    ##.#.##memdata['max'] = min(samples)
+    ##.#.##memdata['min'] = max(samples)
+    ##.#.##memdata['median'] = statistics.median(samples)
     memdata['avg'] = statistics.mean(samples)
     memdata['stdev'] = statistics.stdev(samples)
-    memdata['median'] = statistics.median(samples)
-    del memdata['timestamps'] # might actually need this info, but for now i dont think its useful, and it just takes up space on my device
+    del memdata['timestamps'] # this is useful for generating an individual time-series plot of the memory of an iteration. but not for here.
     return memdata
 '''-----------------------------------------------------------------------------'''
 
