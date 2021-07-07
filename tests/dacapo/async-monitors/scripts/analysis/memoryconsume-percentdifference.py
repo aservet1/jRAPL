@@ -6,18 +6,7 @@ from math import sqrt
 from sys import argv
 
 from myutil import parse_cmdline_args
-
-'''---------------------------------------------------------------------------------------------------'''
-
-def percent_diff(a,b):
-    return (a-b)/((a+b)/2) * 100
-
-def percent_diff_propagate_uncertainty(sa,sb,a,b): # uses propagation of error through each step of a percent difference
-    subtract = a-b
-    subtract_sd = sqrt((sa**2)+(sb**2))
-    average = (a+b)/2
-    average_sd = sqrt(.5**2 * sa**2 + .5**2 * sb**2)
-    return sqrt( ((subtract/average)**2) * ( (subtract_sd/subtract)**2 + (average_sd/average)**2 ) * 100 )
+from aggr_utils import percent_diff, percent_diff_propagate_uncertainty
 
 '''---------------------------------------------------------------------------------------------------'''
 
