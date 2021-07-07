@@ -20,7 +20,7 @@ resultDir=$1
 
 rm -rf $resultDir && mkdir $resultDir
 
-benchmarks=$(sed 's/#.*$//g' benchmarks.txt)
+benchmarks=$(sed 's/#.*$//g' benchmarks.config)
 for benchmark in $benchmarks
 do
 	monitoringEnergy=true
