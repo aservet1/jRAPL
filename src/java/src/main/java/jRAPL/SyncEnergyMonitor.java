@@ -14,14 +14,15 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 	}
 
 	public EnergyStats getSample() {
-		String energyString = EnergyMonitor.energyStatCheck();
-		EnergyStats sample = Utils.stringToEnergyStats(energyString);
-		return sample;
+		return stringToEnergyStats (
+			EnergyMonitor.energyStatCheck()
+		);
 	}
 
 	public double[] getPrimitiveSample() {
-		String energyString = EnergyMonitor.energyStatCheck();
-		return Utils.stringToPrimitiveSample(energyString);
+		return stringToPrimitiveSample (
+			EnergyMonitor.energyStatCheck()
+		);
 	}
 
 	public static void main(String[] args) throws InterruptedException {
@@ -35,8 +36,8 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 		for (int i = 0; i < 10; i++) {
 			Thread.sleep(100);
 			_after = monitor.getPrimitiveSample();
-			_diff = Utils.subtractPrimitiveSamples(_after,_before);
-			System.out.println(Utils.csvPrimitiveArray(_diff));
+			_diff = subtractPrimitiveSamples(_after,_before);
+			System.out.println(csvPrimitiveArray(_diff));
 			_before = _after;
 		}
 

@@ -32,7 +32,7 @@ public final class EnergyDiff extends EnergySample {
 	}
 
 	public static EnergyDiff between(EnergyStats before, EnergyStats after) {
-		double[] primitiveSample = Utils.subtractPrimitiveSamples(after.getPrimitiveSample(), before.getPrimitiveSample());
+		double[] primitiveSample = EnergyMonitor.subtractPrimitiveSamples(after.getPrimitiveSample(), before.getPrimitiveSample());
 		Duration elapsedTime = (before.getTimestamp() == null || after.getTimestamp() == null)
 				? null : Duration.between(before.getTimestamp(), after.getTimestamp());
 		return new EnergyDiff(primitiveSample, elapsedTime);

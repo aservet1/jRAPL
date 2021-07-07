@@ -75,7 +75,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		EnergyStats[] samplesArray = new EnergyStats[k];
 		for (int i = 0; i < strings.length; i++) {
 			String energyString = strings[i];
-			samplesArray[i] = Utils.stringToEnergyStats(energyString);
+			samplesArray[i] = stringToEnergyStats(energyString);
 			samplesArray[i].setTimestamp(timestamps[i]);
 		}
 
@@ -88,7 +88,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		double[][] samplesArray = new double[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
 		for (int i = 0; i < strings.length; i++) {
 			String energyString = strings[i];
-			samplesArray[i] = Utils.stringToPrimitiveSample(energyString);
+			samplesArray[i] = stringToPrimitiveSample(energyString);
 		}
 
 		return samplesArray;
@@ -122,7 +122,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		// java generate JSON for the meta info object RIGHT HERE RIGHT NOW
 		String json = String.format( //@TODO make sure all of the metainfo points are here or if you need to gather more data to display
 				"{\"samplingRate\": %d, \"lifetime\": %d, \"numSamples\": %d, \"energyWrapAround\": %f }",
-				samplingRate, lifetime, numSamples, ArchSpec.RAPL_WRAPAROUND); //TODO make sure wraparound gets accurately calculated on the C side before you start using this
+				samplingRate, lifetime, numSamples, ArchSpec.RAPL_WRAPAROUND);
 		try {
 			BufferedWriter writer = new BufferedWriter (
 							(fileName == null)
