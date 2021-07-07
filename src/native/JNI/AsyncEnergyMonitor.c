@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include "ArchSpec.h"
 #include "EnergyStats.h"
 #include "AsyncEnergyMonitor.h"
 #include "Utils.h"
@@ -48,23 +49,28 @@ Java_jRAPL_AsyncEnergyMonitorCSide_getLastKSamplesNative(JNIEnv* env, jclass jcl
 	if (monitor->samples_dynarr) assert( k <= monitor->samples_dynarr->nItems );
 	if (monitor->samples_linklist) assert( k <= monitor->samples_linklist->nItems );
 
+	size_t num_sockets = getSocketNum();
+
+	k *= num_sockets;
+
 	EnergyStats samples[k];
 	lastKSamples(k, monitor, samples);
 
-	char sample_strings[512*(k+1)];
-	bzero(sample_strings, 512*(k+1));
+	char sample_strings[512*k];
+	bzero(sample_strings, 512*k);
+
+	char csv_string[512];
+	EnergyStats multisocket_sample_buffer[num_sockets];
 
 	int offset = 0;
-	for (int i = 0; i < k; i++) { //TODO This doesn't account for multiple samples per socket
-		//EnergyStats e = samples[i];
-		char string[] = "4,2,0";
-		//energy_stats_csv_string(e, string);
-		char string2[512+10];
-		sprintf(string2,"%s_", string);
-		
-		int string_len = strlen(string2);
-		memcpy(sample_strings + offset, string2, string_len);
-		offset += string_len;
+	for (int i = 0; i < k; i+=num_sockets) {
+
+		for (int j = 0; j < num_sockets; j++)
+			multisocket_sample_buffer[j] = samples[i+j];
+		energy_stats_csv_string(multisocket_sample_buffer, csv_string);
+
+		offset += sprintf(sample_strings + offset, "%s_", csv_string);
+
 	}
 	return (*env)->NewStringUTF(env, sample_strings);	
 }
