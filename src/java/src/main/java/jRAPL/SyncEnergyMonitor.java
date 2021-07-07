@@ -1,10 +1,6 @@
 
 package jRAPL;
 
-import java.time.Instant;
-
-import java.util.Arrays;
-
 public class SyncEnergyMonitor extends EnergyMonitor {
 
 	@Override
