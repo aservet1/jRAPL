@@ -8,7 +8,6 @@ import java.io.OutputStreamWriter;
 import java.io.FileWriter;
 
 import java.time.Instant;
-import java.time.Duration;
 
 public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Runnable {
 

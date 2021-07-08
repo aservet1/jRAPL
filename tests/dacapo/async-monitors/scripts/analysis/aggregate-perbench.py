@@ -20,7 +20,7 @@ benchmarks    = sorted(list(set([ fname.split('.')[0].split('_')[0]  for fname i
 monitor_types = sorted(list(set([ fname.split('.')[0].split('_')[-1] for fname in os.listdir() if fname.endswith(input_extension) ])))
 if not len(monitor_types) and not len(benchmarks):
     print("no files found with extension",input_extension)
-    exit()
+    exit(2)
 
 for bench in benchmarks:
     for monitor_type in monitor_types:

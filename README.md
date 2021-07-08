@@ -107,7 +107,7 @@ implementation is.
 
 ## Checking if it works on your machine
 To see if your computer's architecture is supported, run 
-```sudo java -cp src/java/target/jRAPL-1.0.jar jRAPL.ArchSpec```
+```sudo java -cp src/java/target/jRAPL-1.0.jar jRAPL.Demo ArchSpec```
 which will print out a few architecture-specific parameters. The relevant output will be something like:
 ```
 MICRO_ARCHITECTURE: 8e

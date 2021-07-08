@@ -27,6 +27,11 @@ public final class ArchSpec {
 	public static final int PKG_IDX;
 	//@TODO -- there's a 5th possible power domain, right? like full motherboard energy or something
 
+	public static final boolean DRAM_SUPPORTED;
+	public static final boolean GPU_SUPPORTED;
+	public static final boolean CORE_SUPPORTED;
+	public static final boolean PKG_SUPPORTED;
+
 	static {
 
 		EnergyManager m = new EnergyManager();	// to make sure that native access has been set up at this point.
@@ -68,6 +73,11 @@ public final class ArchSpec {
 		CORE_IDX = coreIndex;
 		PKG_IDX = pkgIndex;
 
+		DRAM_SUPPORTED = (DRAM_IDX != -1);
+		GPU_SUPPORTED  = (GPU_IDX  != -1);
+		CORE_SUPPORTED = (CORE_IDX != -1);
+		PKG_SUPPORTED  = (PKG_IDX  != -1);
+
 		m.deactivate();
 	}
 	
@@ -88,12 +98,13 @@ public final class ArchSpec {
 			"DRAM_IDX: " + DRAM_IDX,
 			"GPU_IDX: " + GPU_IDX,
 			"CORE_IDX: " + CORE_IDX,
-			"PKG_IDX: " + PKG_IDX
+			"PKG_IDX: " + PKG_IDX,
+			"",
+			"DRAM_SUPPORTED: " + DRAM_SUPPORTED,
+			"GPU_SUPPORTED: " + GPU_SUPPORTED,
+			"CORE_SUPPORTED: " + CORE_SUPPORTED,
+			"PKG_SUPPORTED: " + PKG_SUPPORTED
 		);
-	}
-
-	public static void main(String[] args) {
-		System.out.println(infoString());
 	}
 
 }

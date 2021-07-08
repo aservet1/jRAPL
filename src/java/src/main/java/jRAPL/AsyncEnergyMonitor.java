@@ -10,8 +10,6 @@ import java.io.OutputStreamWriter;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.Arrays; // just for the test driver, and debug. should eventually not actually be used in user-facing code, if we can make that happen. for modularity and cleanliness :)
-
 public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 	protected Instant monitorStartTime = null;
@@ -75,7 +73,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		EnergyStats[] samplesArray = new EnergyStats[k];
 		for (int i = 0; i < strings.length; i++) {
 			String energyString = strings[i];
-			samplesArray[i] = Utils.stringToEnergyStats(energyString);
+			samplesArray[i] = stringToEnergyStats(energyString);
 			samplesArray[i].setTimestamp(timestamps[i]);
 		}
 
@@ -88,7 +86,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		double[][] samplesArray = new double[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
 		for (int i = 0; i < strings.length; i++) {
 			String energyString = strings[i];
-			samplesArray[i] = Utils.stringToPrimitiveSample(energyString);
+			samplesArray[i] = stringToPrimitiveSample(energyString);
 		}
 
 		return samplesArray;
@@ -122,7 +120,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		// java generate JSON for the meta info object RIGHT HERE RIGHT NOW
 		String json = String.format( //@TODO make sure all of the metainfo points are here or if you need to gather more data to display
 				"{\"samplingRate\": %d, \"lifetime\": %d, \"numSamples\": %d, \"energyWrapAround\": %f }",
-				samplingRate, lifetime, numSamples, ArchSpec.RAPL_WRAPAROUND); //TODO make sure wraparound gets accurately calculated on the C side before you start using this
+				samplingRate, lifetime, numSamples, ArchSpec.RAPL_WRAPAROUND);
 		try {
 			BufferedWriter writer = new BufferedWriter (
 							(fileName == null)
@@ -154,47 +152,4 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		return s;
 	}
 
-	// this is just used in the main() driver, not part of the AsyncMonitor
-	private static void sleepPrint(int ms) throws InterruptedException {
-		int sec = (int)ms/1000;
-		ms = ms%1000;
-		for (int s = 0; s < sec; s++) {
-			System.out.printf("%d/%d\n",s,(sec+ms));
-			Thread.sleep(1000);
-		} Thread.sleep(ms);
-	}
-
-	public static void main(String[] args) throws InterruptedException {
-		AsyncEnergyMonitor m = null;
-		if (args[0].equalsIgnoreCase("Java")) {
-			m = new AsyncEnergyMonitorJavaSide();
-		} else if (args[0].equalsIgnoreCase("C")) {
-			m = new AsyncEnergyMonitorCSide(args[1]);
-		} else {
-			System.out.println("invalid args[0]: "+args[0]);
-			System.exit(2);
-		}
-		m.activate();
-		m.setSamplingRate(12);
-
-		m.start();
-		sleepPrint(3000);
-		m.stop();
-
-		System.out.println(m);
-		int k = 5;
-		System.out.println(Arrays.deepToString(m.getLastKSamples_Arrays(k)));
-		System.out.println();
-		System.out.println(Arrays.toString(m.getLastKTimestamps(k)));
-		System.out.println();
-		System.out.println(Arrays.toString(m.getLastKSamples(m.getNumSamples())));
-
-		String name = args[0] + ((args.length == 1) ? "" : args[1]);
-
-		m.writeFileMetadata("AsyncMonitor-"+name+"-metainfo.json");
-		m.writeFileCSV("AsyncMonitor-"+name+".csv");
-
-		m.reset();
-		m.deactivate();
-	}
 }
