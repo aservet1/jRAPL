@@ -55,20 +55,4 @@ public class EnergyMonitor extends EnergyManager {
 		return diff;
     }
     
-    protected static String csvPrimitiveArray(double[] a) {
-		String s = new String();
-		int i; for (i = 0; i < ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET-1; i++) {
-			s += String.format("%.6f",a[i]) + ",";
-		} s += String.format("%.6f",a[i]);
-		return s;
-	}
-
-	protected static String csvPrimitiveArray(double[] a, Instant timestamp) {
-		return String.format("%s,%d", csvPrimitiveArray(a), Utils.timestampToUsec(timestamp));
-	}
-
-	protected static String csvPrimitiveArray(double[] a, Duration elapsedTime) {
-		return String.format("%s,%d", csvPrimitiveArray(a), Utils.durationToUsec(elapsedTime));
-	}
-
 }
