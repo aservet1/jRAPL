@@ -106,5 +106,5 @@ public final class ArchSpec {
 			"PKG_SUPPORTED: " + PKG_SUPPORTED
 		);
 	}
-	
+
 }
