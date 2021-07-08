@@ -1,13 +1,11 @@
 
 << Immediate Todos:
-	- finish the edits David asked for
 	- whats wrong with JMH JNI overhead
 	- compare JMH JNI overhead results to full runtime	
 	- Properly graph sampling efficiency
 
 << Semi Immediate Todos:
 	- Run experiments on several computers
-	- CSide-GetLastK needs to me made to work for a multi-socket machine. Right not it just returns placeholder data...
 	- Get a complete lists of the benchmarks / more info about dacapo-evalution-git+309e1fa.jar
 	- make all JSON dumps have camelCase key names, and fix analysis scripts to match those names
 
@@ -38,5 +36,4 @@ Ideas for future development:
 	- Instead of returning an EnergyStats object as a human readable string across the JNI, serialize the raw bits of the struct, return that
 		as a string, and then write a java-side parsing function. That's probably going to be hard to write but the string brought across will
 		be smaller, and it'll probably be less computation overall, unless if the Java hella-optimizes string splitting and atoi type computations
-
 
