@@ -1,0 +1,84 @@
+\relax 
+\@writefile{toc}{\contentsline {section}{\numberline {1}Intro}{1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background}{1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}RAPL}{1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}MSR Interface}{1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Benchmarking Tools Used}{1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.1}DaCapo Benchmark Suite}{1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.2}Java MicroBenchmark Harness (JMH)}{2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Methodology}{2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}System Specifications}{2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Energy Monitor Implementations}{2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Overview of the Experiments}{3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}Energy Update Time}{3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.2}JNI Interface Runtime Overhead}{3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.3}Reading One Energy Value from One Power Domain}{3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.4}SyncEnergyMonitor Sampling Runtime}{4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.5}Comparing different aspects of the different implementations of the AsyncEnergyMonitor}{4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Basic Characteristics}{6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Energy Update Time}{6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Energy Update Time (microseconds)}}{7}\protected@file@percent }
+\newlabel{fig:PKG-rapl-counter}{{1}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Results}{7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Average Time Between Samples}{7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces average reported usecs between 1 msec sample}}{8}\protected@file@percent }
+\newlabel{fig:xalan-PKG-Time-scatter}{{2}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Average Sample Energy}{8}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces average energy per sample for dram}}{9}\protected@file@percent }
+\newlabel{fig:xalan-PKG-Time-scatter}{{3}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces average energy per sample for pkg}}{10}\protected@file@percent }
+\newlabel{fig:xalan-PKG-Time-scatter}{{4}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}JNI Runtime Overhead}{10}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Runtime for EnergyStatCheck on CSide}}{11}\protected@file@percent }
+\newlabel{fig:jolteon-jmh-runtime-energystatcheck-c}{{5}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Runtime for EnergyStatCheck on JavaSide}}{11}\protected@file@percent }
+\newlabel{fig:jolteon-jmh-runtime-energystatcheck-java}{{6}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Runtime for ProfileInit on CSide}}{12}\protected@file@percent }
+\newlabel{fig:jolteon-jmh-runtime-profileinit-c}{{7}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Runtime for ProfileInit on JavaSide}}{12}\protected@file@percent }
+\newlabel{fig:jolteon-jmh-runtime-profileinit-java}{{8}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Runtime for ProfileDealloc on CSide}}{13}\protected@file@percent }
+\newlabel{fig:jolteon-jmh-runtime-profileDealloc-c}{{9}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Runtime for ProfileDealloc on JavaSide}}{13}\protected@file@percent }
+\newlabel{fig:jolteon-jmh-runtime-profileDealloc-java}{{10}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Time to Read One Energy Value from MSR}{13}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Runtime to read MSR for CORE RAPL counter}}{14}\protected@file@percent }
+\newlabel{fig:CORE-rapl-counter}{{11}{14}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Runtime to read MSR for DRAM RAPL counter}}{14}\protected@file@percent }
+\newlabel{fig:DRAM-rapl-counter}{{12}{14}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Runtime to read MSR for PKG RAPL counter}}{15}\protected@file@percent }
+\newlabel{fig:PKG-rapl-counter}{{13}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Java SyncEnergyMonitor Sampling Runtime}{15}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Runtimes per sampling function}}{15}\protected@file@percent }
+\newlabel{fig:PKG-rapl-counter}{{14}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}AsyncEnergyMonitor Comparison}{16}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.6.1}Sampling Efficiency}{16}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Average sampling efficiency per benchmark}}{16}\protected@file@percent }
+\newlabel{fig:samplingefficiency_perbench}{{15}{16}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Average sampling effieicency across all benchmarks}}{17}\protected@file@percent }
+\newlabel{fig:samplingefficiency_overall}{{16}{17}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}Memory Footprint}{18}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Memory Overhead of Each Monitor Type}}{18}\protected@file@percent }
+\newlabel{fig:samplingefficiency_perbench}{{17}{18}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Proposed other experiments}{19}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Better C side sleeping}{19}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Shrinking the size of the data brought across the JNI}{19}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Appendix}{19}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Memory Footprint of Object Sample vs Primitive Array Sample}{19}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}MSR update rate extra plots}{20}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces How long it takes for the PKG\_socket2 MSR to update (microseconds)}}{20}\protected@file@percent }
+\newlabel{fig:PKG-rapl-counter}{{18}{20}}
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces How long it takes for the PKG\_socket2 MSR to update (microseconds)}}{21}\protected@file@percent }
+\newlabel{fig:PKG-rapl-counter}{{19}{21}}
+\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces How long it takes for the PKG\_socket2 MSR to update (microseconds)}}{21}\protected@file@percent }
+\newlabel{fig:PKG-rapl-counter}{{20}{21}}
+\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces How long it takes for the PKG\_socket2 MSR to update (microseconds)}}{22}\protected@file@percent }
+\newlabel{fig:PKG-rapl-counter}{{21}{22}}
+\@writefile{lof}{\contentsline {figure}{\numberline {22}{\ignorespaces How long it takes for the PKG\_socket2 MSR to update (microseconds)}}{22}\protected@file@percent }
+\newlabel{fig:PKG-rapl-counter}{{22}{22}}
+\@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces How long it takes for the PKG\_socket2 MSR to update (microseconds)}}{23}\protected@file@percent }
+\newlabel{fig:PKG-rapl-counter}{{23}{23}}
+\@writefile{lof}{\contentsline {figure}{\numberline {24}{\ignorespaces How long it takes for the PKG\_socket2 MSR to update (microseconds)}}{23}\protected@file@percent }
+\newlabel{fig:PKG-rapl-counter}{{24}{23}}
+\@writefile{lof}{\contentsline {figure}{\numberline {25}{\ignorespaces How long it takes for the PKG\_socket2 MSR to update (microseconds)}}{24}\protected@file@percent }
+\newlabel{fig:PKG-rapl-counter}{{25}{24}}

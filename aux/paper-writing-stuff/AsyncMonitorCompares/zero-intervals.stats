@@ -1,0 +1,66 @@
+C Zero Interval Stats DRAM:
+  mean: 14.545727436461878
+  stdev: 1.6884433448880687
+  mode: 14
+  min: 2
+  max: 22
+  num zero intervals: 4997
+  -------------------------------------  
+Java Zero Interval Stats DRAM:
+  mean: 176.19886593762658
+  stdev: 29.157874258663455
+  mode: 187
+  min: 3
+  max: 242
+  num zero intervals: 4938
+==========================================
+C Zero Interval Stats GPU:
+  mean: 6.124828028982849
+  stdev: 55.453642839981484
+  mode: 0
+  min: 0
+  max: 772
+  num zero intervals: 10903
+  -------------------------------------  
+Java Zero Interval Stats GPU:
+  mean: 76.84768683274021
+  stdev: 641.7644413001219
+  mode: 11
+  min: 0
+  max: 8504
+  num zero intervals: 11240
+==========================================
+C Zero Interval Stats CORE:
+  mean: 0.6705950665605712
+  stdev: 0.9620917609380989
+  mode: 0
+  min: 0
+  max: 8
+  num zero intervals: 46499
+  -------------------------------------  
+Java Zero Interval Stats CORE:
+  mean: 17.63027231886218
+  stdev: 9.82004833013419
+  mode: 11
+  min: 0
+  max: 109
+  num zero intervals: 46967
+==========================================
+C Zero Interval Stats PKG:
+  mean: 14.542617046818728
+  stdev: 1.6965292336620446
+  mode: 14
+  min: 0
+  max: 22
+  num zero intervals: 4998
+  -------------------------------------  
+Java Zero Interval Stats PKG:
+  mean: 176.19886593762658
+  stdev: 29.07826013375229
+  mode: 192
+  min: 3
+  max: 241
+  num zero intervals: 4938
+==========================================
+Total C readings:	77682
+Total Java readings:	875008

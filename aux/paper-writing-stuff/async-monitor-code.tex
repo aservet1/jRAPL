@@ -1,0 +1,53 @@
+
+%% Not included anywhere in the paper. Old stuff I wrote, might or might not be useful later
+
+\section{All of my Async Monitor - Related Code}
+    My intention behind the code is that you'd use an object of the abstract class AsyncEnergyMonitor, and initialize it to be one of the sub-classes, CSide and JavaSide. So you'd do \texttt{AsyncEnergyMonitor m = new AsyncEnergyMonitorJavaSide()} or \texttt{AsyncEnergyMonitor m = new AsyncEnergyMonitorCSide()}. All of the core utilities
+    are defined or declared in the top-level abstract class, so you can use them "interchangeably" with no difference after they've been declared. You can see this
+    in the sample main() driver for AsyncEnergyMonitor.java. It picks whether to initialize the AsyncEnergyMonitor as a CSide or JavaSide object based on command line arguments, and then
+    the rest of the main driver's functionality works regardless of what kind it was instantiated as.
+   
+\subsection{AsyncEnergyMonitor.java}
+    \begin{framed}
+        \lstset{language=java}
+        \lstinputlisting[tabsize=2]{java-src/AsyncEnergyMonitor.java}
+    \end{framed}
+\subsection{AsyncEnergyMonitorJavaSide.java}
+    \begin{framed}
+        \lstset{language=java}
+        \lstinputlisting[tabsize=2]{java-src/AsyncEnergyMonitorJavaSide.java}
+    \end{framed}
+\subsection{AsyncEnergyMonitorCSide.java}
+    \begin{framed}
+        \lstset{language=java}
+        \lstinputlisting[tabsize=2]{java-src/AsyncEnergyMonitorCSide.java}
+    \end{framed}
+\subsection{All of the C Side Code Related to AsyncEnergyMonitorCSide}
+    \subsubsection{JNI Wrapper Calls}
+        \begin{framed}
+            \lstset{language=C}
+            \lstinputlisting[tabsize=2]{native-src/jni-exports/AsyncEnergyMonitor.c}
+        \end{framed}
+    \subsubsection{AsyncEnergyMonitor.h}
+       \begin{framed}
+            \lstset{language=C}
+            \lstinputlisting[tabsize=2]{native-src/just-c/AsyncEnergyMonitor.h}
+        \end{framed}
+    \subsubsection{AsyncEnergyMonitor.c}
+        \begin{framed}
+            \lstset{language=C}
+            \lstinputlisting[tabsize=2]{native-src/just-c/AsyncEnergyMonitor.c}
+        \end{framed}
+    Different CSide Data Storage Methods for the AsyncEnergyMonitor
+    \begin{itemize}
+       \item CSideDataStorage.h
+            \begin{framed}
+                \lstset{language=C}
+                \lstinputlisting[tabsize=2]{native-src/just-c/CSideDataStorage.h}
+            \end{framed}
+        \item CSideDataStorage.c
+            \begin{framed}
+                \lstset{language=C}
+                \lstinputlisting[tabsize=2]{native-src/just-c/CSideDataStorage.c}
+            \end{framed}
+    \end{itemize}

@@ -1,0 +1,162 @@
+\section{Methodology}
+
+\subsection{System Specifications}
+
+%We evaluate \ourframework{} on a dual socket Intel E5-2630 v4 2.20 GHz CPU server, with 64GB DDR4 of RAM. Each socket CPU has 10 cores, 20 ``virtual'' cores with hyper threading enabled. The machine runs Debian 4.9 OS, Linux kernel 4.9, with the default Debian \texttt{powersave} governor. All experiments were run with Java 11 on top of Hotspot VM build 11.0.2+9-LTS.
+
+
+\anote{Here's the specs for Jolteon (System A) and my computer (System B), are we doing this on any other of our servers? Or another laptop? I don't have access to a desktop that I know of.}
+\begin{center}
+ \begin{tabular}{ ||p{3cm} | p{4cm} | p{4cm} || }
+ \hline
+ \textbf{Name}  & \textbf{System A} & \textbf{System B}   \\
+ \hline\hline
+ Sockets        &   2       & 1              \\
+ \hline
+ Cores          & 20        & ?                 \\
+ \hline
+ Virtual Cores  &  40       & 8              \\
+ \hline
+ OS             & Debian 4.9    & Mint 20  \\
+ \hline
+ Linux Kernel   &  4.9          & 5.4.0-74-generic \\
+ \hline
+ Micro-Architecture &   Broadwell EP & KabyLake       \\
+ \hline
+ Memory Size    &   62G     & 15Gi  \\
+ \hline
+ Java Version   & java 11.0.2 2019-01-15 LTS  & openjdk 11.0.11 2021-04-20 \\
+ \hline
+ Java VM        & Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.2+9-LTS, mixed mode) & OpenJDK 64-Bit Server VM (build 11.0.11+9-Ubuntu-0ubuntu2.20.04, mixed mode, sharing) \\
+ \hline
+ Java Runtime   & Java(TM) SE 18.9 (build 11.0.2+9-LTS) & OpenJDK (build 11.0.11+9-Ubuntu-0ubuntu2.20.04)  \\
+ \hline
+ Freq Governor &   \texttt{powersave} &  ?   \\
+ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Energy Monitor Implementations}
+
+jRAPL provides synchronous and asynchronous modes of energy monitoring. The former returns timestamped energy samples on demand, whenever the main program asks. The latter runs on a thread, collecting and storing timestamped samples at a set sampling rate, in between calls to \texttt{monitor.start()} and \texttt{monitor.stop()} methods.
+
+We have three implementations of the asynchronous energy monitor. One is implemented in Java, running on a Java thread and storing samples in an \texttt{ArrayList}, at a set sampling rate. The other two are implemented in C, controlled by Java methods. They both run on a \texttt{pthread} and collect energy samples at a set sampling rate. The difference between the two is their underlying data structure. One uses a dynamic array list, size doubled by \texttt{realloc} whenever filled. The other uses a unrolled linked list, where each node contains an array of samples. The three monitor types' performance is tested and compared with the DaCapo benchmarks.
+
+\subsection{Overview of the Experiments}
+\dnote{Here, explain how many times each experiment is run. How do you average. Do you discard any experiments when many iterations are done etc}
+
+\subsubsection{Energy Update Time}
+\anote{This is already written about in the ``basic characteristics" section. Should i rewrite here? Or move that info to this section?}
+
+\subsubsection{JNI Interface Runtime Overhead}
+    There is a slight cost to accessing this data in a Java application, instead of doing it all in C. This cost comes with the Java Native Interface. This experiment measures the runtime overhead of the JNI call in getting an energy reading.
+    
+    \textbf{JMH Parameters:} 10 second trials, ran as many times as possible in the 10 second period. 1 fork, 5 warmup iterations (for which results are discarded), 25 measurement iterations. Results are cumulative (not averaged) for the 25 iterations.
+    
+    We used our own timestamping as opposed to JMH's \texttt{Mode.AverageTime} utility because 1) we wanted individual readings to plot all of them as opposed to just the average, as there were some very high values that threw the plots off (but also very rare, and could be removed with the 3-standard-deviation test) and 2) we had to timestamp stuff on the C side, which there was no way JMH could do for us. So we implemented our own version of timestamping.
+    
+    We used the C \texttt{gettimeofday()} timestamping function. It fills a \texttt{struct 
+    timveval} with two fields: seconds since epoch, and microseconds since seconds. These fields can be combined to microseconds since epoch, which can then be used to get microsecond runtime.
+    
+    To measure C-side runtime, we defined native JNI a function called \texttt{timeEnergyStatCheck()}. This function would collect and energy sample, but instead of returning it, it would return the runtime in microseconds.
+    
+    To measure Java side runtime, we still used \texttt{gettimeofday()}, for a consistent timer. In native memory, we have two \texttt{struct timeval}s statically allocated. Then we have a JNI native function, \texttt{ctimeStart()} which stores the result of \texttt{gettimeofday()} in one struct, \texttt{ctimeStop()} which stores the result of \texttt{gettimeofday()} in the second struct, and \texttt{ctimeElapsed()}, which converts each struct to microseconds since epoch, subtracts the latter from the former, and returns the microsecond elapsed time.
+    
+    When a microsecond runtime is calculated, it's stored in a \texttt{HashMap<Long,Long>}, representing a histogram. The histogram contains the runtimes for all iterations, excluding warmups. There is a separate histogram for Java-side calls and one for C-side calls. They are each dumped to file for further processing.
+    
+    Each histogram is then processed to generate an average runtime, its standard deviation, and a visual plot of the histogram. The plots exclude values outside the bounds of 3 standard deviations from the mean.
+
+\subsubsection{Reading One Energy Value from One Power Domain}
+    \anote{Should this be for just reading the MSR? Or for reading the MSR and converting to Joules? For this experiment, it's just measuring the call to read\_msr(), which is a wrapper around pread(). Converting to Joules would be this step plus multiplying it by the RAPL energy unit. I'll write about it as if that's what we're measuring, although it'd be very easy to update my experiment to incorporate "converting to joules" as part of time runtime measured.}
+    
+    Runtimes are collected in JMH, but with our own timing utilities, as JMH does not allow for specific profiling of native sections of code. JMH is still useful, however, for the other utilities it provides, such as convenient settings for iterations, warmups, preventing unwarranted optimizations, etc.
+    
+    JMH settings: 1 fork, 5 warmups, 25 measured iterations. Each iteration calls the benchmark method as many times as possible over the course of 10 seconds. Every time a value is read, a busywait loop that counts to 100 (with a \texttt{BlackHole} object to ensure that it doesn't get optimized) is used to give buffer time between MSR reads, since MSRs shut down and reject readings, after a threshold of frequent repeated attempts.
+    
+    The time to read an MSR is done with a native method, \texttt{usecTimeMSRRead(int powerDomain)}, whose parameter takes a constant identifier, identifying which MSR is to be read. It then makes a reading from the MSR, surrounded by timestamps using \texttt{gettimeofday()}. The microsecond difference of timestamps is taken and returned to Java, storing it in a \texttt{HashMap<Long,Logn>} representing a histogram of the frequency of said runtime.
+    
+    The histograms represent every runtime gathered across all iterations, not including warmups. At the end of JMH, they are dumped to file, and parsed by another script, which constructs and average and standard deviation of the runtimes, and plots the histogram, excluding the infrequent readings outside the bounds of 3 standard deviations from the mean; we encounter a small amount of those which make the plots illegible.
+
+\subsubsection{SyncEnergyMonitor Sampling Runtime}
+    This one shows the entire runtime ovherhead for taking an energy sample with the SyncEnergyMonitor. Other experiments showcased the overhead of certain parts, like reading from the MSR, or the overhead the JNI involves. This one is the full sampling, from getting the readings in C to representing them as a Java energy sample object.
+
+    The experiment is very straightforward: run a JMH benchmark set to measure average execution time. This requires little to no extra configuration, as it is one of the basic functionalities that JMH provides.
+
+    Parameters: 1 JVM fork, 7 warmup iterations, 30 measured iterations. Each iteration takes as many energy samples as possible in 10 seconds, taking the average of the interation. It then does an overall aggregate of the mean and error of the runtime.
+
+\subsubsection{Comparing different aspects of the different implementations of the AsyncEnergyMonitor}
+    For these experiments, we used DaCapo Benchmarks to have a variety of runtime environments for the AsyncEnergyMonitors to behave in.
+
+    The experiments were executed with the callback harness, an interface \anote{What's the appropriate word? Interface? Framework? Harness? I think it's harness...} DaCapo provides where a programmer can set up behavior to run before and after a benchmark executes, which lends itself really well to an asynchronous energy monitor. The monitor simply starts up before the benchmark and stops collecting samples after, running in a background thread during the execution of the benchmark and collecting energy samples. Samples are collected at a sampling rate of 1ms, which we determined to have the highest throughput in another experiment.
+
+    After benchmark finishes and the monitor stops collecting samples, meta info (monitor lifetime, number of samples collected, and sampling rate) and the energy samples collected are dumped to two separate files, and then the monitor's data is flushed. For each benchmark, 30 iterations were run and the first 5 treated as warm ups, for which data is discarded. Each set of iterations was run with each the three types of monitors. \anote{I take it that I need to in-depth describe the AsyncEnergyMonitor and all of its implementations in a section for Methodology}
+
+    During all of the experiments we also run an Asynchronous Memory Monitor, to measure memory footprint. This monitor is structured similar to the AsyncEnergyMonitor; it has an internal method that runs in a thread which loops, collecting samples at a set millisecond rate (1ms in this experiment), and is started or stopped by the main thread. Memory ``samples" are assessed with calls to \texttt{Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()}, so each sample is the amount of memory the JVM is using at a given point. Results of the memory monitor are dumped to file and flushed from memory any time that the energy monitors are, as described above. \anote{Should I mention that this one time 90 out of the 9,374,973 samples I collected had negative values, and that I've chalked that up to a slight misalignment in the memory tool that I can just discard? I don't store a memory reading if it's negative.}
+
+
+    \textbf{Benchmarks:}
+        DaCapo benchmarks can be run at different sizes. Some only have one default size, but others can also be made smaller or larger. I used the largest allowed for each, so as to collect data for as much runtime as possible. I've also provided their average runtime as gathered from my experiments, to get an idea for how long each of them runs \anote{average benchmark runtime might be useless, since I also record each monitor's lifetime.}
+
+                    \begin{center}
+                      \begin{tabular}{| c || c || c |}
+                      \hline
+                      \textbf{benchmark} &   \textbf{size}    & \textbf{avg sec}\\
+                      \hline\hline
+                      avrora	&	large	&   154.557 \\
+                      batik     &	default	&   29.569    \\
+                      biojava   &	default	&   53.969    \\
+                      cassandra	&	default	&   5.395    \\
+                      eclipse	&	large	&   123.157    \\
+                      fop       &	default	&   2.605    \\
+                      graphchi	&	default	&   2.270    \\
+                      h2        &	large	&   154.100    \\
+                      h2o       &	default	&   62.303    \\
+                      jme       &	default	&   9.202    \\
+                      jython	&	default	&   23.156    \\
+                      luindex	&	default	&   2.164    \\
+                      lusearch	&	default	&   7.55    \\
+                      pmd       &	large	&   121.198    \\
+                      sunflow	&	large	&   107.652    \\
+                      tomcat	&	large	&   34.808    \\
+                      tradebeans&	default	&   66.575    \\
+                      tradesoap	&	huge	&   259.876     \\
+                      xalan     &	default &   17.008    \\
+                      zxing     &	default &   21.67    \\
+                     \hline
+                    \end{tabular}
+                    \end{center}
+
+    \begin{itemize}
+        \item \textbf{Sampling Efficiency (what is the correct name?)}:
+            This analysis on the data from above experiments compares the sampling efficiency of the three monitors. While each of the monitors is set to take samples every millisecond, there is some error involved. The sampling rate is implemented by sleeping before taking another sample. This means that the sampling loop will sleep for 1ms, and then take and store a sample, which has some extra runtime overhead. \anote{Should I show the code for how sleep works in each implementation, or at least describe it better?} The runtime of taking a sample involves different runtime, depending on its implementation.
+            
+            While sleeping is accruate to milliseconds, it's not accurate to microseconds, which may also impact the sampling efficiency. A few microseconds over the expected 1000 per millisecond can add up and affect the sampling efficiency.
+            
+            More on the empirical microsecond time between samples is described in the next section, ``time per sample."
+            
+            This experiment quantifies the impact of the overhead. If the monitors had a perfect sampling rate, the amount of samples collected would match, or be very close to, the lifetime in milliseconds of the monitor. Dividing number of samples by the lifetime of the monitor would be ~1. As expected, however, this is not the case. I call this quotient the sampling efficiency, the closer to 1 it is, the higher the sampling efficiency.
+            
+            The energy monitor records number of samples and its lifetime in milliseconds as metadata when dumped to disk after every iteration. We aggregate these measurements with mean and standard deviation. Aggregates are done in two ways: grouped by monitor across all benchmarks and iterations, and grouped both by monitor and by benchmark across all iterations. \anote{We'll probably only end up talking about ``grouped by monitor across all benchmarks and all iterations," but I can write about and include results for both in case useful info comes up until we decide to get rid of that, or appendix it.}
+        
+        \item \textbf{Time Per Sample}:
+            Similar to the sampling efficiency, we observe the empirical time between each sample and compare this value between the monitor implementations. In theory, the time should be 1000 microseconds, as per the 1ms sampling rate, but the implementation of the monitors and imperfections in the nature of sleeping (you can't say, for example, ask the OS to un-schedule a thread/process for exactly 86 clock cycles) makes this vary.
+            
+            Every energy sample is also collected with a timestamp, recorded in the disk dump as microseconds since epoch. The time between any two given samples can be calculated with a simple subtraction. A list of ``time between each sample" can be generated with \texttt{[ timestamps[i]-timestamps[i-1] for i in range(1,len(timestamps)) ]}. For each iteration, we generate an average and standard deviation of microseconds per sample.
+            
+            We then aggregate each iteration in two ways: across all benchmarks and iterations for a given monitor, and across all iterations for a given benchmark for a given monitor. In both these cases, we produce an average and standard deviation \anote{or do I call it uncertainty now?} based on the average and standard deviation of each individual iteration. The aggregated average is calculated by averaging each individual average weighted by the number of samples that average represents. The aggregate standard deviation is calculated as an ``average" where each step of the average (addition and division) uses propagation of uncertainty techniques. \anote{I don't know how much the propagation of uncertainty thing is common knowledge and its clear what I mean by that. If necessary, I can go into detail about how the summation of the average is actually a summation of the squares of each standard deviation, and the division of that by the number of samples actually needs to be a division by N**2. I can also cite where I read about the propagation of uncertainty techniques, if need be. It's the wikipedia page that Timur sent in one of the meetings where this came up, in regards to how to propagate uncertainty for percent difference.}
+        
+        \item \textbf{Joules Per Sample}:
+            From the data recorded of these experiments, we measure the amount of joules captured per sample. We have a CSV output of the raw energy samples (total accumulated count). To get joules for one sample, subtract the joules between two lines. \anote{Should I mention how I toss out the very rare instances of wraparound?}. Per monitor type per powerdomain per socket, we have a list of the joules collected per sample, generated by \texttt{[ energy[i]-energy[i-1] for i in range(1,len(energy)) ]}. 
+            \anote{The way I aggregate these results is pretty much the exact same as the last paragraph of the ``Time per Sample" section, I just do it with the energy values instead of the timestamps. I do the aggregation for each powerdomain. Is there a more central place to put that paragraph so I can reference it where I need? I'm also going to be referencing that same information in the ``Memory Footprint" section below.}
+        
+        \item \textbf{Memory footprint}:
+        
+        With the above runs of the experiment described, this experiment involves one extra run, with no AsyncEnergyMonitor running, but still with an AsyncMemoryMonitor running. This is to demonstrate the normal memory footprint of the benchmark, so we can calculate the impact of a jRAPL monitor on memory. The energy monitor is never activated and therefore none of the jRAPL utilities are, and no native code is loaded from jRAPL into the runtime. This extra set of experiments is just a memory profiling of the DaCapo benchmark, in addition to the ones with a memory profiling of the jRAPL monitor.
+        
+        \anote{To be clear, we're only doing average and standard deviation? Nothing about min and max and median? We calculated those as well, and I can report those if they matter, although I think that was just to ``debug" some weird results in the data, not to report in the end. I can include either of those three measurements if they are useful, though.}
+        
+        After each iteration, a series of memory samples is dumped to disk. We aggregate each iteration's data to an average and standard deviation. We then aggregate the per-iteration results in the same way as described above (per monitor type across all benchmarks and iterations, and per monitor type per benchmarks across all iterations, with the same meta-average and meta-stdev formulas described above), with the no-jRAPL set of experiments also considered a ``monitor type".
+        
+        Once we have averages and standard deviations of memory activity per benchmark per monitor type, we normalize against the average and standard deviation of the set of runs done with no jRAPL monitor running. That way we can isolate the impact on memory of the monitor. The normalized average is a percent difference against the no-jRAPL average, and the normalized standard deviation is also a percent difference, but with every operation (addition subtraction, and division) being its ``propagation of error" equivalent. \anote{Like I mentioned above when describing my ``average standard deviation" algorithm, if it's not common knowledge what I mean by propagation of error, I can go more in-depth on what I mean and how the algorithm actually works. }
+        
+    \end{itemize}

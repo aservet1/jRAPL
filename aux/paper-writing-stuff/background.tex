@@ -1,0 +1,26 @@
+\section{Background}
+
+\anote{This will require citations, right?}
+
+\subsection{RAPL}
+RAPL stands for Runtime Average Power Limiting. RAPL is an interface on Intel processors to enforce power consumption limits, with several interfaces provided, one being energy status, the interface we explore in this paper. The interface is provided through on-chip Model Specific registers (MSRs).
+
+
+
+\subsection{MSR Interface}
+The Intel MSR module is available on Intel machines for Linux systems. Linux provides pseudo file system that provides interface to MSR registers, read/writable at \texttt{/dev/cpu/(core)/msr}. Every 8 bytes of the pseudo-file maps to a 64-bit MSR register, which can be read/written, depending on the RAPL interface that the register facilitates. The sections of the pseudo-file can be accessed \texttt{pread()} and \texttt{pwrite()}, binary I/O functions in C which set a specified number of bytes at a specified offset. Each MSR has a set offset in the pseudo-file.
+
+%This library reads a selection of these registers which report energy consumption for various computer components such as DRAM, CPU cores, CPU Package, or GPU, herein referred to as "power domains". \anote{PSys is another power domain, energy for the entire system on chip. It's a new thing though, and Jolteon doesn't have it. Only 4 architectures that I know of do. My computer is one of them.}
+
+\subsection{Benchmarking Tools Used}
+We for the most part used two external tools for measuring performance and observing behavior of jRAPL: the DaCapo Benchmark Suite and the Java MicroBenchmark Harness (JMH).
+
+\subsubsection{DaCapo Benchmark Suite}
+DaCapo is a set of open-source, real world applications that run with predictable behaviour, which can act as a benchmark for typical behaviour in different situations. Some benchmarks execute a high volume of database queries, others do a lot of math on the CPU, others have a lot of in-memory operations, so on and so forth. We observed the behaviour of jRAPL monitoring energy throughout all of the available benchmarks, to get a realistic picture of how the tool performs and behaves in different scenarios. This benchmarking paradigm serves to show program behaviour over long periods of time, on the order of minutes or hours.
+
+\subsubsection{Java MicroBenchmark Harness (JMH)}
+On the flipside of DaCapo demonstrating program behaviour over long periods of time, the Java MicroBenchmark Harness is for measuring smaller, precise sections of the program, such as runtime of certain blocks of code. Because of Java runtime optimizations, programmers who write their own test drivers for these types of benchmarks often arrive at pitfalls, where their driver is optimized a different way than would be observed in realistic code scenarios. A common scenario to test runtime is calling a method in a loop for thousands of back-to-back timestamped iterations. However, the JVM might get the idea that the work done in the loop is useless and discards some or all of the work being done in the method. JMH provides utilities to avoid these unwarranted optimizations such as these in benchmark code.
+
+JMH also provides an easy setup to writing your benchmark driver which virtually every driver needs, but would be tedious / redundant / a source of potential errors for every programmer to write themselves. This includes easy control over the number and duration of trials, number of warmup trials, amount of separate JVM forks to run, and more. Selecting the benchmark mode (ie throughput or average runtime) is as simple as changing a Java annotation, and outputs in several common data exchange formats, including json and csv.
+
+\anote{Is it appropriate to bring up an example of my own issue that JMH solved? I'm thinking about how when I wrote my own runtime driver for the JNI overhead test, it was showing little to no difference, and sometimes even the C side call was a few usec faster than the Java side call. Turns out it was because the JVM optimized out the actually important part, which was building and returning the string of energy readings. JMH's \texttt{BlackHole} tool made sure to trick the JVM into thinking that some other part of the program was consuming the return value, thereby not doing a Dead Code elimination.}
