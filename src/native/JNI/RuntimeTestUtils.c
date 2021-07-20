@@ -39,13 +39,6 @@ JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_deallocCSideTiming(JNIEnv* en
 	} free(fd);
 }
 
-JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeProfileInit(JNIEnv* env, jclass jcls) {
-	STARTSTAMP;
-	Java_jRAPL_EnergyManager_profileInit(env, jcls);
-	STOPSTAMP;
-	return DIFF_USEC;
-}
-
 static jstring str;
 JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls) {
 	STARTSTAMP;
@@ -53,27 +46,12 @@ JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIE
 	STOPSTAMP;
 	return DIFF_USEC;
 }
-
 /**	This will be run and timed from the Java side. It's meant to show that there's no overhead to calling
  *	void JNI functions. This should have the same runtime as usecTimeEnergyStatCheck(), even though the
  *	timestamps for this one surround a Java call.
  */
 JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_energyStatCheckNoReturnValue(JNIEnv* env, jclass jcls) {
-	Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls);
-}
-
-JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_timechecker(JNIEnv* env, jclass jcls) {
-	STARTSTAMP;
-	sleep_millisecond(15);
-	STOPSTAMP;
-	return DIFF_USEC;
-}
-
-JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeProfileDealloc(JNIEnv* env, jclass jcls) {
-	STARTSTAMP;
-	Java_jRAPL_EnergyManager_profileDealloc(env, jcls);
-	STOPSTAMP;
-	return DIFF_USEC;
+	str = Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls);
 }
 
 #define RETURN_EMPTY_ARRAY						\
@@ -138,3 +116,26 @@ JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_ctimeStop(JNIEnv* env, jclass
 JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_ctimeElapsedUsec(JNIEnv* env, jclass jcls) {
 	return (jlong) ((tvStop.tv_sec*1000000+tvStop.tv_usec) - (tvStart.tv_sec*1000000+tvStart.tv_usec));
 }
+
+
+
+// JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeProfileInit(JNIEnv* env, jclass jcls) {
+// 	STARTSTAMP;
+// 	Java_jRAPL_EnergyManager_profileInit(env, jcls);
+// 	STOPSTAMP;
+// 	return DIFF_USEC;
+// }
+
+// JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_timechecker(JNIEnv* env, jclass jcls) {
+// 	STARTSTAMP;
+// 	sleep_millisecond(15);
+// 	STOPSTAMP;
+// 	return DIFF_USEC;
+// }
+
+// JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeProfileDealloc(JNIEnv* env, jclass jcls) {
+// 	STARTSTAMP;
+// 	Java_jRAPL_EnergyManager_profileDealloc(env, jcls);
+// 	STOPSTAMP;
+// 	return DIFF_USEC;
+// }
