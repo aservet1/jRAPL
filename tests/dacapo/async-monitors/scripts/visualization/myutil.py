@@ -1,5 +1,4 @@
 import os
-import json
 
 def parse_cmdline_args(argv):
     try:
