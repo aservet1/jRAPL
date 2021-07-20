@@ -48,6 +48,7 @@ public class CSideCalls {
     public static class State_ {
 		private HashMap<Long, Long> histogram = new HashMap<Long, Long>();
 
+		protected String dataDir = System.getProperty("dataDir");
 		protected String name;
 
 		public void addValue(long microSeconds) {
@@ -84,7 +85,7 @@ public class CSideCalls {
 		public void doFinalTeardown() {
 			RuntimeTestUtils.deallocCSideTiming();
 			try {
-				FileWriter myHistogramWriter = new FileWriter("data/CSide_"+name+"_histogram.data");
+				FileWriter myHistogramWriter = new FileWriter(dataDir + "/CSide_"+name+"_histogram.data");
 				histogram.forEach((k, v) -> {
 					try {
 						myHistogramWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());

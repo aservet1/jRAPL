@@ -45,6 +45,8 @@ public class ReadMSR {
 	@State(Scope.Thread)
 	public static class MyState {
 
+		protected String dataDir = System.getProperty("dataDir");
+
 		protected String NAME;
 
 		private HashMap<Long, Long> histogram = new HashMap<>();
@@ -90,7 +92,7 @@ public class ReadMSR {
 			RuntimeTestUtils.deallocCSideTiming();
 			try {
 				System.out.println("Successfully wrote to the file.");
-				FileWriter myHistogramWriter = new FileWriter("data/readMSR_"+NAME+"_histogram.data");
+				FileWriter myHistogramWriter = new FileWriter(dataDir + "/readMSR_"+NAME+"_histogram.data");
 				histogram.forEach((k, v) -> {
 					try {
 						myHistogramWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());

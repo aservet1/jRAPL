@@ -2,13 +2,25 @@
 
 #ignoreLock=-Djmh.ignoreLock=true
 
+if [ -z $1 ]
+then
+	echo "usage $0 data_dir"
+	exit 2
+elif [ -d $1 ]
+then
+	echo "$1 already exists."
+	exit 1
+else
+	data_dir=$1
+	mkdir $data_dir
+fi
+
+set -e
 sudo -v
 
-mvn clean install && ./transferjars.sh ../../../src/java/target/jRAPL-1.0.jar target/benchmarks.jar
-[ $? == 0 ] || exit
+mvn clean install && ./scripts/transferjars.sh jRAPL-1.0.jar target/benchmarks.jar
 
-rm -rf data && mkdir data # where results will be written to
-sudo java -jar $ignoreLock target/benchmarks.jar
+sudo java -DdataDir=$data_dir -jar $ignoreLock target/benchmarks.jar 
 
 echo ">> jmh done, now analyzing results"
 
