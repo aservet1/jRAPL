@@ -2,13 +2,14 @@
 
 import os
 import json
-import statistics
 import numpy as np
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from math import sqrt
 from sys import argv
+
+from myutil import parse_cmdline_args
 
 '''--------------------------------------------------------------------------------'''
 def do_perbench(data):
@@ -102,24 +103,10 @@ def do_overall(data):
 
 '''-----------------------------------------------------------------------------------'''
 
-try:
-	json_data_file = argv[1]
-	result_dir = argv[2]
-except:
-	print("usage:",argv[0],"<json data file>","<directory to output the plots>")
-	exit(2)
+data_file, result_dir = parse_cmdline_args(argv)
 
-if not (result_dir.startswith("/") or result_dir.startswith("~")):
-	result_dir = os.path.join(os.getcwd(),result_dir)
-if not os.path.isdir(result_dir):
-	print("directory",result_dir,"does not exist")
-	exit(2)
-
-with open(json_data_file) as fd:
+with open(data_file) as fd:
 	data = json.load(fd)
 
 do_perbench(data)
 do_overall(data)
-
-with open(json_data_file) as fd:
-    data = json.loads(fd.read())

@@ -14,7 +14,5 @@ def parse_cmdline_args(argv):
         print("directory",result_dir,"does not exist")
         exit(2)
 
-    with open(data_file) as fd:
-        data = json.load(fd)
-
     return data_file, result_dir
+
