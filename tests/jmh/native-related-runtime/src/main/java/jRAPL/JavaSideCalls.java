@@ -47,6 +47,8 @@ public class JavaSideCalls {
 	public static class State_ {
 		protected HashMap<Long, Long> histogram = new HashMap<Long, Long>();
 		
+		protected String dataDir = System.getProperty("dataDir");
+
 		// private Instant before;
 		// private Instant after;
 
@@ -87,7 +89,7 @@ public class JavaSideCalls {
 		@TearDown(Level.Trial)
 		public void doFinalTeardown() {
 			try {
-				FileWriter myHistogramWriter = new FileWriter("data/JavaSide_"+name+"_histogram.data");
+				FileWriter myHistogramWriter = new FileWriter(dataDir + "/JavaSide_"+name+"_histogram.data");
 				histogram.forEach((k, v) -> {
 					try {
 						myHistogramWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
