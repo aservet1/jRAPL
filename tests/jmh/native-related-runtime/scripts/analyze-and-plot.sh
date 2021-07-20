@@ -7,4 +7,5 @@ then
 	exit 2
 fi
 
-python3 scripts/make_histogram.py data/$1_*_histogram.data
+files=$1_*_histogram.data
+python3 scripts/make_histogram.py $files #"$1_*_histogram.data"

@@ -52,9 +52,13 @@ public class CSideCalls {
 		protected String name;
 
 		public void addValue(long microSeconds) {
-			if (getIter() >= startIter) { // don't add value if youre still in warmup
+			if (!isWarmup()) { // don't add value if youre still in warmup
 				histogram.put(microSeconds, histogram.containsKey(microSeconds) ? histogram.get(microSeconds)+1 : 1);
 			}
+		}
+
+		private boolean isWarmup() {
+			return (getIter() < startIter);
 		}
 
 		protected final int WARMUPS = 5;
@@ -85,10 +89,12 @@ public class CSideCalls {
 		public void doFinalTeardown() {
 			RuntimeTestUtils.deallocCSideTiming();
 			try {
-				FileWriter myHistogramWriter = new FileWriter(dataDir + "/CSide_"+name+"_histogram.data");
+				FileWriter myHistogramWriter = new FileWriter (
+					String.format("%s/CSide_%s_histogram.data", dataDir, name)
+				);
 				histogram.forEach((k, v) -> {
 					try {
-						myHistogramWriter.write(Long.toString(k) + " " + Long.toString(v) + System.lineSeparator());
+						myHistogramWriter.write(String.format("%d %d\n", k, v));
 					}
 					catch (IOException e) {
 						System.out.println("An error occurred.");
@@ -104,6 +110,95 @@ public class CSideCalls {
 			}
 		}
 	}
+
+	@State(Scope.Thread)
+    public static class EnergyStatCheckState extends State_ {
+		@Setup(Level.Iteration)
+		public void incrementIteration() {
+			this.incrementIter();
+		}
+
+		@Setup(Level.Trial)
+		public void doInitalSetup() {
+			super.doInitialSetup();
+			name = "EnergyStatCheck";
+		}
+
+        @TearDown(Level.Invocation)
+        public void doTearDown() throws InterruptedException {
+			EnergyManager.profileDealloc();
+        }
+    }
+
+	@Benchmark
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void timeEnergyStatCheck(EnergyStatCheckState s, Blackhole b) throws InterruptedException {
+		s.addValue(RuntimeTestUtils.usecTimeEnergyStatCheck());
+		Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+	}
+
+
+	//.....// @State(Scope.Thread)
+    //.....// public static class timecheckerCSideState extends State_ {
+	//.....// 	@Setup(Level.Iteration)
+	//.....// 	public void incrementIteration() {
+	//.....// 		this.incrementIter();
+	//.....// 	}
+
+	//.....// 	@Setup(Level.Trial)
+	//.....// 	public void doInitalSetup() {
+	//.....// 		super.doInitialSetup();
+	//.....// 		name = "timecheckerCSide";
+	//.....// 	}
+
+    //.....//     @TearDown(Level.Invocation)
+    //.....//     public void doTearDown() throws InterruptedException {
+	//.....// 		EnergyManager.profileDealloc();
+    //.....//     }
+
+    //.....// } public static class timecheckerJSideState extends State_ {
+	//.....// 	@Setup(Level.Iteration)
+	//.....// 	public void incrementIteration() {
+	//.....// 		this.incrementIter();
+	//.....// 	}
+
+	//.....// 	@Setup(Level.Trial)
+	//.....// 	public void doInitalSetup() {
+	//.....// 		super.doInitialSetup();
+	//.....// 		name = "timecheckerJSide";
+	//.....// 	}
+
+    //.....//     @TearDown(Level.Invocation)
+    //.....//     public void doTearDown() throws InterruptedException {
+	//.....// 		EnergyManager.profileDealloc();
+    //.....//     }
+	//.....// }
+
+	//.....// @Benchmark
+	//.....// @Fork(1)
+	//.....// @Warmup(iterations = 5) @Measurement(iterations = 50)
+	//.....// // @Warmup(iterations = 1) @Measurement(iterations = 3)
+	//.....// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	//.....// public void timecheckC(timecheckerCSideState s, Blackhole b) throws InterruptedException {
+	//.....// 	s.addValue(RuntimeTestUtils.timechecker());
+	//.....// 	Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+	//.....// }
+
+	//.....// @Benchmark
+	//.....// @Fork(1)
+	//.....// @Warmup(iterations = 5) @Measurement(iterations = 50)
+	//.....// // @Warmup(iterations = 1) @Measurement(iterations = 3)
+	//.....// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	//.....// public void timecheckJ(timecheckerJSideState s, Blackhole b) throws InterruptedException {
+	//.....// 	RuntimeTestUtils.ctimeStart();
+	//.....// 	RuntimeTestUtils.timechecker();
+	//.....// 	RuntimeTestUtils.ctimeStop();
+	//.....// 	s.addValue(RuntimeTestUtils.ctimeElapsedUsec());
+	//.....// 	Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
+	//.....// }
 
 	// @State(Scope.Thread)
     // public static class ProfileInitState extends State_ {
@@ -124,107 +219,8 @@ public class CSideCalls {
     //     }
 
     // }
-	// @State(Scope.Thread)
-    // public static class EnergyStatCheckState extends State_ {
-	// 	@Setup(Level.Iteration)
-	// 	public void incrementIteration() {
-	// 		this.incrementIter();
-	// 	}
 
-	// 	@Setup(Level.Trial)
-	// 	public void doInitalSetup() {
-	// 		super.doInitialSetup();
-	// 		name = "EnergyStatCheck";
-	// 	}
-
-    //     @TearDown(Level.Invocation)
-    //     public void doTearDown() throws InterruptedException {
-	// 		EnergyManager.profileDealloc();
-    //     }
-
-    // }
-	// @Benchmark
-	// @Fork(1)
-	// @Warmup(iterations = 5) @Measurement(iterations = 25)
-	// // @Warmup(iterations = 1) @Measurement(iterations = 3)
-	// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	// public void timeEnergyStatCheck(EnergyStatCheckState s, Blackhole b) throws InterruptedException {
-	// 	s.addValue(RuntimeTestUtils.usecTimeEnergyStatCheck());
-	// 	Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
-	// }
-
-
-	@State(Scope.Thread)
-    public static class timecheckerCSideState extends State_ {
-		@Setup(Level.Iteration)
-		public void incrementIteration() {
-			this.incrementIter();
-		}
-
-		@Setup(Level.Trial)
-		public void doInitalSetup() {
-			super.doInitialSetup();
-			name = "timecheckerCSide";
-		}
-
-        @TearDown(Level.Invocation)
-        public void doTearDown() throws InterruptedException {
-			EnergyManager.profileDealloc();
-        }
-
-    } public static class timecheckerJSideState extends State_ {
-		@Setup(Level.Iteration)
-		public void incrementIteration() {
-			this.incrementIter();
-		}
-
-		@Setup(Level.Trial)
-		public void doInitalSetup() {
-			super.doInitialSetup();
-			name = "timecheckerJSide";
-		}
-
-        @TearDown(Level.Invocation)
-        public void doTearDown() throws InterruptedException {
-			EnergyManager.profileDealloc();
-        }
-	}
-
-	@Benchmark
-	@Fork(1)
-	@Warmup(iterations = 5) @Measurement(iterations = 50)
-	// @Warmup(iterations = 1) @Measurement(iterations = 3)
-	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timecheckC(timecheckerCSideState s, Blackhole b) throws InterruptedException {
-		s.addValue(RuntimeTestUtils.timechecker());
-		Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
-	}
-
-	@Benchmark
-	@Fork(1)
-	@Warmup(iterations = 5) @Measurement(iterations = 50)
-	// @Warmup(iterations = 1) @Measurement(iterations = 3)
-	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timecheckJ(timecheckerJSideState s, Blackhole b) throws InterruptedException {
-		RuntimeTestUtils.ctimeStart();
-		RuntimeTestUtils.timechecker();
-		RuntimeTestUtils.ctimeStop();
-		s.addValue(RuntimeTestUtils.ctimeElapsedUsec());
-		Util.busyWait(b); // repeatedly accessing MSRs without break eventually shuts them down and causes register read error
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
+	// .................................................................................................................... //
 
 	// @State(Scope.Thread)
 	// public static class ProfileDeallocState extends State_ {

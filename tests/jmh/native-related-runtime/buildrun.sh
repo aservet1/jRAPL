@@ -24,7 +24,8 @@ sudo java -DdataDir=$data_dir -jar $ignoreLock target/benchmarks.jar
 
 echo ">> jmh done, now analyzing results"
 
+cd $data_dir
 for x in JavaSide CSide readMSR
 do
-	./scripts/analyze-and-plot.sh $x
+	../scripts/analyze-and-plot.sh $x
 done
