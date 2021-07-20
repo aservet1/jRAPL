@@ -1,12 +1,34 @@
 #!/bin/bash
 
-#ignoreLock=-Djmh.ignoreLock=true
+function usage() {
+	echo "usage: $0 data_dir"
+	exit 2
+}
 
+set -e
 sudo -v
 
-mvn clean install && ./transferjars.sh ../../../src/java/target/jRAPL-1.0.jar target/benchmarks.jar
-[ $? == 0 ] || exit
+[ -z $1 ] && usage $0
 
-rm -rf data && mkdir data # where results will be written to
-sudo java -jar $ignoreLock target/benchmarks.jar -rf json
+datadir=$1
+
+if [ -d $datadir ]; then
+	echo "data dir $datadir already exists. delete it or pick another name"
+	exit 1
+fi
+
+mkdir $datadir
+
+mvn clean install
+
+./scripts/transferjars.sh \
+	jRAPL-1.0.jar \
+	target/benchmarks.jar
+
+
+sudo java \
+	-jar target/benchmarks.jar \
+	-rf json
+
 mv jmh-result.json LastResultDone.json
+

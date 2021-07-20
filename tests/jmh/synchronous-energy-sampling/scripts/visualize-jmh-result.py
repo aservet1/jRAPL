@@ -16,10 +16,10 @@ for d in _data:
     name = d['benchmark'].split('.')[-1]
     data[name] = d
 
-labels = []
-means = []
-errors = [] # not standard deviation. not sure what the error is
-unit = []
+unit    =  []
+means   =  []
+labels  =  []
+errors  =  [] # not standard deviation. not sure what the error is
 
 for name in data:
     if name.startswith('time'):
