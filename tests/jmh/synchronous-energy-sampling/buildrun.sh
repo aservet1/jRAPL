@@ -28,7 +28,8 @@ mvn clean install
 
 sudo java \
 	-jar target/benchmarks.jar \
-	-rf json
+	-rf json \
+	| $datadir/output.log
 
-mv jmh-result.json LastResultDone.json
+mv jmh-result.json $datadir
 
