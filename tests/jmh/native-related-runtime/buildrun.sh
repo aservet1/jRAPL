@@ -12,7 +12,6 @@ then
 	exit 1
 else
 	data_dir=$1
-	mkdir $data_dir
 fi
 
 set -e
@@ -20,6 +19,7 @@ sudo -v
 
 mvn clean install && ./scripts/transferjars.sh jRAPL-1.0.jar target/benchmarks.jar
 
+mkdir $data_dir
 sudo java -DdataDir=$data_dir -jar $ignoreLock target/benchmarks.jar 
 
 echo ">> jmh done, now analyzing results"
