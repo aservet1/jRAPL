@@ -92,6 +92,7 @@ public class Consolidated {
 				e.printStackTrace();
 			}
 			EnergyManager.profileDealloc();
+			histogram.clear();
 		}
 
         public void addValue(long microSeconds) {
