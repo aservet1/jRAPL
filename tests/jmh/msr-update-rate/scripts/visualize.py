@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 
 try:
     datafile = argv[1]
-except:
-    print("usage:",argv[0],"<data file>")
+    system_name = argv[2]
+except IndexError:
+    print("usage:",argv[0],"<data file> <System{A,B,C,...}>")
     exit(2)
 
 with open(datafile) as fh:
@@ -38,8 +39,8 @@ axs[1].set_title('pkg')
 # axs[3].scatter(range(len(core['filtered'])),core['filtered'])
 # axs[3].set_title('core')
 
-fig.suptitle('Energy Update Time')
+fig.suptitle('Energy Update Time ' + system_name)
 fig.align_ylabels(axs)
 
 plt.show()
-#fig.savefig('energy-update-time-simple_systemB')
+#fig.savefig('energy-update-time-simple_' + system_name)
