@@ -1,0 +1,191 @@
+# JMH version: 1.27
+# VM version: JDK 11.0.6, OpenJDK 64-Bit Server VM, 11.0.6+10-post-Debian-1bpo91
+# VM invoker: /usr/lib/jvm/java-11-openjdk-amd64/bin/java
+# VM options: <none>
+# JMH blackhole mode: full blackhole + dont-inline hint
+# Warmup: 7 iterations, 10 s each
+# Measurement: 30 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: jRAPL.EnergySampling.timeGetPrimitiveSample
+
+# Run progress: 0.00% complete, ETA 00:18:30
+# Fork: 1 of 1
+# Warmup Iteration   1: 37.935 us/op
+# Warmup Iteration   2: 34.734 us/op
+# Warmup Iteration   3: 34.874 us/op
+# Warmup Iteration   4: 35.180 us/op
+# Warmup Iteration   5: 34.785 us/op
+# Warmup Iteration   6: 35.058 us/op
+# Warmup Iteration   7: 34.580 us/op
+Iteration   1: 35.714 us/op
+Iteration   2: 34.842 us/op
+Iteration   3: 35.282 us/op
+Iteration   4: 35.071 us/op
+Iteration   5: 35.701 us/op
+Iteration   6: 35.043 us/op
+Iteration   7: 34.983 us/op
+Iteration   8: 35.632 us/op
+Iteration   9: 34.736 us/op
+Iteration  10: 34.646 us/op
+Iteration  11: 34.940 us/op
+Iteration  12: 35.883 us/op
+Iteration  13: 34.949 us/op
+Iteration  14: 34.974 us/op
+Iteration  15: 35.571 us/op
+Iteration  16: 35.204 us/op
+Iteration  17: 35.247 us/op
+Iteration  18: 35.094 us/op
+Iteration  19: 35.353 us/op
+Iteration  20: 34.697 us/op
+Iteration  21: 35.220 us/op
+Iteration  22: 34.909 us/op
+Iteration  23: 35.068 us/op
+Iteration  24: 34.915 us/op
+Iteration  25: 35.194 us/op
+Iteration  26: 34.976 us/op
+Iteration  27: 35.108 us/op
+Iteration  28: 35.780 us/op
+Iteration  29: 35.146 us/op
+Iteration  30: 35.105 us/op
+
+
+Result "jRAPL.EnergySampling.timeGetPrimitiveSample":
+  35.166 ±(99.9%) 0.218 us/op [Average]
+  (min, avg, max) = (34.646, 35.166, 35.883), stdev = 0.326
+  CI (99.9%): [34.948, 35.384] (assumes normal distribution)
+
+
+# JMH version: 1.27
+# VM version: JDK 11.0.6, OpenJDK 64-Bit Server VM, 11.0.6+10-post-Debian-1bpo91
+# VM invoker: /usr/lib/jvm/java-11-openjdk-amd64/bin/java
+# VM options: <none>
+# JMH blackhole mode: full blackhole + dont-inline hint
+# Warmup: 7 iterations, 10 s each
+# Measurement: 30 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: jRAPL.EnergySampling.timeGetSample
+
+# Run progress: 33.33% complete, ETA 00:12:21
+# Fork: 1 of 1
+# Warmup Iteration   1: 37.517 us/op
+# Warmup Iteration   2: 35.728 us/op
+# Warmup Iteration   3: 31.825 us/op
+# Warmup Iteration   4: 33.679 us/op
+# Warmup Iteration   5: 33.895 us/op
+# Warmup Iteration   6: 33.186 us/op
+# Warmup Iteration   7: 35.563 us/op
+Iteration   1: 35.833 us/op
+Iteration   2: 35.425 us/op
+Iteration   3: 33.009 us/op
+Iteration   4: 31.192 us/op
+Iteration   5: 35.078 us/op
+Iteration   6: 34.307 us/op
+Iteration   7: 33.038 us/op
+Iteration   8: 34.484 us/op
+Iteration   9: 33.336 us/op
+Iteration  10: 35.875 us/op
+Iteration  11: 32.557 us/op
+Iteration  12: 35.535 us/op
+Iteration  13: 31.430 us/op
+Iteration  14: 34.701 us/op
+Iteration  15: 34.256 us/op
+Iteration  16: 32.140 us/op
+Iteration  17: 34.306 us/op
+Iteration  18: 35.085 us/op
+Iteration  19: 35.905 us/op
+Iteration  20: 34.552 us/op
+Iteration  21: 35.709 us/op
+Iteration  22: 36.410 us/op
+Iteration  23: 36.224 us/op
+Iteration  24: 36.563 us/op
+Iteration  25: 33.600 us/op
+Iteration  26: 33.684 us/op
+Iteration  27: 33.940 us/op
+Iteration  28: 33.212 us/op
+Iteration  29: 35.922 us/op
+Iteration  30: 34.295 us/op
+
+
+Result "jRAPL.EnergySampling.timeGetSample":
+  34.387 ±(99.9%) 0.971 us/op [Average]
+  (min, avg, max) = (31.192, 34.387, 36.563), stdev = 1.454
+  CI (99.9%): [33.415, 35.358] (assumes normal distribution)
+
+
+# JMH version: 1.27
+# VM version: JDK 11.0.6, OpenJDK 64-Bit Server VM, 11.0.6+10-post-Debian-1bpo91
+# VM invoker: /usr/lib/jvm/java-11-openjdk-amd64/bin/java
+# VM options: <none>
+# JMH blackhole mode: full blackhole + dont-inline hint
+# Warmup: 7 iterations, 10 s each
+# Measurement: 30 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: jRAPL.EnergySampling.timeNativeGetSample
+
+# Run progress: 66.67% complete, ETA 00:06:10
+# Fork: 1 of 1
+# Warmup Iteration   1: 31.915 us/op
+# Warmup Iteration   2: 33.092 us/op
+# Warmup Iteration   3: 33.510 us/op
+# Warmup Iteration   4: 33.587 us/op
+# Warmup Iteration   5: 32.088 us/op
+# Warmup Iteration   6: 34.680 us/op
+# Warmup Iteration   7: 32.646 us/op
+Iteration   1: 33.301 us/op
+Iteration   2: 32.494 us/op
+Iteration   3: 31.649 us/op
+Iteration   4: 32.493 us/op
+Iteration   5: 33.509 us/op
+Iteration   6: 33.303 us/op
+Iteration   7: 32.412 us/op
+Iteration   8: 32.298 us/op
+Iteration   9: 32.443 us/op
+Iteration  10: 32.291 us/op
+Iteration  11: 33.452 us/op
+Iteration  12: 32.899 us/op
+Iteration  13: 32.415 us/op
+Iteration  14: 31.289 us/op
+Iteration  15: 32.261 us/op
+Iteration  16: 32.409 us/op
+Iteration  17: 32.547 us/op
+Iteration  18: 32.939 us/op
+Iteration  19: 31.716 us/op
+Iteration  20: 31.919 us/op
+Iteration  21: 31.894 us/op
+Iteration  22: 34.095 us/op
+Iteration  23: 32.732 us/op
+Iteration  24: 32.270 us/op
+Iteration  25: 33.218 us/op
+Iteration  26: 33.650 us/op
+Iteration  27: 33.364 us/op
+Iteration  28: 31.706 us/op
+Iteration  29: 32.103 us/op
+Iteration  30: 33.101 us/op
+
+
+Result "jRAPL.EnergySampling.timeNativeGetSample":
+  32.606 ±(99.9%) 0.452 us/op [Average]
+  (min, avg, max) = (31.289, 32.606, 34.095), stdev = 0.677
+  CI (99.9%): [32.153, 33.058] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:18:31
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                                    Mode  Cnt   Score   Error  Units
+jRAPL.EnergySampling.timeGetPrimitiveSample  avgt   30  35.166 ± 0.218  us/op
+jRAPL.EnergySampling.timeGetSample           avgt   30  34.387 ± 0.971  us/op
+jRAPL.EnergySampling.timeNativeGetSample     avgt   30  32.606 ± 0.452  us/op
+
+Benchmark result is saved to jmh-result.json
