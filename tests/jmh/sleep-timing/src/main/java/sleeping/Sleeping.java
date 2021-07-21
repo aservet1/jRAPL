@@ -59,27 +59,41 @@ public class Sleeping {
 		@TearDown(Level.Trial)
 		public void teardown() {
 			if (cSamples.size() != 0) {
-				long sum = 0;
-				for (long t : cSamples) sum += t;
-				long average = sum/cSamples.size();
-				System.out.println("...> C Timed Average: " + average);
+				System.out.printf("...> C Time: %f +/- %f\n", average(cSamples), stdev(cSamples));
 			}
+		}
+		private static double average(ArrayList<Long> lst) {
+			long sum = 0;
+			int N = lst.size();
+			for (long n : lst) sum += n;
+			return sum / N;
+		}
+		private static double stdev(ArrayList<Long> lst) {
+			double m = average(lst);
+			int N = lst.size();
+			double deviations = 0;
+			for (long n : lst) deviations += Math.pow(m-n, 2);
+			return Math.sqrt( deviations / (N-1) );
 		}
 	}
 
+	//@Benchmark
+	//@Fork(1)
+	//// @Warmup(iterations = 2)
+	//// @Measurement(iterations = 3)
+	//@Warmup(iterations = 5)
+	//@Measurement(iterations = 10)
+	//@BenchmarkMode(Mode.AverageTime)
+	//@OutputTimeUnit(TimeUnit.MICROSECONDS)
+	//public void timeJSleep(S s) throws InterruptedException {
+	//	Thread.sleep(s.TIME);
+	//}
 	@Benchmark
 	@Fork(1)
-	@Warmup(iterations = 2)
-	@Measurement(iterations = 3)
-	@BenchmarkMode(Mode.AverageTime)
-	@OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void timeJSleep(S s) throws InterruptedException {
-		Thread.sleep(s.TIME);
-	}
-	@Benchmark
-	@Fork(1)
-	@Warmup(iterations = 2)
-	@Measurement(iterations = 3)
+	// @Warmup(iterations = 2)
+	// @Measurement(iterations = 3)
+	@Warmup(iterations = 5)
+	@Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeCSleep(S s) throws InterruptedException {
@@ -87,8 +101,10 @@ public class Sleeping {
 	}
 	@Benchmark
 	@Fork(1)
-	@Warmup(iterations = 2)
-	@Measurement(iterations = 3)
+	// @Warmup(iterations = 2)
+	// @Measurement(iterations = 3)
+	@Warmup(iterations = 5)
+	@Measurement(iterations = 10)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeCSleepWithC(S s) throws InterruptedException {
