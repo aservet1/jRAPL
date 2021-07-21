@@ -16,11 +16,12 @@ fi
 
 set -e
 sudo -v
+outputlog=$data_dir/output.log
 
 mvn clean install && ./scripts/transferjars.sh jRAPL-1.0.jar target/benchmarks.jar
 
 mkdir $data_dir
-sudo java -DdataDir=$data_dir -jar $ignoreLock target/benchmarks.jar 
+sudo java -DdataDir=$data_dir -jar $ignoreLock target/benchmarks.jar | tee $outputlog
 
 echo ">> jmh done, now analyzing results"
 
