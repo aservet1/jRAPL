@@ -20,8 +20,8 @@ def get_perbench():
         def get_by_monitor_type(data, monitor_type):
             return [ d for d in data[benchmark] if d['metadata']['monitor_type'] == monitor_type ][0]
 
-        java_metadata = get_by_monitor_type(data,'java')['metadata']
-        c_ll_metadata = get_by_monitor_type(data,'c-linklist')['metadata']
+        java_metadata = get_by_monitor_type(data,'java')          ['metadata']
+        c_ll_metadata = get_by_monitor_type(data,'c-linklist')    ['metadata']
         c_da_metadata = get_by_monitor_type(data,'c-dynamicarray')['metadata']
 
         result[benchmark]['java']           = {}
@@ -32,9 +32,10 @@ def get_perbench():
         result[benchmark]['c-linklist']    ['avg'] = c_ll_metadata['numSamples']['avg'] / c_ll_metadata['lifetime']['avg']
         result[benchmark]['c-dynamicarray']['avg'] = c_da_metadata['numSamples']['avg'] / c_da_metadata['lifetime']['avg']
 
-        result[benchmark]['java']          ['stdev'] = math.sqrt( (java_metadata['numSamples']['stdev']/java)**2 / java_metadata['lifetime']['stdev']**2 )
-        result[benchmark]['c-linklist']    ['stdev'] = math.sqrt( (c_ll_metadata['numSamples']['stdev']/java)**2 / c_ll_metadata['lifetime']['stdev']**2 )
-        result[benchmark]['c-dynamicarray']['stdev'] = math.sqrt( (c_da_metadata['numSamples']['stdev']/java)**2 / c_da_metadata['lifetime']['stdev']**2 )
+        # propagation-of-uncertainty division
+        result[benchmark]['java']          ['stdev'] = math.sqrt( (java_metadata['numSamples']['stdev']/java_metadata['lifetime']['stdev'])**2 / java_metadata['lifetime']['stdev']**2 )
+        result[benchmark]['c-linklist']    ['stdev'] = math.sqrt( (c_ll_metadata['numSamples']['stdev']/c_ll_metadata['lifetime']['stdev'])**2 / c_ll_metadata['lifetime']['stdev']**2 )
+        result[benchmark]['c-dynamicarray']['stdev'] = math.sqrt( (c_da_metadata['numSamples']['stdev']/c_da_metadata['lifetime']['stdev'])**2 / c_da_metadata['lifetime']['stdev']**2 )
 
     return result
 
@@ -73,8 +74,8 @@ results['perbench']  =  get_perbench ()
 results['overall']   =  get_overall  ()
 
 results['plotinfo'] = {}
-results['plotinfo']['perbench'] = { 'filename': 'sampling-efficiency_perbench', 'xlabel': 'Sampling Efficiency' }
-results['plotinfo']['overall']  = { 'filename': 'sampling-efficiency_overall' , 'ylabel': 'Sampling Efficiency' }
+results['plotinfo']['perbench'] = { 'filename': 'sampling-efficiency_perbench', 'xlabel': 'Sampling Efficiency', 'title': 'Sampling Efficiency' }
+results['plotinfo']['overall']  = { 'filename': 'sampling-efficiency_overall' , 'ylabel': 'Sampling Efficiency', 'title': 'Sampling Efficiency' }
 
 print('.) done with overall')
 
