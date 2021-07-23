@@ -52,8 +52,8 @@ public class Consolidated {
         protected String benchmarkDomain;
 		protected String dataDir = System.getProperty("dataDir");
 
-		// protected final int WARMUPS = 5;
-		protected final int WARMUPS = 1;
+		protected final int WARMUPS = 5;
+		// protected final int WARMUPS = 1;
 
 		private int iterNum = 0;
 		private int startIter = WARMUPS+1;
@@ -119,16 +119,6 @@ public class Consolidated {
 	}
 
 	@State(Scope.Thread)
-    public static class   CSideEnergyStatCheckState  extends TheState {
-		@Setup(Level.Trial)
-		public void doInitalSetup() {
-			RuntimeTestUtils.initCSideTiming();
-			benchmarkName = "EnergyStatCheck";
-            benchmarkDomain = "CSide";
-		}
-    }
-
-	@State(Scope.Thread)
 	public static class JavaSideEnergyStatCheckState extends TheState {
 		@Setup(Level.Trial)
 		public void initialSetup() {
@@ -137,6 +127,16 @@ public class Consolidated {
             benchmarkDomain = "JavaSide";
 		}
 	}
+	
+	@State(Scope.Thread)
+    public static class   CSideEnergyStatCheckState  extends TheState {
+		@Setup(Level.Trial)
+		public void doInitalSetup() {
+			RuntimeTestUtils.initCSideTiming();
+			benchmarkName = "EnergyStatCheck";
+            benchmarkDomain = "CSide";
+		}
+    }
 
     @State(Scope.Thread)
 	public static class EnergyStatCheckNoReturnState extends TheState {
@@ -150,8 +150,8 @@ public class Consolidated {
 
 	@Benchmark
 	@Fork(1)
-	// @Warmup(iterations = 5) @Measurement(iterations = 25)
-	@Warmup(iterations = 1) @Measurement(iterations = 3)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void cSideTimeEnergyStatCheck(CSideEnergyStatCheckState s, Blackhole b) {
 		s.addValue(RuntimeTestUtils.usecTimeEnergyStatCheck());
@@ -160,8 +160,8 @@ public class Consolidated {
 
 	@Benchmark
 	@Fork(1)
-	// @Warmup(iterations = 5) @Measurement(iterations = 25)
-	@Warmup(iterations = 1) @Measurement(iterations = 3)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void javaSideTimeEnergyStatCheck(Blackhole b, JavaSideEnergyStatCheckState s) {
 		RuntimeTestUtils.ctimeStart();
@@ -174,8 +174,8 @@ public class Consolidated {
 
 	@Benchmark
 	@Fork(1)
-	// @Warmup(iterations = 5) @Measurement(iterations = 25)
-	@Warmup(iterations = 1) @Measurement(iterations = 3)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeEnergyStatCheckNoReturnValue(Blackhole b, EnergyStatCheckNoReturnState s) {
 		RuntimeTestUtils.ctimeStart();
@@ -187,97 +187,97 @@ public class Consolidated {
 
 	// 	// ------------------------------------------------------------------------------------------------------------------------------ //
 
-	// public static class StateDRAM extends TheState { 
-	// 	// @Setup(Level.Iteration)
-	// 	// public void incrementIteration() {
-	// 	// 	this.incrementIter();
-	// 	// }
-	// 	@Setup(Level.Trial)
-	// 	public void setName() {
-	// 		// super.initialSetup();
-	// 		RuntimeTestUtils.initCSideTiming();
-	// 		benchmarkName = "DRAM";
-	// 		benchmarkDomain = "readMSR";
-	// 	}
-	// }
-	// public static class StateGPU extends TheState {
-	// 	// @Setup(Level.Iteration)
-	// 	// public void incrementIteration() {
-	// 	// 	this.incrementIter();
-	// 	// }
-	// 	@Setup(Level.Trial)
-	// 	public void setName() {
-	// 		// super.initialSetup();
-	// 		RuntimeTestUtils.initCSideTiming();
-	// 		benchmarkName = "GPU";
-	// 		benchmarkDomain = "readMSR";
-	// 	}
-	// }
-	// public static class StateCORE extends TheState {
-	// 	// @Setup(Level.Iteration)
-	// 	// public void incrementIteration() {
-	// 	// 	this.incrementIter();
-	// 	// }
-	// 	@Setup(Level.Trial)
-	// 	public void setName() {
-	// 		// super.initialSetup();
-	// 		RuntimeTestUtils.initCSideTiming();
-	// 		benchmarkName = "CORE";
-	// 		benchmarkDomain = "readMSR";
-	// 	}
-	// }
-	// public static class StatePKG extends TheState {
-	// 	// @Setup(Level.Iteration)
-	// 	// public void incrementIteration() {
-	// 	// 	this.incrementIter();
-	// 	// }
-	// 	@Setup(Level.Trial)
-	// 	public void setName() {
-	// 		// super.initialSetup();
-	// 		RuntimeTestUtils.initCSideTiming();
-	// 		benchmarkName = "PKG";
-	// 		benchmarkDomain = "readMSR";
-	// 	}
-	// }
+	public static class StateDRAM extends TheState { 
+		// @Setup(Level.Iteration)
+		// public void incrementIteration() {
+		// 	this.incrementIter();
+		// }
+		@Setup(Level.Trial)
+		public void setName() {
+			// super.initialSetup();
+			RuntimeTestUtils.initCSideTiming();
+			benchmarkName = "DRAM";
+			benchmarkDomain = "readMSR";
+		}
+	}
+	public static class StateGPU extends TheState {
+		// @Setup(Level.Iteration)
+		// public void incrementIteration() {
+		// 	this.incrementIter();
+		// }
+		@Setup(Level.Trial)
+		public void setName() {
+			// super.initialSetup();
+			RuntimeTestUtils.initCSideTiming();
+			benchmarkName = "GPU";
+			benchmarkDomain = "readMSR";
+		}
+	}
+	public static class StateCORE extends TheState {
+		// @Setup(Level.Iteration)
+		// public void incrementIteration() {
+		// 	this.incrementIter();
+		// }
+		@Setup(Level.Trial)
+		public void setName() {
+			// super.initialSetup();
+			RuntimeTestUtils.initCSideTiming();
+			benchmarkName = "CORE";
+			benchmarkDomain = "readMSR";
+		}
+	}
+	public static class StatePKG extends TheState {
+		// @Setup(Level.Iteration)
+		// public void incrementIteration() {
+		// 	this.incrementIter();
+		// }
+		@Setup(Level.Trial)
+		public void setName() {
+			// super.initialSetup();
+			RuntimeTestUtils.initCSideTiming();
+			benchmarkName = "PKG";
+			benchmarkDomain = "readMSR";
+		}
+	}
 
-	// @Benchmark
-	// @Fork(1)
-	// @Warmup(iterations = 5) @Measurement(iterations = 25)
-	// // @Warmup(iterations = 1) @Measurement(iterations = 3)
-	// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	// public void timeReadDRAM(StateDRAM state, Blackhole b) {
-	// 	state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.DRAM));
-	// 	Util.busyWait(b);
-	// }
+	@Benchmark
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void timeReadDRAM(StateDRAM state, Blackhole b) {
+		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.DRAM));
+		Util.busyWait(b);
+	}
 
-	// @Benchmark
-	// @Fork(1)
-	// @Warmup(iterations = 5) @Measurement(iterations = 25)
-	// // @Warmup(iterations = 1) @Measurement(iterations = 3)
-	// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	// public void timeReadPKG(StatePKG state, Blackhole b) {
-	// 	state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.PKG));
-	// 	Util.busyWait(b);
-	// }
+	@Benchmark
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void timeReadPKG(StatePKG state, Blackhole b) {
+		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.PKG));
+		Util.busyWait(b);
+	}
 
-	// @Benchmark
-	// @Fork(1)
-	// @Warmup(iterations = 5) @Measurement(iterations = 25)
-	// // @Warmup(iterations = 1) @Measurement(iterations = 3)
-	// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	// public void timeReadGPU(StateGPU state, Blackhole b) {
-	// 	state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.GPU));
-	// 	Util.busyWait(b);
-	// }
+	@Benchmark
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void timeReadGPU(StateGPU state, Blackhole b) {
+		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.GPU));
+		Util.busyWait(b);
+	}
 
-	// @Benchmark
-	// @Fork(1)
-	// @Warmup(iterations = 5) @Measurement(iterations = 25)
-	// // @Warmup(iterations = 1) @Measurement(iterations = 3)
-	// @BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-	// public void timeReadCORE(StateCORE state, Blackhole b) {
-	// 	state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.CORE));
-	// 	Util.busyWait(b);
-	// }
+	@Benchmark
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void timeReadCORE(StateCORE state, Blackhole b) {
+		state.addValue(RuntimeTestUtils.usecTimeMSRRead(RuntimeTestUtils.CORE));
+		Util.busyWait(b);
+	}
 
 }
