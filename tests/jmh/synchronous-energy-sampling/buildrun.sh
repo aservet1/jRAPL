@@ -17,7 +17,7 @@ if [ -d $datadir ]; then
 	exit 1
 fi
 
-mkdir $datadir
+mkdir -p $datadir
 
 mvn clean install
 
