@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
+import os
 import json
 from sys import argv
 import matplotlib.pyplot as plt
 
 try:
     datafile = argv[1]
-    system_name = argv[2]
+    result_dir = argv[2]
+    system_name = argv[3]
 except IndexError:
-    print("usage:",argv[0],"<data file> <System{A,B,C,...}>")
+    print("usage:",argv[0],"<data file> <result dir> <System{A,B,C,...}>")
     exit(2)
 
 with open(datafile) as fh:
@@ -42,5 +44,6 @@ axs[1].set_title('pkg')
 fig.suptitle('Energy Update Time ' + system_name)
 fig.align_ylabels(axs)
 
-plt.show()
-#fig.savefig('energy-update-time-simple_' + system_name)
+#plt.show()
+os.chdir(result_dir)
+fig.savefig('energy-update-time-simple_' + system_name)

@@ -68,7 +68,7 @@ print(len(df),'total samples')
 
 result_dfs = dict()
 
-cutoff = 7000
+cutoff = 5000
 
 for powerDomain in header:
     print(f'started powerDomain={powerDomain}')
@@ -108,7 +108,7 @@ for powerDomain in header:
 with open(outfile,'w') as fd:
     fd.write(json.dumps(result_dfs))
 
-# percent that were outliers (above 3000 ms)
+# percent that were outliers (above 5000 ms)
 nfiltered = len(result_dfs['dram_socket1']['filtered']) + len(result_dfs['pkg_socket1']['filtered'])
 nexcluded = len(result_dfs['dram_socket1']['outliers']) + len(result_dfs['pkg_socket1']['outliers'])
 print(str(nexcluded/nfiltered * 100) + "% excluded")

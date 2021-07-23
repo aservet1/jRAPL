@@ -5,7 +5,7 @@ sudo -v; set -e
 mvn clean install
 
 hostName=$(hostname)
-outputDir=_results
+outputDir=results
 outputLog=$outputDir/output.log
 
 mkdir -p $outputDir

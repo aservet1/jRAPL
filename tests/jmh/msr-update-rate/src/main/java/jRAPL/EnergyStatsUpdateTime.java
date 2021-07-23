@@ -113,7 +113,7 @@ public class EnergyStatsUpdateTime {
 	@Benchmark
 	@Fork(1)
 	@Warmup(iterations = 5)
-	@Measurement(iterations = 15)
+	@Measurement(iterations = 25)
 	@BenchmarkMode(Mode.Throughput)
 	public void postProcessAddSample(State_ state) {
 		state.addSample();
