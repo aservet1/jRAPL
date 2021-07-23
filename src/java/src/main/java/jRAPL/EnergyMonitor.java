@@ -28,7 +28,7 @@ public class EnergyMonitor extends EnergyManager {
 	//@TODO consider if you want the timestamp to be part of the primitive sample. let's say no for now
     protected static double[] stringToPrimitiveSample(String energyString) {
 		String[] parts = energyString.split(",");
-		return stringArrayToDoubleArray(
+		return stringArrayToDoubleArray (
 			Arrays.copyOf(parts, parts.length-1)
 		);
 	}
@@ -54,5 +54,5 @@ public class EnergyMonitor extends EnergyManager {
 		}
 		return diff;
     }
-    
+
 }
