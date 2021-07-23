@@ -5,6 +5,8 @@ import json
 from sys import argv
 import matplotlib.pyplot as plt
 
+from statistics import mean, stdev
+
 try:
     datafile = argv[1]
     result_dir = argv[2]
@@ -23,7 +25,6 @@ pkg = data['pkg_socket'+str(s)]
 # core = data['core_socket'+str(s)]
 # gpu = data['gpu_socket'+str(s)]
 
-
 # fig, axs = plt.subplots(1,4,figsize=(15,5))
 fig, axs = plt.subplots(1,2,figsize=(15,5))
 
@@ -41,9 +42,29 @@ axs[1].set_title('pkg')
 # axs[3].scatter(range(len(core['filtered'])),core['filtered'])
 # axs[3].set_title('core')
 
-fig.suptitle('Energy Update Time ' + system_name)
+fig.suptitle('Energy Update Time Scatter' + system_name)
 fig.align_ylabels(axs)
 
 #plt.show()
 os.chdir(result_dir)
 fig.savefig('energy-update-time-simple_' + system_name)
+
+print('>>','done with scatterplot')
+
+'''------------------------------------------------------------------------------'''
+
+fig.clf(); plt.clf();
+
+plt.bar ( \
+	['dram','pkg'], \
+	[mean(dram['filtered']), mean(pkg['filtered'])], \
+	yerr=[stdev(dram['filtered']), stdev(pkg['filtered'])] \
+)
+
+plt.title('Average Update Time ' + system_name)
+plt.ylabel('time (ms)')
+plt.savefig('energy-update-time-average_'+system_name)
+
+print('>>','done with average bar plot')
+
+
