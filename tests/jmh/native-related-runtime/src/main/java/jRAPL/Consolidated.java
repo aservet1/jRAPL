@@ -185,6 +185,27 @@ public class Consolidated {
 		Util.busyWait(b);
     }
 
+    @State(Scope.Thread)
+	public static class EnergyStatCheckPureC extends TheState {
+		@Setup(Level.Trial)
+		public void initialSetup() {
+			EnergyManager.profileInit();
+			benchmarkName = "EnergyStatCheckPureC";
+            benchmarkDomain = "CSide";
+		}
+	}
+
+	@Benchmark
+	@Fork(1)
+	@Warmup(iterations = 5) @Measurement(iterations = 25)
+	// @Warmup(iterations = 1) @Measurement(iterations = 3)
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void timeEnergyStatCheckNoReturnValue(Blackhole b, EnergyStatCheckNoReturnState s) {
+		long usec = RuntimeTestUtils.energyStatCheckPureC();
+		s.addValue(usec);
+		Util.busyWait(b);
+    }
+
 	// 	// ------------------------------------------------------------------------------------------------------------------------------ //
 
 	public static class StateDRAM extends TheState { 

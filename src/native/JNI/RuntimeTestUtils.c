@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <sys/time.h>
 
+#include "EnergyStats.h"
 #include "ArchSpec.h"
 #include "EnergyCheckUtils.h"
 #include "JNIFunctionDeclarations.h"
@@ -52,6 +53,13 @@ JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIE
  */
 JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_energyStatCheckNoReturnValue(JNIEnv* env, jclass jcls) {
 	str = Java_jRAPL_EnergyMonitor_energyStatCheck(env, jcls);
+}
+JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_energyStatCheckPureC(JNIEnv* env, jclass jcls) {
+	STARTSTAMP;
+	EnergyStats stats[num_sockets];
+	EnergyStatCheck(stats);
+	STOPSTAMP;
+	return DIFF_USEC;
 }
 
 #define RETURN_EMPTY_ARRAY						\
