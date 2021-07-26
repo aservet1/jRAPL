@@ -3,8 +3,8 @@
 #include <string.h>
 #include <assert.h>
 #include "arch_spec.h"
-#include "energy_stats.h"
 #include "async_energy_monitor.h"
+#include "energy_check_utils.h"
 #include "utils.h"
 
 static AsyncEnergyMonitor* monitor = NULL;

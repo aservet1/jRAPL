@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <assert.h>
 
-#include "energy_stats.h"
 #include "async_energy_monitor.h"
 #include "energy_check_utils.h"
 #include "arch_spec.h"

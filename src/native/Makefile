@@ -5,7 +5,6 @@ CFILES = \
 		energy_check_utils.c \
 		arch_spec.c \
 		msr.c \
- 		energy_stats.c \
 		async_energy_monitor.c \
 		cside_data_storage.c \
 		utils.c \

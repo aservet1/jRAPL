@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "energy_stats.h"
+#include "energy_check_utils.h"
 #include "arch_spec.h"
 #include "msr.h"
 

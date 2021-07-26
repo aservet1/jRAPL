@@ -4,7 +4,7 @@
 #include <pthread.h>
 #include <stdbool.h>
 
-#include "energy_stats.h"
+#include "energy_check_utils.h"
 #include "cside_data_storage.h"
 
 #define DYNAMIC_ARRAY_STORAGE 1

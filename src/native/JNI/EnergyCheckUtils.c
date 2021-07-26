@@ -12,7 +12,6 @@
 #include "energy_check_utils.h"
 #include "arch_spec.h"
 #include "msr.h"
-#include "energy_stats.h"
 
 #include "JNIFunctionDeclarations.h"
 
