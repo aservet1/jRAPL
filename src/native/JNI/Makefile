@@ -18,6 +18,7 @@ JNIEXPORTS = \
 		EnergyCheckUtils.c \
 		\
 		RuntimeTestUtils.c
+
 OFILES = $(JNIEXPORTS:.c=.o)
 
 CC = gcc
@@ -29,6 +30,7 @@ all: $(JNI_LIB)
 $(JNI_LIB): $(JNIEXPORTS)
 	$(CC) $(CFLAGS) $(INCLUDE_FLAGS) $(JNIEXPORTS) $(JNIEXPORTS)
 	$(CC) -g -Wall $(INCLUDE_FLAGS) -shared -Wl,-soname,$(JNI_LIB) -o $(JNI_LIB) $(OFILES) -L $(NATIVE_FILES_LOCATION) -lc -lNativeRAPL
+
 clean:
 	rm -f $(JNI_LIB) $(OFILES) $(CDRIVER)
 	rm -f $(MAVEN_RESOURCES)/$(JNI_LIB)

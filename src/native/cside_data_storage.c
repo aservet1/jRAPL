@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "ArchSpec.h"
-#include "CSideDataStorage.h"
+#include "arch_spec.h"
+#include "cside_data_storage.h"
 
 DynamicArray* newDynamicArray(size_t capacity) {
 	DynamicArray* list = (DynamicArray*)malloc(sizeof(DynamicArray));

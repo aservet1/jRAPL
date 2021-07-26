@@ -4,13 +4,12 @@
 #include <stdbool.h>
 #include <assert.h>
 
-#include "EnergyStats.h"
-#include "AsyncEnergyMonitor.h"
-#include "EnergyCheckUtils.h"
-#include "ArchSpec.h"
-#include "Utils.h"
+#include "async_energy_monitor.h"
+#include "energy_check_utils.h"
+#include "arch_spec.h"
+#include "utils.h"
 
-#include "CSideDataStorage.h"
+#include "cside_data_storage.h"
 
 #define USING_DYNAMIC_ARRAY	monitor->storageType == DYNAMIC_ARRAY_STORAGE
 #define USING_LINKED_LIST	monitor->storageType == LINKED_LIST_STORAGE
