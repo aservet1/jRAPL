@@ -51,6 +51,7 @@ def do_perbench(data):
 	plt.ylabel('Benchmark', fontweight='bold')
 	plt.xlabel(plotinfo['xlabel'], fontweight='bold')
 	plt.yticks([r + bar_width for r in range(len(c_ll_avg))], labels)
+	plt.xticks(np.linspace(0,1,11))
 	plt.legend()
 	fig = plt.gcf()
 	fig.set_size_inches(12,25)
@@ -77,13 +78,14 @@ def do_overall(data):
 	plt.bar (                                                                     \
 		x           =  [0,1,2],                                                   \
 		height      =  [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],    \
-		#yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],    \
+		yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],    \
 		tick_label  =  labels,                                                    \
 		capsize     =  .5                                                         \
 	)
 
 	plt.xlabel('monitor type')
 	plt.ylabel(plotinfo['ylabel'])
+	plt.yticks(np.linspace(0,1,11))
 	plt.title(plotinfo['title'])
 
 	fig = plt.gcf()
