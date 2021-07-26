@@ -6,7 +6,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "energy_stats.h"
 #include "energy_check_utils.h"
 #include "async_energy_monitor.h"
 #include "arch_spec.h"
