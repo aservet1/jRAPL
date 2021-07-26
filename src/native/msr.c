@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "EnergyCheckUtils.h"
-#include "MSR.h"
-#include "ArchSpec.h"
+#include "energy_check_utils.h"
+#include "msr.h"
+#include "arch_spec.h"
 
 /** Note that when reaserching MSR, it stands for Model-Specific Register, not to be
  *    confused with Machine State Register

@@ -2,8 +2,8 @@
 #include <unistd.h>
 #ifndef _ARCH_SPEC_H
 #define _ARCH_SPEC_H
-#include "MSR.h"
-#include "MicroArchitectures.h"
+#include "msr.h"
+#include "micro_architectures.h"
 
 #define CPUID				\
     __asm__ volatile ("cpuid"   	\

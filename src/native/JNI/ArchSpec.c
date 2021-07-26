@@ -4,9 +4,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "EnergyStats.h"
-#include "ArchSpec.h"
-#include "MSR.h"
+#include "energy_stats.h"
+#include "arch_spec.h"
+#include "msr.h"
 
 JNIEXPORT jdouble JNICALL
 Java_jRAPL_ArchSpec_getWraparoundEnergy(JNIEnv* env, jclass jcls) {

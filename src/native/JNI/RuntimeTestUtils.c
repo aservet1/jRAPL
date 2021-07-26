@@ -3,10 +3,11 @@
 #include <fcntl.h>
 #include <sys/time.h>
 
-#include "ArchSpec.h"
-#include "EnergyCheckUtils.h"
+#include "arch_spec.h"
+#include "energy_check_utils.h"
+#include "utils.h"
+
 #include "JNIFunctionDeclarations.h"
-#include "Utils.h"
 
 //timestamping macros
 #define STARTSTAMP	gettimeofday(&start, NULL);

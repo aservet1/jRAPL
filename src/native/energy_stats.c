@@ -2,8 +2,8 @@
 #include <string.h>
 #include <assert.h>
 #include <strings.h>
-#include "EnergyStats.h"
-#include "ArchSpec.h"
+#include "energy_stats.h"
+#include "arch_spec.h"
 
 EnergyStats
 energy_stats_subtract(EnergyStats x, EnergyStats y) {

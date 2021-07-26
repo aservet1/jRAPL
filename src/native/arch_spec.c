@@ -5,8 +5,8 @@
 #include <math.h>
 #include <stdint.h>
 #include <string.h>
-#include "ArchSpec.h"
-#include "MSR.h"
+#include "arch_spec.h"
+#include "msr.h"
 
 /** RAPL conversion unit */ //@TODO shouldn't this be in MSR.c??
 rapl_msr_unit

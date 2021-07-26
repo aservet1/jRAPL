@@ -9,11 +9,11 @@
 #include <inttypes.h>
 #include <sys/types.h>
 
-#include "EnergyCheckUtils.h"
-#include "ArchSpec.h"
-#include "MSR.h"
-#include "EnergyStats.h"
-#include "Utils.h"
+#include "energy_check_utils.h"
+#include "arch_spec.h"
+#include "msr.h"
+#include "energy_stats.h"
+#include "utils.h"
 
 #define MSR_DRAM_ENERGY_UNIT 0.000015
 

@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include "ArchSpec.h"
-#include "EnergyStats.h"
-#include "AsyncEnergyMonitor.h"
-#include "Utils.h"
+#include "arch_spec.h"
+#include "energy_stats.h"
+#include "async_energy_monitor.h"
+#include "utils.h"
 
 static AsyncEnergyMonitor* monitor = NULL;
 

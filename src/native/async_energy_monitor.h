@@ -4,8 +4,8 @@
 #include <pthread.h>
 #include <stdbool.h>
 
-#include "EnergyStats.h"
-#include "CSideDataStorage.h"
+#include "energy_stats.h"
+#include "cside_data_storage.h"
 
 #define DYNAMIC_ARRAY_STORAGE 1
 #define LINKED_LIST_STORAGE 2

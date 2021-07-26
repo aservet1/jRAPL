@@ -2,7 +2,7 @@
 #ifndef ENERGY_CHECK_UTILS_H
 #define ENERGY_CHECK_UTILS_H
 
-#include "EnergyStats.h"
+#include "energy_stats.h"
 
 void ProfileInit();
 void EnergyStatCheck(EnergyStats stats_per_socket[]);

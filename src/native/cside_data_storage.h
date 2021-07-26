@@ -2,7 +2,7 @@
 #ifndef CSIDE_DATA_STORAGE
 #define CSIDE_DATA_STORAGE
 
-#include "EnergyStats.h"
+#include "energy_stats.h"
 
 typedef struct LinkNode {
 	EnergyStats *items;
