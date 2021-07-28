@@ -1,0 +1,35 @@
+figures dont need titles
+
+capitalize first letters
+
+report units -> report dimensions
+
+eergy update time
+	remove xticks on energy update time
+		elapsed time from start as x axis
+	y axis as ms
+	dots w/ borders, ply with alpha value
+	average figure is unnecessary
+
+histograms
+	y axis: number of calls
+	x axis: time (us)
+	less digits in the legend
+	cside and javaside next to each other (subplot)
+	emphasize the order of magniutde difference somehow
+	normalize the bars
+	
+	for MSR ones: 'runtime to read individual components'
+		plot them all on one line
+		maybe normalize it when theyre all together
+		consider making a table instead of plots
+		maybe dont include CORE?
+		
+whole sample runtime
+	just say the number, not a figure
+	
+do power for per becnhmark (time normalize those boys)
+		
+		
+		
+		
