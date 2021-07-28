@@ -33,9 +33,9 @@ def get_perbench():
         result[benchmark]['c-dynamicarray']['avg'] = c_da_metadata['numSamples']['avg'] / c_da_metadata['lifetime']['avg']
 
         # propagation-of-uncertainty division
-        result[benchmark]['java']          ['stdev'] = math.sqrt( (java_metadata['numSamples']['stdev']/java_metadata['lifetime']['stdev'])**2 / java_metadata['lifetime']['stdev']**2 )
-        result[benchmark]['c-linklist']    ['stdev'] = math.sqrt( (c_ll_metadata['numSamples']['stdev']/c_ll_metadata['lifetime']['stdev'])**2 / c_ll_metadata['lifetime']['stdev']**2 )
-        result[benchmark]['c-dynamicarray']['stdev'] = math.sqrt( (c_da_metadata['numSamples']['stdev']/c_da_metadata['lifetime']['stdev'])**2 / c_da_metadata['lifetime']['stdev']**2 )
+        result[benchmark]['java']          ['stdev'] = 0#math.sqrt( (java_metadata['numSamples']['stdev']/java_metadata['lifetime']['stdev'])**2 / java_metadata['lifetime']['stdev']**2 )
+        result[benchmark]['c-linklist']    ['stdev'] = 0#math.sqrt( (c_ll_metadata['numSamples']['stdev']/c_ll_metadata['lifetime']['stdev'])**2 / c_ll_metadata['lifetime']['stdev']**2 )
+        result[benchmark]['c-dynamicarray']['stdev'] = 0#math.sqrt( (c_da_metadata['numSamples']['stdev']/c_da_metadata['lifetime']['stdev'])**2 / c_da_metadata['lifetime']['stdev']**2 )
 
     return result
 
@@ -57,9 +57,9 @@ def get_overall():
     result['c-linklist']    ['avg'] = c_ll_metadata['numSamples']['avg'] / c_ll_metadata['lifetime']['avg']
     result['c-dynamicarray']['avg'] = c_da_metadata['numSamples']['avg'] / c_da_metadata['lifetime']['avg']
 
-    result['java']          ['stdev'] = math.sqrt(java_metadata['numSamples']['stdev']**2 / java_metadata['lifetime']['stdev']**2)
-    result['c-linklist']    ['stdev'] = math.sqrt(c_ll_metadata['numSamples']['stdev']**2 / c_ll_metadata['lifetime']['stdev']**2)
-    result['c-dynamicarray']['stdev'] = math.sqrt(c_da_metadata['numSamples']['stdev']**2 / c_da_metadata['lifetime']['stdev']**2)
+    result['java']          ['stdev'] = 0#math.sqrt(java_metadata['numSamples']['stdev']**2 / java_metadata['lifetime']['stdev']**2)
+    result['c-linklist']    ['stdev'] = 0#math.sqrt(c_ll_metadata['numSamples']['stdev']**2 / c_ll_metadata['lifetime']['stdev']**2)
+    result['c-dynamicarray']['stdev'] = 0#math.sqrt(c_da_metadata['numSamples']['stdev']**2 / c_da_metadata['lifetime']['stdev']**2)
 
     return result
 
@@ -75,7 +75,7 @@ results['overall']   =  get_overall  ()
 
 results['plotinfo'] = {}
 results['plotinfo']['perbench'] = { 'filename': 'sampling-efficiency_perbench', 'xlabel': 'Sampling Efficiency' }
-results['plotinfo']['overall']  = { 'filename': 'sampling-efficiency_overall' , 'ylabel': 'Sampling Efficiency' }
+results['plotinfo']['overall']  = { 'filename': 'sampling-efficiency_overall' , 'ylabel': 'Sampling Efficiency', 'xlabel': 'Monitor Type' }
 
 print('.) done with overall')
 
