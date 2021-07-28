@@ -1,8 +1,0 @@
-overall_java_avg: 1.274888014474824
-overall_java_std: 0.5524307933620348
-
-overall_c_ll_avg: 2.3348750368340396
-overall_c_ll_std: 0.556703949686466
-
-overall_c_da_avg: 1.5165575583539088
-overall_c_da_std: 0.5537258277834127

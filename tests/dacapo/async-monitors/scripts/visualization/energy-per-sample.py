@@ -79,7 +79,7 @@ def do_overall(data,result_dir):
 			capsize     =  .5                                                         \
 		)
 
-		ax.set_xlabel(powd)
+		ax.set_xlabel(powd.replace('_', ' ').title())
 
 	fig.savefig(os.path.join(result_dir, plotinfo['filename']))
 	print(" <.> done making the overall average graph")
