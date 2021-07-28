@@ -82,7 +82,7 @@ def do_overall(data):
 		capsize     =  .5                                                         \
 	)
 
-	plt.xlabel('monitor type')
+	plt.xlabel(plotinfo['xlabel'])
 	plt.ylabel(plotinfo['ylabel'])
 	plt.yticks(np.linspace(0,1,11))
 
