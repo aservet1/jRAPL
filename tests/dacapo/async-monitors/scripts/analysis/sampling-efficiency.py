@@ -74,8 +74,8 @@ results['perbench']  =  get_perbench ()
 results['overall']   =  get_overall  ()
 
 results['plotinfo'] = {}
-results['plotinfo']['perbench'] = { 'filename': 'sampling-efficiency_perbench', 'xlabel': 'Sampling Efficiency', 'title': 'Sampling Efficiency' }
-results['plotinfo']['overall']  = { 'filename': 'sampling-efficiency_overall' , 'ylabel': 'Sampling Efficiency', 'title': 'Sampling Efficiency' }
+results['plotinfo']['perbench'] = { 'filename': 'sampling-efficiency_perbench', 'xlabel': 'Sampling Efficiency' }
+results['plotinfo']['overall']  = { 'filename': 'sampling-efficiency_overall' , 'ylabel': 'Sampling Efficiency' }
 
 print('.) done with overall')
 

@@ -123,8 +123,8 @@ results['overall']  = get_overall ()
 results['perbench'] = get_perbench()
 
 results['plotinfo'] = {}
-results['plotinfo']['perbench'] = { 'title': 'Energy Per Sample Normalized by Time Per Sample', 'filename': 'energy-per-sample_timenormalized_perbench', 'xlabel': 'Average Energy Per Sample (joules)' } 
-results['plotinfo']['overall']  = { 'title': 'Energy Per Sample Normalized by Time Per Sample', 'filename': 'energy-per-sample_timenormalized_overall' , 'ylabel': 'Average Energy Per Sample (joules)' } 
+results['plotinfo']['perbench'] = { 'filename': 'energy-per-sample_timenormalized_perbench', 'xlabel': 'Average Energy Per Sample (joules)' } 
+results['plotinfo']['overall']  = { 'filename': 'energy-per-sample_timenormalized_overall' , 'ylabel': 'Average Energy Per Sample (joules)' } 
 
 with open(outputfile,'w') as fd:
     json.dump(results, fd)

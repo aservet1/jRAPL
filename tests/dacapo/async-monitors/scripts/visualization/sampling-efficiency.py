@@ -47,7 +47,6 @@ def do_perbench(data):
 	plt.barh(r2, c_ll_avg, bar_width, color='#bc5090', edgecolor="white", label='C Linked List')   
 	plt.barh(r3, java_avg, bar_width, color='#ffa600', edgecolor="white", label='Java')            
 
-	plt.title(plotinfo['title'])
 	plt.ylabel('Benchmark', fontweight='bold')
 	plt.xlabel(plotinfo['xlabel'], fontweight='bold')
 	plt.yticks([r + bar_width for r in range(len(c_ll_avg))], labels)
@@ -86,7 +85,6 @@ def do_overall(data):
 	plt.xlabel('monitor type')
 	plt.ylabel(plotinfo['ylabel'])
 	plt.yticks(np.linspace(0,1,11))
-	plt.title(plotinfo['title'])
 
 	fig = plt.gcf()
 	fig.set_size_inches(5,5)

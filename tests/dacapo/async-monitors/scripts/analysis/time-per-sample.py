@@ -76,8 +76,8 @@ results['perbench']  =  get_perbench ()
 results['overall']   =  get_overall  ()
 
 results['plotinfo'] = {}
-results['plotinfo']['perbench'] = { 'filename': 'time-per-sample_perbench', 'xlabel': 'Time Per Sample (usec)', 'title': 'Average Time Per Sample' }
-results['plotinfo']['overall']  = { 'filename': 'time-per-sample_overall' , 'ylabel': 'Time Per Sample (usec)', 'title': 'Average Time Per Sample' }
+results['plotinfo']['perbench'] = { 'filename': 'time-per-sample_perbench', 'xlabel': 'Time Per Sample (usec)' }
+results['plotinfo']['overall']  = { 'filename': 'time-per-sample_overall' , 'ylabel': 'Time Per Sample (usec)' }
 
 print('.) done with overall')
 

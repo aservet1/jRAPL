@@ -88,7 +88,6 @@ plt.bar (                                                                   \
 
 plt.xlabel('monitor type')
 plt.ylabel('average memory percent difference')
-plt.title('% memory difference that each type of monitor added')
 
 fig = plt.gcf()
 fig.set_size_inches(5,5)

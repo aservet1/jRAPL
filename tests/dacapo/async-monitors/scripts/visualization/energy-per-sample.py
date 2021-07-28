@@ -42,7 +42,6 @@ def do_perbench(data,result_dir):
 
 		plotinfo = data['plotinfo']['perbench']
 
-		plt.title(plotinfo['title'] + ": " + powd.upper())
 		plt.ylabel('Benchmark', fontweight='bold')
 		plt.xlabel(plotinfo['xlabel'], fontweight='bold')
 		plt.yticks([r + bar_width for r in range(len(c_ll_avg))], labels)
@@ -81,7 +80,6 @@ def do_overall(data,result_dir):
 		)
 
 		ax.set_xlabel(powd)
-		fig.suptitle(plotinfo['title'])
 
 	fig.savefig(os.path.join(result_dir, plotinfo['filename']))
 	print(" <.> done making the overall average graph")

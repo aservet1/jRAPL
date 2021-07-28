@@ -1,10 +1,9 @@
-figures dont need titles
 
 capitalize first letters
 
 report units -> report dimensions
 
-eergy update time
+energy update time
 	remove xticks on energy update time
 		elapsed time from start as x axis
 	y axis as ms
@@ -29,7 +28,4 @@ whole sample runtime
 	just say the number, not a figure
 	
 do power for per becnhmark (time normalize those boys)
-		
-		
-		
-		
+
