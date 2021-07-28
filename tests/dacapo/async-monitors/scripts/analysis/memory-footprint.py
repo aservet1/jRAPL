@@ -9,7 +9,6 @@ from myutil import parse_cmdline_args, load_data_by_file_extension
 from aggr_utils import percent_diff, percent_diff_propagate_uncertainty
 
 '''---------------------------------------------------------------------------------------------------'''
-
 def get_perbench():
     data = load_data_by_file_extension('.aggregate-perbench.json', 'benchmark')
     result = {}
@@ -81,7 +80,7 @@ def get_overall():
 print('.) starting')
 
 data_dir, result_dir = parse_cmdline_args(argv)
-outputfile = os.path.join(result_dir,'memory-percent-difference.json')
+outputfile = os.path.join(result_dir,'memory-footprint.json')
 
 os.chdir(data_dir)
 results = {}

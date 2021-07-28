@@ -63,7 +63,7 @@ plt.legend()
 fig = plt.gcf()
 fig.set_size_inches(12,25)
 
-plt.savefig(os.path.join(result_dir,'memory-compare_perbenchmark'))
+plt.savefig(os.path.join(result_dir,'memory-footprint_perbenchmark'))
 print(" <.> done making the per-benchmark graph")
 
 overall_java_avg = data['overall']['java']['avg'] 
@@ -92,7 +92,7 @@ plt.ylabel('memory footprint (% difference)'.title())
 fig = plt.gcf()
 fig.set_size_inches(5,5)
 
-plt.savefig(os.path.join(result_dir,'memory-compare_overall'))
+plt.savefig(os.path.join(result_dir,'memory-footprint_overall'))
 print(" <.> done making the overall average graph")
 
 ##  with open(os.path.join(result_dir,'raw-overall-data.txt'),'w') as f:
