@@ -1,4 +1,0 @@
-I had an old way of doing this analysis, with way worse efficiency, but worked well because
-my previous data format was causing bugs. But I fixed the previous data format, so these
-incredibly inefficient scripts arent necessary any more. Still keeping this around for reference
-and potential code recycling, for the time being.
