@@ -11,8 +11,9 @@ try:
 except IndexError:
     print("usage:",argv[0],"<list of data files> result_dir")
     exit(2)
-
-print(data_files)
+if not len(data_files):
+    print("usage:",argv[0],"<list of data files> result_dir")
+    exit(2)
 
 for fname in data_files:
     data = {}
