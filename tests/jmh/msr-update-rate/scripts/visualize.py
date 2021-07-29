@@ -26,31 +26,31 @@ pkg = data['pkg_socket'+str(s)]
 # gpu = data['gpu_socket'+str(s)]
 
 # fig, axs = plt.subplots(1,4,figsize=(15,5))
-fig, axs = plt.subplots(1,2,figsize=(15,10))
+fig, axs = plt.subplots(1,2,figsize=(15,7.5))
 
-axs[0].scatter    (range(len(dram['filtered'])), dram['filtered'])
+c = 'black'; a = .7
+
+axs[0].scatter    (range(len(dram['filtered'])), dram['filtered'], edgecolor=c, alpha=a)
 axs[0].set_title  ('dram')
-axs[0].set_ylabel ('update time (ms)')
+axs[0].set_ylabel ('update time (μs)')
+axs[0].set_xticks([])
+axs[0].set_yticks(axs[0].get_yticks()[1:-1])
 
-axs[1].scatter    (range(len(pkg['filtered'])),  pkg['filtered'])
+axs[1].scatter    (range(len(pkg['filtered'])),  pkg['filtered'], edgecolor=c, alpha=a)
 axs[1].set_title  ('pkg')
-
-# axs[2].scatter(range(len(gpu['filtered'])),gpu['filtered'])
-# axs[2].set_title('gpu')
-
-# axs[3].scatter(range(len(core['filtered'])),core['filtered'])
-# axs[3].set_title('core')
-
-# fig.suptitle('Energy Update Time Scatter' + system_name)
-fig.align_ylabels(axs)
+axs[1].set_xticks([])
+axs[1].set_yticks(axs[0].get_yticks())
 
 #plt.show()
 os.chdir(result_dir)
-fig.savefig('energy-update-time-simple_' + system_name)
+fig.savefig('energy-update-time_' + system_name)
 
 print('>>','done with scatterplot')
 
+exit(0)
 '''------------------------------------------------------------------------------'''
+
+# This below figure is unnecessary, consider deleting it
 
 fig.clf(); plt.clf();
 
