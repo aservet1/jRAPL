@@ -35,9 +35,9 @@ for i in range(1, len(sys.argv)):
         extra2 = Rectangle((0, 0), 1, 1, fc="w", fill=False, edgecolor='none', linewidth=0)
         plt.legend()
         title = fname.split('.')[0]
-        plt.title(title)
+        #plt.title(title)
         plt.legend([extra1, extra2], ("σ: "+str(sd)+"µ", "x̄: "+str(mean)+"µ"))
-        plt.xlabel("microseconds")
-        plt.ylabel("num calls with time")
+        plt.xlabel("microseconds".title())
+        plt.ylabel("frequency".title())
         plt.savefig(title)
         plt.clf()

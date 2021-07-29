@@ -16,10 +16,10 @@ for d in _data:
     name = d['benchmark'].split('.')[-1]
     data[name] = d
 
-unit    =  []
-means   =  []
-labels  =  []
-errors  =  [] # not standard deviation. not sure what the error is
+unit    =  [];
+means   =  [];
+labels  =  [];
+errors  =  []; # not standard deviation. not sure what the error is
 
 for name in data:
     if name.startswith('time'):
@@ -39,7 +39,7 @@ print(errors)
 print('units:',unit)
 
 plt.bar(range(len(labels)), means, yerr=errors, tick_label=labels)
-plt.ylabel('average runtime: '+str(unit))
-plt.xlabel('sampling version')
-plt.title('average runtime for synchronous energy sampling')
+plt.ylabel('average runtime ('.title()+str(unit).split('/')[0]+')')
+plt.xlabel('sampling version'.title())
+# plt.title('average sample runtime'.title())
 plt.savefig('sync-samples-runtime')

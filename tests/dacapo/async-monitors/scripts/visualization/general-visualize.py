@@ -78,7 +78,7 @@ def do_overall(data):
 		capsize     =  .5                                                         \
 	)
 
-	plt.xlabel('monitor type')
+	plt.xlabel('monitor type'.title())
 	plt.ylabel(plotinfo['ylabel'])
 
 	fig = plt.gcf()

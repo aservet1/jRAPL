@@ -51,7 +51,7 @@ def filter_for_outliers(unfiltered, **kwargs):
 
 try:
     datafile = argv[1]
-    outfile = argv[2]
+    outfile  = argv[2]
 except:
     print("usage",argv[0],"<csv data file> <json output file>")
     exit(2)
@@ -68,7 +68,6 @@ print(len(df),'total samples')
 
 result_dfs = dict()
 
-cutoff = 5000
 
 for powerDomain in header:
     print(f'started powerDomain={powerDomain}')
@@ -86,50 +85,52 @@ for powerDomain in header:
             bw = 0
         else:
             bw += 1
-    # Get the difference between consecutive timestamps
-    ts_diffs = diff_list(change_ts)
+    # Get the difference between consecutive timestamps, convert to milliseconds
+    ts_diffs = diff_list(change_ts) # [ usec/1000 for usec in diff_list(change_ts) ]
     
-    # Get the cumulative sum of the unfiltered duractions
-    # Get the filtered durations <=3000 and outliers >3000
+    # Get the filtered durations <=3 and outliers >3
+    cutoff = 3000 # 3 ms cutoff
     filtered, outliers = filter_for_outliers(ts_diffs, le=cutoff)
     
     result = filtered
     
     result_dfs[powerDomain] = {
-                               "change_timestamps": change_ts,
-                               #"reading_change_num": non_zero_reading_nums,
-                               "energy_differences": ener_diffs,
-                               "filtered": filtered,
-                               "outliers": outliers
-                              }  
+        #"reading_change_num": non_zero_reading_nums,
+        #"change_timestamps": change_ts,
+        #"energy_differences": ener_diffs,
+        "filtered": filtered,
+        "outliers": outliers
+    }  
     
     print(f'collected result dataframe for powerDomain={powerDomain};\tlen(outliers)={len(outliers)};\tlen(result)={len(result)}')
+
+# percent that were outliers (above 3000 ms)
+nfiltered = len(result_dfs['dram_socket1']['filtered']) + len(result_dfs['pkg_socket1']['filtered'])
+nexcluded = len(result_dfs['dram_socket1']['outliers']) + len(result_dfs['pkg_socket1']['outliers'])
+result_dfs['percent-excluded'] = nexcluded/nfiltered * 100
 
 with open(outfile,'w') as fd:
     fd.write(json.dumps(result_dfs))
 
-# percent that were outliers (above 5000 ms)
-nfiltered = len(result_dfs['dram_socket1']['filtered']) + len(result_dfs['pkg_socket1']['filtered'])
-nexcluded = len(result_dfs['dram_socket1']['outliers']) + len(result_dfs['pkg_socket1']['outliers'])
-print(str(nexcluded/nfiltered * 100) + "% excluded")
-
-dram_mean = statistics.mean(result_dfs['dram_socket1']['filtered'])
+dram_mean  = statistics.mean(result_dfs['dram_socket1']['filtered'])
 dram_stdev = statistics.mean(result_dfs['dram_socket1']['filtered'])
 
-pkg_mean = statistics.mean(result_dfs['pkg_socket1']['filtered'])
-pkg_stdev = statistics.stdev(result_dfs['pkg_socket1']['filtered'])
+pkg_mean   = statistics.mean(result_dfs['pkg_socket1']['filtered'])
+pkg_stdev  = statistics.stdev(result_dfs['pkg_socket1']['filtered'])
 
 both = list(result_dfs['dram_socket1']['filtered'])
 both.extend(list(result_dfs['pkg_socket1']['filtered']))
-both_mean = statistics.mean(both)
+both_mean  = statistics.mean(both)
 both_stdev = statistics.stdev(both)
 
 print("Mean and stdev:")
 print(json.dumps({
-        'dram_mean':dram_mean,
-        'dram_stdev':dram_stdev,
-        'pkg_mean':pkg_mean,
-        'pkg_stdev':pkg_stdev,
-        'both_mean':both_mean, 
-        'both_stdev':both_stdev
-    }, indent=2))
+    'dram_mean':dram_mean,
+    'dram_stdev':dram_stdev,
+    'pkg_mean':pkg_mean,
+    'pkg_stdev':pkg_stdev,
+    'both_mean':both_mean, 
+    'both_stdev':both_stdev
+}, indent=2))
+
+
