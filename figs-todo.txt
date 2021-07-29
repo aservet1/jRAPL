@@ -2,12 +2,7 @@
 report units -> report dimensions
 
 histograms
-	y axis: number of calls
-	x axis: time (us)
-	less digits in the legend
-	cside and javaside next to each other (subplot)
-	emphasize the order of magniutde difference somehow
-	normalize the bars
+	normalize the bars (maybe not tho)
 	
 	for MSR ones: 'runtime to read individual components'
 		plot them all on one line
@@ -20,3 +15,4 @@ whole sample runtime
 	
 do power for per becnhmark (time normalize those boys)
 
+make a table for async monitor stuff
