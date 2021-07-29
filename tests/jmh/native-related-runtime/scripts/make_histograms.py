@@ -1,15 +1,26 @@
+#!/usr/bin/env python3
+import os
+from sys import argv
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-import sys
 
-for i in range(1, len(sys.argv)):
-    fname = sys.argv[i]
+
+try:
+    data_files = argv[1:-1]
+    result_dir = argv[-1]
+except IndexError:
+    print("usage:",argv[0],"<list of data files> result_dir")
+    exit(2)
+
+print(data_files)
+
+for fname in data_files:
     data = {}
     with open(fname) as fh:
         n = 0
         sum_ = 0
         for line in fh:
-            k, v = [int(i) for i in line.split()]
+            k, v = [int(s.strip()) for s in line.split()]
             data[k] = v
             n += v
             sum_ += k*v
@@ -34,10 +45,10 @@ for i in range(1, len(sys.argv)):
         extra1 = Rectangle((0, 0), 1, 1, fc="w", fill=False, edgecolor='none', linewidth=0)
         extra2 = Rectangle((0, 0), 1, 1, fc="w", fill=False, edgecolor='none', linewidth=0)
         plt.legend()
-        title = fname.split('.')[0]
+        title = fname.split('.')[0].split('/')[-1]
         #plt.title(title)
         plt.legend([extra1, extra2], ("σ: "+str(sd)+"µ", "x̄: "+str(mean)+"µ"))
         plt.xlabel("microseconds".title())
         plt.ylabel("frequency".title())
-        plt.savefig(title)
+        plt.savefig(os.path.join(result_dir,title))
         plt.clf()
