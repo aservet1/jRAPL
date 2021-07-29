@@ -1,14 +1,5 @@
 
-capitalize first letters
-
 report units -> report dimensions
-
-energy update time
-	remove xticks on energy update time
-		elapsed time from start as x axis
-	y axis as ms
-	dots w/ borders, ply with alpha value
-	average figure is unnecessary
 
 histograms
 	y axis: number of calls
