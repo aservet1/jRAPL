@@ -79,6 +79,7 @@ axs[0].legend ( \
 		"σ: "+trunc_str(cside['metadata']['stdev'])+" µsec"  \
 	) \
 )
+axs[0].set_title("C")
 
 axs[1].bar ( \
 	javaside['data']['filtered'].keys(), \
@@ -95,6 +96,7 @@ axs[1].legend ( \
 		"σ: "+trunc_str(javaside['metadata']['stdev'])+" µsec"  \
 	) \
 )
+axs[1].set_title("Java")
 axs[1].set_yticks(axs[0].get_yticks()) # align y axis idiom
 
 fig.supxlabel('Time (μs)')
