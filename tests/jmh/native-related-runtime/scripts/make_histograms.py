@@ -4,6 +4,8 @@ from sys import argv
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
+def trunc_str(n): # decimal tostring, truncated
+	return "%.4f" % n
 
 try:
     data_files = argv[1:-1]
@@ -52,7 +54,7 @@ for fname in data_files:
         plt.legend()
         title = fname.split('.')[0].split('/')[-1]
         #plt.title(title)
-        plt.legend([extra1, extra2], ("σ: "+str(sd)+"µ", "x̄: "+str(mean)+"µ"))
+        plt.legend([extra1, extra2], ( "x̄: "+trunc_str(mean)+"µs", "σ: "+trunc_str(sd)+"µ" ))
         plt.xlabel("microseconds".title())
         plt.ylabel("frequency".title())
         plt.savefig(os.path.join(result_dir,title))
