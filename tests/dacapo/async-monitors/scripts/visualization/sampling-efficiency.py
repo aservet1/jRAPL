@@ -53,7 +53,7 @@ def do_perbench(data):
 	plt.xticks(np.linspace(0,1,11))
 	plt.legend()
 	fig = plt.gcf()
-	fig.set_size_inches(12,25)
+	fig.set_size_inches(15,25)
 
 	plt.savefig(os.path.join(result_dir, plotinfo['filename']))
 	print(" <.> done making the per-benchmark graph")

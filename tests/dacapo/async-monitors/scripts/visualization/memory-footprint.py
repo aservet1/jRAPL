@@ -61,7 +61,7 @@ plt.xlabel('Percent Difference', fontweight='bold')
 plt.yticks([r + bar_width for r in range(len(c_ll_avg))], labels)
 plt.legend()
 fig = plt.gcf()
-fig.set_size_inches(12,25)
+fig.set_size_inches(15,25)
 
 plt.savefig(os.path.join(result_dir,'memory-footprint_perbenchmark'))
 print(" <.> done making the per-benchmark graph")
