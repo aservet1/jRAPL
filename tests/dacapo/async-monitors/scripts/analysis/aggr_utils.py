@@ -65,3 +65,13 @@ def percent_diff_propagate_uncertainty(sa,sb,a,b):
     average = (a/2) + (b/2)
     average_sd = math.sqrt( (sa**2 / 2**2) + (sb**2 / 2**2) )
     return math.sqrt( ((subtract/average)**2) * ( (subtract_sd/subtract)**2 + (average_sd/average)**2 ) * 100 )
+
+''' https://en.wikipedia.org/wiki/Propagation_of_uncertainty '''
+def division_propagate_uncertainty(sda, sdb, a, b):
+    return 0
+    return math.sqrt (                  \
+        (a/b) *                         \
+        (                               \
+            (sda/a)**2 + (sdb/b)**2     \
+        )                               \
+    )

@@ -9,7 +9,9 @@ scratch
 # generated raw data results
 *.metadata.json
 *.csv
-*.stats.json
 *.memory.json
+
+# intermediate results
+*.stats.json
 *.aggregate-perbench.json
 *.aggregate-permonitor.json

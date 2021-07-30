@@ -18,19 +18,19 @@ public class EnergyMonitor extends EnergyManager {
 	 *	method that wraps this like getStringSample()
 	*/ native static String energyStatCheck(); 
 
-	//@TODO consider if you want the timestamp to be part of the primitive sample. let's say no for now
-    public static double[] stringToPrimitiveSample(String energyString) {
-		String[] stringVals = energyString.split(",");
-		return stringArrayToDoubleArray(
-			Arrays.copyOf(stringVals,stringVals.length-1)
-		);
-	}
-
 	private static double[] stringArrayToDoubleArray(String[] s) {
 		double[] d = new double[s.length];
 		for (int i = 0; i < s.length; i++)
 			d[i] = Double.parseDouble(s[i]);
 		return d;
+	}
+
+	//@TODO consider if you want the timestamp to be part of the primitive sample. let's say no for now
+    protected static double[] stringToPrimitiveSample(String energyString) {
+		String[] parts = energyString.split(",");
+		return stringArrayToDoubleArray (
+			Arrays.copyOf(parts, parts.length-1)
+		);
 	}
 
 	protected static EnergyStats stringToEnergyStats(String energyString) {
@@ -54,5 +54,5 @@ public class EnergyMonitor extends EnergyManager {
 		}
 		return diff;
     }
-    
+
 }

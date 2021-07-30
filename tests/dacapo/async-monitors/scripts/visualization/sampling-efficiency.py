@@ -1,127 +1,115 @@
 #!/usr/bin/env python3
 
-from sys import argv
 import os
 import json
-import pandas as pd
-import statistics
-import matplotlib.pyplot as plt
-import matplotlib as mpl
 import numpy as np
-import math
+import pandas as pd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from math import sqrt
+from sys import argv
 
 from myutil import parse_cmdline_args
 
-data_dir, result_dir = parse_cmdline_args(argv)
-os.chdir(data_dir)
+'''--------------------------------------------------------------------------------'''
+def do_perbench(data):
+	labels = []
+	java_avg = []; c_da_avg = []; c_ll_avg = [];
+	java_std = []; c_da_std = []; c_ll_std = [];
 
-files = sorted([ f for f in os.listdir() if f.endswith('.aggregate-stats.json') ])
+	plotinfo = data['plotinfo']['perbench']
 
-data = []
-for fname in files:
-    with open(fname) as f:
-        d = json.loads(f.read())
-        data.append(d)
-x = {}
-for d in data:
-    bench = d['metadata']['benchmark']
-    if not bench in x.keys(): x[bench] = [d]
-    else: x[bench].append(d)
-data = x
+	for benchmark in sorted(data['perbench'].keys()):
 
-labels = []
+		labels.append(benchmark)
 
-java_samples_per_ms_AVG = []
-c_ll_samples_per_ms_AVG = []
-c_da_samples_per_ms_AVG = []
+		java_avg.append(data['perbench'][benchmark]['java']['avg'])
+		java_std.append(data['perbench'][benchmark]['java']['stdev'])
 
-java_samples_per_ms_STDEV = []
-c_ll_samples_per_ms_STDEV = []
-c_da_samples_per_ms_STDEV = []
+		c_ll_avg.append(data['perbench'][benchmark]['c-linklist']['avg'])
+		c_ll_std.append(data['perbench'][benchmark]['c-linklist']['stdev'])
 
-for benchmark in data:
+		c_da_avg.append(data['perbench'][benchmark]['c-dynamicarray']['avg'])
+		c_da_std.append(data['perbench'][benchmark]['c-dynamicarray']['stdev'])
 
-    def get_by_monitor_type(data, monitor_type):
-        return [ d for d in data[benchmark] if d['metadata']['monitor_type'] == monitor_type ][0]
+	## Make the all-benchmarks graph ##
+	bar_width = 0.25
+	mpl.rcParams['figure.dpi'] = 600
+	r1 = np.arange(len(c_ll_avg))
+	r2 = [x + bar_width for x in r1]
+	r3 = [x + bar_width for x in r2]
 
-    labels.append(benchmark)
+	plt.clf()
+	# plt.barh(r1, c_da_avg, bar_width, xerr=c_da_std, color='#003f5c', edgecolor="white", label='C Dynamic Array') 
+	# plt.barh(r2, c_ll_avg, bar_width, xerr=c_ll_std, color='#bc5090', edgecolor="white", label='C Linked List')   
+	# plt.barh(r3, java_avg, bar_width, xerr=java_std, color='#ffa600', edgecolor="white", label='Java')            
+	plt.barh(r1, c_da_avg, bar_width, color='#003f5c', edgecolor="white", label='C Dynamic Array') 
+	plt.barh(r2, c_ll_avg, bar_width, color='#bc5090', edgecolor="white", label='C Linked List')   
+	plt.barh(r3, java_avg, bar_width, color='#ffa600', edgecolor="white", label='Java')            
 
-    java_metadata = get_by_monitor_type(data,'java')['metadata']
-    c_ll_metadata = get_by_monitor_type(data,'c-linklist')['metadata']
-    c_da_metadata = get_by_monitor_type(data,'c-dynamicarray')['metadata']
+	plt.ylabel('Benchmark', fontweight='bold')
+	plt.xlabel(plotinfo['xlabel'], fontweight='bold')
+	plt.yticks([r + bar_width for r in range(len(c_ll_avg))], labels)
+	plt.xticks(np.linspace(0,1,11))
+	plt.legend()
+	fig = plt.gcf()
+	fig.set_size_inches(12,25)
 
-    java_samples_per_ms_AVG.append( java_metadata['numSamples']['avg'] / java_metadata['lifetime']['avg'] )
-    c_ll_samples_per_ms_AVG.append( c_ll_metadata['numSamples']['avg'] / c_ll_metadata['lifetime']['avg'] )
-    c_da_samples_per_ms_AVG.append( c_da_metadata['numSamples']['avg'] / c_da_metadata['lifetime']['avg'] )
+	plt.savefig(os.path.join(result_dir, plotinfo['filename']))
+	print(" <.> done making the per-benchmark graph")
 
-    java_samples_per_ms_STDEV.append( math.sqrt( (java_metadata['numSamples']['stdev']**2) / (java_metadata['lifetime']['avg']**2) ) )
-    c_ll_samples_per_ms_STDEV.append( math.sqrt( (c_ll_metadata['numSamples']['stdev']**2) / (c_ll_metadata['lifetime']['avg']**2) ) )
-    c_da_samples_per_ms_STDEV.append( math.sqrt( (c_da_metadata['numSamples']['stdev']**2) / (c_da_metadata['lifetime']['avg']**2) ) )
 
-## Make the all-benchmarks graph ##
-bar_width = 0.25
-mpl.rcParams['figure.dpi'] = 600
-r1 = np.arange(len(labels))
-r2 = [x + bar_width for x in r1]
-r3 = [x + bar_width for x in r2]
+def do_overall(data):
+	plotinfo = data['plotinfo']['overall']
 
-plt.clf()
-plt.barh(r1, java_samples_per_ms_AVG, bar_width, xerr=java_samples_per_ms_STDEV, color='#ffa600', edgecolor="white", label='Java')
-plt.barh(r2, c_da_samples_per_ms_AVG, bar_width, xerr=c_da_samples_per_ms_STDEV, color='#003f5c', edgecolor="white", label='C Dynamic Array')
-plt.barh(r3, c_ll_samples_per_ms_AVG, bar_width, xerr=c_ll_samples_per_ms_STDEV, color='#bc5090', edgecolor="white", label='C Linked List')
+	overall_java_avg = data['overall']['java']['avg'] 
+	overall_java_std = data['overall']['java']['stdev']
 
-plt.ylabel('Benchmark', fontweight='bold')
-plt.xlabel('samples per ms', fontweight='bold')
-plt.yticks([r + bar_width for r in range(len(labels))], labels)
-plt.legend()
-fig = plt.gcf()
-fig.set_size_inches(12,25)
-#plt.show()
-plt.savefig(os.path.join(result_dir,'sampling-efficiency_perbench'))
+	overall_c_ll_avg = data['overall']['c-linklist']['avg'] 
+	overall_c_ll_std = data['overall']['c-linklist']['stdev']
 
-## Now to average across all benchmarks and make a bar graph with error bars of the 3 ##
-''' https://math.stackexchange.com/questions/1547141/aggregating-standard-deviation-to-a-summary-point?fbclid=IwAR3GpT8cNoNbMHntA1dKhWKHGXvBj2W-t7NQU29qoqtsg37uZKZgkeDM-aE <-- formulas for aggr_mean and aggr_stdev '''
-def aggr_mean(sample_sizes, averages):
-    assert len(sample_sizes) == len(averages)
-    return sum([ (sample_sizes[i]*averages[i]) for i in range(len(sample_sizes)) ]) / sum(sample_sizes)
-def aggr_stdev(sample_sizes, stdevs):
-    assert len(sample_sizes) == len(stdevs)
-    return math.sqrt(sum([ (sample_sizes[i]*(stdevs[i]**2)) for i in range(len(sample_sizes)) ]) / sum (sample_sizes))
+	overall_c_da_avg = data['overall']['c-dynamicarray']['avg'] 
+	overall_c_da_std = data['overall']['c-dynamicarray']['stdev']
 
-# TODO you should be doing these calculations in a separate 'overall aggregation' module.................
-overall_java_avg = aggr_mean (,java_samples_per_ms_AVG)
-overall_java_std = aggr_stdev(,java_samples_per_ms_STDEV)
-overall_c_ll_avg = aggr_mean (,c_ll_samples_per_ms_AVG)
-overall_c_ll_std = aggr_stdev(,c_ll_samples_per_ms_STDEV)
-overall_c_da_avg = aggr_mean (,c_da_samples_per_ms_AVG)
-overall_c_da_std = aggr_stdev(,c_da_samples_per_ms_STDEV)
+	labels = ['java','c-linklist','c-dynamicarray']
 
-labels = ['java','c-linklist','c-dynamicarray']
+	plt.clf()
+	plt.bar (                                                                     \
+		x           =  [0,1,2],                                                   \
+		height      =  [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],    \
+		yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],    \
+		tick_label  =  labels,                                                    \
+		capsize     =  .5                                                         \
+	)
 
-plt.clf()
-plt.bar(x=[0,1,2], \
-    height=[overall_java_avg, overall_c_ll_avg, overall_c_da_avg], \
-    yerr=  [overall_java_std, overall_c_ll_std, overall_c_da_std], \
-    tick_label=labels \
-)
+	plt.xlabel(plotinfo['xlabel'])
+	plt.ylabel(plotinfo['ylabel'])
+	plt.yticks(np.linspace(0,1,11))
 
-plt.xlabel('monitor type')
-plt.ylabel('samples per ms')
-plt.title('sampling efficiency of monitors (average across benchmarks)')
+	fig = plt.gcf()
+	fig.set_size_inches(5,5)
 
-fig = plt.gcf()
-fig.set_size_inches(5,5)
+	plt.savefig(os.path.join(result_dir,plotinfo['filename']))
+	print(" <.> done making the overall average graph")
 
-#plt.show()
-plt.savefig( os.path.join(result_dir,'sampling-efficiency_overall') )
+	# with open(os.path.join(result_dir,'raw-overall-data.txt'),'w') as f:
+	# 	f.write("overall_java_avg: "+str(overall_java_avg)+"\n")
+	# 	f.write("overall_java_std: "+str(overall_java_std)+"\n")
+	# 	f.write("\n")
+	# 	f.write("overall_c_ll_avg: "+str(overall_c_ll_avg)+"\n")
+	# 	f.write("overall_c_ll_std: "+str(overall_c_ll_std)+"\n")
+	# 	f.write("\n")
+	# 	f.write("overall_c_da_avg: "+str(overall_c_da_avg)+"\n")
+	# 	f.write("overall_c_da_std: "+str(overall_c_da_std)+"\n")
 
-with open( os.path.join(result_dir,'sampling-efficiency_overall.raw'), 'w' ) as f:
-	f.write('overall_java_avg: '+str(overall_java_avg)+"\n")
-	f.write('overall_java_std: '+str(overall_java_std)+"\n")
-	f.write("\n")
-	f.write('overall_c_ll_avg: '+str(overall_c_ll_avg)+"\n")
-	f.write('overall_c_ll_std: '+str(overall_c_ll_std)+"\n")
-	f.write("\n")
-	f.write('overall_c_da_avg: '+str(overall_c_da_avg)+"\n")
-	f.write('overall_c_da_std: '+str(overall_c_da_std)+"\n")
+	# print(" <.> done printing overall data")
 
+'''-----------------------------------------------------------------------------------'''
+
+data_file, result_dir = parse_cmdline_args(argv)
+
+with open(data_file) as fd:
+	data = json.load(fd)
+
+do_perbench(data)
+do_overall(data)

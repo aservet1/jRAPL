@@ -7,8 +7,8 @@ from sys import argv
 def diff_list(l,wraparound=0):
     d = []
     for i in range(1,len(l)):
-		diff = l[i]-l[i-1]
-		if diff < 0: diff += wraparound
+        diff = l[i]-l[i-1]
+        if diff < 0: diff += wraparound
         d.append(diff)
     return d
 

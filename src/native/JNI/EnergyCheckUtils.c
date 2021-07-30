@@ -9,13 +9,13 @@
 #include <inttypes.h>
 #include <sys/types.h>
 
-#include "JNIFunctionDeclarations.h"
-#include "EnergyCheckUtils.h"
-#include "ArchSpec.h"
-#include "MSR.h"
-#include "EnergyStats.h"
+#include "energy_check_utils.h"
+#include "arch_spec.h"
+#include "msr.h"
 
-#define MSR_DRAM_ENERGY_UNIT 0.000015 // this one is not necessary to define in this file scope, is it?
+#include "JNIFunctionDeclarations.h"
+
+// #define MSR_DRAM_ENERGY_UNIT 0.000015 // this one is not necessary to define in this file scope, is it?
 
 static uint64_t num_sockets;
 static int power_domains_supported; // this variable is not necessary to store in this file scope, or is it?

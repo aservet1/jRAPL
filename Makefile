@@ -28,3 +28,4 @@ clean: clean-driver-output
 	(cd $(NATIVE_SRC) && make clean)
 	(cd $(NATIVE_SRC)/JNI && make clean)
 	(cd $(JAVA_SRC) && mvn clean)
+
