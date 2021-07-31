@@ -1,5 +1,6 @@
 
 NATIVE_SRC = src/native
+JNI_SRC = src/JNI
 JAVA_SRC = src/java
 
 DRIVER_OUTPUT_FILES = \
@@ -16,7 +17,7 @@ all:
 
 nativeLib: ## Compile native .so
 	(cd $(NATIVE_SRC) && make)
-	(cd $(NATIVE_SRC)/JNI && make)
+	(cd $(JNI_SRC) && make)
 
 javaLib: ## Build java .jar
 	(cd $(JAVA_SRC) && mvn clean install)
@@ -26,6 +27,6 @@ clean-driver-output:
 
 clean: clean-driver-output
 	(cd $(NATIVE_SRC) && make clean)
-	(cd $(NATIVE_SRC)/JNI && make clean)
+	(cd $(JNI_SRC) && make clean)
 	(cd $(JAVA_SRC) && mvn clean)
 
