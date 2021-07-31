@@ -13,12 +13,3 @@ whole sample runtime
 	
 do time_normalize for per becnhmark energy samples
 
-
-put horizontal lines on sampling efficiency, see how that looks
-to resize:
-	- time between samples
-	- memory footprint
-	- sampling efficiency
-
-
-
