@@ -60,3 +60,9 @@ Ideas for future development:
 			- case default: PANIC("unrecognized storage type: %s" sotrage_type_names[STORAGE_TYPE])
 			- central storage file table, like systemcall function table, indexed by the storage type id instead of the like the system call interrupt id
 				- can tell people it's like that, so they know of a familiar concept (i guess this is a design pattern) and get ahold of what im telling them about how it works
+		- try to make this a dynamically linked library. look into dynamically linking a .so to your current JNIRAPL.so library
+			- NativeUtils function: void loadLibraryFromjar(libraryPath, dynamicallyLinkedLibrariesPaths...)
+				- make a /tmp directory for these files (or request a local filesystem from java, if java can abstract that out)
+				- copy all the so's into that directory
+				- link them together
+				- system.load(newly-linked-library.so)
