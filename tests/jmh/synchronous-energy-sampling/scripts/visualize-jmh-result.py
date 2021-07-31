@@ -2,7 +2,28 @@
 
 import json
 from sys import argv
+
+import math
+
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FormatStrFormatter
+
+def is_float(n):
+    return n % 1 != 0
+def is_float_list(l):
+    counted_floats_in_list = sum([int(is_float(n)) for n in l])
+    return counted_floats_in_list != 0
+
+def plt_set_ax_limits(xmin, xmax, ymin, ymax):
+    none = (None,None)
+    if ((xmin,xmax)!=(none)):
+        plt.xlim([xmin,xmax])
+    if ((ymin,ymax)!=(none)):
+        plt.ylim([ymin,ymax])
+
+    precision = 1
+    format_string = f'%.{precision}f'
+    plt.gca().yaxis.set_major_formatter(FormatStrFormatter(format_string))
 
 if len(argv) != 2:
     print('usage:',argv[0],'jmh-result-file-to-parse.json')
@@ -38,8 +59,30 @@ print(means)
 print(errors)
 print('units:',unit)
 
-plt.bar(range(len(labels)), means, yerr=errors, tick_label=labels)
-plt.ylabel('average runtime ('.title()+str(unit).split('/')[0]+')')
-plt.xlabel('sampling version'.title())
+xmin, xmax = (None, None)
+ymin, ymax = (32.5555, 35.5555)
+plt_set_ax_limits(xmin, xmax, ymin, ymax)
+# plt.yticks(range(ymin, ymax+1, (1 if (ymax % 1 == 0) else ymax % 1)))
+
+# # def set_appropriate_yticks(): ----------------------------------- #--#
+# ystep = 1 if (ymax % 1 == 0) else ymax % 1                          #--#
+# ytick_range = range ( ymin, ymax + 1, ystep )                       #--#
+# if (is_float_list(ytick_range)):                                    #--#
+#     plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.2f')) #--#
+
+# ----------------------------------------------------------------- #--#
+
+plt.bar(
+    range(len(labels)),
+    means,
+    yerr = errors,
+    tick_label = labels,
+    color = 'cadetblue',
+    edgecolor = 'black',
+    alpha = 1
+);
+
+plt.ylabel('Average Runtime ({})'.format(unit))
+plt.xlabel('Sampling Version')
 # plt.title('average sample runtime'.title())
 plt.savefig('sync-samples-runtime')
