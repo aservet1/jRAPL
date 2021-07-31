@@ -78,12 +78,16 @@ overall_c_da_std = data['overall']['c-dynamicarray']['stdev']
 labels = ['java','c-linklist','c-dynamicarray']
 
 plt.clf()
-plt.bar (                                                                   \
-	x = [0,1,2],                                                            \
-    height     = [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],    \
-    yerr       = [overall_java_std, overall_c_ll_std, overall_c_da_std],    \
-    tick_label = labels,                                                    \
-    capsize    = .5                                                         \
+plt.gcf().set_size_inches(1,1);
+plt.bar (                                                                   
+	x = [0,1,2],                                                            
+    height     = [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],    
+    yerr       = [overall_java_std, overall_c_ll_std, overall_c_da_std],    
+    tick_label = labels,                                                    
+    capsize    = .5,                                                         
+	color = 'green',
+	edgecolor = 'black',
+	alpha = .75
 )
 
 plt.xlabel('monitor type'.title())
@@ -92,7 +96,7 @@ plt.ylabel('memory footprint (% difference)'.title())
 fig = plt.gcf()
 fig.set_size_inches(5,5)
 
-plt.savefig(os.path.join(result_dir,'memory-footprint_overall'))
+plt.show()#plt.savefig(os.path.join(result_dir,'memory-footprint_overall'))
 print(" <.> done making the overall average graph")
 
 ##  with open(os.path.join(result_dir,'raw-overall-data.txt'),'w') as f:
