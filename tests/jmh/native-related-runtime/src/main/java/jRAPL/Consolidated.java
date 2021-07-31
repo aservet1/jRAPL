@@ -154,7 +154,10 @@ public class Consolidated {
 	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void cSideTimeEnergyStatCheck(CSideEnergyStatCheckState s, Blackhole b) {
+		RuntimeTestUtils.ctimeStart();
 		s.addValue(RuntimeTestUtils.usecTimeEnergyStatCheck());
+		RuntimeTestUtils.ctimeStop();
+		b.consume(RuntimeTestUtils.ctimeElapsedUsec());
 		Util.busyWait(b);
 	}
 
@@ -191,7 +194,7 @@ public class Consolidated {
 	public static class EnergyStatCheckPureCState extends TheState {
 		@Setup(Level.Trial)
 		public void initialSetup() {
-			EnergyManager.profileInit();
+			RuntimeTestUtils.initCSideTiming();
 			benchmarkName = "EnergyStatCheckPureC";
             benchmarkDomain = "CSide";
 		}
@@ -203,7 +206,10 @@ public class Consolidated {
 	// @Warmup(iterations = 1) @Measurement(iterations = 3)
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeEnergyStatCheckPureC(Blackhole b, EnergyStatCheckPureCState s) {
+		RuntimeTestUtils.ctimeStart();
 		long usec = RuntimeTestUtils.energyStatCheckPureC();
+		RuntimeTestUtils.ctimeStop();
+		b.consume(RuntimeTestUtils.ctimeElapsedUsec());
 		s.addValue(usec);
 		Util.busyWait(b);
     }
