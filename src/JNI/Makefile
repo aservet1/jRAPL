@@ -4,10 +4,10 @@ JAVA_INCLUDE = $(JAVAHOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
 JNI_LIB = libJNIRAPL.so
-NATIVE_FILES_LOCATION = ..
+NATIVE_FILES_LOCATION = ../native
 NATIVE_LIB = $(NATIVE_FILES_LOCATION)/libNativeRAPL.a
 
-MAVEN_RESOURCES = ../../../src/java/src/main/resources/native
+MAVEN_RESOURCES = ../../src/java/src/main/resources/native
   # where maven will find the native library in the JavaSide compilation
 
 INCLUDE_FLAGS = -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) -I$(NATIVE_FILES_LOCATION) 
