@@ -76,7 +76,7 @@ def do_overall(data,result_dir):
 			yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],
 			tick_label  =  labels,
 			capsize     =  1,
-			color = 'yellow',
+			color = 'gold',
 			edgecolor = 'black',
 			alpha = 1
 		)
