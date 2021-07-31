@@ -3,13 +3,11 @@
 import os
 import json
 import numpy as np
-import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from math import sqrt
 from sys import argv
 
-from myutil import parse_cmdline_args
+from myutil import parse_cmdline_args, plt_set_axis_limits
 
 '''--------------------------------------------------------------------------------'''
 def do_perbench(data):
@@ -74,12 +72,21 @@ def do_overall(data):
 	labels = ['java','c-linklist','c-dynamicarray']
 
 	plt.clf()
-	plt.bar (                                                                     \
-		x           =  [0,1,2],                                                   \
-		height      =  [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],    \
-		yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],    \
-		tick_label  =  labels,                                                    \
-		capsize     =  .5                                                         \
+
+	xrange = (None, None)
+	yrange = (32.5555, 35.5555)
+	xaxis_precision, yaxis_precision = (0, 1)
+	plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
+
+	plt.bar (
+		x           =  [0,1,2],
+		height      =  [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],
+		# yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],
+		tick_label  =  labels,
+		capsize     =  .5,
+		color = 'purple',
+		edgecolor = 'black',
+		alpha = 1
 	)
 
 	plt.xlabel(plotinfo['xlabel'])
@@ -111,5 +118,5 @@ data_file, result_dir = parse_cmdline_args(argv)
 with open(data_file) as fd:
 	data = json.load(fd)
 
+do_overall (data)
 do_perbench(data)
-do_overall(data)

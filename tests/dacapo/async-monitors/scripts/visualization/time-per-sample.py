@@ -60,14 +60,15 @@ def do_overall(data, result_dir):
     overall_c_da_std = data['overall']['c-dynamicarray'] ['stdev']
 
     plt.clf()
-    plt.bar (                                                                     \
-        x           =  [0,1,2],                                                   \
-        height      =  [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],    \
-        yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],    \
-        tick_label  =  ['java'          , 'c-linklist'    , 'c-dynamicarray'],    \
+    plt.bar (
+        x           =  [0,1,2],
+        height      =  [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],
+        yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],
+        tick_label  =  ['java'          , 'c-linklist'    , 'c-dynamicarray'],
+        color = 'purple',
+        edgecolor = 'black',
+        alpha = 1
     )
-        #capsize     =  .5                                                         \
-    #)
 
     plt.ylabel(plotinfo['ylabel'])
 

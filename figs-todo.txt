@@ -14,12 +14,11 @@ whole sample runtime
 do power for per becnhmark (time normalize those boys)
 
 to colorize (dont spend more than 20 minutes total, these just have to get done):
-	syncmonitor sampling runtime
+	()syncmonitor sampling runtime
 	sampling efficiency
-	memory overhead
-	time per sample
-	energy per sample
-	power per sample
+	()time per sample
+	()energy per sample
+	()power per sample
 
 	remember to run the graphs on vaporeon once you get the colors right
 	
