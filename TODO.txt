@@ -19,6 +19,7 @@
 	- cite the rapl-read.weebseeksjsndmfjee.edu stuff in your code. (we know this is legit because he did power measurement validation though external, also verifiable means`)
 		- where you got the MSR offsets from (and how you know they're correct)
 		- the table with the CPU microarchitectures and their supported power domains
+	- have Java check if kernel msr module is loaded, if not, exit and inform the user to `sudo modprobe msr`. can do it in the shell with `lsmod | awk '{print $1}' | grep '^msr\s*.*$'`
 
 Ideas for future development:
 	- Naming Conventions to Edit (and make sure they're good):
