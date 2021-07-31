@@ -1,35 +1,36 @@
 #!/usr/bin/env python3
 
+import os
 import json
 from sys import argv
-
-import math
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 
-def is_float(n):
-    return n % 1 != 0
-def is_float_list(l):
-    counted_floats_in_list = sum([int(is_float(n)) for n in l])
-    return counted_floats_in_list != 0
-
-def plt_set_ax_limits(xmin, xmax, ymin, ymax):
+def plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision):
     none = (None,None)
-    if ((xmin,xmax)!=(none)):
-        plt.xlim([xmin,xmax])
-    if ((ymin,ymax)!=(none)):
-        plt.ylim([ymin,ymax])
+    if ((xrange)!=(none)):
+        plt.xlim(xrange)
+        if xaxis_precision != 0:
+            plt.gca().xaxis.set_major_formatter(FormatStrFormatter('%.'+str(xaxis_precision)+'f'))
+        else:
+            plt.xticks(range(xrange[0],xrange[1]+1))
+    if ((yrange)!=(none)):
+        plt.ylim(yrange)
+        if yaxis_precision != 0:
+            plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.'+str(yaxis_precision)+'f'))
+        else:
+            plt.yticks(range(yrange[0],yrange[1]+1))
 
-    precision = 1
-    format_string = f'%.{precision}f'
-    plt.gca().yaxis.set_major_formatter(FormatStrFormatter(format_string))
-
-if len(argv) != 2:
-    print('usage:',argv[0],'jmh-result-file-to-parse.json')
+# if len(argv) != 2:
+try:
+    jmh_result = argv[1]
+    result_dir = argv[2]
+except:
+    print('usage:',argv[0],'jmh-result.json result_dir')
     exit(2)
 
-with open(argv[1]) as f:
+with open(jmh_result) as f:
     _data = json.loads(f.read())
 
 data = {}
@@ -59,18 +60,10 @@ print(means)
 print(errors)
 print('units:',unit)
 
-xmin, xmax = (None, None)
-ymin, ymax = (32.5555, 35.5555)
-plt_set_ax_limits(xmin, xmax, ymin, ymax)
-# plt.yticks(range(ymin, ymax+1, (1 if (ymax % 1 == 0) else ymax % 1)))
-
-# # def set_appropriate_yticks(): ----------------------------------- #--#
-# ystep = 1 if (ymax % 1 == 0) else ymax % 1                          #--#
-# ytick_range = range ( ymin, ymax + 1, ystep )                       #--#
-# if (is_float_list(ytick_range)):                                    #--#
-#     plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.2f')) #--#
-
-# ----------------------------------------------------------------- #--#
+xrange = (None, None)
+yrange = (32, 36)
+xaxis_precision, yaxis_precision = (0, 0)
+plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
 plt.bar(
     range(len(labels)),
@@ -85,4 +78,4 @@ plt.bar(
 plt.ylabel('Average Runtime ({})'.format(unit))
 plt.xlabel('Sampling Version')
 # plt.title('average sample runtime'.title())
-plt.savefig('sync-samples-runtime')
+plt.savefig(os.path.join(result_dir,'sync-samples-runtime'))
