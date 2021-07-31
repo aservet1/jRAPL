@@ -26,6 +26,43 @@ if not os.path.isdir(result_dir):
 with open(json_data_file) as fd:
     data = json.loads(fd.read())
 
+'''---------------------------------------------------------------------------------------'''
+
+overall_java_avg = data['overall']['java']['avg'] 
+overall_java_std = data['overall']['java']['stdev']
+
+overall_c_ll_avg = data['overall']['c-linklist']['avg'] 
+overall_c_ll_std = data['overall']['c-linklist']['stdev']
+
+overall_c_da_avg = data['overall']['c-dynamicarray']['avg'] 
+overall_c_da_std = data['overall']['c-dynamicarray']['stdev']
+
+labels = ['java','c-linklist','c-dynamicarray']
+
+plt.clf()
+plt.gcf().set_size_inches(1,1);
+plt.bar (                                                                   
+	x = [0,1,2],                                                            
+    height     = [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],    
+    yerr       = [overall_java_std, overall_c_ll_std, overall_c_da_std],    
+    tick_label = labels,                                                    
+    # capsize    = 1,                                                         
+	color = 'limegreen',
+	edgecolor = 'black',
+	alpha = 1
+)
+
+plt.xlabel('monitor type'.title())
+plt.ylabel('memory footprint (% difference)'.title())
+
+fig = plt.gcf()
+fig.set_size_inches(5,5)
+
+plt.savefig(os.path.join(result_dir,'memory-footprint_overall'))
+print(" <.> done making the overall average graph")
+
+'''---------------------------------------------------------------------------------------'''
+
 labels = []
 java_avg = []; c_da_avg = []; c_ll_avg = [];
 java_std = []; c_da_std = []; c_ll_std = [];
@@ -66,43 +103,6 @@ fig.set_size_inches(15,25)
 plt.savefig(os.path.join(result_dir,'memory-footprint_perbenchmark'))
 print(" <.> done making the per-benchmark graph")
 
-overall_java_avg = data['overall']['java']['avg'] 
-overall_java_std = data['overall']['java']['stdev']
-
-overall_c_ll_avg = data['overall']['c-linklist']['avg'] 
-overall_c_ll_std = data['overall']['c-linklist']['stdev']
-
-overall_c_da_avg = data['overall']['c-dynamicarray']['avg'] 
-overall_c_da_std = data['overall']['c-dynamicarray']['stdev']
-
-labels = ['java','c-linklist','c-dynamicarray']
-
-plt.clf()
-plt.bar (                                                                   \
-	x = [0,1,2],                                                            \
-    height     = [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],    \
-    yerr       = [overall_java_std, overall_c_ll_std, overall_c_da_std],    \
-    tick_label = labels,                                                    \
-    capsize    = .5                                                         \
-)
-
-plt.xlabel('monitor type'.title())
-plt.ylabel('memory footprint (% difference)'.title())
-
-fig = plt.gcf()
-fig.set_size_inches(5,5)
-
-plt.savefig(os.path.join(result_dir,'memory-footprint_overall'))
-print(" <.> done making the overall average graph")
-
-##  with open(os.path.join(result_dir,'raw-overall-data.txt'),'w') as f:
-##  	f.write("overall_java_avg: "+str(overall_java_avg)+"\n")
-##  	f.write("overall_java_std: "+str(overall_java_std)+"\n")
-##  	f.write("\n")
-##  	f.write("overall_c_ll_avg: "+str(overall_c_ll_avg)+"\n")
-##  	f.write("overall_c_ll_std: "+str(overall_c_ll_std)+"\n")
-##  	f.write("\n")
-##  	f.write("overall_c_da_avg: "+str(overall_c_da_avg)+"\n")
-##  	f.write("overall_c_da_std: "+str(overall_c_da_std)+"\n")
+'''---------------------------------------------------------------------------------------'''
 
 print(" <.> done printing overall data")

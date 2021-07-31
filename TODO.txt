@@ -19,6 +19,7 @@
 	- cite the rapl-read.weebseeksjsndmfjee.edu stuff in your code. (we know this is legit because he did power measurement validation though external, also verifiable means`)
 		- where you got the MSR offsets from (and how you know they're correct)
 		- the table with the CPU microarchitectures and their supported power domains
+	- have Java check if kernel msr module is loaded, if not, exit and inform the user to `sudo modprobe msr`. can do it in the shell with `lsmod | awk '{print $1}' | grep '^msr\s*.*$'`
 
 Ideas for future development:
 	- Naming Conventions to Edit (and make sure they're good):
@@ -38,3 +39,31 @@ Ideas for future development:
 		as a string, and then write a java-side parsing function. That's probably going to be hard to write but the string brought across will
 		be smaller, and it'll probably be less computation overall, unless if the Java hella-optimizes string splitting and atoi type computations
 
+	- More Async Monitor implementations:
+		- Javaside executor PureJava
+		- Javaside executor CSideStorage
+			- on monitor.activate(), a c side init-structure function is going to be called and will allocate the storage structure type
+				- consider dynamically switching structure types
+				- allocate a new structure as the current type, optionally copy current data over, and deallocate the other
+					- if collecting samples at this time, stop and then start again around the native call to change structure data
+					- make it optionally copy data on a condition, like if current sample size is input to some predicate function (is N too big? too small? too few samples given this sampling rate?)
+			- consider making modular definitions for C side storage data types
+				- consider if they need to be defined at compile time and recompiled, or you could load that data up at runtime from a text file specifying the options
+					- if go with text file way, we'd need a way to parse the data, and theyd still probably have to write correct C functions
+					- instead of text file, consider making it a dynamically loaded local library
+						- libdatastructures.so
+						- make type additions and recompile that, then the so just gets linked to libNativeRapl.so at runtime
+							- you can do that from java, right?
+
+	- Make Async Monitor storage types more customizable, kind of in a polymorphism-type-way
+		- more modular and easy to edit
+		- switch case statments on storage types
+			- case default: PANIC("unrecognized storage type: %s" sotrage_type_names[STORAGE_TYPE])
+			- central storage file table, like systemcall function table, indexed by the storage type id instead of the like the system call interrupt id
+				- can tell people it's like that, so they know of a familiar concept (i guess this is a design pattern) and get ahold of what im telling them about how it works
+		- try to make this a dynamically linked library. look into dynamically linking a .so to your current JNIRAPL.so library
+			- NativeUtils function: void loadLibraryFromjar(libraryPath, dynamicallyLinkedLibrariesPaths...)
+				- make a /tmp directory for these files (or request a local filesystem from java, if java can abstract that out)
+				- copy all the so's into that directory
+				- link them together
+				- system.load(newly-linked-library.so)

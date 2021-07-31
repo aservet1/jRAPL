@@ -1,0 +1,2 @@
+Talk about next meeting:
+	I came up with more plot presentation methods after we talked, so I applied them. Mostly colors and axis scales and whatnot

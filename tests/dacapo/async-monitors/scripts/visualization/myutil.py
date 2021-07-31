@@ -1,4 +1,6 @@
 import os
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FormatStrFormatter
 
 def parse_cmdline_args(argv):
     try:
@@ -14,4 +16,15 @@ def parse_cmdline_args(argv):
         exit(2)
 
     return data_file, result_dir
+
+def plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision):
+    none = (None,None)
+    if ((xrange)!=(none)):
+        plt.gca().set(xlim = xrange)
+        if xaxis_precision != 0:
+            plt.gca().xaxis.set_major_formatter(FormatStrFormatter('%.'+str(xaxis_precision)+'f'))
+    if ((yrange)!=(none)):
+        plt.gca().set(ylim = yrange)
+        if yaxis_precision != 0:
+            plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.'+str(yaxis_precision)+'f'))
 

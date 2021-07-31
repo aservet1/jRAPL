@@ -101,7 +101,7 @@ public class Demo {
 			System.exit(2);
 		}
 		m.activate();
-		m.setSamplingRate(12);
+		m.setSamplingRate(100);
 
 		m.start();
 		DemoUtils.sleepPrint(3000);
