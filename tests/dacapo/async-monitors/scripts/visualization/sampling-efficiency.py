@@ -74,7 +74,7 @@ def do_overall(data):
 	plt.clf()
 
 	xrange = (None, None)
-	yrange = (32.5555, 35.5555)
+	yrange = (.7, .9)
 	xaxis_precision, yaxis_precision = (0, 1)
 	plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 

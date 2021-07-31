@@ -20,11 +20,11 @@ def parse_cmdline_args(argv):
 def plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision):
     none = (None,None)
     if ((xrange)!=(none)):
-        plt.xlim(xrange)
+        plt.gca().set(xlim = xrange)
         if xaxis_precision != 0:
             plt.gca().xaxis.set_major_formatter(FormatStrFormatter('%.'+str(xaxis_precision)+'f'))
     if ((yrange)!=(none)):
-        plt.ylim(yrange)
+        plt.gca().set(ylim = yrange)
         if yaxis_precision != 0:
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.'+str(yaxis_precision)+'f'))
 
