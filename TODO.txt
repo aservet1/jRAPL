@@ -1,18 +1,40 @@
 
-<< Have done by next week ## wednesday #:
-	graph aggregated min, max, avg, std of memory.
-	graph jmh's time-each-sample thing
-<< Near future:
-	in Java, assess the memory of an object -- to compare between footprint of Object Sample and Primitive Sample
+<< Immediate Todos:
+	- whats wrong with JMH JNI overhead
+	- compare JMH JNI overhead results to full runtime	
+	- Properly graph sampling efficiency
 
+<< Semi Immediate Todos:
+	- Run experiments on several computers
+	- Get a complete lists of the benchmarks / more info about dacapo-evalution-git+309e1fa.jar
+	- make all JSON dumps have camelCase key names, and fix analysis scripts to match those names
+	- change 'time-between-samples' to 'time-per-sample' JSON field in the async-monitors result gathering
 
+<< Other Todos:
+	- Update the UML
+	- figure out why -O{1,2,3} flags mess things up. Almost positive it's bc it optimizes out the assembly code required to getSocketNum() (as per my gdb run)
+		- does compiling with clang cause a segfault on non debian machine?
+		- where does the clang segfault happen? it's somewhere in AsyncEnergyMonitorCSide. easy enough to fix?
+		- what exactly is the problem with clang and debian?
+	- cite the rapl-read.weebseeksjsndmfjee.edu stuff in your code. (we know this is legit because he did power measurement validation though external, also verifiable means`)
+		- where you got the MSR offsets from (and how you know they're correct)
+		- the table with the CPU microarchitectures and their supported power domains
 
-Update the UML
+Ideas for future development:
+	- Naming Conventions to Edit (and make sure they're good):
+		; EnergyStamp (now what EnergyStats is)
+		; EnergyStats (holds whatever aggregate you want, plus maybe a String identifying it and an instant/duration object)
+		; EnergySample (for EnergyDiff)
 
-IDEA for AsyncMonitor: set a maxCapacityUntilDump and when arraylist gets that full, start (another) thread to dump to file and clear out the current thing. to not puollute RAM too much. idk, maybe.
-like you can have a second thread monitoring the capacity and then dumping as necessary. idk if it's a problem to implicitly spawn a second
-thread. there might be a conventional method to deal with things growing in memory too often.
+	- Make C run on a schedule instead of sleeping, so sampling overhead of 130-170usec (on jolteon, at least) isn't an issue for high rates.
+		- See timer implementation, or the thing Timur sent: https://github.com/jvm-profiling-tools/async-profiler/blob/master/src/itimer.cpp
+	- Make the AsyncMonitor have an 'auto dump' file, then have it dump its content to file (on a separate thread or executor, whatever that is) and clear out.
+		To make it not indefinitely grow in memory
+	- AsyncMonitor runs a set number of samples at a rate, instead of a start/stop wait loop
 
-make the AsyncMonitor run a set number of operations   instead of start/stop wait loop
+	- EnergySample.dumps() and EnergySample.loads() from CSV
 
-"timer" implemntation on the C side -- could make the sleep_milliseconds() function more accurate
+	- Instead of returning an EnergyStats object as a human readable string across the JNI, serialize the raw bits of the struct, return that
+		as a string, and then write a java-side parsing function. That's probably going to be hard to write but the string brought across will
+		be smaller, and it'll probably be less computation overall, unless if the Java hella-optimizes string splitting and atoi type computations
+

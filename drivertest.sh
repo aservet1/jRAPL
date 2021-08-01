@@ -2,15 +2,21 @@
 
 sudo -v
 
-# runs through my sample main() drivers to make sure they're all in order
+# runs through my sample Demo.java drivers to make sure the output is as expected
 
 printf "\nhello w0rld\n\n";
 
-runDriver="sudo java -cp java/target/jRAPL-1.0.jar "
+runDriver=""
 
-for driver in 'ArchSpec' 'SyncEnergyMonitor' 'AsyncEnergyMonitor C' 'AsyncEnergyMonitor Java'
+for driverArgs in \
+	'ArchSpec' \
+	'SyncEnergyMonitor' \
+	'AsyncEnergyMonitor C LINKED_LIST' \
+	'AsyncEnergyMonitor C DYNAMIC_ARRAY' \
+	'AsyncEnergyMonitor Java'
 do
-	echo ~~~$driver~~~
-	$runDriver jRAPL.$driver
+	echo ~~~ $driverArgs ~~~
+	sudo java -cp 'src/java/target/jRAPL-1.0.jar' jRAPL.Demo $driverArgs
+
 	echo =============================================
 done

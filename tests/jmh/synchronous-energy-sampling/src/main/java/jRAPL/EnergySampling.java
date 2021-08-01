@@ -54,24 +54,37 @@ public class EnergySampling {
     }
 
 	@Benchmark
+	@Warmup(iterations = 7)
+	@Fork(1)
+	@Measurement(iterations = 30)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeNativeGetSample(MyState state, Blackhole b) {
 		b.consume(EnergyMonitor.energyStatCheck());
+		// Util.busyWait(b);
+		
 	}
 
 	@Benchmark
+	@Warmup(iterations = 7)
+	@Fork(1)
+	@Measurement(iterations = 30)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeGetSample(MyState state, Blackhole b) {
 		b.consume(state.monitor.getSample());
+		// Util.busyWait(b);
 	}
 	
 	@Benchmark
+	@Warmup(iterations = 7)
+	@Fork(1)
+	@Measurement(iterations = 30)
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void timeGetPrimitiveSample(MyState state, Blackhole b) {
 		b.consume(state.monitor.getPrimitiveSample());
+		// Util.busyWait(b);
 	}
 
 }

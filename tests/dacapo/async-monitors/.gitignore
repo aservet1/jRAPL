@@ -1,4 +1,4 @@
-*.jar
+jRAPL-1.0.jar
 scratch
 *.class
 
@@ -9,5 +9,9 @@ scratch
 # generated raw data results
 *.metadata.json
 *.csv
+*.memory.json
+
+# intermediate results
 *.stats.json
-jolteon-results.tar.gz
+*.aggregate-perbench.json
+*.aggregate-permonitor.json

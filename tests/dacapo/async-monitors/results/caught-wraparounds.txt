@@ -1,0 +1,28 @@
+
+Sun 20 Jun 2021 09:18:11 PM EDT
+
+170-<=< started working on 'batik_13_c-dynamicarray'
+171:.> caught negative diff: -64424.5078 0.0 64424.5078
+--
+727-<=< started working on 'eclipse_5_java'
+728:.> caught negative diff: -262143.9685 0.0159 262143.9844
+--
+1178-<=< started working on 'h2_5_java'
+1179:.> caught negative diff: -262143.993 0.007 262144.0
+--
+1293-<=< started working on 'h2o_23_java'
+1294:.> caught negative diff: -262143.9835 0.0165 262144.0
+--
+2076-<=< started working on 'pmd_5_c-dynamicarray'
+2077:.> caught negative diff: -262143.9883 0.0117 262144.0
+--
+2169-<=< started working on 'sunflow_1_c-linklist'
+2170:.> caught negative diff: -262143.9835 0.0165 262144.0
+2171:.> caught negative diff: -262143.9835 0.0165 262144.0
+--
+2197-<=< started working on 'sunflow_23_java'
+2198:.> caught negative diff: -262143.9419 0.0112 262143.9531
+--
+2208-<=< started working on 'sunflow_25_c-linklist'
+2209:.> caught negative diff: -64424.5033 0.0045 64424.5078
+2210:.> caught negative diff: -64424.5033 0.0045 64424.5078

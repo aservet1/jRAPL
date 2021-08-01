@@ -62,13 +62,12 @@ THE POSSIBILITY OF SUCH DAMAGE.
 			<artifactId>jRAPL</artifactId>
 			<version>1.0</version>
 		</dependency>
-		<!--dependency>
+		<dependency>
 			<groupId>jRAPL</groupId>
 			<artifactId>jRAPL</artifactId>
 			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/../../../java/target/jRAPL-1.0.jar</systemPath>
-		</dependency-->
+			<scope>system</scope> <systemPath>${project.basedir}/../../../src/java/target/jRAPL-1.0.jar</systemPath>
+		</dependency>
     </dependencies>
 
     <properties>
@@ -90,12 +89,13 @@ THE POSSIBILITY OF SUCH DAMAGE.
         <uberjar.name>benchmarks</uberjar.name>
     </properties>
 
-    <repositories>
+    <!--repositories>
         <repository>
-            <id>jRAPL-repo</id> <!-- https://roufid.com/3-ways-to-add-local-jar-to-maven-project/ method 3 -->
+            <id>jRAPL-repo</id>
             <url>file:///${project.basedir}/jRAPL-repo</url>
         </repository>
-    </repositories>
+    </repositories-->
+    <!-- https://roufid.com/3-ways-to-add-local-jar-to-maven-project/ method 3 -->
 
 
     <build>

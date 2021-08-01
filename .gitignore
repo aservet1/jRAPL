@@ -2,12 +2,19 @@
 target/
 
 #temp files i generate, from testing AsyncMonitor.writeToFile() method
-AsyncMonitor-C.csv
 AsyncMonitor-Java.csv
-AsyncMonitor-C-metainfo.json
 AsyncMonitor-Java-metainfo.json
+AsyncMonitor-CDYNAMIC_ARRAY.csv
+AsyncMonitor-CDYNAMIC_ARRAY-metainfo.json
+AsyncMonitor-CLINKED_LIST.csv
+AsyncMonitor-CLINKED_LIST-metainfo.json
 
 *.swp
 
 .vscode
 .settings
+.classpath
+.factorypath
+.project
+
+__pycache__
