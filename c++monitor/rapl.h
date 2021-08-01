@@ -1,9 +1,9 @@
 #pragma once
 // - $$ --------------- $$
 
-using namespace rapl {
-	void init();
-	void dealloc();
+namespace rapl {
+	void Init();
+	void Dealloc();
 	double DRAM();
 	double CORE();
 	double PKG();
