@@ -68,10 +68,18 @@ def percent_diff_propagate_uncertainty(sa,sb,a,b):
 
 ''' https://en.wikipedia.org/wiki/Propagation_of_uncertainty '''
 def division_propagate_uncertainty(sda, sdb, a, b):
-    return 0
-    return math.sqrt (                  \
-        (a/b) *                         \
-        (                               \
-            (sda/a)**2 + (sdb/b)**2     \
-        )                               \
+    # return 0
+    return math.sqrt (
+        (a/b)**2 * (
+			(sda/a)**2 
+			+
+			(sdb/b)**2
+        )
     )
+
+''' https://en.wikipedia.org/wiki/Propagation_of_uncertainty '''
+def multiply_by_constant_propagate_uncertainty(s, C):
+	return math.sqrt (
+		C**2 * s**2
+	)
+
