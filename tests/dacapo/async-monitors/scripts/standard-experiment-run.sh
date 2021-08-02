@@ -8,6 +8,7 @@ function usage() {
 }
 [ $# != 1 ] && usage $0
 
+set -e
 sudo -v
 sudo echo 'hello w0rld :))'
 
@@ -33,7 +34,7 @@ do
 	monitoringEnergy=false
 	sudo scripts/run-dacapo.sh \
 		$benchmark $monitoringEnergy $iterations \
-		$warmups no-monitor $resultDir
+		$warmups no-monitor $samplingRate $resultDir
 	
 done
 
