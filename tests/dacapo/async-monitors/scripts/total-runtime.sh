@@ -2,6 +2,7 @@
 
 if [ -z $1 ]; then
 	echo "pass in log file as argument"
+	exit 1
 fi
 
 log=$1
