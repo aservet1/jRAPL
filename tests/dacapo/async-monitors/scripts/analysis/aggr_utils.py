@@ -21,10 +21,10 @@ def propagate_uncertainty_through_average(sample_sizes, stdevs):
 
 def aggregate_memory_stats(memory_data):
     mem_stats = {}
-    sample_sizes = [dat['num_samples'] for dat in memory_data]
+    sample_sizes = [dat['numSamples'] for dat in memory_data]
     mem_stats['avg']   = aggr_mean (sample_sizes , [dat['avg'] for dat in memory_data])
     mem_stats['stdev'] = propagate_uncertainty_through_average(sample_sizes, [dat['stdev'] for dat in memory_data])
-    mem_stats['num_samples'] = statistics.mean([ dat['num_samples'] for dat in memory_data ]) #TODO we want {avg:..., stdev:...}. don't we?
+    mem_stats['num_samples'] = statistics.mean([ dat['numSamples'] for dat in memory_data ]) #TODO we want {avg:..., stdev:...}. don't we?
 
     ##.#.## -- Do not delete these! We will probably end up not includling these metrics, but we might!! Do not delete them unless they are confirmed useless!
     ##.#.## mem_stats['global_min'] = min( [ dat['min'] for dat in memory_data] )
