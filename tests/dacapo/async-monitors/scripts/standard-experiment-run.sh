@@ -11,8 +11,8 @@ set -e
 
 [ $# = 0 ] && usage $0
 
-warmups=0 #5
-iterations=1 #30
+warmups=5
+iterations=30
 samplingRate=1
 resultDir=$1
 [ -z $2 ] && logfile=/dev/null || logfile=$2
