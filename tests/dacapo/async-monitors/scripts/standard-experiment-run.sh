@@ -7,6 +7,8 @@ function usage() {
 	exit 1
 }
 
+set -e
+
 [ $# != 1 ] && usage $0
 
 echo " (||(.. Started on $(date)"
@@ -24,6 +26,7 @@ if [ -d $resultDir ]; then
 	echo "    please pick another name, or manually delete it (and be sure that you want to delete it AND that it's the one you actually want to delete / not a typo)"
 	exit 1
 fi
+
 mkdir $resultDir
 sudo ps -ef > $resultDir/SYSTEM_PROCESSES_THAT_WERE_RUNNING.txt
 
@@ -42,7 +45,7 @@ do
 	monitoringEnergy=false
 	sudo scripts/run-dacapo.sh \
 		$benchmark $monitoringEnergy $iterations \
-		$warmups no-monitor $resultDir
+		$warmups no-monitor $samplingRate $resultDir
 	
 done
 

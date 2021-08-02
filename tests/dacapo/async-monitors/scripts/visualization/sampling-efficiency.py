@@ -74,14 +74,14 @@ def do_overall(data):
 	plt.clf()
 
 	xrange = (None, None)
-	yrange = (.7, .9)
-	xaxis_precision, yaxis_precision = (0, 1)
+	yrange = (.75, .9)
+	xaxis_precision, yaxis_precision = (0, 2)
 	plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
 	plt.bar (
 		x           =  [0,1,2],
 		height      =  [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],
-		# yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],
+		#yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],
 		tick_label  =  labels,
 		capsize     =  .5,
 		color = 'purple',
@@ -91,25 +91,12 @@ def do_overall(data):
 
 	plt.xlabel(plotinfo['xlabel'])
 	plt.ylabel(plotinfo['ylabel'])
-	plt.yticks(np.linspace(0,1,11))
 
 	fig = plt.gcf()
 	fig.set_size_inches(5,5)
 
 	plt.savefig(os.path.join(result_dir,plotinfo['filename']))
 	print(" <.> done making the overall average graph")
-
-	# with open(os.path.join(result_dir,'raw-overall-data.txt'),'w') as f:
-	# 	f.write("overall_java_avg: "+str(overall_java_avg)+"\n")
-	# 	f.write("overall_java_std: "+str(overall_java_std)+"\n")
-	# 	f.write("\n")
-	# 	f.write("overall_c_ll_avg: "+str(overall_c_ll_avg)+"\n")
-	# 	f.write("overall_c_ll_std: "+str(overall_c_ll_std)+"\n")
-	# 	f.write("\n")
-	# 	f.write("overall_c_da_avg: "+str(overall_c_da_avg)+"\n")
-	# 	f.write("overall_c_da_std: "+str(overall_c_da_std)+"\n")
-
-	# print(" <.> done printing overall data")
 
 '''-----------------------------------------------------------------------------------'''
 
