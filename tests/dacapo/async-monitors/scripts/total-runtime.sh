@@ -7,4 +7,10 @@ fi
 
 log=$1
 
-cat $log | grep 'in [0-9]* msec' | sed 's/^.*in //' | awk '{print $1}' | awk '{s+=$1} END {print s}'
+msec=$(cat $log | grep 'in [0-9]* msec' | sed 's/^.*in //' | awk '{print $1}' | awk '{s+=$1} END {print s}')
+
+hours=$(( $msec / 1000 / 60 / 60 ))
+minutes=$(( $msec / 1000 / 60 % 60 ))
+
+echo "$hours hours and $minutes minutes"
+echo "  (not including non-dacapo overhead, like writing data to files after iterations)"
