@@ -22,11 +22,3 @@ mvn clean install && ./scripts/transferjars.sh jRAPL-1.0.jar target/benchmarks.j
 
 mkdir -p $data_dir
 sudo java -DdataDir=$data_dir -jar $ignoreLock target/benchmarks.jar | tee $outputlog
-
-echo ">> jmh done, now analyzing results"
-
-cd $data_dir
-for x in JavaSide CSide readMSR
-do
-	../scripts/analyze-and-plot.sh $x
-done
