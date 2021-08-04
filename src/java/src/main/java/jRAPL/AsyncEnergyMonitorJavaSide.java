@@ -131,10 +131,12 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	public void writeFileCSV(String fileName) {
 		BufferedWriter writer = null;
 		try {
-			writer = new BufferedWriter ( // write to stdout if filename is null
-				(fileName == null) ? new OutputStreamWriter(System.out) : new FileWriter(new File(fileName))
+			writer = new BufferedWriter (
+				(fileName == null)
+					? new OutputStreamWriter(System.out)
+					: new FileWriter(new File(fileName))
 			);
-			writer.write(EnergyStats.csvHeader()+"\n");       //"socket,"+ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")[0]+",timestamp\n");
+			writer.write(EnergyStats.csvHeader()+"\n");
 			for (String sample : samples)
 				writer.write(sample+"\n");
 			writer.flush();

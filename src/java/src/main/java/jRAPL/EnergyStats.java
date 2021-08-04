@@ -18,13 +18,17 @@ public final class EnergyStats extends EnergySample {
 	}
 
 	public static String csvHeader() {
-		return EnergySample.csvHeader() + "timestamp";
+		return new String (
+			EnergySample.csvHeader()
+		);
 	}
 
 	@Override
 	public String csv() {
 		return super.csv() + (
-			(timestamp == null) ? "null" : Utils.timestampToUsec(timestamp)
+			(timestamp == null)
+				? "null" // TODO ugh, do I really want null timestamps? i dont think that's necessary any more. it might be though
+				: Utils.timestampToUsec(timestamp)
 		);
 	}
 

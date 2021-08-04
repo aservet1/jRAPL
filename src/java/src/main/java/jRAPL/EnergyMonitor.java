@@ -44,7 +44,8 @@ public class EnergyMonitor extends EnergyManager {
 			)
 		);
     }
-    
+
+	// wondering if this is necessary to have, might as well let the user do their own logic for this if theyre taking on the primitive samples already    
 	protected static double[] subtractPrimitiveSamples(double[] a, double[] b) {
 		assert ( a.length == b.length );
 		double[] diff = new double[a.length];

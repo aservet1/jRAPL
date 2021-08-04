@@ -16,14 +16,6 @@ Java_jRAPL_ArchSpec_getWraparoundEnergy(JNIEnv* env, jclass jcls) {
 	return wraparound_energy;
 }
 
-JNIEXPORT jstring JNICALL
-Java_jRAPL_ArchSpec_energyStatsStringFormat(JNIEnv* env, jclass jcls) {
-	char energy_stats_jni_string_format[512];
-	get_energy_stats_jni_string_format(energy_stats_jni_string_format);
-	// get_power_domains_supported(get_cpu_model(),power_domain_string);
-	return (*env)->NewStringUTF(env, energy_stats_jni_string_format);	
-}
-
 JNIEXPORT jint JNICALL
 Java_jRAPL_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls) {
 	return (jint)getSocketNum(); 
