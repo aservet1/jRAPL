@@ -48,7 +48,6 @@ for bench in benchmarks:
             aggregated['metadata'][k]['stdev'] = statistics.stdev(d)
 
         aggregated['metadata']['iteration'] = 'AGGREGATE_PERBENCH'
-        aggregated['metadata']['benchmark'] = 'AGGREGATE_PERBENCH'
 
         aggregated['memory'] = {}
         aggregated['memory']['jraplon' ] = aggregate_memory_stats([ dat['memory']['jraplon']  for dat in data ])
