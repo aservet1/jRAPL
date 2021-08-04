@@ -7,6 +7,7 @@ import java.util.Arrays;
 public abstract class EnergySample
 {
 	private final double[] primitiveSample;
+	protected native static String csvHeader();
 	
 	public EnergySample(double[] primitiveSample) {
 		this.primitiveSample = Arrays.copyOfRange(
@@ -16,18 +17,6 @@ public abstract class EnergySample
 	
 	public EnergySample(EnergySample other) {
 		this.primitiveSample = other.primitiveSample.clone();
-	}
-
-	protected static String csvHeader() {
-		String header = new String();
-		int sock = 1;
-		for (String perSocket : ArchSpec.ENERGY_STATS_STRING_FORMAT.split("@")) {
-			for (String powerDomain : perSocket.split(",")) {
-				header += String.format("%s_socket%d,", powerDomain, sock);
-			}
-			sock++;
-		}
-		return header;
 	}
 
 	protected String csv() {
@@ -83,17 +72,16 @@ public abstract class EnergySample
 		} return result;
 	}
 	
-	protected static String dumpHeader() {
-		return ArchSpec.ENERGY_STATS_STRING_FORMAT.replace("@",","); 
-	}
-
-	public String dump() {
-		String s = new String();
-		for (int i = 0; i < primitiveSample.length; i++) {
-			s += String.format("%.6f,",primitiveSample[i]);
-		}
-		return s;
-	}
-
 }
+// 	protected static String dumpHeader() {
+// 		return ArchSpec.ENERGY_STATS_STRING_FORMAT.replace("@",","); 
+// 	}
+// 
+// 	public String dump() {
+// 		String s = new String();
+// 		for (int i = 0; i < primitiveSample.length; i++) {
+// 			s += String.format("%.6f,",primitiveSample[i]);
+// 		}
+// 		return s;
+// 	}
 
