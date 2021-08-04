@@ -36,13 +36,19 @@ for bench in benchmarks:
 
         aggregated['metadata'] = data[0]['metadata'] # copy over the first [metadata] block to keep common fields, over-write the aggregated fields
 
+        aggregated['metadata']['lifetime_numSamples_covariance'] = covariance (
+            [ d['metadata'][ 'lifetime' ] for d in data ],
+            [ d['metadata']['numSamples'] for d in data ]
+        )
+
         for k in ['lifetime','numSamples']:
             d = [ d['metadata'][k] for d in data ]
             aggregated['metadata'][k] = dict()
-            aggregated['metadata'][k]['avg']   = statistics.mean (d)
+            aggregated['metadata'][k][ 'avg' ] = statistics.mean (d)
             aggregated['metadata'][k]['stdev'] = statistics.stdev(d)
 
         aggregated['metadata']['iteration'] = 'AGGREGATE_PERBENCH'
+        aggregated['metadata']['benchmark'] = 'AGGREGATE_PERBENCH'
 
         aggregated['memory'] = {}
         aggregated['memory']['jraplon' ] = aggregate_memory_stats([ dat['memory']['jraplon']  for dat in data ])

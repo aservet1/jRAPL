@@ -38,11 +38,18 @@ for monitor_type in monitor_types:
     aggregated = {}
 
     aggregated['metadata'] = data[0]['metadata'] # copy over the first [metadata] block to keep common fields, over-write the aggregate fields
+
+    aggregated['metadata']['lifetime_numSamples_covariance'] = covariance (
+        [ d['metadata']['lifetime']   for d in data ],
+        [ d['metadata']['numSamples'] for d in data ]
+    )
+
     for k in ['lifetime','numSamples']:
         dat = [ d['metadata'][k] for d in data ]
         aggregated['metadata'][k] = dict()
         aggregated['metadata'][k]['avg']   = statistics.mean(dat)
         aggregated['metadata'][k]['stdev'] = statistics.stdev(dat)
+
     aggregated['metadata']['iteration'] = 'AGGREGATE_PERMONITOR'
     aggregated['metadata']['benchmark'] = 'AGGREGATE_PERMONITOR'
 
