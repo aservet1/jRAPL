@@ -7,7 +7,7 @@ from sys import argv
 data_dir = argv[1]
 os.chdir(data_dir)
 
-caught_nefs = {
+count = {
 	'negs': 0,
 	'nonnegs': 0
 }
@@ -22,5 +22,10 @@ for filename in sorted([
 		count['negs'] += len(data['negatives_caught']['samples'])
 		count['nonnegs'] += len(data['samples'])
 
-print(count)
-print( count['negs'] / count['nonnegs'] * 100 , '%' )
+print (
+	count
+);
+print (
+	count['negs'] / (count['nonnegs'] + count['negs']) * 100, '%'
+);
+
