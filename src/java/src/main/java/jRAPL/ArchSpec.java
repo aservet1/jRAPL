@@ -46,20 +46,21 @@ public final class ArchSpec {
 			coreIndex = -1,
 			pkgIndex = -1;
 
-		int idx = 0;
-		for ( String part : EnergySample.csvHeader().split(",") ) {
+		int idx = 0; for (
+			String part:EnergySample.csvHeader().split(",")
+		) {
 			switch (part.split("_")[0]) {
 				case "dram":
-					dramIndex = idx++;
+					if (dramIndex == -1) dramIndex = idx++;
 					break;
 				case "gpu":
-					gpuIndex = idx++;
+					if (gpuIndex == -1) gpuIndex = idx++;
 					break;
 				case "core":
-					coreIndex = idx++;
+					if (coreIndex == -1) coreIndex = idx++;
 					break;
 				case "pkg":
-					pkgIndex = idx++;
+					if (pkgIndex == -1) pkgIndex = idx++;
 					break;
 				case "timestamp":
 					continue;
@@ -77,10 +78,10 @@ public final class ArchSpec {
 		CORE_IDX = coreIndex;
 		PKG_IDX = pkgIndex;
 
-		DRAM_SUPPORTED = (DRAM_IDX != -1);
-		GPU_SUPPORTED  = (GPU_IDX  != -1);
-		CORE_SUPPORTED = (CORE_IDX != -1);
-		PKG_SUPPORTED  = (PKG_IDX  != -1);
+		DRAM_SUPPORTED = DRAM_IDX != -1;
+		GPU_SUPPORTED  = GPU_IDX  != -1;
+		CORE_SUPPORTED = CORE_IDX != -1;
+		PKG_SUPPORTED  = PKG_IDX  != -1;
 
 		int n = 0;
 		boolean[] supported = {
@@ -89,7 +90,6 @@ public final class ArchSpec {
 			CORE_SUPPORTED,
 			PKG_SUPPORTED
 		};
-
 		for ( boolean sup : supported ) {
 			if (sup) n++;
 		} NUM_STATS_PER_SOCKET = n;
