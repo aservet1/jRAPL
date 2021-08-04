@@ -7,7 +7,6 @@ public final class ArchSpec {
 	public static final double RAPL_WRAPAROUND;
 	public static final int MICRO_ARCHITECTURE;
 	public static final String MICRO_ARCHITECTURE_NAME;
-	public static final String ENERGY_STATS_STRING_FORMAT;
 
 	public native static int getSocketNum();
 	public native static double getWraparoundEnergy();
@@ -33,9 +32,8 @@ public final class ArchSpec {
 	public static final boolean PKG_SUPPORTED;
 
 	static {
-
 		EnergyManager m = new EnergyManager();	// to make sure that native access has been set up at this point.
-		m.activate();								// is dealloc'd by the end of this static block since it has no other use
+		m.activate();							// is dealloc'd by the end of this static block since it has no other use
 		
 		MICRO_ARCHITECTURE = getMicroArchitecture();
 		MICRO_ARCHITECTURE_NAME = getMicroArchitectureName();
@@ -43,31 +41,37 @@ public final class ArchSpec {
 		NUM_SOCKETS = getSocketNum();
 		RAPL_WRAPAROUND = getWraparoundEnergy();
 
-		ENERGY_STATS_STRING_FORMAT = energyStatsStringFormat();
-		NUM_STATS_PER_SOCKET = ENERGY_STATS_STRING_FORMAT.split("@")[0].split(",").length;
+		int dramIndex = -1,
+			gpuIndex = -1,
+			coreIndex = -1,
+			pkgIndex = -1;
 
-		int dramIndex = -1, gpuIndex = -1, coreIndex = -1, pkgIndex = -1;
-		String domains_string = ENERGY_STATS_STRING_FORMAT.split("@")[0];
-		String[] positions = domains_string.split(",");
-		for ( int i = 0; i < positions.length; i++ ) {
-			switch (positions[i]) {
+		int idx = 0;
+		for ( String part : EnergySample.csvHeader().split(",") ) {
+			switch (part.split("_")[0]) {
 				case "dram":
-					dramIndex = i;
+					dramIndex = idx++;
 					break;
 				case "gpu":
-					gpuIndex = i;
+					gpuIndex = idx++;
 					break;
 				case "core":
-					coreIndex = i;
+					coreIndex = idx++;
 					break;
 				case "pkg":
-					pkgIndex = i;
+					pkgIndex = idx++;
 					break;
+				case "timestamp":
+					continue;
 				default:
-					System.err.println("unexpected format string: " + domains_string);
+					System.err.println (
+						"unexpected part found in csv header: "
+						+ part
+					);
 					System.exit(0);
-			}	
+			}
 		}
+
 		DRAM_IDX = dramIndex;
 		GPU_IDX = gpuIndex;
 		CORE_IDX = coreIndex;
@@ -77,6 +81,18 @@ public final class ArchSpec {
 		GPU_SUPPORTED  = (GPU_IDX  != -1);
 		CORE_SUPPORTED = (CORE_IDX != -1);
 		PKG_SUPPORTED  = (PKG_IDX  != -1);
+
+		int n = 0;
+		boolean[] supported = {
+			DRAM_SUPPORTED,
+			GPU_SUPPORTED,
+			CORE_SUPPORTED,
+			PKG_SUPPORTED
+		};
+
+		for ( boolean sup : supported ) {
+			if (sup) n++;
+		} NUM_STATS_PER_SOCKET = n;
 
 		m.deactivate();
 	}
@@ -92,8 +108,6 @@ public final class ArchSpec {
 			"NUM_SOCKETS: " + NUM_SOCKETS,
 			"NUM_STATS_PER_SOCKET: " + NUM_STATS_PER_SOCKET,
 			"RAPL_WRAPAROUND: " + RAPL_WRAPAROUND,
-			"",
-			"ENERGY_STATS_STRING_FORMAT: " + ENERGY_STATS_STRING_FORMAT,
 			"",
 			"DRAM_IDX: " + DRAM_IDX,
 			"GPU_IDX: " + GPU_IDX,

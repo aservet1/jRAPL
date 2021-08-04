@@ -26,7 +26,6 @@ static rapl_msr_unit rapl_unit;
 static uint64_t num_sockets;
 static double wraparound_energy = -1; // TODO wait, is this not even being used here?
 
-
 int*
 get_msr_fds() { // only valid after ProfileInit() has been called. it's set to NULL in all other cases
 	return msr_fds;
@@ -101,7 +100,7 @@ EnergyStatCheck(EnergyStats stats_per_socket[num_sockets]) {
 				stats_per_socket[i].core = read_core(i);
 				stats_per_socket[i].pkg = read_pkg(i);
 				stats_per_socket[i].timestamp = usec_since_epoch();
-			} break;
+			} return;
 
 		case DRAM_CORE_PKG:
 			for (int i = 0; i < num_sockets; i++) {
@@ -110,7 +109,7 @@ EnergyStatCheck(EnergyStats stats_per_socket[num_sockets]) {
 				stats_per_socket[i].core = read_core(i);
 				stats_per_socket[i].pkg = read_pkg(i);
 				stats_per_socket[i].timestamp = usec_since_epoch();
-			} break;
+			} return;
 
 		case GPU_CORE_PKG:
 			for (int i = 0; i < num_sockets; i++) {
@@ -119,7 +118,7 @@ EnergyStatCheck(EnergyStats stats_per_socket[num_sockets]) {
 				stats_per_socket[i].core = read_core(i);
 				stats_per_socket[i].pkg = read_pkg(i);
 				stats_per_socket[i].timestamp = usec_since_epoch();
-			} break;
+			} return;
 
 		case UNDEFINED_ARCHITECTURE:
 			fprintf(stderr,"ERROR: MicroArchitecture not supported: %X\n", micro_architecture);
@@ -129,11 +128,9 @@ EnergyStatCheck(EnergyStats stats_per_socket[num_sockets]) {
 				stats_per_socket[i].core = -1;
 				stats_per_socket[i].pkg = -1;
 				stats_per_socket[i].timestamp = usec_since_epoch();
-			} break;
-			break;
+			} return;
 	}
 }
-
 
 EnergyStats
 energy_stats_subtract(EnergyStats x, EnergyStats y) {
@@ -146,72 +143,32 @@ energy_stats_subtract(EnergyStats x, EnergyStats y) {
 	return diff;
 }
 
-// TODO a whole lot of the ways I come up with formats and labels and stuff is pretty janky. it all works for the purposes
-// of what needs to happen, but it's poorly designed and probably hard for someone to edit without a lot of time to
-// figure out what's going on in this code. make sure to edit before jRAPL is declared "release-able"
-
-static void
-multiply_string_by_socket_num(char buffer[], char string[]) { //@TODO deprecate this, please
-	int string_len = strlen(string);
-	int offset = 0;
-	for (int i = 0; i < num_sockets; i++) {
-		memcpy(buffer + offset, string, string_len);
-		offset += string_len;
-	}
-	buffer[++offset] = '\0';
-}
-
-void
-get_energy_stats_jni_string_format(char buffer[512]) { //@TODO deprecate this, please
-	char* string;
-	switch (power_domains_supported) {
-		case DRAM_GPU_CORE_PKG:
-			string = "dram,gpu,core,pkg@";
-			break;
-		case DRAM_CORE_PKG:
-			string = "dram,core,pkg@";
-			break;
-		case GPU_CORE_PKG:
-			string = "gpu,core,pkg@";
-			break;
-		default:
-			sprintf(buffer,"undefined_architecture@");
-			return;
-	}
-	bzero(buffer, 512);
-	multiply_string_by_socket_num(buffer, string);
-	return;
-}
-
-// TODO see if there's a way you can get around that, to make the code more modular instead of a copy/paste for each case
-//	that you have to edit slightly
-// because sprintf requires me to hard code the number of arguments, I have to violate the DRY principle for this function
 void
 energy_stats_csv_header(char csv_header[512]) { 
 	int offset = 0;
 	const char* format;
 	switch(power_domains_supported) {
 		case DRAM_GPU_CORE_PKG:
-			format = "dram_socket%d,gpu_socket_%d,core_socket%d,pkg_socket%d,";
-			for (int s = 1; s <= num_sockets; s++) {
+			format = "dram_socket%d,gpu_socket%d,core_socket%d,pkg_socket%d,";
+			for (int s = 1; s <= num_sockets; s++)
 				offset += sprintf(csv_header + offset, format, s,s,s,s);
-				// if (s <= num_sockets-1) offset += sprintf(csv_header+offset,",");
-			} sprintf(csv_header + offset, "timestamp");
+			sprintf(csv_header + offset, "timestamp");
 			return;
+
 		case DRAM_CORE_PKG:
 			format = "dram_socket%d,core_socket%d,pkg_socket%d,";
-			for (int s = 1; s <= num_sockets; s++) {
+			for (int s = 1; s <= num_sockets; s++)
 				offset += sprintf(csv_header + offset, format, s,s,s);
-				// if (s <= num_sockets-1) offset += sprintf(csv_header+offset,",");
-			} sprintf(csv_header + offset, "timestamp");
+			sprintf(csv_header + offset, "timestamp");
 			return;
+
 		case GPU_CORE_PKG:
 			format = "gpu_socket_%d,core_socket%d,pkg_socket%d,";
-			for (int s = 1; s <= num_sockets; s++) {
+			for (int s = 1; s <= num_sockets; s++)
 				offset += sprintf(csv_header + offset, format, s,s,s);
-				// if (s <= num_sockets-1) offset += sprintf(csv_header+offset,",");
-			} sprintf(csv_header + offset, "timestamp");
+			sprintf(csv_header + offset, "timestamp");
 			return;
+
 		default:
 			sprintf(csv_header, "undefined_architecture");
 			return;

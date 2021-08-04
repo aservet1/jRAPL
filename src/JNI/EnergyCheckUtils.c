@@ -40,3 +40,10 @@ JNIEXPORT void JNICALL
 Java_jRAPL_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls) {
 	ProfileDealloc();
 }
+
+JNIEXPORT jstring JNICALL
+Java_jRAPL_EnergySample_csvHeader(JNIEnv * env, jclass jcls) {
+	char header[512];
+	energy_stats_csv_header(header);
+ 	return (*env)->NewStringUTF(env, header);	
+}
