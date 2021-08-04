@@ -1,0 +1,5 @@
+.> caught negative diff: -262143.993774 0.006226 262144.0
+.> caught negative diff: -262143.981506 0.002869 262143.984375
+.> caught negative diff: -262143.992554 0.007446 262144.0
+.> caught negative diff: -262143.987793 0.012207 262144.0
+.> caught negative diff: -262143.98407 0.000305 262143.984375
