@@ -1,2 +1,13 @@
 Talk about next meeting:
 	I came up with more plot presentation methods after we talked, so I applied them. Mostly colors and axis scales and whatnot
+
+really big error bars on one of the plots which makes them unreadable. how do you deal with this situation?
+
+should joules / power per sample be combined sockets, or broken down by sockets?
+	in general, comined sockets / overall system (but still broken down by power domain) is a common thing, right?
+
+should average power be "power per sample" or 
+
+
+overview of framework -- just like how the whole tool works, right
+	asyncenergymonitor cside / javaside design pattern 
