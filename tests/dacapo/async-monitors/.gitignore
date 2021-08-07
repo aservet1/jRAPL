@@ -12,6 +12,6 @@ scratch
 *.memory.json
 
 # intermediate results
-*.stats.json
-*.aggregate-perbench.json
-*.aggregate-permonitor.json
+# *.stats.json
+# *.aggregate-perbench.json
+# *.aggregate-permonitor.json
