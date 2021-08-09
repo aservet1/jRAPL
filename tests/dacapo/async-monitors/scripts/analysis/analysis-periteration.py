@@ -50,7 +50,7 @@ results_dir = sys.argv[1]# 'jolteon-results-subset'
 os.chdir(results_dir)
 
 datafiles = os.listdir()
-datafilenames = list(set([ name.split('.')[0] for name in datafiles])) #remove file extension
+datafilenames = list(set([ name.split('.')[0] for name in datafiles ])) #remove file extension
 
 for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")]): # potentially find a better way to gracefully deal with memory data files
     filename_parts = filename.split('_')

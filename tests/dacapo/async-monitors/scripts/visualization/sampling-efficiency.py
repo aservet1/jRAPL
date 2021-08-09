@@ -38,12 +38,12 @@ def do_perbench(data):
 	r3 = [x + bar_width for x in r2]
 
 	plt.clf()
-	# plt.barh(r1, c_da_avg, bar_width, xerr=c_da_std, color='#003f5c', edgecolor="white", label='C Dynamic Array') 
-	# plt.barh(r2, c_ll_avg, bar_width, xerr=c_ll_std, color='#bc5090', edgecolor="white", label='C Linked List')   
-	# plt.barh(r3, java_avg, bar_width, xerr=java_std, color='#ffa600', edgecolor="white", label='Java')            
-	plt.barh(r1, c_da_avg, bar_width, color='#003f5c', edgecolor="white", label='C Dynamic Array') 
-	plt.barh(r2, c_ll_avg, bar_width, color='#bc5090', edgecolor="white", label='C Linked List')   
-	plt.barh(r3, java_avg, bar_width, color='#ffa600', edgecolor="white", label='Java')            
+	plt.barh(r1, c_da_avg, bar_width, xerr=c_da_std, color='#003f5c', edgecolor="white", label='C Dynamic Array') 
+	plt.barh(r2, c_ll_avg, bar_width, xerr=c_ll_std, color='#bc5090', edgecolor="white", label='C Linked List')   
+	plt.barh(r3, java_avg, bar_width, xerr=java_std, color='#ffa600', edgecolor="white", label='Java')            
+	# plt.barh(r1, c_da_avg, bar_width, color='#003f5c', edgecolor="white", label='C Dynamic Array') 
+	# plt.barh(r2, c_ll_avg, bar_width, color='#bc5090', edgecolor="white", label='C Linked List')   
+	# plt.barh(r3, java_avg, bar_width, color='#ffa600', edgecolor="white", label='Java')            
 
 	plt.ylabel('Benchmark', fontweight='bold')
 	plt.xlabel(plotinfo['xlabel'], fontweight='bold')
@@ -74,14 +74,14 @@ def do_overall(data):
 	plt.clf()
 
 	xrange = (None, None)
-	yrange = (.75, .9)
+	yrange = (.7, .9)
 	xaxis_precision, yaxis_precision = (0, 2)
 	plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
 	plt.bar (
 		x           =  [0,1,2],
 		height      =  [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],
-		#yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],
+		yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],
 		tick_label  =  labels,
 		capsize     =  .5,
 		color = 'purple',
