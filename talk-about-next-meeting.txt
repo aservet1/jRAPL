@@ -14,4 +14,4 @@ fixed the standard error bug on the sampling efficiency thing (was because i was
 		- wait, this one's interesting. is it useful to know that there are wildly different power readings?
 			- probably not, we can reference the per-benchmark plot of this in the appendix. but its no surprise that these are bigger error bars. we want uncertainty within a benchmark, and then
 			  to propagate that to the aggregate across benchmarks, not to have the whole uncertainty for all benchmarks to be show
-		- this is an interesting concept; get uncertainty at primary step before the merge is done across benchmarks, and propagate the uncertainty through the merge. 
+		- this is an interesting concept; get uncertainty at primary step before the merge is done across benchmarks, and propagate the uncertainty through the merge.
