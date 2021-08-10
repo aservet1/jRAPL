@@ -49,7 +49,7 @@ results_dir = sys.argv[1]# 'jolteon-results-subset'
 os.chdir(results_dir)
 
 datafiles = os.listdir()
-datafilenames = list(set([ name.split('.')[0] for name in datafiles])) #remove file extension
+datafilenames = list(set([ name.split('.')[0] for name in datafiles ])) #remove file extension
 
 for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")]): # potentially find a better way to gracefully deal with memory data files
     filename_parts = filename.split('_')
@@ -97,7 +97,8 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
     result['time-energy']['time-between-samples']['num_samples'] = len(time)
     result['time-energy']['time-between-samples']['avg'] = statistics.mean(time)
     result['time-energy']['time-between-samples']['stdev'] = statistics.stdev(time)
-            
+    
+    # TODO: power-per-sample (can parallel divide the arrays of energy and timestamps, then convert to Watts from joules/usec
             
     with open(filename+'.stats.json','w') as fh:
         fh.write(json.dumps(result))

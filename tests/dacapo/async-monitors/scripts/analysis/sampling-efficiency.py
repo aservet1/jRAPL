@@ -55,8 +55,11 @@ def get_perbench():
 
     return result
 
+# because of stuff and technicalities and things, i calculated all of the permonitor results directly in my aggregate-permonitor one, so this is just parsing those results out
 def get_overall():
+
     data = load_data_by_file_extension('aggregate-permonitor.json', 'monitor_type')
+
     assert(len(data['java']) == 1 and len(data['c-linklist']) == 1 and len(data['c-dynamicarray']) == 1)
 
     java_metadata = data['java'][0]['metadata']
@@ -64,34 +67,49 @@ def get_overall():
     c_da_metadata = data['c-dynamicarray'][0]['metadata']
 
     result = {}
-
     result['java']           = {}
     result['c-linklist']     = {}
     result['c-dynamicarray'] = {}
 
-    java_NS_avg    =  java_metadata['numSamples']['avg']
-    c_ll_NS_avg    =  c_ll_metadata['numSamples']['avg']
-    c_da_NS_avg    =  c_da_metadata['numSamples']['avg']
-    java_NS_stdev  =  java_metadata['numSamples']['stdev']
-    c_ll_NS_stdev  =  c_ll_metadata['numSamples']['stdev']
-    c_da_NS_stdev  =  c_da_metadata['numSamples']['stdev']
+    result['java']           ['avg']  = java_metadata['samplingEfficiency']['avg']
+    result['c-linklist']     ['avg']  = c_ll_metadata['samplingEfficiency']['avg']
+    result['c-dynamicarray'] ['avg']  = c_da_metadata['samplingEfficiency']['avg']
 
-    java_LI_avg    =  java_metadata['lifetime']['avg']
-    c_ll_LI_avg    =  c_ll_metadata['lifetime']['avg']
-    c_da_LI_avg    =  c_da_metadata['lifetime']['avg']
-    java_LI_stdev  =  java_metadata['lifetime']['stdev']
-    c_ll_LI_stdev  =  c_ll_metadata['lifetime']['stdev']
-    c_da_LI_stdev  =  c_da_metadata['lifetime']['stdev']
-
-    result['java']           ['avg']  = java_NS_avg / java_LI_avg
-    result['c-linklist']     ['avg']  = c_ll_NS_avg / c_ll_LI_avg
-    result['c-dynamicarray'] ['avg']  = c_da_NS_avg / c_da_LI_avg
-
-    result['java']          ['stdev'] = div_uncertainty(java_NS_stdev, java_LI_stdev, java_NS_avg, java_LI_avg)
-    result['c-linklist']    ['stdev'] = div_uncertainty(c_ll_NS_stdev, c_ll_LI_stdev, c_ll_NS_avg, c_ll_LI_avg)
-    result['c-dynamicarray']['stdev'] = div_uncertainty(c_da_NS_stdev, c_da_LI_stdev, c_da_NS_avg, c_da_LI_avg)
+    result['java']          ['stdev'] = java_metadata['samplingEfficiency']['stdev']
+    result['c-linklist']    ['stdev'] = c_ll_metadata['samplingEfficiency']['stdev']
+    result['c-dynamicarray']['stdev'] = c_da_metadata['samplingEfficiency']['stdev']
 
     return result
+
+    # result = {}
+
+    # result['java']           = {}
+    # result['c-linklist']     = {}
+    # result['c-dynamicarray'] = {}
+
+    # java_NS_avg    =  java_metadata['numSamples']['avg']
+    # c_ll_NS_avg    =  c_ll_metadata['numSamples']['avg']
+    # c_da_NS_avg    =  c_da_metadata['numSamples']['avg']
+    # java_NS_stdev  =  java_metadata['numSamples']['stdev']
+    # c_ll_NS_stdev  =  c_ll_metadata['numSamples']['stdev']
+    # c_da_NS_stdev  =  c_da_metadata['numSamples']['stdev']
+
+    # java_LI_avg    =  java_metadata['lifetime']['avg']
+    # c_ll_LI_avg    =  c_ll_metadata['lifetime']['avg']
+    # c_da_LI_avg    =  c_da_metadata['lifetime']['avg']
+    # java_LI_stdev  =  java_metadata['lifetime']['stdev']
+    # c_ll_LI_stdev  =  c_ll_metadata['lifetime']['stdev']
+    # c_da_LI_stdev  =  c_da_metadata['lifetime']['stdev']
+
+    # result['java']           ['avg']  = java_NS_avg / java_LI_avg
+    # result['c-linklist']     ['avg']  = c_ll_NS_avg / c_ll_LI_avg
+    # result['c-dynamicarray'] ['avg']  = c_da_NS_avg / c_da_LI_avg
+
+    # result['java']          ['stdev'] = div_uncertainty(java_NS_stdev, java_LI_stdev, java_NS_avg, java_LI_avg)
+    # result['c-linklist']    ['stdev'] = div_uncertainty(c_ll_NS_stdev, c_ll_LI_stdev, c_ll_NS_avg, c_ll_LI_avg)
+    # result['c-dynamicarray']['stdev'] = div_uncertainty(c_da_NS_stdev, c_da_LI_stdev, c_da_NS_avg, c_da_LI_avg)
+
+    # return result
 
 '''---------------------------------------------------------------------------'''
 
@@ -105,7 +123,7 @@ results['overall']   =  get_overall  ()
 
 results['plotinfo'] = {}
 results['plotinfo']['perbench'] = { 'filename': 'sampling-efficiency_perbench', 'xlabel': 'Sampling Efficiency' }
-results['plotinfo']['overall']  = { 'filename': 'sampling-efficiency_overall' , 'ylabel': 'Sampling Efficiency', 'xlabel': 'Monitor Type' }
+results['plotinfo']['overall' ] = { 'filename': 'sampling-efficiency_overall' , 'ylabel': 'Sampling Efficiency', 'xlabel': 'Monitor Type' }
 
 print('.) done with overall')
 
