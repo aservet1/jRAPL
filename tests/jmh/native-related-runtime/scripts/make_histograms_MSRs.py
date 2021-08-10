@@ -55,7 +55,7 @@ if len(data_files) % 3 != 0:
 
 fig = plt.figure(constrained_layout=True)
 i = 0
-# create 3x1 subfigs (credit to: https://stackoverflow.com/questions/27426668/row-titles-for-matplotlib-subplot)
+# credit to: https://stackoverflow.com/questions/27426668/row-titles-for-matplotlib-subplot
 row_names = ['System A', 'System B']
 subfigs = fig.subfigures (
     nrows=len(row_names),
