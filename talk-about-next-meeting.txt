@@ -15,3 +15,5 @@ fixed the standard error bug on the sampling efficiency thing (was because i was
 			- probably not, we can reference the per-benchmark plot of this in the appendix. but its no surprise that these are bigger error bars. we want uncertainty within a benchmark, and then
 			  to propagate that to the aggregate across benchmarks, not to have the whole uncertainty for all benchmarks to be show
 		- this is an interesting concept; get uncertainty at primary step before the merge is done across benchmarks, and propagate the uncertainty through the merge.
+
+ughhhh the memory footprint results are inconsistent again. i mean it keeps showing a low footprint which is all good and dandy, but the consistent trend with Java being worse is not there. i feel like we're not working with a big enough sample size or something, we havent captured enough of the variance. idk. i should look through and debug the data a bit better to see what i see about this
