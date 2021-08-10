@@ -20,10 +20,10 @@ def diff_list(l, wraparound = 0):
 	for i in range(1,len(l)):
 		diff = l[i] - l[i-1]
 		if diff < 0:
-			print(".> caught negative diff:",diff,l[i],l[i-1]) # discard instances of wraparound, since theyre so infrequent for this experiment.
-																# TODO: make sure that wraparound is included by the time you release this though
+			print(".> caught negative diff:",diff,l[i],l[i-1])
 			diff += wraparound
-		else: diffs.append(diff)
+        	print("...> fixed to:",diff)
+		diffs.append(diff)
 	return diffs
     # return [ float(float(l[i]) - float(l[i-1])) for i in range(1,len(l))]
 
@@ -91,23 +91,25 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
     result['time-energy']['power-per-sample']  = dict()
 
     for power_domain in list(energydata.keys()):
-        energy = diff_list(energydata[power_domain].to_list())
+        energy = diff_list (
+            energydata[power_domain].to_list(),
+            wraparound = metadata['energyWrapAround']
+        )
         result['time-energy']['energy-per-sample'][power_domain] = dict()
         result['time-energy']['energy-per-sample'][power_domain]['num_samples'] = len(energy)
         result['time-energy']['energy-per-sample'][power_domain]['avg'] = statistics.mean(energy)
         result['time-energy']['energy-per-sample'][power_domain]['stdev'] = statistics.stdev(energy)
 
         assert len(energy) == len(time)
-
-        time_seconds = [ t*1000000 for t in time ]
+        time_seconds = [ t/1000000 for t in time ]
         power = [
             energy[i] / time_seconds[i]
             for i in range(len(energy))
         ]
-        result['time-energy']['energy-per-sample'][power_domain] = dict()
-        result['time-energy']['energy-per-sample'][power_domain]['num_samples'] = len(energy)
-        result['time-energy']['energy-per-sample'][power_domain]['avg'] = statistics.mean(energy)
-        result['time-energy']['energy-per-sample'][power_domain]['stdev'] = statistics.stdev(energy)
+        result['time-energy']['power-per-sample'][power_domain] = dict()
+        result['time-energy']['power-per-sample'][power_domain]['num_samples'] = len(energy)
+        result['time-energy']['power-per-sample'][power_domain]['avg'] = statistics.mean(energy)
+        result['time-energy']['power-per-sample'][power_domain]['stdev'] = statistics.stdev(energy)
             
     with open(filename+'.stats.json','w') as fh:
         fh.write(json.dumps(result))

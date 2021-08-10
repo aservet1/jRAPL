@@ -9,12 +9,12 @@ def trunc_str(n): # decimal tostring, truncated
 
 try:
     data_files = argv[1:-1]
-    result_dir = argv[-1]
+    output_dir = argv[-1]
 except IndexError:
-    print("usage:",argv[0],"<list of data files> result_dir")
+    print("usage:",argv[0],"<list of data files> output_dir")
     exit(2)
 if not len(data_files):
-    print("usage:",argv[0],"<list of data files> result_dir")
+    print("usage:",argv[0],"<list of data files> output_dir")
     exit(2)
 
 if len(data_files) % 3 != 0:
@@ -65,8 +65,13 @@ for i, fname in enumerate( data_files ):
     ax.set_title(title)
     ax.legend([extra1, extra2], ( "x̄: "+trunc_str(mean)+"µs", "σ: "+trunc_str(sd)+"µ" ))
 
-fig.supxlabel("microseconds".title())
-fig.supylabel("frequency".title())
+# fig.supxlabel("microseconds".title())
+# fig.supylabel("frequency".title())
 plt.show()
 
-
+fig.savefig (
+	os.path.join (
+		output_dir,
+		"all-dem-msr-runtimes"
+	)
+)
