@@ -95,7 +95,8 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
     result['time-energy']['time-between-samples']['num_samples'] = len(time)
     result['time-energy']['time-between-samples']['avg'] = statistics.mean(time)
     result['time-energy']['time-between-samples']['stdev'] = statistics.stdev(time)
-            
+    
+    # TODO: power-per-sample (can parallel divide the arrays of energy and timestamps, then convert to Watts from joules/usec
             
     with open(filename+'.stats.json','w') as fh:
         fh.write(json.dumps(result))
