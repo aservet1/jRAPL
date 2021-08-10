@@ -78,25 +78,36 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
 
     result['time-energy'] = dict()
 
-    timestamps = energydata['timestamp'].to_list()
+    timestamps = energydata['timestamp']#.to_list()
     del energydata['timestamp']
 
-    result['time-energy']['energy-per-sample'] = dict()
-    power_domains = list(energydata.keys())
-    for powd in power_domains:
-        energy = diff_list(energydata[powd].to_list())
-        result['time-energy']['energy-per-sample'][powd] = dict()
-        result['time-energy']['energy-per-sample'][powd]['num_samples'] = len(energy)
-        result['time-energy']['energy-per-sample'][powd]['avg'] = statistics.mean(energy)
-        result['time-energy']['energy-per-sample'][powd]['stdev'] = statistics.stdev(energy)
-
-    time = diff_list(timestamps)
+    time = diff_list(timestamps.to_list())
     result['time-energy']['time-between-samples'] = {}
     result['time-energy']['time-between-samples']['num_samples'] = len(time)
     result['time-energy']['time-between-samples']['avg'] = statistics.mean(time)
     result['time-energy']['time-between-samples']['stdev'] = statistics.stdev(time)
-    
-    # TODO: power-per-sample (can parallel divide the arrays of energy and timestamps, then convert to Watts from joules/usec
+
+    result['time-energy']['energy-per-sample'] = dict()
+    result['time-energy']['power-per-sample']  = dict()
+
+    for power_domain in list(energydata.keys()):
+        energy = diff_list(energydata[power_domain].to_list())
+        result['time-energy']['energy-per-sample'][power_domain] = dict()
+        result['time-energy']['energy-per-sample'][power_domain]['num_samples'] = len(energy)
+        result['time-energy']['energy-per-sample'][power_domain]['avg'] = statistics.mean(energy)
+        result['time-energy']['energy-per-sample'][power_domain]['stdev'] = statistics.stdev(energy)
+
+        assert len(energy) == len(time)
+
+        time_seconds = [ t*1000000 for t in time ]
+        power = [
+            energy[i] / time_seconds[i]
+            for i in range(len(energy))
+        ]
+        result['time-energy']['energy-per-sample'][power_domain] = dict()
+        result['time-energy']['energy-per-sample'][power_domain]['num_samples'] = len(energy)
+        result['time-energy']['energy-per-sample'][power_domain]['avg'] = statistics.mean(energy)
+        result['time-energy']['energy-per-sample'][power_domain]['stdev'] = statistics.stdev(energy)
             
     with open(filename+'.stats.json','w') as fh:
         fh.write(json.dumps(result))
