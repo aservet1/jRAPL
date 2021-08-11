@@ -21,8 +21,8 @@ def diff_list(l, wraparound = 0):
 		diff = l[i] - l[i-1]
 		if diff < 0:
 			print(".> caught negative diff:",diff,l[i],l[i-1])
-			diff += wraparound
-        	print("...> fixed to:",diff)
+			diff += wraparound#262143.99993896484#wraparound
+			print("...> fixed to:",diff)
 		diffs.append(diff)
 	return diffs
     # return [ float(float(l[i]) - float(l[i-1])) for i in range(1,len(l))]
@@ -40,14 +40,19 @@ def memory_data(benchmark, iteration, type):
     memdata['stdev'] = statistics.stdev(samples)
     del memdata['timestamps'] # this is useful for generating an individual time-series plot of the memory of an iteration. but not for here.
     return memdata
+
+def make_path_absolute(path):
+	return path if ( path.startswith('/') or path.startswith('~') ) else os.path.join(os.getcwd(), path)
+
 '''-----------------------------------------------------------------------------'''
 
-if len(sys.argv) != 2:
-	print("usage: python3 "+sys.argv[0]+" <folder containing the data that you intend to process and generate results for>")
+if len(sys.argv) != 3:
+	print("usage: python3 "+sys.argv[0]+" <raw data directory> <directory to dump to>")
 	exit(1)
 
-results_dir = sys.argv[1]# 'jolteon-results-subset'
-os.chdir(results_dir)
+data_dir = sys.argv[1]
+result_dir = make_path_absolute(sys.argv[2])
+os.chdir(data_dir)
 
 datafiles = os.listdir()
 datafilenames = list(set([ name.split('.')[0] for name in datafiles ])) #remove file extension
@@ -111,7 +116,13 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
         result['time-energy']['power-per-sample'][power_domain]['avg'] = statistics.mean(energy)
         result['time-energy']['power-per-sample'][power_domain]['stdev'] = statistics.stdev(energy)
             
-    with open(filename+'.stats.json','w') as fh:
+    with open (
+        os.path.join (
+            result_dir,
+            filename+'.stats.json'
+        ),
+        'w'
+    ) as fh:
         fh.write(json.dumps(result))
 
     result.clear()
