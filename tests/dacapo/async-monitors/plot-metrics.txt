@@ -1,4 +1,0 @@
-energy-per-sample.py # also works for timenormalized
-memory-footprint.py
-sampling-efficiency.py
-time-per-sample.py
