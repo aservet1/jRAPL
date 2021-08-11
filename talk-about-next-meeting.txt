@@ -1,19 +1,15 @@
-Talk about next meeting:
-	I came up with more plot presentation methods after we talked, so I applied them. Mostly colors and axis scales and whatnot
 
-really big error bars on one of the plots which makes them unreadable. how do you deal with this situation?
+monitor on / monitor off (normalization)
 
-should joules / power per sample be combined sockets, or broken down by sockets?
-	in general, comined sockets / overall system (but still broken down by power domain) is a common thing, right?
+if over 1, overconsuming, less than 1, under consuming
 
-should average power be "power per sample" or just average joules per sample divided by average time per sample
-(this is to time normalize the joules per sample reading, since Java had longer average sampling periods, so naturally it would report more energy per sample period)
+|   .        .
+| . .        . .
+| . .  .     . .
+| . .  . .   . .
+|_._.__._.___._.___ bar1 is 'with monitor on', bar2 is 'with monitor off'
 
-fixed the standard error bug on the sampling efficiency thing (was because i was averaging across all benchmarks, so there was big big variance in time and numsamp. i fixed it by changing where i did the math; get this metric and then average it, dont calculate based off the whole averages and sds of all benchmark runs)
- - make sure you calculate power per sample as well, so you dont have the whacky error bars on that one. i think it might be the same issue, since different benchmarks have wildly different power consumption, so its better to calculate the power individually on the first run and then let those results propagate through the thing
-		- wait, this one's interesting. is it useful to know that there are wildly different power readings?
-			- probably not, we can reference the per-benchmark plot of this in the appendix. but its no surprise that these are bigger error bars. we want uncertainty within a benchmark, and then
-			  to propagate that to the aggregate across benchmarks, not to have the whole uncertainty for all benchmarks to be show
-		- this is an interesting concept; get uncertainty at primary step before the merge is done across benchmarks, and propagate the uncertainty through the merge.
+raw values for bars
+J, CD, CA
 
-ughhhh the memory footprint results are inconsistent again. i mean it keeps showing a low footprint which is all good and dandy, but the consistent trend with Java being worse is not there. i feel like we're not working with a big enough sample size or something, we havent captured enough of the variance. idk. i should look through and debug the data a bit better to see what i see about this
+update the UML and make it fit on the screen
