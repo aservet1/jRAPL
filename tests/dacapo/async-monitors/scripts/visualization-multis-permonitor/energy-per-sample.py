@@ -17,7 +17,7 @@ fds  = [ fd.close() for fd in fds ]
 
 power_domains = sorted(data[0].keys())
 
-fig = plt.figure(constrained_layout=True, figsize=(6,5))
+fig = plt.figure(constrained_layout=True, figsize=(8,7))
 
 row_names = [
     'System A',
