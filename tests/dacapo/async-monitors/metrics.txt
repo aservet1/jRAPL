@@ -1,0 +1,5 @@
+energy-per-sample
+energy-per-sample_timenormalized
+memory-footprint
+sampling-efficiency
+time-per-sample
