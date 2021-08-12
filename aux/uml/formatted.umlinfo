@@ -138,7 +138,7 @@ EnergyMonitor extends EnergyManager
 ===========EnergyStats===============
 
 EnergyStats extends EnergySample
-- Instant timestamp;
+- Instant timestamp
 + EnergyStats(double[], Instant)
 + EnergyStats(EnergyStats)
 + csvHeader() String 
