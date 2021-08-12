@@ -8,11 +8,11 @@ public final class ArchSpec {
 	public static final int MICRO_ARCHITECTURE;
 	public static final String MICRO_ARCHITECTURE_NAME;
 
-	public native static int getSocketNum();
-	public native static double getWraparoundEnergy();
-	public native static String getMicroArchitectureName();
-	public native static int getMicroArchitecture();
-	public native static String energyStatsStringFormat();
+	private native static int getSocketNum();
+	private native static double getWraparoundEnergy();
+	private native static String getMicroArchitectureName();
+	private native static int getMicroArchitecture();
+	private native static String energyStatsStringFormat();
 
 	// the indexes of where power domains are in the returned array of energy stats
 	// I wonder if this is the best class to calculate and store these indices.
