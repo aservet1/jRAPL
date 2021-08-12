@@ -1,5 +1,4 @@
 ===========ArchSpec===============
-{package jRAPL}
 final class ArchSpec
 + NUM_SOCKETS  final int 
 + NUM_STATS_PER_SOCKET  final int 
@@ -23,32 +22,30 @@ final class ArchSpec
 + infoString() String 
 ==================
 ===========AsyncEnergyMonitorCSide===============
-package jRAPL
 
 class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 
 - startNative() void 
 - stopNative() void 
 - resetNative() void 
-- activateNative(int samplingRate,int storageType,int size_parameter) void 
+- activateNative(int,int,int) void 
 - deactivateNative() void 
-- writeFileCSVNative(String filePath) void 
-- getLastKSamplesNative(int k) String 
-- longgetLastKTimestampsNative(int k) [] 
+- writeFileCSVNative(String) void 
+- getLastKSamplesNative(int) String 
+- getLastKTimestampsNative(int) long[] 
 - getNumSamplesNative() int 
-- setSamplingRateNative(int s) void 
+- setSamplingRateNative(int) void 
 - getSamplingRateNative() int 
-- DYNAMIC_ARRAY_STORAGE   final int 
-- LINKED_LIST_STORAGE  final int 
+- DYNAMIC_ARRAY_STORAGE int 
+- LINKED_LIST_STORAGE int 
 - samplingRate int 
 - storageType int 
 - initialSize  int 
 + AsyncEnergyMonitorCSide()
-+ AsyncEnergyMonitorCSide(int s, String storageTypeString, int size)
-+ AsyncEnergyMonitorCSide(String storageTypeString)
++ AsyncEnergyMonitorCSide(int, String, int)
++ AsyncEnergyMonitorCSide(String)
 ==================
 ===========AsyncEnergyMonitor===============
-package jRAPL
 abstract class AsyncEnergyMonitor extends EnergyMonitor
 # monitorStartTime Instant  
 # monitorStopTime Instant  
@@ -61,51 +58,44 @@ abstract class AsyncEnergyMonitor extends EnergyMonitor
 + start() void 
 + stop() void 
 + reset() void 
-+ abstract Instant[] getLastKTimestamps(int k)
-+ abstract String[] getLastKSamples(int k)
-+ getLastKSamples_Objects(int k) EnergyStats[] 
-+ getLastKSamples_Arrays(int k) double[][] 
++ abstract Instant[] getLastKTimestamps(int)
++ abstract String[] getLastKSamples(int)
++ getLastKSamples_Objects(int) EnergyStats[] 
++ getLastKSamples_Arrays(int) double[][] 
 + isRunning() boolean 
-+ writeFileCSV(String fileName) abstract void 
-+ writeFileMetadata(String fileName) void 
++ writeFileCSV(String) void 
++ writeFileMetadata(String) void 
 ==================
 ===========AsyncEnergyMonitorJavaSide===============
-package jRAPL;
 AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Runnable {
 + AsyncEnergyMonitorJavaSide()
-+ AsyncEnergyMonitorJavaSide(int s)
-- ArrayList<String> samples;
-- samplingRate int ;
-- exit volatile boolean ;
-- t  Thread ;
++ AsyncEnergyMonitorJavaSide(int)
+- ArrayList<String> samples
+- samplingRate int
+- exit volatile boolean
+- t Thread
 }
-==================
-===========Demo===============
-==================
-===========DriverTmp===============
 ==================
 ===========DvfsEnergyController===============
 DvfsEnergyController extends EnergyController {
-+ scale(int freq)   int 
++ scale(int)   int 
 + freqAvailable()   int[] 
-+ SetGovernor(String gov)   void 
++ SetGovernor(String)   void 
 ==================
 ===========EnergyController===============
-package jRAPL;
 public class EnergyController extends EnergyManager {
 }
 ==================
 ===========EnergyDiff===============
 EnergyDiff extends EnergySample
-+ EnergyDiff(double[] primitiveSample, Duration elapsedTime)
-- Duration elapsedTime = null;
-+ setElapsedTime(Duration elapsed) void 
++ EnergyDiff(double[], Duration)
+- elapsedTime Duration
++ setElapsedTime(Duration) void 
 + getElapsedTime() Duration 
 + csvHeader()  String 
-+ between(EnergyStats before, EnergyStats after)  EnergyDiff 
++ between(EnergyStats, EnergyStats) EnergyDiff 
 ==================
 ===========EnergyManager===============
-package jRAPL
 EnergyManager
 - boolean active 
 - boolean libraryLoaded 
@@ -120,74 +110,69 @@ EnergyManager
 
 EnergyMonitor extends EnergyManager
 # energyStatCheck()  String 
-- stringArrayToDoubleArray(String[] s)  double[] 
-# stringToPrimitiveSample(String energyString)  double[] 
-# stringToEnergyStats(String energyString)  EnergyStats 
-# subtractPrimitiveSamples(double[] a, double[] b)  double[] 
+- stringArrayToDoubleArray(String[])  double[] 
+# stringToPrimitiveSample(String)  double[] 
+# stringToEnergyStats(String)  EnergyStats 
+# subtractPrimitiveSamples(double[], double[])  double[] 
 ==================
 ===========EnergySample===============
-package jRAPL
 + abstract class EnergySample
 {
-+ EnergySample(double[] primitiveSample)
-+ EnergySample(EnergySample other)
-# csvHeader() static String 
++ EnergySample(double[])
++ EnergySample(EnergySample)
+# csvHeader() String 
 # String csv()
 + getPrimitiveSample() double[] 
 - primitiveSample double[] 
-- getEnergy(int socket, int index) double 
-+ getCore(int socket) double 
+- getEnergy(int, int) double 
++ getCore(int) double 
 + getCore() double 
-+ getGpu(int socket) double 
++ getGpu(int) double 
 + getGpu() double 
-+ getPackage(int socket) double 
++ getPackage(int) double 
 + getPackage() double 
-+ getDram(int socket) double 
++ getDram(int) double 
 + getDram() double 
 }
 ==================
 ===========EnergyStats===============
-package jRAPL;
 
 EnergyStats extends EnergySample
 - Instant timestamp;
-+ EnergyStats(double[] primitiveSample, Instant ts)
-+ EnergyStats(EnergyStats other)
++ EnergyStats(double[], Instant)
++ EnergyStats(EnergyStats)
 + csvHeader() String 
 + getTimestamp() Instant 
-+ setTimestamp(Instant ts) void 
++ setTimestamp(Instant) void 
 ==================
 ===========NativeUtils===============
-package jRAPL
 NativeUtils
 - MIN_PREFIX_LENGTH int  
 + String NATIVE_FOLDER_PATH_PREFIX
-+ loadLibraryFromJar(String path) void 
++ loadLibraryFromJar(String) void 
 - temporaryDir File
 - NativeUtils()
 - isPosixCompliant() boolean 
-- createTempDirectory(String prefix) File 
+- createTempDirectory(String) File 
 ==================
 ===========PowercapEnergyController===============
-package jRAPL
 PowercapEnergyController extends EnergyController {
 + GetDramPowerSpec()   double[] 
-+ SetPackagePowerLimit(int socketId, int level, double costomPower)   void 
-+ SetPackageTimeWindowLimit(int socketId, int level, double costomTimeWin)   void 
-+ SetDramTimeWindowLimit(int socketId, int level, double costomTimeWin)   void 
-+ SetDramPowerLimit(int socketId, int level, double costomPower)   void 
-+ SetPowerLimit(int ENABLE)   void 
++ SetPackagePowerLimit(int, int, double)   void 
++ SetPackageTimeWindowLimit(int, int, double)   void 
++ SetDramTimeWindowLimit(int, int, double)   void 
++ SetDramPowerLimit(int, int, double)   void 
++ SetPowerLimit(int)   void 
 }
 ==================
 ===========SyncEnergyMonitor===============
-package jRAPL;
 SyncEnergyMonitor extends EnergyMonitor
 + getSample() EnergyStats 
 + getPrimitiveSample() double[] 
 ==================
 ===========Utils===============
 Utils
-+ usecToInstant(long usec)  Instant 
-+ timestampToUsec(Instant timestamp)  long 
-+ durationToUsec(Duration duration)  long 
++ usecToInstant(long)  Instant 
++ timestampToUsec(Instant)  long 
++ durationToUsec(Duration)  long 
 ==================
