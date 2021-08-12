@@ -1,12 +1,10 @@
-package jRAPL;
-public class EnergyManager
-{
-private boolean active = false;
-private static boolean libraryLoaded = false;
-private static int energyManagersActive = 0;
-native static void profileInit();
-native static void profileDealloc();
-static void loadNativeLibrary()
-public void activate()
-public void deactivate()
-}
+package jRAPL
+EnergyManager
+- boolean active 
+- boolean libraryLoaded 
+- int energyManagersActive 
+- void profileInit()
+- void profileDealloc()
+- void loadNativeLibrary()
++ void activate()
++ void deactivate()

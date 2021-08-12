@@ -1,20 +1,19 @@
-package jRAPL;
-import java.util.Arrays;
-public abstract class EnergySample
+package jRAPL
++ abstract class EnergySample
 {
-private final double[] primitiveSample;
-protected native static String csvHeader();
-public EnergySample(double[] primitiveSample)
-public EnergySample(EnergySample other)
-protected String csv()
-public double[] getPrimitiveSample()
-private double getEnergy(int socket, int index)
-public double getCore(int socket)
-public double getCore()
-public double getGpu(int socket)
-public double getGpu()
-public double getPackage(int socket)
-public double getPackage()
-public double getDram(int socket)
-public double getDram()
++ EnergySample(double[] primitiveSample)
++ EnergySample(EnergySample other)
+# csvHeader() static String 
+# String csv()
++ getPrimitiveSample() double[] 
+- primitiveSample double[] 
+- getEnergy(int socket, int index) double 
++ getCore(int socket) double 
++ getCore() double 
++ getGpu(int socket) double 
++ getGpu() double 
++ getPackage(int socket) double 
++ getPackage() double 
++ getDram(int socket) double 
++ getDram() double 
 }

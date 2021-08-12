@@ -1,12 +1,7 @@
-package jRAPL;
-import java.time.Duration;
-public final class EnergyDiff extends EnergySample {
-private Duration elapsedTime = null;
-public EnergyDiff(double[] primitiveSample, Duration elapsedTime)
-public void setElapsedTime(Duration elapsed)
-public Duration getElapsedTime()
-public static String csvHeader()
-@Override
-public String csv()
-public static EnergyDiff between(EnergyStats before, EnergyStats after)
-}
+EnergyDiff extends EnergySample
++ EnergyDiff(double[] primitiveSample, Duration elapsedTime)
+- Duration elapsedTime = null;
++ setElapsedTime(Duration elapsed) void 
++ getElapsedTime() Duration 
++ csvHeader()  String 
++ between(EnergyStats before, EnergyStats after)  EnergyDiff 
