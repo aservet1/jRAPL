@@ -89,7 +89,7 @@ for powerDomain in header:
     ts_diffs = diff_list(change_ts) # [ usec/1000 for usec in diff_list(change_ts) ]
     
     # Get the filtered durations <=3 and outliers >3
-    cutoff = 3000 # 3 ms cutoff
+    cutoff = 10000 # 3 ms cutoff
     filtered, outliers = filter_for_outliers(ts_diffs, le=cutoff)
     
     result = filtered
