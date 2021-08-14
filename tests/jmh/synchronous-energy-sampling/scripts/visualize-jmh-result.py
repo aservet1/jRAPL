@@ -31,7 +31,13 @@ except:
     exit(2)
 
 system_names = ['System A', 'System B']
-fig, axs = plt.subplots(nrows=1, ncols=len(system_names), sharey=True, figsize=(8,4))
+fig, axs = plt.subplots (
+	nrows=1,
+	ncols=len(system_names),
+	sharey=True,
+	figsize=(8,4),
+	constrained_layout=True
+)
 for i,jmh_result in enumerate(jmh_results):
     print(jmh_result)
     with open(jmh_result) as f:
