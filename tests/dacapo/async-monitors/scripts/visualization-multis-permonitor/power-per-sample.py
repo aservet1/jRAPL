@@ -44,12 +44,12 @@ for row, subfig in enumerate(subfigs):
         java_std = data[row][powd][     'java'     ]['stdev']
         c_ll_std = data[row][powd][  'c-linklist'  ]['stdev']
         c_da_std = data[row][powd]['c-dynamicarray']['stdev']
-        labels   = ['J', 'C-L', 'C-D']
+        
         ax.bar (
             x           =  [0,1,2],
             height      =  [java_avg, c_ll_avg, c_da_avg],
             yerr        =  [java_std, c_ll_std, c_da_std],
-            tick_label  =  labels,
+            tick_label  =  ['J'     , 'C-L'   , 'C-D'   ],
             #capsize     =  1,
             color       = 'gold',
             edgecolor   = 'black',

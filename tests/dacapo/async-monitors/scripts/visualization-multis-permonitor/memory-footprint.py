@@ -22,9 +22,13 @@ fig, (ax1, ax2) = plt.subplots (
   ncols=2,
   sharex=True,
   sharey=True,
-  figsize=(5,3)
+  figsize=(5,3),
+  constrained_layout=True
 )
 put_bar_on_an_axis(systemA_file, ax1, 'System A', color='limegreen', edgecolor='black', alpha=1 )
 put_bar_on_an_axis(systemB_file, ax2, 'System B', color='limegreen', edgecolor='black', alpha=1 )
+
+fig.supxlabel('Monitor Type')
+fig.supylabel('% Difference')
 
 plt.savefig(os.path.join(result_dir,'memory-footprint'))

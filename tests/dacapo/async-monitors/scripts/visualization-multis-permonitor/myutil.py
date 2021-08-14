@@ -50,12 +50,11 @@ def put_bar_on_an_axis(data_file, ax, title, color='blue', edgecolor='black', al
     c_da_avg = data['c-dynamicarray']['avg'] 
     c_da_std = data['c-dynamicarray']['stdev']
 
-    labels = ['java','c-linklist','c-dynamicarray']
     ax.bar (
         x           =  [0       , 1       ,        2],
         height      =  [java_avg, c_ll_avg, c_da_avg],
         yerr        =  [java_std, c_ll_std, c_da_std],
-        tick_label  =  labels,
+        tick_label  =  ['J'     , 'CL'    , 'CD'    ],
         #capsize     =  .5,
         color = color,
         edgecolor = edgecolor,

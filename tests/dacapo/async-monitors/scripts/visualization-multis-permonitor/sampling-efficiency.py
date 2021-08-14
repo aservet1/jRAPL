@@ -17,7 +17,8 @@ fig, (ax1, ax2) = plt.subplots (
   ncols=2,
   sharex=True,
   sharey=True,
-  figsize=(5,3)
+  figsize=(5,3),
+  constrained_layout=True
 )
 put_bar_on_an_axis(systemA_file, ax1, 'System A', color='purple', edgecolor='black', alpha=1 )
 put_bar_on_an_axis(systemB_file, ax2, 'System B', color='purple', edgecolor='black', alpha=1 )
@@ -27,8 +28,8 @@ yrange = (.7, .95)
 xaxis_precision, yaxis_precision = (0, 2)
 plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
-#fig.supxlabel('Monitor Type')
-#fig.supylabel('Sampling Efficiency')
+fig.supxlabel('Monitor Type')
+fig.supylabel('Sampling Efficiency')
 
 plt.show()
 fig.savefig(os.path.join(result_dir,'sampling-efficiency'))
