@@ -4,9 +4,26 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "energy_check_utils.h"
 #include "arch_spec.h"
-#include "msr.h"
+
+JNIEXPORT jstring JNICALL
+Java_jRAPL_ArchSpec_getEnergySampleArrayOrder(JNIEnv* env, jclass jcls) {
+	char* order;
+	switch(get_power_domains_supported(get_micro_architecture())) {
+		case DRAM_GPU_CORE_PKG:
+			order = "dram,gpu,core,pkg";
+			break;
+		case DRAM_CORE_PKG:
+			order = "dram,core,pkg";
+			break;
+		case GPU_CORE_PKG:
+			order = "gpu,core,pkg";
+			break;
+		default:
+			order = "undefined_architecture";
+	}
+	return (*env)->NewStringUTF(env, order);
+}
 
 JNIEXPORT jdouble JNICALL
 Java_jRAPL_ArchSpec_getWraparoundEnergy(JNIEnv* env, jclass jcls) {

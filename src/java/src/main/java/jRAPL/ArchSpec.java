@@ -13,6 +13,7 @@ public final class ArchSpec {
 	private native static String getMicroArchitectureName();
 	private native static int getMicroArchitecture();
 	private native static String energyStatsStringFormat();
+	private native static String getEnergySampleArrayOrder();
 
 	// the indexes of where power domains are in the returned array of energy stats
 	// I wonder if this is the best class to calculate and store these indices.
@@ -32,8 +33,10 @@ public final class ArchSpec {
 	public static final boolean PKG_SUPPORTED;
 
 	static {
-		EnergyManager m = new EnergyManager();	// to make sure that native access has been set up at this point.
-		m.activate();							// is dealloc'd by the end of this static block since it has no other use
+
+		if (!EnergyManager.isLibraryLoaded()) {
+			EnergyManager.loadNativeLibrary();
+		}
 		
 		MICRO_ARCHITECTURE = getMicroArchitecture();
 		MICRO_ARCHITECTURE_NAME = getMicroArchitectureName();
@@ -47,29 +50,29 @@ public final class ArchSpec {
 			pkgIndex = -1;
 
 		int idx = 0; for (
-			String part:EnergySample.csvHeader().split(",")
+			String part : getEnergySampleArrayOrder().split(",")
 		) {
-			switch (part.split("_")[0]) {
+			switch (part) {
 				case "dram":
-					if (dramIndex == -1) dramIndex = idx++;
+					dramIndex = idx++;
 					break;
 				case "gpu":
-					if (gpuIndex == -1) gpuIndex = idx++;
+					gpuIndex = idx++;
 					break;
 				case "core":
-					if (coreIndex == -1) coreIndex = idx++;
+					coreIndex = idx++;
 					break;
 				case "pkg":
-					if (pkgIndex == -1) pkgIndex = idx++;
+					pkgIndex = idx++;
 					break;
 				case "timestamp":
 					continue;
 				default:
 					System.err.println (
-						"unexpected part found in csv header: "
+						"unexpected part found in energy sample array order: "
 						+ part
 					);
-					System.exit(0);
+					System.exit(1);
 			}
 		}
 
@@ -94,7 +97,6 @@ public final class ArchSpec {
 			if (sup) n++;
 		} NUM_STATS_PER_SOCKET = n;
 
-		m.deactivate();
 	}
 	
 	public static void init() {} // do-nothing function to trigger the static block...probably a better way of doing this

@@ -25,6 +25,10 @@ public class EnergyManager
 		libraryLoaded = true;
 	}
 
+	static boolean isLibraryLoaded() {
+		return libraryLoaded;
+	}
+
 	public void activate() {
 		if (active) {
 			System.err.println(
@@ -38,7 +42,7 @@ public class EnergyManager
 			System.exit(1);
 		}
 
-		if (!libraryLoaded) {
+		if (!isLibraryLoaded()) {
 			loadNativeLibrary();
 			ArchSpec.init(); // there's definitely a better way of doing this
 		}
