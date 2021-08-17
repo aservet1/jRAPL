@@ -14,9 +14,9 @@
     to add to this file, and make sure this documentation blurb is accurately describing what's
     going on with this file and where it's being used. */
 
-void Java_jRAPL_EnergyManager_profileInit(JNIEnv *env, jclass jcls);
-jint Java_jRAPL_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls);
-jstring Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls);
-void Java_jRAPL_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls);
+void Java_jRAPL_RaplSingleton_profileInit(JNIEnv *env, jclass jcls);
+jint Java_jRAPL_RaplSingleton_getSocketNum(JNIEnv *env, jclass jcls);
+jstring Java_jRAPL_RaplSingleton_energyStatCheck(JNIEnv *env, jclass jcls);
+void Java_jRAPL_RaplSingleton_profileDealloc(JNIEnv * env, jclass jcls);
 
 #endif //JNI_FUNCTION_DECLARATIONS
