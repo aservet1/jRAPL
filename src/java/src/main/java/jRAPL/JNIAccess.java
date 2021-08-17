@@ -1,7 +1,7 @@
 package jRAPL;
 
 //@TODO: change name to NativeManager or JNIManager or JNIFunctions or something
-/*final */class RaplSingleton { // @TODO: make sure you know exactly what it means to have a final class
+/*final */class JNIAccess { // @TODO: make sure you know exactly what it means to have a final class
 
     //@TODO: make these methods not static / part of this singleton object if possible, or not.
     //  but it could be a convention where you wrap each one, and have any 'are you subscribed' guard checks on every single function all
@@ -75,10 +75,10 @@ package jRAPL;
         loadNativeLibrary();
     }
 
-    private RaplSingleton() {}
+    private JNIAccess() {}
 
-    private static RaplSingleton instance = new RaplSingleton();
-    public static RaplSingleton getInstance() {
+    private static JNIAccess instance = new JNIAccess();
+    public static JNIAccess getInstance() {
         return instance;
     }
 

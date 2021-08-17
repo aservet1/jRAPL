@@ -62,42 +62,42 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	@Override //from EnergyManager
 	public void activate() {
 		super.activate();
-		RaplSingleton.activate(samplingRate,storageType,initialSize);
+		JNIAccess.activate(samplingRate,storageType,initialSize);
 	}
 
 	@Override
 	public void deactivate() {
-		RaplSingleton.deactivate(); // @TODO Have an AsyncEnergyMonitor sub-module for the RaplSingleton class
+		JNIAccess.deactivate(); // @TODO Have an AsyncEnergyMonitor sub-module for the JNIAccess class
 		super.deactivate();
 	}
 
 	@Override
 	public void start() {
 		super.start();
-		RaplSingleton.start();
+		JNIAccess.start();
 	}
 
 	@Override
 	public void stop() {
 		super.stop();
-		RaplSingleton.stop();
+		JNIAccess.stop();
 	}
 
 	@Override
 	public void writeFileCSV(String filePath) {
-		RaplSingleton.writeFileCSV(filePath);
+		JNIAccess.writeFileCSV(filePath);
 	}
 
 	@Override
 	public String[] getLastKSamples(int k) {
 		// I don't know how to do JNI String arrays,
 		// so return one giant '_'-delimited string to split
-		return RaplSingleton.getLastKSamples(k).split("_");
+		return JNIAccess.getLastKSamples(k).split("_");
 	} // this is a potential time and memory overhead hazard
 
 	@Override
 	public Instant[] getLastKTimestamps(int k) {
-		long[] usecValues = RaplSingleton.getLastKTimestamps(k);
+		long[] usecValues = JNIAccess.getLastKTimestamps(k);
 		Instant[] instantValues = new Instant[usecValues.length];
 		for (int i = 0; i < usecValues.length; i++)
 			instantValues[i] = Utils.usecToInstant(usecValues[i]);
@@ -106,22 +106,22 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 
 	@Override
 	public int getNumSamples() {
-		return RaplSingleton.getNumSamples();
+		return JNIAccess.getNumSamples();
 	}
 
 	@Override
 	public int getSamplingRate() {
-		return RaplSingleton.getSamplingRate();
+		return JNIAccess.getSamplingRate();
 	}
 
 	@Override
 	public void setSamplingRate(int s) {
-		RaplSingleton.setSamplingRate(s);
+		JNIAccess.setSamplingRate(s);
 	}
 
 	@Override
 	public void reset() {
 		super.reset();
-		RaplSingleton.reset();
+		JNIAccess.reset();
 	}
 }

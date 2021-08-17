@@ -15,13 +15,13 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 
 	public EnergyStats getSample() {
 		return stringToEnergyStats (
-			RaplSingleton.energyStatCheck()
+			JNIAccess.energyStatCheck()
 		);
 	}
 
 	public double[] getPrimitiveSample() {
 		return stringToPrimitiveSample (
-			RaplSingleton.energyStatCheck()
+			JNIAccess.energyStatCheck()
 		);
 	}
 

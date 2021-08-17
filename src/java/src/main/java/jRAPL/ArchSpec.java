@@ -33,13 +33,13 @@ public final class ArchSpec {
 	public static final boolean PKG_SUPPORTED;
 
 	static {
-		RaplSingleton.getInstance().subscribe();
+		JNIAccess.getInstance().subscribe();
 		
-		MICRO_ARCHITECTURE = RaplSingleton.getMicroArchitecture();
-		MICRO_ARCHITECTURE_NAME = RaplSingleton.getMicroArchitectureName();
+		MICRO_ARCHITECTURE = JNIAccess.getMicroArchitecture();
+		MICRO_ARCHITECTURE_NAME = JNIAccess.getMicroArchitectureName();
 
-		NUM_SOCKETS = RaplSingleton.getSocketNum();
-		RAPL_WRAPAROUND = RaplSingleton.getWraparoundEnergy();
+		NUM_SOCKETS = JNIAccess.getSocketNum();
+		RAPL_WRAPAROUND = JNIAccess.getWraparoundEnergy();
 
 		int dramIndex = -1,
 			gpuIndex = -1,
@@ -47,7 +47,7 @@ public final class ArchSpec {
 			pkgIndex = -1;
 
 		int idx = 0; for (
-			String part : RaplSingleton.getEnergySampleArrayOrder().split(",")
+			String part : JNIAccess.getEnergySampleArrayOrder().split(",")
 		) {
 			switch (part) {
 				case "dram":
@@ -94,7 +94,7 @@ public final class ArchSpec {
 			if (sup) n++;
 		} NUM_STATS_PER_SOCKET = n;
 
-		RaplSingleton.getInstance().unsubscribe();
+		JNIAccess.getInstance().unsubscribe();
 	}
 	
 	public static void init() {} // do-nothing function to trigger the static block...probably a better way of doing this

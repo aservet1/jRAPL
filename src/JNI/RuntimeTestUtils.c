@@ -43,7 +43,7 @@ JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_deallocCSideTiming(JNIEnv* en
 static jstring str;
 JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIEnv* env, jclass jcls) {
 	STARTSTAMP;
-	str = Java_jRAPL_RaplSingleton_energyStatCheck(env, jcls);
+	str = Java_jRAPL_JNIAccess_energyStatCheck(env, jcls);
 	STOPSTAMP;
 	return DIFF_USEC;
 }
@@ -52,7 +52,7 @@ JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeEnergyStatCheck(JNIE
  *	timestamps for this one surround a Java call.
  */
 JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_energyStatCheckNoReturnValue(JNIEnv* env, jclass jcls) {
-	str = Java_jRAPL_RaplSingleton_energyStatCheck(env, jcls);
+	str = Java_jRAPL_JNIAccess_energyStatCheck(env, jcls);
 }
 JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_energyStatCheckPureC(JNIEnv* env, jclass jcls) {
 	STARTSTAMP;
@@ -136,7 +136,7 @@ JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_ctimeElapsedUsec(JNIEnv* env
 
 // JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeProfileInit(JNIEnv* env, jclass jcls) {
 // 	STARTSTAMP;
-// 	Java_jRAPL_RaplSingleton_profileInit(env, jcls);
+// 	Java_jRAPL_JNIAccess_profileInit(env, jcls);
 // 	STOPSTAMP;
 // 	return DIFF_USEC;
 // }
@@ -150,7 +150,7 @@ JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_ctimeElapsedUsec(JNIEnv* env
 
 // JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_usecTimeProfileDealloc(JNIEnv* env, jclass jcls) {
 // 	STARTSTAMP;
-// 	Java_jRAPL_RaplSingleton_profileDealloc(env, jcls);
+// 	Java_jRAPL_JNIAccess_profileDealloc(env, jcls);
 // 	STOPSTAMP;
 // 	return DIFF_USEC;
 // }

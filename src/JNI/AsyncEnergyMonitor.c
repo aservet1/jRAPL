@@ -10,12 +10,12 @@
 static AsyncEnergyMonitor* monitor = NULL;
 
 JNIEXPORT void JNICALL
-Java_jRAPL_RaplSingleton_activate(JNIEnv* env, jclass jcls, jint samplingRate, jint storageType, jint initialSize) {
+Java_jRAPL_JNIAccess_activate(JNIEnv* env, jclass jcls, jint samplingRate, jint storageType, jint initialSize) {
 	monitor = newAsyncEnergyMonitor(samplingRate, storageType, initialSize);
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_RaplSingleton_deactivate(JNIEnv* env, jclass jcls) {
+Java_jRAPL_JNIAccess_deactivate(JNIEnv* env, jclass jcls) {
 	if (monitor != NULL) {
 		freeAsyncEnergyMonitor(monitor);
 		monitor = NULL;
@@ -23,29 +23,29 @@ Java_jRAPL_RaplSingleton_deactivate(JNIEnv* env, jclass jcls) {
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_RaplSingleton_start(JNIEnv* env, jclass jcls) {
+Java_jRAPL_JNIAccess_start(JNIEnv* env, jclass jcls) {
 	start(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_RaplSingleton_stop(JNIEnv* env, jclass jcls) {
+Java_jRAPL_JNIAccess_stop(JNIEnv* env, jclass jcls) {
 	stop(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_RaplSingleton_reset(JNIEnv* env, jclass jcls) {
+Java_jRAPL_JNIAccess_reset(JNIEnv* env, jclass jcls) {
 	reset(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_RaplSingleton_writeFileCSV(JNIEnv* env, jclass jcls, jstring jstringFilepath) {
+Java_jRAPL_JNIAccess_writeFileCSV(JNIEnv* env, jclass jcls, jstring jstringFilepath) {
 	const char* filepath = (*env)->GetStringUTFChars(env, jstringFilepath, NULL);
 	writeFileCSV(monitor, filepath);
 	(*env)->ReleaseStringUTFChars(env, jstringFilepath, filepath);
 }
 
 JNIEXPORT jstring JNICALL
-Java_jRAPL_RaplSingleton_getLastKSamples(JNIEnv* env, jclass jcls, int k) {
+Java_jRAPL_JNIAccess_getLastKSamples(JNIEnv* env, jclass jcls, int k) {
 	if (monitor->samples_dynarr) assert( k <= monitor->samples_dynarr->nItems );
 	if (monitor->samples_linklist) assert( k <= monitor->samples_linklist->nItems );
 
@@ -76,7 +76,7 @@ Java_jRAPL_RaplSingleton_getLastKSamples(JNIEnv* env, jclass jcls, int k) {
 }
 
 JNIEXPORT jlongArray JNICALL
-Java_jRAPL_RaplSingleton_getLastKTimestamps(JNIEnv* env, jclass jcls, int k) {
+Java_jRAPL_JNIAccess_getLastKTimestamps(JNIEnv* env, jclass jcls, int k) {
 	EnergyStats samples[k];
 	lastKSamples(k, monitor, samples);
 
@@ -91,16 +91,16 @@ Java_jRAPL_RaplSingleton_getLastKTimestamps(JNIEnv* env, jclass jcls, int k) {
 }
 
 JNIEXPORT jint JNICALL
-Java_jRAPL_RaplSingleton_getNumSamples(JNIEnv* env, jclass jcls) {
+Java_jRAPL_JNIAccess_getNumSamples(JNIEnv* env, jclass jcls) {
 	return (jint)getNumSamples(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_RaplSingleton_setSamplingRate(JNIEnv* env, jclass jcls, jint s) {
+Java_jRAPL_JNIAccess_setSamplingRate(JNIEnv* env, jclass jcls, jint s) {
 	setSamplingRate(monitor,(int)s);
 }
 
 JNIEXPORT jint JNICALL
-Java_jRAPL_RaplSingleton_getSamplingRate(JNIEnv* env, jclass jcls) {
+Java_jRAPL_JNIAccess_getSamplingRate(JNIEnv* env, jclass jcls) {
 	return getSamplingRate(monitor);
 }

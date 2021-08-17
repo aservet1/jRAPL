@@ -3,7 +3,7 @@ package jRAPL;
 public class EnergyManager
 {
 	private boolean active = false;
-    private static RaplSingleton JNI = RaplSingleton.getInstance();
+    private static JNIAccess JNI = JNIAccess.getInstance();
 
 	public void activate() {
 		if (active) {
