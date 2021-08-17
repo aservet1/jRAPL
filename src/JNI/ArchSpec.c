@@ -7,7 +7,7 @@
 #include "arch_spec.h"
 
 JNIEXPORT jstring JNICALL
-Java_jRAPL_ArchSpec_getEnergySampleArrayOrder(JNIEnv* env, jclass jcls) {
+Java_jRAPL_RaplSingleton_getEnergySampleArrayOrder(JNIEnv* env, jclass jcls) {
 	char* order;
 	switch(get_power_domains_supported(get_micro_architecture())) {
 		case DRAM_GPU_CORE_PKG:
@@ -26,36 +26,33 @@ Java_jRAPL_ArchSpec_getEnergySampleArrayOrder(JNIEnv* env, jclass jcls) {
 }
 
 JNIEXPORT jdouble JNICALL
-Java_jRAPL_RaplRingleton_getWraparoundEnergy(JNIEnv* env, jclass jcls) {
+Java_jRAPL_RaplSingleton_getWraparoundEnergy(JNIEnv* env, jclass jcls) {
 	int fd = open("/dev/cpu/0/msr",O_RDONLY);
 	double wraparound_energy = get_wraparound_energy(get_rapl_unit(fd).energy);
 	close(fd);
 	return wraparound_energy;
 }
 
-<<<<<<< HEAD
-=======
-JNIEXPORT jstring JNICALL
-Java_jRAPL_RaplRingleton_energyStatsStringFormat(JNIEnv* env, jclass jcls) {
-	char energy_stats_jni_string_format[512];
-	get_energy_stats_jni_string_format(energy_stats_jni_string_format);
-	// get_power_domains_supported(get_cpu_model(),power_domain_string);
-	return (*env)->NewStringUTF(env, energy_stats_jni_string_format);	
-}
+// JNIEXPORT jstring JNICALL
+// Java_jRAPL_RaplSingleton_energyStatsStringFormat(JNIEnv* env, jclass jcls) {
+// 	char energy_stats_jni_string_format[512];
+// 	get_energy_stats_jni_string_format(energy_stats_jni_string_format);
+// 	// get_power_domains_supported(get_cpu_model(),power_domain_string);
+// 	return (*env)->NewStringUTF(env, energy_stats_jni_string_format);	
+// }
 
->>>>>>> 16315a05fc8e8408594beba74e7d03d60f13d3f2
 JNIEXPORT jint JNICALL
-Java_jRAPL_RaplRingleton_getSocketNum(JNIEnv *env, jclass jcls) {
+Java_jRAPL_RaplSingleton_getSocketNum(JNIEnv *env, jclass jcls) {
 	return (jint)getSocketNum(); 
 }
 
 JNIEXPORT jint JNICALL
-Java_jRAPL_RaplRingleton_getMicroArchitecture(JNIEnv* env, jclass jcls) {
+Java_jRAPL_RaplSingleton_getMicroArchitecture(JNIEnv* env, jclass jcls) {
 	return get_micro_architecture();
 }
 
 JNIEXPORT jstring JNICALL
-Java_jRAPL_RaplRingleton_getMicroArchitectureName(JNIEnv* env, jclass jcls) {
+Java_jRAPL_RaplSingleton_getMicroArchitectureName(JNIEnv* env, jclass jcls) {
 	const char* name;
 	switch(get_micro_architecture()) {
 		case KABYLAKE:			name = "KABYLAKE";			break;

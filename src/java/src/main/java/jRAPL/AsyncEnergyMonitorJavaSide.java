@@ -42,7 +42,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	*/	
 	public void run() {
 		while (!exit) {
-			String energyString = EnergyMonitor.energyStatCheck();
+			String energyString = RaplSingleton.energyStatCheck();
 			samples.add(energyString);
 			try { Thread.sleep(samplingRate); } catch (Exception e) {  }
 		}

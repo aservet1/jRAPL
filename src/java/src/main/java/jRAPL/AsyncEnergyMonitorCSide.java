@@ -4,17 +4,17 @@ import java.time.Instant;
 
 public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 {
-	private native static void startNative();
-	private native static void stopNative();
-	private native static void resetNative();
-	private native static void activateNative(int samplingRate,int storageType,int size_parameter);
-	private native static void deactivateNative();
-	private native static void writeFileCSVNative(String filePath);
-	private native static String getLastKSamplesNative(int k);
-	private native static long[] getLastKTimestampsNative(int k);
-	private native static int getNumSamplesNative();
-	private native static void setSamplingRateNative(int s);
-	private native static int getSamplingRateNative();
+	// private native static void start();
+	// private native static void stop();
+	// private native static void reset();
+	// private native static void activate(int samplingRate,int storageType,int size_parameter);
+	// private native static void deactivate();
+	// private native static void writeFileCSV(String filePath);
+	// private native static String getLastKSamples(int k);
+	// private native static long[] getLastKTimestamps(int k);
+	// private native static int getNumSamples();
+	// private native static void setSamplingRate(int s);
+	// private native static int getSamplingRate();
 
 	// these correspond to '#define' macros written in AsyncEnergyMonitor.h
 	private static final int DYNAMIC_ARRAY_STORAGE = 1;
@@ -62,42 +62,42 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	@Override //from EnergyManager
 	public void activate() {
 		super.activate();
-		activateNative(samplingRate,storageType,initialSize);
+		RaplSingleton.activate(samplingRate,storageType,initialSize);
 	}
 
 	@Override
 	public void deactivate() {
-		deactivateNative();
+		RaplSingleton.deactivate(); // @TODO Have an AsyncEnergyMonitor sub-module for the RaplSingleton class
 		super.deactivate();
 	}
 
 	@Override
 	public void start() {
 		super.start();
-		startNative();
+		RaplSingleton.start();
 	}
 
 	@Override
 	public void stop() {
 		super.stop();
-		stopNative();
+		RaplSingleton.stop();
 	}
 
 	@Override
 	public void writeFileCSV(String filePath) {
-		writeFileCSVNative(filePath);
+		RaplSingleton.writeFileCSV(filePath);
 	}
 
 	@Override
 	public String[] getLastKSamples(int k) {
 		// I don't know how to do JNI String arrays,
 		// so return one giant '_'-delimited string to split
-		return getLastKSamplesNative(k).split("_");
+		return RaplSingleton.getLastKSamples(k).split("_");
 	} // this is a potential time and memory overhead hazard
 
 	@Override
 	public Instant[] getLastKTimestamps(int k) {
-		long[] usecValues = getLastKTimestampsNative(k);
+		long[] usecValues = RaplSingleton.getLastKTimestamps(k);
 		Instant[] instantValues = new Instant[usecValues.length];
 		for (int i = 0; i < usecValues.length; i++)
 			instantValues[i] = Utils.usecToInstant(usecValues[i]);
@@ -106,22 +106,22 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 
 	@Override
 	public int getNumSamples() {
-		return getNumSamplesNative();
+		return RaplSingleton.getNumSamples();
 	}
 
 	@Override
 	public int getSamplingRate() {
-		return getSamplingRateNative();
+		return RaplSingleton.getSamplingRate();
 	}
 
 	@Override
 	public void setSamplingRate(int s) {
-		setSamplingRateNative(s);
+		RaplSingleton.setSamplingRate(s);
 	}
 
 	@Override
 	public void reset() {
 		super.reset();
-		resetNative();
+		RaplSingleton.reset();
 	}
 }
