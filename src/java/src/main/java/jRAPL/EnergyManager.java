@@ -3,31 +3,7 @@ package jRAPL;
 public class EnergyManager
 {
 	private boolean active = false;
-
-	private static boolean libraryLoaded = false;
-
-	//TODO make this atomic, or make a synchronized increment function for thread safety
-	private static int energyManagersActive = 0; // counter for shared resource
-
-	// package-private so they can be called in JMH test methods
-	native static void profileInit();
-	native static void profileDealloc();
-
-	static void loadNativeLibrary() {
-		String nativelib = "/native/libJNIRAPL.so";
-		try {
-			NativeUtils.loadLibraryFromJar(nativelib);
-		} catch (Exception e) {
-			System.err.println("!! error loading library ! -- " + nativelib);
-			e.printStackTrace();
-			System.exit(1);
-		}
-		libraryLoaded = true;
-	}
-
-	static boolean isLibraryLoaded() {
-		return libraryLoaded;
-	}
+    private static RaplSingleton JNI = RaplSingleton.getInstance();
 
 	public void activate() {
 		if (active) {
@@ -42,16 +18,8 @@ public class EnergyManager
 			System.exit(1);
 		}
 
-		if (!isLibraryLoaded()) {
-			loadNativeLibrary();
-			ArchSpec.init(); // there's definitely a better way of doing this
-		}
-		if (energyManagersActive == 0) {
-			profileInit();
-		}
-
 		active = true;
-		energyManagersActive += 1;
+		JNI.subscribe();
 	}
 
 	public void deactivate() {
@@ -68,8 +36,6 @@ public class EnergyManager
 		}
 
 		active = false;
-		energyManagersActive -= 1;
-
-		if (energyManagersActive == 0) profileDealloc();
+        JNI.unsubscribe();
 	}
 }

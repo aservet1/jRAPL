@@ -21,14 +21,14 @@ static uint64_t num_sockets;
 static int power_domains_supported; // this variable is not necessary to store in this file scope, or is it?
 
 JNIEXPORT void JNICALL
-Java_jRAPL_EnergyManager_profileInit(JNIEnv *env, jclass jcls) {
+Java_jRAPL_RaplSingleton_profileInit(JNIEnv *env, jclass jcls) {
 	num_sockets = getSocketNum();
 	power_domains_supported = get_power_domains_supported(get_micro_architecture()); // this variable is not necessary to store in this file scope, or is it?
 	ProfileInit();
 }
 
 JNIEXPORT jstring JNICALL
-Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls) {
+Java_jRAPL_RaplSingleton_energyStatCheck(JNIEnv *env, jclass jcls) {
 	char ener_info[512];
 	EnergyStats stats_per_socket[num_sockets];
 	EnergyStatCheck(stats_per_socket);
@@ -37,7 +37,7 @@ Java_jRAPL_EnergyMonitor_energyStatCheck(JNIEnv *env, jclass jcls) {
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_EnergyManager_profileDealloc(JNIEnv * env, jclass jcls) {
+Java_jRAPL_RaplSingleton_profileDealloc(JNIEnv * env, jclass jcls) {
 	ProfileDealloc();
 }
 
