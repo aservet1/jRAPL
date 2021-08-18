@@ -14,9 +14,9 @@
     to add to this file, and make sure this documentation blurb is accurately describing what's
     going on with this file and where it's being used. */
 
-void Java_jRAPL_JNIAccess_profileInit(JNIEnv *env, jclass jcls);
-jint Java_jRAPL_JNIAccess_getSocketNum(JNIEnv *env, jclass jcls);
-jstring Java_jRAPL_JNIAccess_energyStatCheck(JNIEnv *env, jclass jcls);
-void Java_jRAPL_JNIAccess_profileDealloc(JNIEnv * env, jclass jcls);
+void Java_jRAPL_NativeAccess_profileInit(JNIEnv *env, jclass jcls);
+jint Java_jRAPL_NativeAccess_getSocketNum(JNIEnv *env, jclass jcls);
+jstring Java_jRAPL_NativeAccess_energyStatCheck(JNIEnv *env, jclass jcls);
+void Java_jRAPL_NativeAccess_profileDealloc(JNIEnv * env, jclass jcls);
 
 #endif //JNI_FUNCTION_DECLARATIONS

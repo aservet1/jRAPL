@@ -3,7 +3,6 @@ package jRAPL;
 public class EnergyManager
 {
 	private boolean active = false;
-    private static JNIAccess JNI = JNIAccess.getInstance();
 
 	public void activate() {
 		if (active) {
@@ -19,7 +18,7 @@ public class EnergyManager
 		}
 
 		active = true;
-		JNI.subscribe();
+		NativeAccess.subscribe();
 	}
 
 	public void deactivate() {
@@ -36,6 +35,6 @@ public class EnergyManager
 		}
 
 		active = false;
-        JNI.unsubscribe();
+        NativeAccess.unsubscribe();
 	}
 }
