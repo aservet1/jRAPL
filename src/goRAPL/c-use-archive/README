@@ -1,0 +1,7 @@
+Small demo sample of how to compile an archive into a C executable
+
+- Set the include path (to find the headers with the function declarations)
+- Set the library path (to find the binary executable implementations of the functions)
+
+- Just mimick what's going on in the Makefile, it really does capture the essence of how
+  compiling a static library with a source file into a binary executable works
