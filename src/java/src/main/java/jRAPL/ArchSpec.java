@@ -8,12 +8,12 @@ public final class ArchSpec {
 	public static final int MICRO_ARCHITECTURE;
 	public static final String MICRO_ARCHITECTURE_NAME;
 
-	private native static int getSocketNum();
-	private native static double getWraparoundEnergy();
-	private native static String getMicroArchitectureName();
-	private native static int getMicroArchitecture();
-	private native static String energyStatsStringFormat();
-	private native static String getEnergySampleArrayOrder();
+	// private native static int getSocketNum();
+	// private native static double getWraparoundEnergy();
+	// private native static String getMicroArchitectureName();
+	// private native static int getMicroArchitecture();
+	// private native static String energyStatsStringFormat();
+	// private native static String getEnergySampleArrayOrder();
 
 	// the indexes of where power domains are in the returned array of energy stats
 	// I wonder if this is the best class to calculate and store these indices.
@@ -33,16 +33,13 @@ public final class ArchSpec {
 	public static final boolean PKG_SUPPORTED;
 
 	static {
-
-		if (!EnergyManager.isLibraryLoaded()) {
-			EnergyManager.loadNativeLibrary();
-		}
+		NativeAccess.subscribe();
 		
-		MICRO_ARCHITECTURE = getMicroArchitecture();
-		MICRO_ARCHITECTURE_NAME = getMicroArchitectureName();
+		MICRO_ARCHITECTURE = NativeAccess.getMicroArchitecture();
+		MICRO_ARCHITECTURE_NAME = NativeAccess.getMicroArchitectureName();
 
-		NUM_SOCKETS = getSocketNum();
-		RAPL_WRAPAROUND = getWraparoundEnergy();
+		NUM_SOCKETS = NativeAccess.getSocketNum();
+		RAPL_WRAPAROUND = NativeAccess.getWraparoundEnergy();
 
 		int dramIndex = -1,
 			gpuIndex = -1,
@@ -50,7 +47,7 @@ public final class ArchSpec {
 			pkgIndex = -1;
 
 		int idx = 0; for (
-			String part : getEnergySampleArrayOrder().split(",")
+			String part : NativeAccess.getEnergySampleArrayOrder().split(",")
 		) {
 			switch (part) {
 				case "dram":
@@ -97,6 +94,7 @@ public final class ArchSpec {
 			if (sup) n++;
 		} NUM_STATS_PER_SOCKET = n;
 
+		NativeAccess.unsubscribe();
 	}
 	
 	public static void init() {} // do-nothing function to trigger the static block...probably a better way of doing this

@@ -7,7 +7,7 @@
 #include "arch_spec.h"
 
 JNIEXPORT jstring JNICALL
-Java_jRAPL_ArchSpec_getEnergySampleArrayOrder(JNIEnv* env, jclass jcls) {
+Java_jRAPL_NativeAccess_getEnergySampleArrayOrder(JNIEnv* env, jclass jcls) {
 	char* order;
 	switch(get_power_domains_supported(get_micro_architecture())) {
 		case DRAM_GPU_CORE_PKG:
@@ -26,25 +26,33 @@ Java_jRAPL_ArchSpec_getEnergySampleArrayOrder(JNIEnv* env, jclass jcls) {
 }
 
 JNIEXPORT jdouble JNICALL
-Java_jRAPL_ArchSpec_getWraparoundEnergy(JNIEnv* env, jclass jcls) {
+Java_jRAPL_NativeAccess_getWraparoundEnergy(JNIEnv* env, jclass jcls) {
 	int fd = open("/dev/cpu/0/msr",O_RDONLY);
 	double wraparound_energy = get_wraparound_energy(get_rapl_unit(fd).energy);
 	close(fd);
 	return wraparound_energy;
 }
 
+// JNIEXPORT jstring JNICALL
+// Java_jRAPL_NativeAccess_energyStatsStringFormat(JNIEnv* env, jclass jcls) {
+// 	char energy_stats_jni_string_format[512];
+// 	get_energy_stats_jni_string_format(energy_stats_jni_string_format);
+// 	// get_power_domains_supported(get_cpu_model(),power_domain_string);
+// 	return (*env)->NewStringUTF(env, energy_stats_jni_string_format);	
+// }
+
 JNIEXPORT jint JNICALL
-Java_jRAPL_ArchSpec_getSocketNum(JNIEnv *env, jclass jcls) {
+Java_jRAPL_NativeAccess_getSocketNum(JNIEnv *env, jclass jcls) {
 	return (jint)getSocketNum(); 
 }
 
 JNIEXPORT jint JNICALL
-Java_jRAPL_ArchSpec_getMicroArchitecture(JNIEnv* env, jclass jcls) {
+Java_jRAPL_NativeAccess_getMicroArchitecture(JNIEnv* env, jclass jcls) {
 	return get_micro_architecture();
 }
 
 JNIEXPORT jstring JNICALL
-Java_jRAPL_ArchSpec_getMicroArchitectureName(JNIEnv* env, jclass jcls) {
+Java_jRAPL_NativeAccess_getMicroArchitectureName(JNIEnv* env, jclass jcls) {
 	const char* name;
 	switch(get_micro_architecture()) {
 		case KABYLAKE:			name = "KABYLAKE";			break;

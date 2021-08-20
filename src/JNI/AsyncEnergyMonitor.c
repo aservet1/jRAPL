@@ -10,12 +10,12 @@
 static AsyncEnergyMonitor* monitor = NULL;
 
 JNIEXPORT void JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_activateNative(JNIEnv* env, jclass jcls, jint samplingRate, jint storageType, jint initialSize) {
+Java_jRAPL_NativeAccess_activateMonitor(JNIEnv* env, jclass jcls, jint samplingRate, jint storageType, jint initialSize) {
 	monitor = newAsyncEnergyMonitor(samplingRate, storageType, initialSize);
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_deactivateNative(JNIEnv* env, jclass jcls) {
+Java_jRAPL_NativeAccess_deactivateMonitor(JNIEnv* env, jclass jcls) {
 	if (monitor != NULL) {
 		freeAsyncEnergyMonitor(monitor);
 		monitor = NULL;
@@ -23,29 +23,29 @@ Java_jRAPL_AsyncEnergyMonitorCSide_deactivateNative(JNIEnv* env, jclass jcls) {
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_startNative(JNIEnv* env, jclass jcls) {
+Java_jRAPL_NativeAccess_startMonitor(JNIEnv* env, jclass jcls) {
 	start(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_stopNative(JNIEnv* env, jclass jcls) {
+Java_jRAPL_NativeAccess_stopMonitor(JNIEnv* env, jclass jcls) {
 	stop(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_resetNative(JNIEnv* env, jclass jcls) {
+Java_jRAPL_NativeAccess_resetMonitor(JNIEnv* env, jclass jcls) {
 	reset(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_writeFileCSVNative(JNIEnv* env, jclass jcls, jstring jstringFilepath) {
+Java_jRAPL_NativeAccess_writeFileCSVMonitor(JNIEnv* env, jclass jcls, jstring jstringFilepath) {
 	const char* filepath = (*env)->GetStringUTFChars(env, jstringFilepath, NULL);
 	writeFileCSV(monitor, filepath);
 	(*env)->ReleaseStringUTFChars(env, jstringFilepath, filepath);
 }
 
 JNIEXPORT jstring JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_getLastKSamplesNative(JNIEnv* env, jclass jcls, int k) {
+Java_jRAPL_NativeAccess_getLastKSamplesMonitor(JNIEnv* env, jclass jcls, int k) {
 	if (monitor->samples_dynarr) assert( k <= monitor->samples_dynarr->nItems );
 	if (monitor->samples_linklist) assert( k <= monitor->samples_linklist->nItems );
 
@@ -76,7 +76,7 @@ Java_jRAPL_AsyncEnergyMonitorCSide_getLastKSamplesNative(JNIEnv* env, jclass jcl
 }
 
 JNIEXPORT jlongArray JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_getLastKTimestampsNative(JNIEnv* env, jclass jcls, int k) {
+Java_jRAPL_NativeAccess_getLastKTimestampsMonitor(JNIEnv* env, jclass jcls, int k) {
 	EnergyStats samples[k];
 	lastKSamples(k, monitor, samples);
 
@@ -91,16 +91,16 @@ Java_jRAPL_AsyncEnergyMonitorCSide_getLastKTimestampsNative(JNIEnv* env, jclass 
 }
 
 JNIEXPORT jint JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_getNumSamplesNative(JNIEnv* env, jclass jcls) {
+Java_jRAPL_NativeAccess_getNumSamplesMonitor(JNIEnv* env, jclass jcls) {
 	return (jint)getNumSamples(monitor);
 }
 
 JNIEXPORT void JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_setSamplingRateNative(JNIEnv* env, jclass jcls, jint s) {
+Java_jRAPL_NativeAccess_setSamplingRateMonitor(JNIEnv* env, jclass jcls, jint s) {
 	setSamplingRate(monitor,(int)s);
 }
 
 JNIEXPORT jint JNICALL
-Java_jRAPL_AsyncEnergyMonitorCSide_getSamplingRateNative(JNIEnv* env, jclass jcls) {
+Java_jRAPL_NativeAccess_getSamplingRateMonitor(JNIEnv* env, jclass jcls) {
 	return getSamplingRate(monitor);
 }
