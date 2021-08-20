@@ -1,6 +1,6 @@
 all:
 	mkdir -p bin
-	go build
+	go build goRAPL.go
 	mv goRAPL bin
 
 clean:

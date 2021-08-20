@@ -1,2 +1,0 @@
-Goal: Get Rapl readings in GoLang bindings
-	Get this done in 60 minutes and you're a champ
