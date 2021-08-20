@@ -2,6 +2,7 @@
 #define MSR
 #define _XOPEN_SOURCE 500 //for pread and pwrite
 
+//#include <jni.h>
 #include <stdint.h>
 
 /**
@@ -143,6 +144,7 @@ calc_time_window(uint64_t Y, uint64_t F);
 
 void
 calc_y(uint64_t *Y, uint64_t F, double custm_time);
+// calc_y(uint64_t *Y, uint64_t F, jdouble custm_time);
 
 rapl_msr_power_limit_t
 get_specs(int fd, uint64_t addr);
@@ -158,17 +160,23 @@ set_package_clamp_enable(int fd, uint64_t setting, uint64_t addr);
 
 void
 convert_optimal_yf_from_time(uint64_t *Y, uint64_t *F, double custm_power);
+// convert_optimal_yf_from_time(uint64_t *Y, uint64_t *F, jdouble custm_power);
 void
 set_pkg_time_window_limit(int fd, uint64_t addr, double custm_time);
+// set_pkg_time_window_limit(int fd, uint64_t addr, jdouble custm_time);
 
 void
 set_dram_time_window_limit(int fd, uint64_t addr, double custm_time);
+// set_dram_time_window_limit(int fd, uint64_t addr, double custm_time);
+// // set_dram_time_window_limit(int fd, uint64_t addr, jdouble custm_time);
 
 void
 set_pkg_power_limit(int fd, uint64_t addr, double custm_power);
+// set_pkg_power_limit(int fd, uint64_t addr, jdouble custm_power);
 
 void
 set_dram_power_limit(int fd, uint64_t addr, double custm_power);
+// set_dram_power_limit(int fd, uint64_t addr, jdouble custm_power);
 
 uint64_t
 extractBitField(uint64_t inField, uint64_t width, uint64_t offset);

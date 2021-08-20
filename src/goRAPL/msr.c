@@ -96,8 +96,9 @@ double calc_time_window(uint64_t Y, uint64_t F) {
  */
 void
 calc_y(uint64_t *Y, uint64_t F, double custm_time) {
+//calc_y(uint64_t *Y, uint64_t F, jdouble custm_time) {
 	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
-	*Y = log2(custm_time / rapl_unit.time / F_arr[F]);
+	*Y = -123456789;//log2(custm_time / rapl_unit.time / F_arr[F]);
 }
 
 /* <--- Alejandro's Interpretation --->
@@ -179,6 +180,7 @@ set_package_clamp_enable(int fd, uint64_t setting, uint64_t addr) {
 //closest to the customized time.
 void
 convert_optimal_yf_from_time(uint64_t *Y, uint64_t *F, double custm_time) {
+//convert_optimal_yf_from_time(uint64_t *Y, uint64_t *F, jdouble custm_time) {
 	uint64_t temp_y;
 	double time_window = 0.0;
 	double delta = 0.0;
@@ -202,6 +204,7 @@ convert_optimal_yf_from_time(uint64_t *Y, uint64_t *F, double custm_time) {
  */
 void
 set_pkg_time_window_limit(int fd, uint64_t addr, double custm_time) {
+//set_pkg_time_window_limit(int fd, uint64_t addr, jdouble custm_time) {
 	uint64_t msr;
 	uint64_t Y;
 	uint64_t F;
@@ -227,6 +230,7 @@ set_pkg_time_window_limit(int fd, uint64_t addr, double custm_time) {
  */
 void
 set_dram_time_window_limit(int fd, uint64_t addr, double custm_time) {
+// set_dram_time_window_limit(int fd, uint64_t addr, jdouble custm_time) {
 	uint64_t msr;
 	uint64_t Y;
 	uint64_t F;
@@ -249,6 +253,7 @@ set_dram_time_window_limit(int fd, uint64_t addr, double custm_time) {
  */
 void
 set_pkg_power_limit(int fd, uint64_t addr, double custm_power) {
+// set_pkg_power_limit(int fd, uint64_t addr, jdouble custm_power) {
 	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	uint64_t msr;
 	msr = read_msr(fd, addr);
@@ -268,6 +273,7 @@ set_pkg_power_limit(int fd, uint64_t addr, double custm_power) {
  */
 void
 set_dram_power_limit(int fd, uint64_t addr, double custm_power) {
+// set_dram_power_limit(int fd, uint64_t addr, jdouble custm_power) {
 	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	uint64_t msr;
 	msr = read_msr(fd, addr);
