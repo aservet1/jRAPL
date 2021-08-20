@@ -95,7 +95,7 @@ double calc_time_window(uint64_t Y, uint64_t F) {
  * Takes the previously calculated time window (the human readable verson) and a given F and calculates the Y value. See formula above.
  */
 void
-calc_y(uint64_t *Y, uint64_t F, jdouble custm_time) {
+calc_y(uint64_t *Y, uint64_t F, double custm_time) {
 	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	*Y = log2(custm_time / rapl_unit.time / F_arr[F]);
 }
@@ -178,7 +178,7 @@ set_package_clamp_enable(int fd, uint64_t setting, uint64_t addr) {
 //the time window, then use the set of Y and F that is smaller than but
 //closest to the customized time.
 void
-convert_optimal_yf_from_time(uint64_t *Y, uint64_t *F, jdouble custm_time) {
+convert_optimal_yf_from_time(uint64_t *Y, uint64_t *F, double custm_time) {
 	uint64_t temp_y;
 	double time_window = 0.0;
 	double delta = 0.0;
@@ -201,7 +201,7 @@ convert_optimal_yf_from_time(uint64_t *Y, uint64_t *F, jdouble custm_time) {
  * it as a bit field, stores the bit field as both the upper and lower time window fields of the MSR
  */
 void
-set_pkg_time_window_limit(int fd, uint64_t addr, jdouble custm_time) {
+set_pkg_time_window_limit(int fd, uint64_t addr, double custm_time) {
 	uint64_t msr;
 	uint64_t Y;
 	uint64_t F;
@@ -226,7 +226,7 @@ set_pkg_time_window_limit(int fd, uint64_t addr, jdouble custm_time) {
  * it as a bit field, stores the bit field as just the lower time window
  */
 void
-set_dram_time_window_limit(int fd, uint64_t addr, jdouble custm_time) {
+set_dram_time_window_limit(int fd, uint64_t addr, double custm_time) {
 	uint64_t msr;
 	uint64_t Y;
 	uint64_t F;
@@ -248,7 +248,7 @@ set_dram_time_window_limit(int fd, uint64_t addr, jdouble custm_time) {
  * (***is rapl_unit just a conversion unit for each type of data?)
  */
 void
-set_pkg_power_limit(int fd, uint64_t addr, jdouble custm_power) {
+set_pkg_power_limit(int fd, uint64_t addr, double custm_power) {
 	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	uint64_t msr;
 	msr = read_msr(fd, addr);
@@ -267,7 +267,7 @@ set_pkg_power_limit(int fd, uint64_t addr, jdouble custm_power) {
  * (the high end is also included here but commented out)
  */
 void
-set_dram_power_limit(int fd, uint64_t addr, jdouble custm_power) {
+set_dram_power_limit(int fd, uint64_t addr, double custm_power) {
 	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	uint64_t msr;
 	msr = read_msr(fd, addr);

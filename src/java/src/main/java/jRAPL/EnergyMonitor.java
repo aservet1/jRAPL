@@ -9,14 +9,7 @@ public class EnergyMonitor extends EnergyManager {
 	@Override
 	public void activate() { super.activate(); }
 	@Override
-	public void deactivate() { super.deactivate(); }
-
-	/** Package private so it can be called in JMH things.
-	 *	@TODO consider making this public in and of itself,
-	 *	so people can directly get a CSV reading if thats
-	 *	all theyre going to need. or have a SyncEnergyMonitor
-	 *	method that wraps this like getStringSample()
-	*/ native static String energyStatCheck(); 
+	public void deactivate() { super.deactivate(); } 
 
 	private static double[] stringArrayToDoubleArray(String[] s) {
 		double[] d = new double[s.length];
