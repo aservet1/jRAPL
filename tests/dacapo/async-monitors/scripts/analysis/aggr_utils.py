@@ -84,10 +84,13 @@ def division_propagate_uncertainty(sda, sdb, a, b, covariance = 0): # assume cov
 			2*(covariance/(a*b))
         )
     )
+''' https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae '''
+def divide_by_constant_propagate_uncertainty(s, C):
+    return s / abs( C )
 
 ''' https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae '''
 def multiply_by_constant_propagate_uncertainty(s, C):
-	return math.abs ( C ) * s
+	return s * abs( C )
 
 ''' https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae '''
 def propagate_uncertainty_through_average(sample_sizes, stdevs): # assumed no covariance because yikes not gonna deal with that logic
