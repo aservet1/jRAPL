@@ -6,6 +6,9 @@ import json
 from sys import argv
 
 from myutil import parse_cmdline_args, load_data_by_file_extension
+from aggr_utils import \
+	division_propagate_uncertainty as div_uncertainty#, \
+	#multiply_by_constant_propagate_uncertainty as mult_uncertainty
 
 '''---------------------------------------------------------------------------'''
 
@@ -28,19 +31,35 @@ def get_perbench():
         result[benchmark]['c-linklist']     = {}
         result[benchmark]['c-dynamicarray'] = {}
 
-        result[benchmark]['java']          ['avg'] = java_metadata['numSamples']['avg'] / java_metadata['lifetime']['avg']
-        result[benchmark]['c-linklist']    ['avg'] = c_ll_metadata['numSamples']['avg'] / c_ll_metadata['lifetime']['avg']
-        result[benchmark]['c-dynamicarray']['avg'] = c_da_metadata['numSamples']['avg'] / c_da_metadata['lifetime']['avg']
+        java_NS_avg    =  java_metadata['numSamples']['avg']
+        c_ll_NS_avg    =  c_ll_metadata['numSamples']['avg']
+        c_da_NS_avg    =  c_da_metadata['numSamples']['avg']
+        java_NS_stdev  =  java_metadata['numSamples']['stdev']
+        c_ll_NS_stdev  =  c_ll_metadata['numSamples']['stdev']
+        c_da_NS_stdev  =  c_da_metadata['numSamples']['stdev']
 
-        # propagation-of-uncertainty division
-        result[benchmark]['java']          ['stdev'] = 0#math.sqrt( (java_metadata['numSamples']['stdev']/java_metadata['lifetime']['stdev'])**2 / java_metadata['lifetime']['stdev']**2 )
-        result[benchmark]['c-linklist']    ['stdev'] = 0#math.sqrt( (c_ll_metadata['numSamples']['stdev']/c_ll_metadata['lifetime']['stdev'])**2 / c_ll_metadata['lifetime']['stdev']**2 )
-        result[benchmark]['c-dynamicarray']['stdev'] = 0#math.sqrt( (c_da_metadata['numSamples']['stdev']/c_da_metadata['lifetime']['stdev'])**2 / c_da_metadata['lifetime']['stdev']**2 )
+        java_LI_avg    =  java_metadata['lifetime']['avg']
+        c_ll_LI_avg    =  c_ll_metadata['lifetime']['avg']
+        c_da_LI_avg    =  c_da_metadata['lifetime']['avg']
+        java_LI_stdev  =  java_metadata['lifetime']['stdev']
+        c_ll_LI_stdev  =  c_ll_metadata['lifetime']['stdev']
+        c_da_LI_stdev  =  c_da_metadata['lifetime']['stdev']
+
+        result[benchmark]['java']           ['avg']  = java_NS_avg / java_LI_avg
+        result[benchmark]['c-linklist']     ['avg']  = c_ll_NS_avg / c_ll_LI_avg
+        result[benchmark]['c-dynamicarray'] ['avg']  = c_da_NS_avg / c_da_LI_avg
+
+        result[benchmark]['java']          ['stdev'] = div_uncertainty(java_NS_stdev, java_LI_stdev, java_NS_avg, java_LI_avg)
+        result[benchmark]['c-linklist']    ['stdev'] = div_uncertainty(c_ll_NS_stdev, c_ll_LI_stdev, c_ll_NS_avg, c_ll_LI_avg)
+        result[benchmark]['c-dynamicarray']['stdev'] = div_uncertainty(c_da_NS_stdev, c_da_LI_stdev, c_da_NS_avg, c_da_LI_avg)
 
     return result
 
+# because of stuff and technicalities and things, i calculated all of the permonitor results directly in my aggregate-permonitor one, so this is just parsing those results out
 def get_overall():
+
     data = load_data_by_file_extension('aggregate-permonitor.json', 'monitor_type')
+
     assert(len(data['java']) == 1 and len(data['c-linklist']) == 1 and len(data['c-dynamicarray']) == 1)
 
     java_metadata = data['java'][0]['metadata']
@@ -48,20 +67,49 @@ def get_overall():
     c_da_metadata = data['c-dynamicarray'][0]['metadata']
 
     result = {}
-
     result['java']           = {}
     result['c-linklist']     = {}
     result['c-dynamicarray'] = {}
 
-    result['java']          ['avg'] = java_metadata['numSamples']['avg'] / java_metadata['lifetime']['avg']
-    result['c-linklist']    ['avg'] = c_ll_metadata['numSamples']['avg'] / c_ll_metadata['lifetime']['avg']
-    result['c-dynamicarray']['avg'] = c_da_metadata['numSamples']['avg'] / c_da_metadata['lifetime']['avg']
+    result['java']           ['avg']  = java_metadata['samplingEfficiency']['avg']
+    result['c-linklist']     ['avg']  = c_ll_metadata['samplingEfficiency']['avg']
+    result['c-dynamicarray'] ['avg']  = c_da_metadata['samplingEfficiency']['avg']
 
-    result['java']          ['stdev'] = 0#math.sqrt(java_metadata['numSamples']['stdev']**2 / java_metadata['lifetime']['stdev']**2)
-    result['c-linklist']    ['stdev'] = 0#math.sqrt(c_ll_metadata['numSamples']['stdev']**2 / c_ll_metadata['lifetime']['stdev']**2)
-    result['c-dynamicarray']['stdev'] = 0#math.sqrt(c_da_metadata['numSamples']['stdev']**2 / c_da_metadata['lifetime']['stdev']**2)
+    result['java']          ['stdev'] = java_metadata['samplingEfficiency']['stdev']
+    result['c-linklist']    ['stdev'] = c_ll_metadata['samplingEfficiency']['stdev']
+    result['c-dynamicarray']['stdev'] = c_da_metadata['samplingEfficiency']['stdev']
 
     return result
+
+    # result = {}
+
+    # result['java']           = {}
+    # result['c-linklist']     = {}
+    # result['c-dynamicarray'] = {}
+
+    # java_NS_avg    =  java_metadata['numSamples']['avg']
+    # c_ll_NS_avg    =  c_ll_metadata['numSamples']['avg']
+    # c_da_NS_avg    =  c_da_metadata['numSamples']['avg']
+    # java_NS_stdev  =  java_metadata['numSamples']['stdev']
+    # c_ll_NS_stdev  =  c_ll_metadata['numSamples']['stdev']
+    # c_da_NS_stdev  =  c_da_metadata['numSamples']['stdev']
+
+    # java_LI_avg    =  java_metadata['lifetime']['avg']
+    # c_ll_LI_avg    =  c_ll_metadata['lifetime']['avg']
+    # c_da_LI_avg    =  c_da_metadata['lifetime']['avg']
+    # java_LI_stdev  =  java_metadata['lifetime']['stdev']
+    # c_ll_LI_stdev  =  c_ll_metadata['lifetime']['stdev']
+    # c_da_LI_stdev  =  c_da_metadata['lifetime']['stdev']
+
+    # result['java']           ['avg']  = java_NS_avg / java_LI_avg
+    # result['c-linklist']     ['avg']  = c_ll_NS_avg / c_ll_LI_avg
+    # result['c-dynamicarray'] ['avg']  = c_da_NS_avg / c_da_LI_avg
+
+    # result['java']          ['stdev'] = div_uncertainty(java_NS_stdev, java_LI_stdev, java_NS_avg, java_LI_avg)
+    # result['c-linklist']    ['stdev'] = div_uncertainty(c_ll_NS_stdev, c_ll_LI_stdev, c_ll_NS_avg, c_ll_LI_avg)
+    # result['c-dynamicarray']['stdev'] = div_uncertainty(c_da_NS_stdev, c_da_LI_stdev, c_da_NS_avg, c_da_LI_avg)
+
+    # return result
 
 '''---------------------------------------------------------------------------'''
 
@@ -75,7 +123,7 @@ results['overall']   =  get_overall  ()
 
 results['plotinfo'] = {}
 results['plotinfo']['perbench'] = { 'filename': 'sampling-efficiency_perbench', 'xlabel': 'Sampling Efficiency' }
-results['plotinfo']['overall']  = { 'filename': 'sampling-efficiency_overall' , 'ylabel': 'Sampling Efficiency', 'xlabel': 'Monitor Type' }
+results['plotinfo']['overall' ] = { 'filename': 'sampling-efficiency_overall' , 'ylabel': 'Sampling Efficiency', 'xlabel': 'Monitor Type' }
 
 print('.) done with overall')
 

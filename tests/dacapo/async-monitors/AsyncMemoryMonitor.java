@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.io.*;
 
 public class AsyncMemoryMonitor implements Runnable {
-	private ArrayList<Long> samples;
-	private ArrayList<Instant> timestamps;
+	private ArrayList<Long> samples = new ArrayList<Long>();
+	private ArrayList<Instant> timestamps = new ArrayList<Instant>();
+
+	private ArrayList<Long> samples_negative_caught = new ArrayList<Long>();
+	private ArrayList<Instant> timestamps_negative_caught = new ArrayList<Instant>();
 
 	private int samplingRate = 10;
 	private volatile boolean exit = false;
@@ -17,11 +20,6 @@ public class AsyncMemoryMonitor implements Runnable {
 	private Instant birth;
 	private Instant death;
 	private Duration lifetime = null;
-
-	public AsyncMemoryMonitor() {
-		samples = new ArrayList<Long>();
-		timestamps = new ArrayList<Instant>();
-	}
 
 	public void setSamplingRate(int s) {
 		samplingRate = s;
@@ -36,15 +34,22 @@ public class AsyncMemoryMonitor implements Runnable {
 	}
 
 	public void run() {
+		long memory;
+		Instant timestamp;
+		Instant now;
 		while(!exit) {
-			long m = memoryUsed();
-			if (m >= 0) { //@TODO: for some whacky reason, we get a negative value occasionally.
+			memory = memoryUsed();
+			timestamp = Instant.now();
+			if (memory < 0) { //@TODO: for some whacky reason, we get a negative value occasionally.
 						  //this happened about 90 out of the last 9374973 or so times we ran
 						  // it, so we're just going to discard them. however, might be good to
 						  // figure out why that's happening and if it means the monitoring method
 						  // is untrustworthy
-				samples.add(memoryUsed());
-				timestamps.add(Instant.now());
+				samples_negative_caught.add(memory);
+				timestamps_negative_caught.add(timestamp);
+			} else {
+				samples.add(memory);
+				timestamps.add(timestamp);
 			}
 			try {
 				Thread.sleep(samplingRate);
@@ -122,12 +127,10 @@ public class AsyncMemoryMonitor implements Runnable {
 		return s;
 	}
 
-	private ArrayList<Long> timestampsInMilliseconds() {
+	private ArrayList<Long> instantsToMillis(ArrayList<Instant> instants) {
 		ArrayList<Long> ts = new ArrayList<>();
-		
-		long bias = timestamps.get(0).toEpochMilli();
-
-		for (Instant i : timestamps)
+		long bias = 0;//instants.get(0).toEpochMilli();
+		for (Instant i : instants)
 			ts.add(i.toEpochMilli() - bias);
 		return ts;
 	}
@@ -140,11 +143,28 @@ public class AsyncMemoryMonitor implements Runnable {
 										? new OutputStreamWriter(System.out)
 										: new FileWriter(new File(fileName))
 									);
-			writer.write(String.format(
-				"{\"samples\":%s,\"timestamps\":%s,\"lifetime\":%d,\"num_samples\":"
-				+"%d, \"sampling_rate\": %d }", // snake_case because output is most likely to be parsed by python, so going with those conventions
-				samples.toString(), timestampsInMilliseconds().toString(), durationToUsec(getLifetime()),
-				samples.size(), samplingRate ));
+			writer.write (
+				String.format (
+					 "{"
+					+	"\"samples\":%s, "
+					+	"\"timestamps\":%s, "
+					+	"\"lifetime\":%d,"
+					+	"\"numSamples\":%d, "
+					+	"\"samplingRate\": %d, "
+					+	"\"negatives_caught\":{ "
+					+		"\"samples\": %s, "
+					+		"\"timestamps\": %s "
+					+	"}"
+					+"}",
+					samples.toString(),
+					instantsToMillis(timestamps).toString(),
+					durationToUsec(getLifetime()),
+					samples.size(),
+					samplingRate,
+					samples_negative_caught.toString(),
+					instantsToMillis(timestamps_negative_caught).toString()
+				)
+			);
 
 			writer.flush();
 			if (fileName != null) writer.close();

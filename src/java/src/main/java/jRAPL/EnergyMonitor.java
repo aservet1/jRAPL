@@ -9,14 +9,7 @@ public class EnergyMonitor extends EnergyManager {
 	@Override
 	public void activate() { super.activate(); }
 	@Override
-	public void deactivate() { super.deactivate(); }
-
-	/** Package private so it can be called in JMH things.
-	 *	@TODO consider making this public in and of itself,
-	 *	so people can directly get a CSV reading if thats
-	 *	all theyre going to need. or have a SyncEnergyMonitor
-	 *	method that wraps this like getStringSample()
-	*/ native static String energyStatCheck(); 
+	public void deactivate() { super.deactivate(); } 
 
 	private static double[] stringArrayToDoubleArray(String[] s) {
 		double[] d = new double[s.length];
@@ -44,7 +37,8 @@ public class EnergyMonitor extends EnergyManager {
 			)
 		);
     }
-    
+
+	// wondering if this is necessary to have, might as well let the user do their own logic for this if theyre taking on the primitive samples already    
 	protected static double[] subtractPrimitiveSamples(double[] a, double[] b) {
 		assert ( a.length == b.length );
 		double[] diff = new double[a.length];

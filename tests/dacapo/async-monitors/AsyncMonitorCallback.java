@@ -79,10 +79,18 @@ public class AsyncMonitorCallback extends Callback {
 			);
 			if (monitoringEnergy) {
 				energyMonitor.writeFileMetadata(null); System.out.printf(" -- monitorType: %s\n",monitorType);
-				energyMonitor.writeFileMetadata(fileNameBase+".metadata.json");
-				energyMonitor.writeFileCSV(fileNameBase+".csv");
+
+				String mdatfile = fileNameBase + ".metadata.json";
+				energyMonitor.writeFileMetadata(mdatfile);
+				System.out.println(" ~) wrote to " + mdatfile);
+
+				String datfile = fileNameBase + ".csv";
+				energyMonitor.writeFileCSV(datfile);
+				System.out.println(" ~) wrote to " + datfile);
 			}
-			memoryMonitor.writeFile(fileNameBase+".memory.json");
+			String memfile = fileNameBase + ".memory.json";
+			memoryMonitor.writeFile(memfile);
+			System.out.println(" ~) wrote to " + memfile);
 		}
 		if (monitoringEnergy) {
 			energyMonitor.reset();

@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 
-from myutil import parse_cmdline_args
+from myutil import parse_cmdline_args, plt_set_axis_limits
 
 def do_perbench(data, result_dir):    
 
@@ -42,7 +42,7 @@ def do_perbench(data, result_dir):
     plt.yticks([r + bar_width for r in range(len(c_ll_avg))], labels)
     plt.legend()
     fig = plt.gcf()
-    fig.set_size_inches(12,25)
+    fig.set_size_inches(15,25)
 
     plt.savefig(os.path.join(result_dir, plotinfo['filename']))
     print(" <.> done making the perbench graph")
@@ -60,14 +60,21 @@ def do_overall(data, result_dir):
     overall_c_da_std = data['overall']['c-dynamicarray'] ['stdev']
 
     plt.clf()
-    plt.bar (                                                                     \
-        x           =  [0,1,2],                                                   \
-        height      =  [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],    \
-        yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],    \
-        tick_label  =  ['java'          , 'c-linklist'    , 'c-dynamicarray'],    \
+
+    xrange = (None, None)
+    yrange = (1000, 1350)
+    xaxis_precision, yaxis_precision = (0, 0)
+    plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
+
+    plt.bar (
+        x           =  [0,1,2],
+        height      =  [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],
+        yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],
+        tick_label  =  ['java'          , 'c-linklist'    , 'c-dynamicarray'],
+        color = 'purple',
+        edgecolor = 'black',
+        alpha = 1
     )
-        #capsize     =  .5                                                         \
-    #)
 
     plt.ylabel(plotinfo['ylabel'])
 

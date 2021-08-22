@@ -47,7 +47,7 @@ def do_perbench(data,result_dir):
 		plt.yticks([r + bar_width for r in range(len(c_ll_avg))], labels)
 		plt.legend()
 		fig = plt.gcf()
-		fig.set_size_inches(12,25)
+		fig.set_size_inches(15,25)
 
 		plt.savefig(os.path.join(result_dir, plotinfo['filename'])+"_"+powd)
 		print(" <.> done making the " + powd + " graph")
@@ -70,13 +70,15 @@ def do_overall(data,result_dir):
 
 		labels = ['java', 'c-linklist', 'c-dynamicarray']
 
-		# plt.clf()
-		ax.bar (                                                                      \
-			x           =  [0,1,2],                                                   \
-			height      =  [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],    \
-			yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],    \
-			tick_label  =  labels,                                                    \
-			capsize     =  .5                                                         \
+		ax.bar (
+			x           =  [0,1,2],
+			height      =  [overall_java_avg, overall_c_ll_avg, overall_c_da_avg],
+			yerr        =  [overall_java_std, overall_c_ll_std, overall_c_da_std],
+			tick_label  =  labels,
+			capsize     =  1,
+			color = 'gold',
+			edgecolor = 'black',
+			alpha = 1
 		)
 
 		ax.set_xlabel(powd.replace('_', ' ').title())
@@ -91,5 +93,5 @@ data_file, result_dir = parse_cmdline_args(argv)
 with open(data_file) as fd:
 	data = json.load(fd)
 
-do_perbench(data,result_dir)
 do_overall (data,result_dir)
+do_perbench(data,result_dir)

@@ -4,6 +4,8 @@ from sys import argv
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
+def trunc_str(n): # decimal tostring, truncated
+    return "%.4f" % n
 
 try:
     data_files = argv[1:-1]
@@ -14,6 +16,10 @@ except IndexError:
 if not len(data_files):
     print("usage:",argv[0],"<list of data files> result_dir")
     exit(2)
+
+clr = 'mediumslateblue'
+edgeclr = 'black'
+a = 1
 
 for fname in data_files:
     data = {}
@@ -42,14 +48,17 @@ for fname in data_files:
         # print(filtered.keys(), filtered.values())
         # print(outliers.keys(), outliers.values())
 
-        plt.bar(list(filtered.keys()), filtered.values())
+        plt.bar(list(filtered.keys()), filtered.values(), color = clr, edgecolor = edgeclr, alpha = a)
         extra1 = Rectangle((0, 0), 1, 1, fc="w", fill=False, edgecolor='none', linewidth=0)
         extra2 = Rectangle((0, 0), 1, 1, fc="w", fill=False, edgecolor='none', linewidth=0)
         plt.legend()
         title = fname.split('.')[0].split('/')[-1]
         #plt.title(title)
-        plt.legend([extra1, extra2], ("σ: "+str(sd)+"µ", "x̄: "+str(mean)+"µ"))
+        plt.legend([extra1, extra2], ( "x̄: "+trunc_str(mean)+"µs", "σ: "+trunc_str(sd)+"µ" ))
         plt.xlabel("microseconds".title())
         plt.ylabel("frequency".title())
         plt.savefig(os.path.join(result_dir,title))
         plt.clf()
+
+
+

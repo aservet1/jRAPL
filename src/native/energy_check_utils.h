@@ -18,7 +18,6 @@ void ProfileDealloc();
 int* get_msr_fds();
 
 EnergyStats energy_stats_subtract(EnergyStats a, EnergyStats b);
-void get_energy_stats_jni_string_format(char format_buffer[512]); //@TODO deprecate this, please
 void energy_stats_csv_header(char* csv_header);
 void energy_stats_csv_string(EnergyStats estats[], char* csv_string);
 

@@ -20,10 +20,10 @@ def diff_list(l, wraparound = 0):
 	for i in range(1,len(l)):
 		diff = l[i] - l[i-1]
 		if diff < 0:
-			print(".> caught negative diff:",diff,l[i],l[i-1]) # discard instances of wraparound, since theyre so infrequent for this experiment.
-																# TODO: make sure that wraparound is included by the time you release this though
-			diff += wraparound
-		else: diffs.append(diff)
+			print(".> caught negative diff:",diff,l[i],l[i-1])
+			diff += wraparound#262143.99993896484#wraparound
+			print("...> fixed to:",diff)
+		diffs.append(diff)
 	return diffs
     # return [ float(float(l[i]) - float(l[i-1])) for i in range(1,len(l))]
 
@@ -40,17 +40,22 @@ def memory_data(benchmark, iteration, type):
     memdata['stdev'] = statistics.stdev(samples)
     del memdata['timestamps'] # this is useful for generating an individual time-series plot of the memory of an iteration. but not for here.
     return memdata
+
+def make_path_absolute(path):
+	return path if ( path.startswith('/') or path.startswith('~') ) else os.path.join(os.getcwd(), path)
+
 '''-----------------------------------------------------------------------------'''
 
-if len(sys.argv) != 2:
-	print("usage: python3 "+sys.argv[0]+" <folder containing the data that you intend to process and generate results for>")
+if len(sys.argv) != 3:
+	print("usage: python3 "+sys.argv[0]+" <raw data directory> <directory to dump to>")
 	exit(1)
 
-results_dir = sys.argv[1]# 'jolteon-results-subset'
-os.chdir(results_dir)
+data_dir = sys.argv[1]
+result_dir = make_path_absolute(sys.argv[2])
+os.chdir(data_dir)
 
 datafiles = os.listdir()
-datafilenames = list(set([ name.split('.')[0] for name in datafiles])) #remove file extension
+datafilenames = list(set([ name.split('.')[0] for name in datafiles ])) #remove file extension
 
 for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")]): # potentially find a better way to gracefully deal with memory data files
     filename_parts = filename.split('_')
@@ -78,26 +83,46 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
 
     result['time-energy'] = dict()
 
-    timestamps = energydata['timestamp'].to_list()
+    timestamps = energydata['timestamp']#.to_list()
     del energydata['timestamp']
 
-    result['time-energy']['energy-per-sample'] = dict()
-    power_domains = list(energydata.keys())
-    for powd in power_domains:
-        energy = diff_list(energydata[powd].to_list())
-        result['time-energy']['energy-per-sample'][powd] = dict()
-        result['time-energy']['energy-per-sample'][powd]['num_samples'] = len(energy)
-        result['time-energy']['energy-per-sample'][powd]['avg'] = statistics.mean(energy)
-        result['time-energy']['energy-per-sample'][powd]['stdev'] = statistics.stdev(energy)
-
-    time = diff_list(timestamps)
+    time = diff_list(timestamps.to_list())
     result['time-energy']['time-between-samples'] = {}
     result['time-energy']['time-between-samples']['num_samples'] = len(time)
     result['time-energy']['time-between-samples']['avg'] = statistics.mean(time)
     result['time-energy']['time-between-samples']['stdev'] = statistics.stdev(time)
+
+    result['time-energy']['energy-per-sample'] = dict()
+    result['time-energy']['power-per-sample']  = dict()
+
+    for power_domain in list(energydata.keys()):
+        energy = diff_list (
+            energydata[power_domain].to_list(),
+            wraparound = metadata['energyWrapAround']
+        )
+        result['time-energy']['energy-per-sample'][power_domain] = dict()
+        result['time-energy']['energy-per-sample'][power_domain]['num_samples'] = len(energy)
+        result['time-energy']['energy-per-sample'][power_domain]['avg'] = statistics.mean(energy)
+        result['time-energy']['energy-per-sample'][power_domain]['stdev'] = statistics.stdev(energy)
+
+        assert len(energy) == len(time)
+        time_seconds = [ t/1000000 for t in time ]
+        power = [
+            energy[i] / time_seconds[i]
+            for i in range(len(energy))
+        ]
+        result['time-energy']['power-per-sample'][power_domain] = dict()
+        result['time-energy']['power-per-sample'][power_domain]['num_samples'] = len(energy)
+        result['time-energy']['power-per-sample'][power_domain]['avg'] = statistics.mean(energy)
+        result['time-energy']['power-per-sample'][power_domain]['stdev'] = statistics.stdev(energy)
             
-            
-    with open(filename+'.stats.json','w') as fh:
+    with open (
+        os.path.join (
+            result_dir,
+            filename+'.stats.json'
+        ),
+        'w'
+    ) as fh:
         fh.write(json.dumps(result))
 
     result.clear()

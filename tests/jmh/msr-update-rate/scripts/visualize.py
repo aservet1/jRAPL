@@ -28,7 +28,7 @@ pkg = data['pkg_socket'+str(s)]
 # fig, axs = plt.subplots(1,4,figsize=(15,5))
 fig, axs = plt.subplots(1,2,figsize=(10,5))
 
-c = 'black'; a = .7
+c = 'darkblue'; a = .7
 
 axs[0].scatter    (range(len(dram['filtered'])), dram['filtered'], edgecolor=c, alpha=a)
 axs[0].set_title  ('DRAM')
@@ -41,7 +41,7 @@ axs[1].set_title  ('Package')
 axs[1].set_xticks([])
 axs[1].set_yticks(axs[0].get_yticks())
 
-plt.show()
+# plt.show()
 os.chdir(result_dir)
 fig.savefig('energy-update-time_' + system_name)
 

@@ -52,9 +52,9 @@ except IndexError:
 	print("usage:", argv[0], "cside-data javaside-data result-dir")
 	exit(2)
 
-c = 'green'
+c = 'limegreen'
 e = 'black'
-a = .75
+a = .9
 
 cside = load_hist(cside)
 javaside = load_hist(javaside)
