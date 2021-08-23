@@ -13,7 +13,7 @@ set -e
 
 warmups=5
 iterations=30
-samplingRate=1
+samplingRate=4
 resultDir=$1
 [ -z $2 ] && logfile=/dev/null || logfile=$2
 if [ -d $resultDir ]; then
@@ -56,4 +56,6 @@ do
 done 2>&1 | tee -a $logfile
 
 echo " (||(.. Completed on $(date)" | tee -a $logfile
+
+printf 'Subject: Your jRAPL experiments are done.\nYou can log on to %s to collect your data\n' $(hostname) | sudo ssmtp a.l.servetto@gmail.com
 
