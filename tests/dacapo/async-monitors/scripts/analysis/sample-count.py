@@ -16,9 +16,21 @@ def get_perbench():
     data = load_data_by_file_extension('aggregate-perbench.json', 'benchmark')
 
     result = {}
+    result['observed'] = {}
+    result['normalized'] = {}
 
     for benchmark in data:
+
         result[benchmark] = {}
+        result['observed'][benchmark] = {}
+        result['normalized'][benchmark] = {}
+
+        result['observed'][benchmark]['java']             =  {}
+        result['observed'][benchmark]['c-linklist']       =  {}
+        result['observed'][benchmark]['c-dynamicarray']   =  {}
+        result['normalized'][benchmark]['java']           =  {}
+        result['normalized'][benchmark]['c-linklist']     =  {}
+        result['normalized'][benchmark]['c-dynamicarray'] =  {}
 
         def get_by_monitor_type(data, monitor_type):
             return [ d for d in data[benchmark] if d['metadata']['monitor_type'] == monitor_type ][0]
@@ -26,10 +38,6 @@ def get_perbench():
         java_metadata = get_by_monitor_type(data,'java')          ['metadata']
         c_ll_metadata = get_by_monitor_type(data,'c-linklist')    ['metadata']
         c_da_metadata = get_by_monitor_type(data,'c-dynamicarray')['metadata']
-
-        result[benchmark]['java']           = {}
-        result[benchmark]['c-linklist']     = {}
-        result[benchmark]['c-dynamicarray'] = {}
 
         java_NS_avg    =  java_metadata['numSamples']['avg']
         c_ll_NS_avg    =  c_ll_metadata['numSamples']['avg']
@@ -45,13 +53,19 @@ def get_perbench():
         c_ll_LI_stdev  =  c_ll_metadata['lifetime']['stdev']
         c_da_LI_stdev  =  c_da_metadata['lifetime']['stdev']
 
-        result[benchmark]['java']           ['avg']  = java_NS_avg / java_LI_avg
-        result[benchmark]['c-linklist']     ['avg']  = c_ll_NS_avg / c_ll_LI_avg
-        result[benchmark]['c-dynamicarray'] ['avg']  = c_da_NS_avg / c_da_LI_avg
+        result['observed'][benchmark]['java']           ['avg']  = java_NS_avg 
+        result['observed'][benchmark]['c-linklist']     ['avg']  = c_ll_NS_avg 
+        result['observed'][benchmark]['c-dynamicarray'] ['avg']  = c_da_NS_avg 
+        result['observed'][benchmark]['java']          ['stdev'] = java_NS_stdev
+        result['observed'][benchmark]['c-linklist']    ['stdev'] = c_ll_NS_stdev
+        result['observed'][benchmark]['c-dynamicarray']['stdev'] = c_da_NS_stdev
 
-        result[benchmark]['java']          ['stdev'] = div_uncertainty(java_NS_stdev, java_LI_stdev, java_NS_avg, java_LI_avg)
-        result[benchmark]['c-linklist']    ['stdev'] = div_uncertainty(c_ll_NS_stdev, c_ll_LI_stdev, c_ll_NS_avg, c_ll_LI_avg)
-        result[benchmark]['c-dynamicarray']['stdev'] = div_uncertainty(c_da_NS_stdev, c_da_LI_stdev, c_da_NS_avg, c_da_LI_avg)
+        result['normalized'][benchmark]['java']           ['avg']  = java_NS_avg / java_LI_avg
+        result['normalized'][benchmark]['c-linklist']     ['avg']  = c_ll_NS_avg / c_ll_LI_avg
+        result['normalized'][benchmark]['c-dynamicarray'] ['avg']  = c_da_NS_avg / c_da_LI_avg
+        result['normalized'][benchmark]['java']          ['stdev'] = div_uncertainty(java_NS_stdev, java_LI_stdev, java_NS_avg, java_LI_avg)
+        result['normalized'][benchmark]['c-linklist']    ['stdev'] = div_uncertainty(c_ll_NS_stdev, c_ll_LI_stdev, c_ll_NS_avg, c_ll_LI_avg)
+        result['normalized'][benchmark]['c-dynamicarray']['stdev'] = div_uncertainty(c_da_NS_stdev, c_da_LI_stdev, c_da_NS_avg, c_da_LI_avg)
 
     return result
 
@@ -67,17 +81,30 @@ def get_overall():
     c_da_metadata = data['c-dynamicarray'][0]['metadata']
 
     result = {}
-    result['java']           = {}
-    result['c-linklist']     = {}
-    result['c-dynamicarray'] = {}
+    result['observed'] = {}
+    result['normalized'] = {}
 
-    result['java']           ['avg']  = java_metadata['samplingEfficiency']['avg']
-    result['c-linklist']     ['avg']  = c_ll_metadata['samplingEfficiency']['avg']
-    result['c-dynamicarray'] ['avg']  = c_da_metadata['samplingEfficiency']['avg']
+    result['observed']['java']           = {}
+    result['observed']['c-linklist']     = {}
+    result['observed']['c-dynamicarray'] = {}
 
-    result['java']          ['stdev'] = java_metadata['samplingEfficiency']['stdev']
-    result['c-linklist']    ['stdev'] = c_ll_metadata['samplingEfficiency']['stdev']
-    result['c-dynamicarray']['stdev'] = c_da_metadata['samplingEfficiency']['stdev']
+    result['normalized']['java']           = {}
+    result['normalized']['c-linklist']     = {}
+    result['normalized']['c-dynamicarray'] = {}
+
+    result['observed']['java']           ['avg']  = java_metadata['numSamples'] ['avg']
+    result['observed']['c-linklist']     ['avg']  = c_ll_metadata['numSamples'] ['avg']
+    result['observed']['c-dynamicarray'] ['avg']  = c_da_metadata['numSamples'] ['avg']
+    result['observed']['java']          ['stdev'] = java_metadata['numSamples']['stdev']
+    result['observed']['c-linklist']    ['stdev'] = c_ll_metadata['numSamples']['stdev']
+    result['observed']['c-dynamicarray']['stdev'] = c_da_metadata['numSamples']['stdev']
+
+    result['normalized']['java']           ['avg']  = java_metadata['samplingEfficiency'] ['avg']
+    result['normalized']['c-linklist']     ['avg']  = c_ll_metadata['samplingEfficiency'] ['avg']
+    result['normalized']['c-dynamicarray'] ['avg']  = c_da_metadata['samplingEfficiency'] ['avg']
+    result['normalized']['java']          ['stdev'] = java_metadata['samplingEfficiency']['stdev']
+    result['normalized']['c-linklist']    ['stdev'] = c_ll_metadata['samplingEfficiency']['stdev']
+    result['normalized']['c-dynamicarray']['stdev'] = c_da_metadata['samplingEfficiency']['stdev']
 
     return result
 
@@ -115,15 +142,15 @@ def get_overall():
 
 data_dir, result_dir = parse_cmdline_args(argv)
 os.chdir(data_dir)
-outputfile = os.path.join(result_dir,'sampling-efficiency.json')
+outputfile = os.path.join(result_dir,'sample-count.json')
 
 results = {}
 results['perbench']  =  get_perbench ()
 results['overall']   =  get_overall  ()
 
-results['plotinfo'] = {}
-results['plotinfo']['perbench'] = { 'filename': 'sampling-efficiency_perbench', 'xlabel': 'Sampling Efficiency' }
-results['plotinfo']['overall' ] = { 'filename': 'sampling-efficiency_overall' , 'ylabel': 'Sampling Efficiency', 'xlabel': 'Monitor Type' }
+# results['plotinfo'] = {}
+# results['plotinfo']['perbench'] = { 'filename': 'sampling-efficiency_perbench', 'xlabel': 'Sampling Efficiency' }
+# results['plotinfo']['overall' ] = { 'filename': 'sampling-efficiency_overall' , 'ylabel': 'Sampling Efficiency', 'xlabel': 'Monitor Type' }
 
 print('.) done with overall')
 

@@ -38,7 +38,7 @@ def plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision):
 def put_bar_on_an_axis(data_file, ax, title, color='blue', edgecolor='black', alpha = 1):
     
     with open(data_file) as fd:
-        data = json.load(fd)['overall']
+        data = json.load(fd)['overall']['normalized']
         #plotinfo = json.load(fd)['plotinfo']['overall']
 
     java_avg = data['java']['avg'] 
