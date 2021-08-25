@@ -39,6 +39,10 @@ def get_perbench():
         c_ll_metadata = get_by_monitor_type(data,'c-linklist')    ['metadata']
         c_da_metadata = get_by_monitor_type(data,'c-dynamicarray')['metadata']
 
+        java_sampling_rate = java_metadata['samplingRate']
+        c_ll_sampling_rate = c_ll_metadata['samplingRate']
+        c_da_sampling_rate = c_da_metadata['samplingRate']
+
         java_NS_avg    =  java_metadata['numSamples']['avg']
         c_ll_NS_avg    =  c_ll_metadata['numSamples']['avg']
         c_da_NS_avg    =  c_da_metadata['numSamples']['avg']
@@ -99,12 +103,12 @@ def get_overall():
     result['observed']['c-linklist']    ['stdev'] = c_ll_metadata['numSamples']['stdev']
     result['observed']['c-dynamicarray']['stdev'] = c_da_metadata['numSamples']['stdev']
 
-    result['normalized']['java']           ['avg']  = java_metadata['samplingEfficiency'] ['avg']
-    result['normalized']['c-linklist']     ['avg']  = c_ll_metadata['samplingEfficiency'] ['avg']
-    result['normalized']['c-dynamicarray'] ['avg']  = c_da_metadata['samplingEfficiency'] ['avg']
-    result['normalized']['java']          ['stdev'] = java_metadata['samplingEfficiency']['stdev']
-    result['normalized']['c-linklist']    ['stdev'] = c_ll_metadata['samplingEfficiency']['stdev']
-    result['normalized']['c-dynamicarray']['stdev'] = c_da_metadata['samplingEfficiency']['stdev']
+    result['normalized']['java']           ['avg']  = java_metadata['normalizedSampleCount'] ['avg']
+    result['normalized']['c-linklist']     ['avg']  = c_ll_metadata['normalizedSampleCount'] ['avg']
+    result['normalized']['c-dynamicarray'] ['avg']  = c_da_metadata['normalizedSampleCount'] ['avg']
+    result['normalized']['java']          ['stdev'] = java_metadata['normalizedSampleCount']['stdev']
+    result['normalized']['c-linklist']    ['stdev'] = c_ll_metadata['normalizedSampleCount']['stdev']
+    result['normalized']['c-dynamicarray']['stdev'] = c_da_metadata['normalizedSampleCount']['stdev']
 
     return result
 
