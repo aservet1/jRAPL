@@ -39,10 +39,14 @@ for monitor_type in monitor_types:
 
     aggregated['metadata'] = data[0]['metadata'] # copy over the first [metadata] block to keep common fields, over-write the aggregate fields
 
+    sampling_rates = [ d['metadata']['samplingRate'] for d in data ]
     lifetimes = [ d['metadata']['lifetime'] for d in data ]
     sample_sizes = [ d['metadata']['numSamples'] for d in data ]
-    assert(len(lifetimes)==len(sample_sizes)==len(data))
-    sampling_efficiencies = [ sample_sizes[i] / lifetimes[i] for i in range(len(data)) ]
+    assert(len(lifetimes)==len(sample_sizes)==len(sampling_rates)==len(data))
+    normalized_sample_counts = [
+        (sample_sizes[i] * sampling_rates[i]) / lifetimes[i]
+        for i in range(len(data))
+    ]
 
     aggregated['metadata']['lifetime_numSamples_covariance'] = covariance ( lifetimes, sample_sizes )
 
@@ -54,10 +58,9 @@ for monitor_type in monitor_types:
     aggregated['metadata']['numSamples']['avg']   = statistics.mean (sample_sizes)
     aggregated['metadata']['numSamples']['stdev'] = statistics.stdev(sample_sizes)
 
-    aggregated['metadata']['samplingEfficiency'] = dict()
-    aggregated['metadata']['samplingEfficiency']['avg']   = statistics.mean (sampling_efficiencies)
-    aggregated['metadata']['samplingEfficiency']['stdev'] = statistics.stdev(sampling_efficiencies)
-    
+    aggregated['metadata']['normalizedSampleCount'] = dict()
+    aggregated['metadata']['normalizedSampleCount']['avg']   = statistics.mean (normalized_sample_counts)
+    aggregated['metadata']['normalizedSampleCount']['stdev'] = statistics.stdev(normalized_sample_counts)
 
     aggregated['metadata']['iteration'] = 'AGGREGATE_PERMONITOR'
     aggregated['metadata']['benchmark'] = 'AGGREGATE_PERMONITOR'
