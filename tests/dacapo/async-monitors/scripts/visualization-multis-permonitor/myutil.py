@@ -11,7 +11,7 @@ def parse_cmdline_args(argv):
         print (
             "usage:",
             argv[0],
-            "<directory to output the plots>",
+            "<directory to output the plot(s)>",
             "<json data file for System A>",
             "<json data file for System B>" # todo: add System C arg and integrate that into your scripts
         )

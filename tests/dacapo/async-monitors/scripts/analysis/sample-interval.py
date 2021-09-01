@@ -28,6 +28,7 @@ def get_perbench():
         c_da_data = get_by_monitor_type(data,'c-dynamicarray')['time-energy']['time-between-samples']
 
         sampling_rate = get_by_monitor_type(data,'java')['metadata']['samplingRate'] # it's the same for all 3 of them
+        msec_to_usec_conversion=1000
 
         result['observed'][benchmark]['java']           = {}
         result['observed'][benchmark]['c-linklist']     = {}
@@ -44,12 +45,12 @@ def get_perbench():
         result['observed'][benchmark]['c-linklist']    ['stdev'] = c_ll_data['stdev']
         result['observed'][benchmark]['c-dynamicarray']['stdev'] = c_da_data['stdev']
 
-        result['normalized'][benchmark]['java']           ['avg']  = java_data['avg']/ (sampling_rate*1000)
-        result['normalized'][benchmark]['c-linklist']     ['avg']  = c_ll_data['avg']/ (sampling_rate*1000)
-        result['normalized'][benchmark]['c-dynamicarray'] ['avg']  = c_da_data['avg']/ (sampling_rate*1000)
-        result['normalized'][benchmark]['java']          ['stdev'] = div_uncertainty(java_data['stdev'], sampling_rate*1000)
-        result['normalized'][benchmark]['c-linklist']    ['stdev'] = div_uncertainty(c_ll_data['stdev'], sampling_rate*1000)
-        result['normalized'][benchmark]['c-dynamicarray']['stdev'] = div_uncertainty(c_da_data['stdev'], sampling_rate*1000)
+        result['normalized'][benchmark]['java']           ['avg']  = java_data['avg']/ (sampling_rate*msec_to_usec_conversion)
+        result['normalized'][benchmark]['c-linklist']     ['avg']  = c_ll_data['avg']/ (sampling_rate*msec_to_usec_conversion)
+        result['normalized'][benchmark]['c-dynamicarray'] ['avg']  = c_da_data['avg']/ (sampling_rate*msec_to_usec_conversion)
+        result['normalized'][benchmark]['java']          ['stdev'] = div_uncertainty(java_data['stdev'], sampling_rate*msec_to_usec_conversion)
+        result['normalized'][benchmark]['c-linklist']    ['stdev'] = div_uncertainty(c_ll_data['stdev'], sampling_rate*msec_to_usec_conversion)
+        result['normalized'][benchmark]['c-dynamicarray']['stdev'] = div_uncertainty(c_da_data['stdev'], sampling_rate*msec_to_usec_conversion)
 
     return result
 
@@ -62,6 +63,7 @@ def get_overall():
     c_da_data = data['c-dynamicarray'][0]['time-energy']['time-between-samples']
 
     sampling_rate = data['java'][0]['metadata']['samplingRate'] # it's the same for all 3 monitors
+    msec_to_usec_conversion=1000
 
     result = {}
     result['normalized'] = {}
@@ -70,12 +72,12 @@ def get_overall():
     result['normalized']['c-linklist']     = {}
     result['normalized']['c-dynamicarray'] = {}
 
-    result['normalized']['java']            ['avg']  = java_data['avg'] / (sampling_rate*1000)
-    result['normalized']['c-linklist']      ['avg']  = c_ll_data['avg'] / (sampling_rate*1000)
-    result['normalized']['c-dynamicarray']  ['avg']  = c_da_data['avg'] / (sampling_rate*1000)
-    result['normalized']['java']           ['stdev'] = div_uncertainty(java_data['stdev'], sampling_rate*1000)
-    result['normalized']['c-linklist']     ['stdev'] = div_uncertainty(c_ll_data['stdev'], sampling_rate*1000)
-    result['normalized']['c-dynamicarray'] ['stdev'] = div_uncertainty(c_da_data['stdev'], sampling_rate*1000)
+    result['normalized']['java']            ['avg']  = java_data['avg'] / (sampling_rate*msec_to_usec_conversion)
+    result['normalized']['c-linklist']      ['avg']  = c_ll_data['avg'] / (sampling_rate*msec_to_usec_conversion)
+    result['normalized']['c-dynamicarray']  ['avg']  = c_da_data['avg'] / (sampling_rate*msec_to_usec_conversion)
+    result['normalized']['java']           ['stdev'] = div_uncertainty(java_data['stdev'], sampling_rate*msec_to_usec_conversion)
+    result['normalized']['c-linklist']     ['stdev'] = div_uncertainty(c_ll_data['stdev'], sampling_rate*msec_to_usec_conversion)
+    result['normalized']['c-dynamicarray'] ['stdev'] = div_uncertainty(c_da_data['stdev'], sampling_rate*msec_to_usec_conversion)
 
     return result
 

@@ -26,15 +26,15 @@ fig, (ax1, ax2) = plt.subplots (
 )
 
 xrange = (None, None)
-yrange = (900, 1350)
+yrange = (.8, 1.5)
 xaxis_precision, yaxis_precision = (0, 0)
 plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
 put_bar_on_an_axis(systemA_file, ax1, 'System A', color='purple', edgecolor='black', alpha=1 )
 put_bar_on_an_axis(systemB_file, ax2, 'System B', color='purple', edgecolor='black', alpha=1 )
 
-fig.supxlabel('Monitor Type')
-fig.supylabel('Observed Sampling Interval (μs)')
+# fig.supxlabel('Monitor Type')
+# fig.supylabel('Normalized Sample Interval (μs)')
 
-plt.savefig(os.path.join(result_dir, 'time-per-sample'))
+plt.savefig(os.path.join(result_dir, 'normalized-sample-interval'))
 print(" <.> done making the overall average graph")

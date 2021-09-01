@@ -61,5 +61,5 @@ fig.supxlabel('Monitor Type')
 fig.supylabel('Average Energy Per Sample (joules)')
 
 # plt.show()
-fig.savefig(os.path.join(result_dir, 'energy-per-sample'))
+fig.savefig(os.path.join(result_dir, 'power-per-sample'))
 print(" <.> done making the overall average graph")
