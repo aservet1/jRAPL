@@ -6,7 +6,7 @@ function echo_eval() {
 
 set -e
 
-metrics='energy-per-sample power-per-sample sample-count sample-interval' # memory-footprint'
+metrics='energy-per-sample power-per-sample sample-count sample-interval memory-footprint'
 samplingrates='1 2 4'
 systems='SystemA SystemB'
 

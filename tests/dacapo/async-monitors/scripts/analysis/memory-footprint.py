@@ -81,16 +81,16 @@ def get_overall():
 
     result['normalized'] = {
         'java': {
-            'avg':   { javg / nojravg },
-            'stdev': { division_propagate_uncertainty(jstd, nojrstd, javg, nojravg) }
+            'avg':   javg / nojravg,
+            'stdev': division_propagate_uncertainty(jstd, nojrstd, javg, nojravg)
         },
         'c-linklist': {
-            'avg':   { clavg / nojravg },
-            'stdev': { division_propagate_uncertainty(clstd, nojrstd, clavg, nojravg) }
+            'avg':   clavg / nojravg,
+            'stdev': division_propagate_uncertainty(clstd, nojrstd, clavg, nojravg)
         },
         'c-dynamicarray': {
-            'avg'  : { cdavg / nojravg },
-            'stdev': { division_propagate_uncertainty(cdstd, nojrstd, cdavg, nojravg) }
+            'avg'  : cdavg / nojravg,
+            'stdev': division_propagate_uncertainty(cdstd, nojrstd, cdavg, nojravg)
         }
     }
 
