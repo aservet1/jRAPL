@@ -13,13 +13,6 @@ raw values for bars
 J, CD, CA
 
 
-here is a closer look at the normalized sample interval under the new smapling rates
-	i want to look at what it's like with a sampling rate of 8, so ill make that go this week
-
-theres a bit more restructuring of how i store and process the data to manage different sampling rates,
-so coming up with plots took longer than i thought this week. i'll have it on overleaf by the end of the day though
-
-
 
 Also, Prof Liu, did you say that you could handle "Section 1" Type stuff? I'm happy to let you do that, since you probably have more contextual
 knowledge about how jRAPL plays in to this whole area of energy aware computing than I do.
