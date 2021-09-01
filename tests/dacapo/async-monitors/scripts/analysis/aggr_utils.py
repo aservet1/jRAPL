@@ -49,14 +49,14 @@ def aggregate_memory_stats(memory_data):
 """
 def general_aggregate(data):
 	res = {}
-	if sorted(list(data[0].keys())) != sorted(['avg','num_samples','stdev']):
+	if sorted(list(data[0].keys())) != sorted(['avg','numSamples','stdev']):
 		for k in data[0].keys():
 			res[k] = general_aggregate( [ d[k] for d in data ] )
 	else: # at the leaves
-		sample_sizes = [ d['num_samples'] for d in data ]
+		sample_sizes = [ d['numSamples'] for d in data ]
 		res['avg'] = aggr_mean(sample_sizes,  [d['avg'] for d in data ])
 		res['stdev'] = propagate_uncertainty_through_average( sample_sizes, [ d['stdev'] for d in data ] )
-		res['num_samples'] = statistics.mean( [ d['num_samples'] for d in data ] )
+		res['numSamples'] = statistics.mean( [ d['numSamples'] for d in data ] )
 
 	return res
 
