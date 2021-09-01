@@ -2,7 +2,7 @@
 << Immediate Todos:
 	- whats wrong with JMH JNI overhead
 	- compare JMH JNI overhead results to full runtime	
-	- Properly graph sampling efficiency
+	- debug the size of the error bars on power per sample
 
 << Semi Immediate Todos:
 	- Run experiments on several computers
