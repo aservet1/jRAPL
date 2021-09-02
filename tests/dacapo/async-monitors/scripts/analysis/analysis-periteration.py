@@ -20,7 +20,7 @@ def diff_list(l, wraparound = 0):
 	for i in range(1,len(l)):
 		diff = l[i] - l[i-1]
 		if diff < 0:
-			print(".> caught negative diff:",diff,l[i],l[i-1])
+			print(".> caught negative diff:",diff,"l[i]:",l[i],"l[i-1]:",l[i-1],"wraparound:",wraparound)
 			diff += wraparound#262143.99993896484#wraparound
 			print("...> fixed to:",diff)
 		diffs.append(diff)

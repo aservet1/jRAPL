@@ -13,7 +13,7 @@ set -e
 
 warmups=5
 iterations=30
-samplingRate=4
+samplingRate=8
 resultDir=$1
 [ -z $2 ] && logfile=/dev/null || logfile=$2
 if [ -d $resultDir ]; then
