@@ -50,15 +50,15 @@ def megaplot(data_files, keypath=[], color='blue', edgecolor='black', alpha=1):
         figsize=(5,5),
         constrained_layout=True
     )
-    put_bar_on_an_axis(data_files[0], axs[0][0], keypath=keypath, title='System A', color=color, edgecolor=edgecolor, alpha=alpha )
-    put_bar_on_an_axis(data_files[1], axs[0][1], keypath=keypath, title='System B', color=color, edgecolor=edgecolor, alpha=alpha )
-    put_bar_on_an_axis(data_files[2], axs[1][0], keypath=keypath, title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
-    put_bar_on_an_axis(data_files[3], axs[1][1], keypath=keypath, title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
-    put_bar_on_an_axis(data_files[4], axs[2][0], keypath=keypath, title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
-    put_bar_on_an_axis(data_files[5], axs[2][1], keypath=keypath, title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis(data_files[0], axs[0][0], keypath=keypath, ylabel='Sampling Rate 1', title='System A', color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis(data_files[1], axs[0][1], keypath=keypath, ylabel=      None,        title='System B', color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis(data_files[2], axs[1][0], keypath=keypath, ylabel='Sampling Rate 2', title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis(data_files[3], axs[1][1], keypath=keypath, ylabel=      None,        title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis(data_files[4], axs[2][0], keypath=keypath, ylabel='Sampling Rate 4', title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis(data_files[5], axs[2][1], keypath=keypath, ylabel=      None,        title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
     return fig
 
-def put_bar_on_an_axis(data_file, ax, keypath=[], title=None, color='blue', edgecolor='black', alpha = 1):
+def put_bar_on_an_axis(data_file, ax, keypath=[], ylabel=None, title=None, color='blue', edgecolor='black', alpha = 1):
     
     with open(data_file) as fp:
         data = json.load(fp)
@@ -84,5 +84,6 @@ def put_bar_on_an_axis(data_file, ax, keypath=[], title=None, color='blue', edge
         alpha = alpha
     )
 
+    if ylabel: ax.set_ylabel(ylabel)
     if title: ax.set_title(title)
 
