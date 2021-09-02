@@ -122,13 +122,13 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
 
     condensed_power_domains = list(set([ p.split('_')[0] for p in power_domains ])) # name without the _socketN suffix
     for condensed_power_domain in condensed_power_domains:
-        power_domains = [ p for p in power_domains if p.startswith(condensed_power_domain)]
+        pds = [ p for p in power_domains if p.startswith(condensed_power_domain)]
         energy = parallel_list_sum([
             diff_list (
                 energydata[power_domain].to_list(),
                 wraparound=metadata['energyWrapAround']
             )
-            for power_domain in power_domains
+            for power_domain in pds
         ])
         result['time-energy']['energy-per-sample'][condensed_power_domain] = some_stats(energy)
 
