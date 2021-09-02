@@ -12,7 +12,7 @@ from myutil import parse_cmdline_args
 result_dir, data_files = parse_cmdline_args(argv)
 
 fds  = [ open(df) for df in data_files ]
-data = [ json.load(fd)['overall'] for fd in fds ]
+data = [ json.load(fd)['overall']['power-per-socket'] for fd in fds ]
 fds  = [ fd.close() for fd in fds ]
 
 # power_domains = sorted(data[0].keys())

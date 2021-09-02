@@ -7,34 +7,20 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 
-from myutil import parse_cmdline_args, plt_set_axis_limits, put_bar_on_an_axis
+from myutil import megaplot, parse_cmdline_args, plt_set_axis_limits
 
-result_dir, data_files = parse_cmdline_args(argv)
+result_dir, data_files, keypath = parse_cmdline_args(argv)
 
-result_dir, data_files = parse_cmdline_args(argv)
-systemA_file, systemB_file = data_files
-assert len(data_files) == 2
-systemA_file, systemB_file = data_files
-
-fig, (ax1, ax2) = plt.subplots (
-  nrows=1,
-  ncols=2,
-  sharex=True,
-  sharey=True,
-  figsize=(5,3),
-  constrained_layout=True
-)
+fig = megaplot(data_files, keypath=keypath, color='blue', edgecolor='black', alpha=1)
 
 xrange = (None, None)
-yrange = (.8, 1.5)
+yrange = (.9, 1.4)
 xaxis_precision, yaxis_precision = (0, 0)
 plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
-
-put_bar_on_an_axis(systemA_file, ax1, 'System A', color='purple', edgecolor='black', alpha=1 )
-put_bar_on_an_axis(systemB_file, ax2, 'System B', color='purple', edgecolor='black', alpha=1 )
 
 # fig.supxlabel('Monitor Type')
 # fig.supylabel('Normalized Sample Interval (μs)')
 
-plt.savefig(os.path.join(result_dir, 'normalized-sample-interval'))
+plt.show()
+fig.savefig(os.path.join(result_dir, 'normalized-sample-interval'))
 print(" <.> done making the overall average graph")
