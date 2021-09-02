@@ -8,26 +8,31 @@
 - used vim commands to isolate the file names and deleted the rest of the text
 
 - commands I did to get the rest were something like this (appended my bash history to this file, picked out the relevant commands, and rewrote a bit to make it more concise / presentable)
+## This series of commands below is just illustrative, not something you can run out of the box. Check on the current state of files involved and
+   rewrite this accordingly in a separate script if you need to run all of it again. These commands alter global state, you cant just run them
+   arbitrarily without considering the current state and what future impacts will be.
 
-for x in $(cat files-to-pull.txt | sort | uniq)
-do
-    echo System{A,B}/samplingrate_{1,2,4}/$x # i lost the information about which anomaly files belong to which sys/samplingrate, so im copying all and i'll figure out which they were with my eyes
-done \
-    | sed 's/\ /\n/g' | sort \
-    > tmp
-sed -i "s|^|alejalej@vaporeon.cs.binghamton.edu:/home/alejalej/storage/async-monitor-experiments/|" tmp 
-mv tmp files-to-pull.txt 
+```
+    for x in $(cat files-to-pull.txt | sort | uniq)
+    do
+        echo System{A,B}/samplingrate_{1,2,4}/$x # i lost the information about which anomaly files belong to which sys/samplingrate, so im copying all and i'll figure out which they were with my eyes
+    done \
+        | sed 's/\ /\n/g' | sort \
+        > tmp
+    sed -i "s|^|alejalej@vaporeon.cs.binghamton.edu:/home/alejalej/storage/async-monitor-experiments/|" tmp 
+    mv tmp files-to-pull.txt 
 
-mkdir -p pulled-files/System{A,B}/samplingrate_{1,2,4} # files copied will just be the file names, so i have to direct them into the proper folder. i cant just copy a subset of the directory tree, so i have to build the directory tree myself
+    mkdir -p pulled-files/System{A,B}/samplingrate_{1,2,4} # files copied will just be the file names, so i have to direct them into the proper folder. i cant just copy a subset of the directory tree, so i have to build the directory tree myself
 
-# these functions extract the system name and sampling rate, so I can build the destination file path and know where to write copied files to
-function sys() {
-    echo $1 | grep -o 'System[AB]'
-}
-function sr() {
-    echo $1 | grep -o 'samplingrate_[124]'
-}
+    # these functions extract the system name and sampling rate, so I can build the destination file path and know where to write copied files to
+    function sys() {
+        echo $1 | grep -o 'System[AB]'
+    }
+    function sr() {
+        echo $1 | grep -o 'samplingrate_[124]'
+    }
 
-for file in $(cat files-to-pull.txt); do
-    scp $file pulled-files/$(sys $file)/$(sr $file)/
-done
+    for file in $(cat files-to-pull.txt); do
+        scp $file pulled-files/$(sys $file)/$(sr $file)/
+    done
+```
