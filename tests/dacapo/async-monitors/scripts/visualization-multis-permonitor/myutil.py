@@ -3,35 +3,23 @@ import json
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 
-def parse_cmdline_args(argv):
-    try:
-        result_dir = argv[1]
-        data_files = argv[2:8]
-        keypath = argv[8:]
-    except:
-        print (
-            "usage:",
-            argv[0],
-            "output-dir",
-            "data files: sysAsr1, sysBsr1, sysAsr2, sysBsr2, sysAsr4, sysBsr4",
-            "keypath..."
-        )
-        print("\nHow each file will translate into each subplot:\n\
-   SystemA SystemB   \n\
-   ________________ \n\
-1 |argv[2] | argv[3]|\n\
-2 |argv[4] | argv[5]|\n\
-4 |argv[6] | argv[7]|\n\
-   ________________ \
-        ")
-        exit(2)
-    if not (result_dir.startswith("/") or result_dir.startswith("~")):
-        result_dir = os.path.join(os.getcwd(),result_dir)
-    if not os.path.isdir(result_dir):
-        print("directory",result_dir,"does not exist")
-        exit(2)
 
-    return result_dir, data_files, keypath
+def get_data_files(metric):
+    # the subplot grid will be laid out visually like how this list is laid out
+    return [
+        'results/SystemA/samplingrate_1/'+metric+'.json', 'results/SystemB/samplingrate_1/'+metric+'.json',
+        'results/SystemA/samplingrate_2/'+metric+'.json', 'results/SystemB/samplingrate_2/'+metric+'.json',
+        'results/SystemA/samplingrate_4/'+metric+'.json', 'results/SystemB/samplingrate_4/'+metric+'.json'
+    ]
+
+output_dir = 'results/overall-plots'
+
+def validate_output_dir(output_dir):
+    if not (output_dir.startswith("/") or output_dir.startswith("~")):
+        output_dir = os.path.join(os.getcwd(),output_dir)
+    if not os.path.isdir(output_dir):
+        print("directory",output_dir,"does not exist")
+        exit(2)
 
 def plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision):
     none = (None,None)
@@ -44,40 +32,11 @@ def plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision):
         if yaxis_precision != 0:
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.'+str(yaxis_precision)+'f'))
 
-"""
-example:
-
-{
-    "normalized": {
-        "foo": {
-            "baz":  { "avg": 100, "stdev": 150 },
-            "bonk": { "avg": 100, "stdev": 150 }
-        },
-        "bar": {
-            "baz": { "avg": 10, "stdev": 10 },
-            "bonk": {"avg": 1,  "stdev": 0  }
-        }
-    },
-    "raw": {
-        "foo": {
-            "baz": { "avg": 100, "stdev": 150 },
-            "bonk": {"avg": 0, "stdev": 50 }
-        },
-        "bar": {
-            "baz": { "avg": -10,  "stdev": 101  },
-            "bonk": {"avg": 1,   "stdev": 0   }
-        }
-    }
-}
-with a keypath of ['raw','foo'], data would be reduced to
-{
-    "baz":  {"avg": 100, "stdev": 150 },
-    "bonk": {"avg": 0, "stdev": 50 }
-}
-
-ie you go down the key path and give the data tree rooted at there
-"""
-def adjust_with_keypath(data, keypath):
+'''
+data is a tree (well, a dictionary).
+return the subtree rooted at the end of the keypath
+'''
+def dictionary_subtree(data, keypath):
     for key in keypath:
         data = data[key]
     return data
@@ -101,11 +60,10 @@ def megaplot(data_files, keypath=[], color='blue', edgecolor='black', alpha=1):
 
 def put_bar_on_an_axis(data_file, ax, keypath=[], title=None, color='blue', edgecolor='black', alpha = 1):
     
-    with open(data_file) as fd:
-        data = json.load(fd)
-        #plotinfo = json.load(fd)['plotinfo']['overall']
+    with open(data_file) as fp:
+        data = json.load(fp)
 
-    data = adjust_with_keypath(data, keypath)
+    data = dictionary_subtree(data, keypath)
 
     java_avg = data['java']['avg'] 
     java_std = data['java']['stdev']

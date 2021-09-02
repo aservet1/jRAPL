@@ -1,20 +1,17 @@
 #!/usr/bin/env python3
 
 import os
-# import json
-# import numpy as np
-# import matplotlib as mpl
-import matplotlib.pyplot as plt
 from sys import argv
+import matplotlib.pyplot as plt
 
-from myutil import parse_cmdline_args, plt_set_axis_limits, megaplot
+from myutil import plt_set_axis_limits, megaplot, get_data_files, output_dir, validate_output_dir
 
-result_dir, data_files, keypath = parse_cmdline_args(argv)
+keypath = ['overall', 'normalized']
 
-fig = megaplot(data_files, keypath=keypath, color='purple', edgecolor='black', alpha=1)
+fig = megaplot(get_data_files('sample-count'), keypath=keypath, color='purple', edgecolor='black', alpha=1)
 
 xrange = (None, None)
-yrange = (.7, 1)
+yrange = (.7, 1.1)
 xaxis_precision, yaxis_precision = (0, 2)
 plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
@@ -22,5 +19,6 @@ plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 # fig.supylabel('Normalized Sample Count')
 
 plt.show()
-fig.savefig(os.path.join(result_dir,'normalized-sample-count'))
+validate_output_dir(output_dir)
+fig.savefig(os.path.join(output_dir,'normalized-sample-count'))
 

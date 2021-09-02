@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 import os
-import matplotlib.pyplot as plt
 from sys import argv
+import matplotlib.pyplot as plt
 
-from myutil import parse_cmdline_args, plt_set_axis_limits, megaplot
+from myutil import plt_set_axis_limits, megaplot, validate_output_dir, get_data_files, output_dir
 
-result_dir, data_files, keypath = parse_cmdline_args(argv)
+keypath = ['overall', 'normalized']
 
-fig = megaplot(data_files, keypath=keypath, color='limegreen', edgecolor='black', alpha=1)
+fig = megaplot(get_data_files('memory-footprint'), keypath=keypath, color='limegreen', edgecolor='black', alpha=1)
 
 xrange = (None, None)
 yrange = (.9, 1.1)
@@ -19,4 +19,5 @@ plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 # fig.supylabel('Normalized Memory Footprint')
 
 plt.show()
-fig.savefig(os.path.join(result_dir,'memory-footprint'))
+validate_output_dir(output_dir)
+fig.savefig(os.path.join(output_dir,'memory-footprint'))

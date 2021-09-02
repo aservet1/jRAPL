@@ -1,17 +1,14 @@
 #!/usr/bin/env python3
 
-from sys import argv
 import os
-import json
+from sys import argv
 import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
 
-from myutil import megaplot, parse_cmdline_args, plt_set_axis_limits
+from myutil import megaplot, plt_set_axis_limits, get_data_files, output_dir, validate_output_dir
 
-result_dir, data_files, keypath = parse_cmdline_args(argv)
+keypath = ['overall', 'normalized']
 
-fig = megaplot(data_files, keypath=keypath, color='blue', edgecolor='black', alpha=1)
+fig = megaplot(get_data_files('sample-interval'), keypath=keypath, color='blue', edgecolor='black', alpha=1)
 
 xrange = (None, None)
 yrange = (.9, 1.4)
@@ -22,5 +19,5 @@ plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 # fig.supylabel('Normalized Sample Interval (μs)')
 
 plt.show()
-fig.savefig(os.path.join(result_dir, 'normalized-sample-interval'))
-print(" <.> done making the overall average graph")
+validate_output_dir(output_dir)
+fig.savefig(os.path.join(output_dir, 'normalized-sample-interval'))
