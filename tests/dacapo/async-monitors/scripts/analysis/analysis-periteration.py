@@ -41,6 +41,18 @@ def memory_data(benchmark, iteration, type):
     del memdata['timestamps'] # this is useful for generating an individual time-series plot of the memory of an iteration. but not for here.
     return memdata
 
+def some_stats(datalist):
+    return {
+        'numSamples': len(datalist),
+        'avg': statistics.mean(datalist),
+        'stdev': statistics.stdev(datalist)
+    }
+
+# takes a list of lists and returns a list where each index is the sum of the items at the sublist at that index
+def parallel_list_sum(lists):
+    assert( [len(l) for l in lists] == sorted(len(l) for l in lists) ) # all lists are the same length
+    return [ sum([ lists[i][j] for i in range(len(lists)) ]) for j in range(len(lists[0])) ]
+
 def make_path_absolute(path):
 	return path if ( path.startswith('/') or path.startswith('~') ) else os.path.join(os.getcwd(), path)
 
@@ -87,23 +99,18 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
     del energydata['timestamp']
 
     time = diff_list(timestamps.to_list())
-    result['time-energy']['time-between-samples'] = {}
-    result['time-energy']['time-between-samples']['num_samples'] = len(time)
-    result['time-energy']['time-between-samples']['avg'] = statistics.mean(time)
-    result['time-energy']['time-between-samples']['stdev'] = statistics.stdev(time)
+    result['time-energy']['sample-period'] = some_stats(time)
 
     result['time-energy']['energy-per-sample'] = dict()
     result['time-energy']['power-per-sample']  = dict()
 
-    for power_domain in list(energydata.keys()):
+    power_domains = list(energydata.keys())
+    for power_domain in power_domains:
         energy = diff_list (
             energydata[power_domain].to_list(),
             wraparound = metadata['energyWrapAround']
         )
-        result['time-energy']['energy-per-sample'][power_domain] = dict()
-        result['time-energy']['energy-per-sample'][power_domain]['num_samples'] = len(energy)
-        result['time-energy']['energy-per-sample'][power_domain]['avg'] = statistics.mean(energy)
-        result['time-energy']['energy-per-sample'][power_domain]['stdev'] = statistics.stdev(energy)
+        result['time-energy']['energy-per-sample'][power_domain] = some_stats(energy)
 
         assert len(energy) == len(time)
         time_seconds = [ t/1000000 for t in time ]
@@ -111,19 +118,34 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
             energy[i] / time_seconds[i]
             for i in range(len(energy))
         ]
-        result['time-energy']['power-per-sample'][power_domain] = dict()
-        result['time-energy']['power-per-sample'][power_domain]['num_samples'] = len(energy)
-        result['time-energy']['power-per-sample'][power_domain]['avg'] = statistics.mean(energy)
-        result['time-energy']['power-per-sample'][power_domain]['stdev'] = statistics.stdev(energy)
-            
+        result['time-energy']['power-per-sample'][power_domain] = some_stats(power)
+
+    condensed_power_domains = list(set([ p.split('_')[0] for p in power_domains ])) # name without the _socketN suffix
+    for condensed_power_domain in condensed_power_domains:
+        power_domains = [ p for p in power_domains if p.startswith(condensed_power_domain)]
+        energy = parallel_list_sum([
+            diff_list (
+                energydata[power_domain].to_list(),
+                wraparound=metadata['energyWrapAround']
+            )
+            for power_domain in power_domains
+        ])
+        result['time-energy']['energy-per-sample'][condensed_power_domain] = some_stats(energy)
+
+        assert len(energy) == len(time)
+        time_seconds = [ t/1000000 for t in time ]
+        power = [
+            energy[i] / time_seconds[i]
+            for i in range(len(energy))
+        ]
+        result['time-energy']['power-per-sample'][condensed_power_domain]  = some_stats(power)
+
     with open (
         os.path.join (
             result_dir,
             filename+'.stats.json'
-        ),
-        'w'
-    ) as fh:
-        fh.write(json.dumps(result))
+        ), 'w'
+    ) as fh: fh.write(json.dumps(result))
 
     result.clear()
     print(">=> done processing, json result written to "+filename+".stats.json'")
