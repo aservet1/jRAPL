@@ -74,15 +74,56 @@ def put_bar_on_an_axis(data_file, ax, keypath=[], ylabel=None, title=None, color
     c_da_avg = data['c-dynamicarray']['avg'] 
     c_da_std = data['c-dynamicarray']['stdev']
 
-    ax.bar (
-        x           =  [0       , 1       ,        2],
-        height      =  [java_avg, c_ll_avg, c_da_avg],
-        yerr        =  [java_std, c_ll_std, c_da_std],
-        tick_label  =  ['J'     , 'CL'    , 'CD'    ],
-        color = color,
-        edgecolor = edgecolor,
-        alpha = alpha
-    )
+    if    isinstance(java_avg, dict) \
+      and isinstance(c_ll_avg, dict) \
+      and isinstance(c_da_avg, dict) \
+      and isinstance(java_avg, dict) \
+      and isinstance(c_ll_avg, dict) \
+      and isinstance(c_da_avg, dict) \
+      and len(java_avg.keys()) == 2  \
+      and len(c_ll_avg.keys()) == 2  \
+      and len(c_da_avg.keys()) == 2  \
+      and len(java_std.keys()) == 2  \
+      and len(c_ll_std.keys()) == 2  \
+      and len(c_da_std.keys()) == 2  \
+          : # this means that there are two bar values per group, (as of now it's memory footprint)
+        labels = list(java_avg.keys()) # arbitrary, could've been from any of them, assuming correct structure and theyre all the same
+        offset=.2
+        w = .4
+        ax.bar (
+            x           =  [0-offset    , 1-offset    ,     2-offset],
+            height      =  [java_avg[labels[0]], c_ll_avg[labels[0]], c_da_avg[labels[0]]],
+            yerr        =  [java_std[labels[0]], c_ll_std[labels[0]], c_da_std[labels[0]]],
+            tick_label  =  ['J'     , 'CL'    , 'CD'    ],
+            label = labels[0],
+            color = color[0],
+            edgecolor = edgecolor,
+            alpha = alpha,
+            width = w
+        )
+        ax.bar (
+            x           =  [0+offset     , 1+offset    ,     2+offset],
+            height      =  [java_avg[labels[1]], c_ll_avg[labels[1]], c_da_avg[labels[1]]],
+            yerr        =  [java_std[labels[1]], c_ll_std[labels[1]], c_da_std[labels[1]]],
+            tick_label  =  ['J'     , 'CL'    , 'CD'    ],
+            label = labels[1],
+            color = color[1],
+            edgecolor = edgecolor,
+            alpha = alpha,
+            width = w
+        )
+        ax.legend()
+
+    else:
+        ax.bar (
+            x           =  [0       , 1       ,        2],
+            height      =  [java_avg, c_ll_avg, c_da_avg],
+            yerr        =  [java_std, c_ll_std, c_da_std],
+            tick_label  =  ['J'     , 'CL'    , 'CD'    ],
+            color = color,
+            edgecolor = edgecolor,
+            alpha = alpha
+        )
 
     if ylabel: ax.set_ylabel(ylabel)
     if title: ax.set_title(title)
