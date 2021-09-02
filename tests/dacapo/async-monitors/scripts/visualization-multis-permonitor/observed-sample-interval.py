@@ -8,7 +8,7 @@ from myutil import megaplot, plt_set_axis_limits, get_data_files, output_dir, va
 
 keypath = ['overall', 'observed']
 
-fig = megaplot(get_data_files('sample-interval'), keypath=keypath, color='purple', edgecolor='black', alpha=1)
+fig = megaplot(get_data_files('sample-interval'), keypath=keypath, color='blue', edgecolor='black', alpha=1)
 
 # xrange = (None, None)
 # yrange = (1000, 5000)
