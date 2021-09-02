@@ -151,7 +151,7 @@ public class AsyncMemoryMonitor implements Runnable {
 					+	"\"lifetime\":%d,"
 					+	"\"numSamples\":%d, "
 					+	"\"samplingRate\": %d, "
-					+	"\"negatives_caught\":{ "
+					+	"\"negativesCaught\":{ "
 					+		"\"samples\": %s, "
 					+		"\"timestamps\": %s "
 					+	"}"
@@ -186,7 +186,4 @@ public class AsyncMemoryMonitor implements Runnable {
 	}
 
 }
-
-
-
 
