@@ -1,34 +1,62 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 
 import os
-import json
-import statistics
-import numpy as np
-import pandas as pd
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-from math import sqrt
 from sys import argv
+import matplotlib.pyplot as plt
 
-from myutil import parse_cmdline_args, put_bar_on_an_axis
+from myutil import plt_set_axis_limits, megaplot, validate_output_dir, get_data_files, output_dir
 
-result_dir, data_files = parse_cmdline_args(argv)
-systemA_file, systemB_file = data_files
-assert len(data_files) == 2
-systemA_file, systemB_file = data_files
+def normalized():
+    keypath = ['overall', 'normalized']
 
-fig, (ax1, ax2) = plt.subplots (
-  nrows=1,
-  ncols=2,
-  sharex=True,
-  sharey=True,
-  figsize=(5,3),
-  constrained_layout=True
-)
-put_bar_on_an_axis(systemA_file, ax1, 'System A', color='limegreen', edgecolor='black', alpha=1 )
-put_bar_on_an_axis(systemB_file, ax2, 'System B', color='limegreen', edgecolor='black', alpha=1 )
+    fig = megaplot(get_data_files('memory-footprint'), keypath=keypath, color='steelblue', edgecolor='black', alpha=1)
 
-fig.supxlabel('Monitor Type')
-fig.supylabel('% Difference')
+    xrange = (None, None)
+    yrange = (.9, 1.1)
+    xaxis_precision, yaxis_precision = (0, 2)
+    plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
-plt.savefig(os.path.join(result_dir,'memory-footprint'))
+    # fig.supxlabel('Monitor Type')
+    # fig.supylabel('Normalized Memory Footprint')
+
+    plt.show()
+    validate_output_dir(output_dir)
+    fig.savefig(os.path.join(output_dir,'normalized-memory-footprint'))
+
+def percent_difference():
+    keypath = ['overall', 'percentdiff']
+
+    fig = megaplot(get_data_files('memory-footprint'), keypath=keypath, color='steelblue', edgecolor='black', alpha=1)
+
+    xrange = (None, None)
+    yrange = (.9, 1.1)
+    xaxis_precision, yaxis_precision = (0, 2)
+    # plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
+
+    # fig.supxlabel('Monitor Type')
+    # fig.supylabel('Normalized Memory Footprint')
+
+    plt.show()
+    validate_output_dir(output_dir)
+    fig.savefig(os.path.join(output_dir,'percentdiff-memory-footprint'))
+
+def raw_bars():
+    keypath = ['overall', 'raws']
+
+    fig = megaplot(get_data_files('memory-footprint'), keypath=keypath, color=('steelblue','firebrick'), edgecolor='black', alpha=1)
+
+    xrange = (None, None)
+    yrange = (.9, 1.1)
+    xaxis_precision, yaxis_precision = (0, 2)
+    # plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
+
+    # fig.supxlabel('Monitor Type')
+    # fig.supylabel('Normalized Memory Footprint')
+
+    plt.show()
+    validate_output_dir(output_dir)
+    fig.savefig(os.path.join(output_dir,'rawbars-memory-footprint'))
+
+raw_bars()
+normalized()
+percent_difference()
