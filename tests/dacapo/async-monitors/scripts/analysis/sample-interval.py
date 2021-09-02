@@ -66,18 +66,34 @@ def get_overall():
     msec_to_usec_conversion=1000
 
     result = {}
-    result['normalized'] = {}
-
-    result['normalized']['java']           = {}
-    result['normalized']['c-linklist']     = {}
-    result['normalized']['c-dynamicarray'] = {}
-
-    result['normalized']['java']            ['avg']  = java_data['avg'] / (sampling_rate*msec_to_usec_conversion)
-    result['normalized']['c-linklist']      ['avg']  = c_ll_data['avg'] / (sampling_rate*msec_to_usec_conversion)
-    result['normalized']['c-dynamicarray']  ['avg']  = c_da_data['avg'] / (sampling_rate*msec_to_usec_conversion)
-    result['normalized']['java']           ['stdev'] = div_uncertainty(java_data['stdev'], sampling_rate*msec_to_usec_conversion)
-    result['normalized']['c-linklist']     ['stdev'] = div_uncertainty(c_ll_data['stdev'], sampling_rate*msec_to_usec_conversion)
-    result['normalized']['c-dynamicarray'] ['stdev'] = div_uncertainty(c_da_data['stdev'], sampling_rate*msec_to_usec_conversion)
+    result['observed'] = {
+        'java': {
+            'avg': java_data['avg'],
+            'stdev': java_data['stdev']
+        },       
+        'c-linklist': {
+            'avg': c_ll_data['avg'],
+            'stdev': c_ll_data['stdev']
+        },
+        'c-dynamicarray': {
+            'avg': c_da_data['avg'],
+            'stdev': c_da_data['stdev']
+        }
+    }
+    result['normalized'] = {
+        'java': {
+            'avg': java_data['avg'] / (sampling_rate*msec_to_usec_conversion),
+            'stdev': div_uncertainty(java_data['stdev'], sampling_rate*msec_to_usec_conversion)
+        },       
+        'c-linklist': {
+            'avg': c_ll_data['avg'] / (sampling_rate*msec_to_usec_conversion),
+            'stdev': div_uncertainty(c_ll_data['stdev'], sampling_rate*msec_to_usec_conversion)
+        },
+        'c-dynamicarray': {
+            'avg': c_da_data['avg'] / (sampling_rate*msec_to_usec_conversion),
+            'stdev': div_uncertainty(c_da_data['stdev'], sampling_rate*msec_to_usec_conversion)
+        }
+    }
 
     return result
 
