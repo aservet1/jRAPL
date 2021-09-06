@@ -12,7 +12,7 @@ from myutil import parse_cmdline_args
 result_dir, data_files = parse_cmdline_args(argv)
 
 fds  = [ open(df) for df in data_files ]
-data = [ json.load(fd)['overall'] for fd in fds ]
+data = [ json.load(fd)['overall']['combined-socket'] for fd in fds ]
 fds  = [ fd.close() for fd in fds ]
 
 power_domains = sorted(data[0].keys())
@@ -48,7 +48,6 @@ for row, subfig in enumerate(subfigs):
             height      =  [java_avg, c_ll_avg, c_da_avg],
             yerr        =  [java_std, c_ll_std, c_da_std],
             tick_label  =  labels,
-            #capsize     =  1,
             color       = 'gold',
             edgecolor   = 'black',
             alpha       =  1

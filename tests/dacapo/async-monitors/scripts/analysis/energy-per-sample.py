@@ -44,29 +44,55 @@ def get_perbench():
 
 def get_overall():
     data = load_data_by_file_extension('aggregate-permonitor.json', 'monitor_type')
-    assert(len(data['java']) == 1 and len(data['c-linklist']) == 1 and len(data['c-dynamicarray']) == 1)
+    assert (
+        len(data['java']) == 1
+        and len(data['c-linklist']) == 1
+        and len(data['c-dynamicarray']) == 1
+    );
 
     java_data = data['java']          [0]['time-energy']['energy-per-sample']
     c_ll_data = data['c-linklist']    [0]['time-energy']['energy-per-sample']
     c_da_data = data['c-dynamicarray'][0]['time-energy']['energy-per-sample']
 
-    result = {}
+    result = {
+        'per-socket': {},
+        'combinded-socket': {}
+    }
 
-    power_domains = sorted(data['java'][0]['time-energy']['energy-per-sample'].keys()) # ['java'] and [0] are arbirary keys, powdomain will be the same list regardless
-    for powd in power_domains:
-        
-        result[powd]                   = {}
-        result[powd]['java']           = {}
-        result[powd]['c-linklist']     = {}
-        result[powd]['c-dynamicarray'] = {}
+    power_domains = sorted (
+        data['java'][0]['time-energy']['power-per-sample'].keys()
+    ) # ['java'] and [0] are arbirary keys, powder_domains will be the same list regardless
 
-        result[powd]['java']          ['avg']   = java_data[powd]['avg']
-        result[powd]['c-linklist']    ['avg']   = c_ll_data[powd]['avg']
-        result[powd]['c-dynamicarray']['avg']   = c_da_data[powd]['avg']
-
-        result[powd]['java']          ['stdev'] = java_data[powd]['stdev']
-        result[powd]['c-linklist']    ['stdev'] = c_ll_data[powd]['stdev']
-        result[powd]['c-dynamicarray']['stdev'] = c_da_data[powd]['stdev']
+    for powd in [p for p in power_domains if '_socket' in p]:
+        result['per-socket'][powd] = {
+            "java": {
+                "avg"  :  java_data[powd]['avg'],
+                "stdev":  java_data[powd]['stdev']
+            },
+            "c-linklist": {
+                "avg"  :  c_ll_data[powd]['avg'],
+                "stdev":  c_ll_data[powd]['stdev']
+            },
+            "c-dynamicarray": {
+                "avg"  :  c_da_data[powd]['avg'],
+                "stdev":  c_da_data[powd]['stdev']
+            }
+        }
+    for powd in [p for p in power_domains if not '_socket' in p]:
+        result['combined-socket'][powd] = {
+            "java": {
+                "avg"  :  java_data[powd]['avg'],
+                "stdev":  java_data[powd]['stdev']
+            },
+            "c-linklist": {
+                "avg"  :  c_ll_data[powd]['avg'],
+                "stdev":  c_ll_data[powd]['stdev']
+            },
+            "c-dynamicarray": {
+                "avg"  :  c_da_data[powd]['avg'],
+                "stdev":  c_da_data[powd]['stdev']
+            }
+        }
     
     return result
 
@@ -80,9 +106,9 @@ results = {}
 results['overall']  = get_overall ()
 results['perbench'] = get_perbench()
 
-results['plotinfo'] = {}
-results['plotinfo']['perbench'] = { 'filename': 'energy-per-sample_perbench', 'xlabel': 'Average Energy Per Sample (joules)' } 
-results['plotinfo']['overall']  = { 'filename': 'energy-per-sample_overall' , 'ylabel': 'Average Energy Per Sample (joules)' } 
+# results['plotinfo'] = {}
+# results['plotinfo']['perbench'] = { 'filename': 'energy-per-sample_perbench', 'xlabel': 'Average Energy Per Sample (joules)' } 
+# results['plotinfo']['overall']  = { 'filename': 'energy-per-sample_overall' , 'ylabel': 'Average Energy Per Sample (joules)' } 
 
 with open(outputfile,'w') as fd:
     json.dump(results, fd)
