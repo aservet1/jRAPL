@@ -23,9 +23,9 @@ def get_perbench():
         def get_by_monitor_type(data, monitor_type):
             return [ d for d in data[benchmark] if d['metadata']['monitor_type'] == monitor_type ][0]
 
-        java_data = get_by_monitor_type(data,'java')          ['time-energy']['time-between-samples']
-        c_ll_data = get_by_monitor_type(data,'c-linklist')    ['time-energy']['time-between-samples']
-        c_da_data = get_by_monitor_type(data,'c-dynamicarray')['time-energy']['time-between-samples']
+        java_data = get_by_monitor_type(data,'java')          ['time-energy']['sample-period']
+        c_ll_data = get_by_monitor_type(data,'c-linklist')    ['time-energy']['sample-period']
+        c_da_data = get_by_monitor_type(data,'c-dynamicarray')['time-energy']['sample-period']
 
         sampling_rate = get_by_monitor_type(data,'java')['metadata']['samplingRate'] # it's the same for all 3 of them
         msec_to_usec_conversion=1000
@@ -58,9 +58,9 @@ def get_overall():
     data = load_data_by_file_extension('aggregate-permonitor.json', 'monitor_type')
     assert(len(data['java']) == 1 and len(data['c-linklist']) == 1 and len(data['c-dynamicarray']) == 1)
 
-    java_data = data['java']          [0]['time-energy']['time-between-samples']
-    c_ll_data = data['c-linklist']    [0]['time-energy']['time-between-samples']
-    c_da_data = data['c-dynamicarray'][0]['time-energy']['time-between-samples']
+    java_data = data['java']          [0]['time-energy']['sample-period']
+    c_ll_data = data['c-linklist']    [0]['time-energy']['sample-period']
+    c_da_data = data['c-dynamicarray'][0]['time-energy']['sample-period']
 
     sampling_rate = data['java'][0]['metadata']['samplingRate'] # it's the same for all 3 monitors
     msec_to_usec_conversion=1000
@@ -108,8 +108,8 @@ results['perbench']  =  get_perbench ()
 results['overall']   =  get_overall  ()
 
 # results['plotinfo'] = {}
-# results['plotinfo']['perbench'] = { 'filename': 'time-per-sample_perbench', 'xlabel': 'Time Per Sample (usec)' }
-# results['plotinfo']['overall']  = { 'filename': 'time-per-sample_overall' , 'ylabel': 'Time Per Sample (usec)' }
+# results['plotinfo']['perbench'] = { 'filename': 'sample-period_perbench', 'xlabel': 'Time Per Sample (usec)' }
+# results['plotinfo']['overall']  = { 'filename': 'sample-period_overall' , 'ylabel': 'Time Per Sample (usec)' }
 
 print('.) done with overall')
 

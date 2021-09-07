@@ -6,7 +6,7 @@ function echo_eval() {
 
 set -e
 
-samplingrates='1 2 4'
+samplingrates='1 2 4 8'
 systems='SystemA SystemB'
 
 for sys in $systems; do
