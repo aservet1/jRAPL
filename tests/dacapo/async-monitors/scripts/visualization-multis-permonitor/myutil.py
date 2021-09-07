@@ -49,7 +49,7 @@ def megaplot(data_files, keypath=[], color='blue', edgecolor='black', alpha=1):
         ncols=2,
         sharex=True,
         sharey=True,
-        figsize=(5,5),
+        figsize=(5,7),
         constrained_layout=True
     )
 

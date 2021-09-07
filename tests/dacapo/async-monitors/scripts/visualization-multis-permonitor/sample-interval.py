@@ -16,10 +16,10 @@ def observed():
     # xaxis_precision, yaxis_precision = (0, 0)
     # plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
-    # fig.supxlabel('Monitor Type')
-    # fig.supylabel('Normalized Sample Interval (μs)')
+    fig.supxlabel('Monitor Type')
+    fig.supylabel('Observed Sample Interval (μs)')
 
-    plt.show()
+    #plt.show()
     validate_output_dir(output_dir)
     fig.savefig(os.path.join(output_dir, 'observed-sample-interval'))
 
@@ -33,10 +33,10 @@ def normalized():
     xaxis_precision, yaxis_precision = (0, 0)
     plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
-    # fig.supxlabel('Monitor Type')
-    # fig.supylabel('Normalized Sample Interval (μs)')
+    fig.supxlabel('Monitor Type')
+    fig.supylabel('Normalized Sample Interval')
 
-    plt.show()
+    #plt.show()
     validate_output_dir(output_dir)
     fig.savefig(os.path.join(output_dir, 'normalized-sample-interval'))
 

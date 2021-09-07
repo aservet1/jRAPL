@@ -16,10 +16,10 @@ def normalized():
     xaxis_precision, yaxis_precision = (0, 2)
     plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
-    # fig.supxlabel('Monitor Type')
-    # fig.supylabel('Normalized Memory Footprint')
+    fig.supxlabel('Monitor Type')
+    fig.supylabel('Normalized Memory Footprint')
 
-    plt.show()
+    #plt.show()
     validate_output_dir(output_dir)
     fig.savefig(os.path.join(output_dir,'normalized-memory-footprint'))
 
@@ -33,10 +33,10 @@ def percent_difference():
     xaxis_precision, yaxis_precision = (0, 2)
     # plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
-    # fig.supxlabel('Monitor Type')
-    # fig.supylabel('Normalized Memory Footprint')
+    fig.supxlabel('Monitor Type')
+    fig.supylabel('Memory Footprint (% difference)')
 
-    plt.show()
+    #plt.show()
     validate_output_dir(output_dir)
     fig.savefig(os.path.join(output_dir,'percentdiff-memory-footprint'))
 
@@ -50,10 +50,10 @@ def raw_bars():
     xaxis_precision, yaxis_precision = (0, 2)
     # plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
-    # fig.supxlabel('Monitor Type')
-    # fig.supylabel('Normalized Memory Footprint')
+    fig.supxlabel('Monitor Type')
+    fig.supylabel('Memory Footprint (bytes)')
 
-    plt.show()
+    #plt.show()
     validate_output_dir(output_dir)
     fig.savefig(os.path.join(output_dir,'rawbars-memory-footprint'))
 

@@ -16,10 +16,10 @@ def normalized():
     xaxis_precision, yaxis_precision = (0, 2)
     plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
-    # fig.supxlabel('Monitor Type')
-    # fig.supylabel('Normalized Sample Count')
+    fig.supxlabel('Monitor Type')
+    fig.supylabel('Normalized Sample Count')
 
-    plt.show()
+    #plt.show()
     validate_output_dir(output_dir)
     fig.savefig(os.path.join(output_dir,'normalized-sample-count'))
 
@@ -33,10 +33,10 @@ def observed():
     xaxis_precision, yaxis_precision = (0, 2)
     # plt_set_axis_limits(xrange, yrange, xaxis_precision, yaxis_precision)
 
-    # fig.supxlabel('Monitor Type')
-    # fig.supylabel('Normalized Sample Count')
+    fig.supxlabel('Monitor Type')
+    fig.supylabel('Observed Sample Count')
 
-    plt.show()
+    #plt.show()
     validate_output_dir(output_dir)
     fig.savefig(os.path.join(output_dir,'observed-sample-count'))
 
