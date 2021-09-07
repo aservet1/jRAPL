@@ -4,7 +4,7 @@ import os
 from sys import argv
 import matplotlib.pyplot as plt
 
-from myutil import megaplot, plt_set_axis_limits, get_data_files, output_dir, validate_output_dir
+from common import megaplot, plt_set_axis_limits, get_data_files, output_dir, validate_output_dir
 
 def observed():
     keypath = ['overall', 'observed']

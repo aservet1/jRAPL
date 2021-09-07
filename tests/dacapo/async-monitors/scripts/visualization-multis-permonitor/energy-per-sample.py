@@ -7,7 +7,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from sys import argv
 
-from myutil import parse_cmdline_args
+from common import parse_cmdline_args
 
 result_dir, data_files = parse_cmdline_args(argv)
 

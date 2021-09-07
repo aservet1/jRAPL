@@ -4,7 +4,7 @@ import os
 from sys import argv
 import matplotlib.pyplot as plt
 
-from myutil import plt_set_axis_limits, megaplot, get_data_files, output_dir, validate_output_dir
+from common import plt_set_axis_limits, megaplot, get_data_files, output_dir, validate_output_dir
 
 def normalized():
     keypath = ['overall', 'normalized']
