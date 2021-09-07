@@ -7,10 +7,10 @@ from matplotlib.ticker import FormatStrFormatter
 def get_data_files(metric):
     # the subplot grid will be laid out visually like how this list is laid out
     return [
-        'results/SystemA/samplingrate_1/'+metric+'.json', 'results/SystemB/samplingrate_1/'+metric+'.json',
-        'results/SystemA/samplingrate_2/'+metric+'.json', 'results/SystemB/samplingrate_2/'+metric+'.json',
-        'results/SystemA/samplingrate_4/'+metric+'.json', 'results/SystemB/samplingrate_4/'+metric+'.json',
-        'results/SystemA/samplingrate_8/'+metric+'.json', 'results/SystemB/samplingrate_8/'+metric+'.json'
+        ['results/SystemA/samplingrate_1/'+metric+'.json','results/SystemB/samplingrate_1/'+metric+'.json'],
+        ['results/SystemA/samplingrate_2/'+metric+'.json','results/SystemB/samplingrate_2/'+metric+'.json'],
+        ['results/SystemA/samplingrate_4/'+metric+'.json','results/SystemB/samplingrate_4/'+metric+'.json'],
+        ['results/SystemA/samplingrate_8/'+metric+'.json','results/SystemB/samplingrate_8/'+metric+'.json']
     ]
 
 output_dir = 'results/overall-plots'
@@ -53,17 +53,17 @@ def megaplot(data_files, keypath=[], color='blue', edgecolor='black', alpha=1):
         constrained_layout=True
     )
 
-    put_bar_on_an_axis( data_files[0], axs[0][0], keypath=keypath, ylabel='Sampling Rate 1', title='System A', color=color, edgecolor=edgecolor, alpha=alpha )
-    put_bar_on_an_axis( data_files[1], axs[0][1], keypath=keypath, ylabel=      None,        title='System B', color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis( data_files[0][0], axs[0][0], keypath=keypath, ylabel='Sampling Rate 1', title='System A', color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis( data_files[0][1], axs[0][1], keypath=keypath, ylabel=      None,        title='System B', color=color, edgecolor=edgecolor, alpha=alpha )
 
-    put_bar_on_an_axis( data_files[2], axs[1][0], keypath=keypath, ylabel='Sampling Rate 2', title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
-    put_bar_on_an_axis( data_files[3], axs[1][1], keypath=keypath, ylabel=      None,        title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis( data_files[1][0], axs[1][0], keypath=keypath, ylabel='Sampling Rate 2', title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis( data_files[1][1], axs[1][1], keypath=keypath, ylabel=      None,        title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
 
-    put_bar_on_an_axis( data_files[4], axs[2][0], keypath=keypath, ylabel='Sampling Rate 4', title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
-    put_bar_on_an_axis( data_files[5], axs[2][1], keypath=keypath, ylabel=      None,        title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis( data_files[2][0], axs[2][0], keypath=keypath, ylabel='Sampling Rate 4', title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis( data_files[2][1], axs[2][1], keypath=keypath, ylabel=      None,        title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
 
-    put_bar_on_an_axis( data_files[6], axs[3][0], keypath=keypath, ylabel='Sampling Rate 8', title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
-    put_bar_on_an_axis( data_files[7], axs[3][1], keypath=keypath, ylabel=      None,        title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis( data_files[3][0], axs[3][0], keypath=keypath, ylabel='Sampling Rate 8', title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
+    put_bar_on_an_axis( data_files[3][1], axs[3][1], keypath=keypath, ylabel=      None,        title=   None   , color=color, edgecolor=edgecolor, alpha=alpha )
 
     return fig
 
