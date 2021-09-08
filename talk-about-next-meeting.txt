@@ -1,19 +1,4 @@
 
-monitor on / monitor off (normalization)
-
-if over 1, overconsuming, less than 1, under consuming
-
-|   .        .
-| . .        . .
-| . .  .     . .
-| . .  . .   . .
-|_._.__._.___._.___ bar1 is 'with monitor on', bar2 is 'with monitor off'
-
-raw values for bars
-J, CD, CA
-
-
-
 Also, Prof Liu, did you say that you could handle "Section 1" Type stuff? I'm happy to let you do that, since you probably have more contextual
 knowledge about how jRAPL plays in to this whole area of energy aware computing than I do.
 

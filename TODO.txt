@@ -1,3 +1,16 @@
+- discard whacky wraparound readings in python analysis script
+- make the asyncenergymonitor discard whacky readings
+	- this involves changing the storage? or keep it as strings, and then do the diffing on lastK or dump?
+- make the output format of the asyncenergymonitor to be diffs instead of raw
+    - this is better because then they dont need to manage wraparound, and they can
+    - still rebuild the cumulative ones
+- newest intel chips; find out your laptop's and see if there are newers
+    - on server?
+    - on laptop?
+- regardless of if there is a new intel chip, see if there are mobile devices
+  - made by intel with RAPL support -- thatd be the coolest in my opinion
+
+
 - whats wrong with JMH JNI overhead
 	- make sure this is still a problem and not something that you've figured out. i think this is fine now, and it's old concerns
 	- compare JMH JNI overhead results to full runtime
@@ -8,11 +21,9 @@
 	- normalized
 	- raw juxtaposed bars
 	- percent difference
-
+------------------------------------------------------------------------
 << Semi Immediates:
-	- Run experiments on several computers
 	- Get a complete lists of the benchmarks / more info about dacapo-evalution-git+309e1fa.jar
-	- make all JSON dumps have camelCase key names, and fix analysis scripts to match those names
 	- change 'time-between-samples' to 'time-per-sample' JSON field in the async-monitors result gathering
 
 << Other Todos:
