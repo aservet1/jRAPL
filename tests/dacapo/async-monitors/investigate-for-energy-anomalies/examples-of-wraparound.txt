@@ -1,0 +1,14 @@
+Example of strange wraparound
+
+    <=< started working on 'avrora_15_c-linklist'
+    .> caught negative diff: -64424.507482 l[i]: 0.00033 l[i-1]: 64424.507812 wraparound: 262143.999939
+    ...> fixed to: 197719.49245700001
+
+Example of appropriate wraparound
+
+    <=< started working on 'avrora_2_java'
+    .> caught negative diff: -262143.974121 l[i]: 0.025879 l[i-1]: 262144.0 wraparound: 262143.999939
+    ...> fixed to: 0.025817999994615093
+
+
+So far I've only seen this on vaporeon, not my computer
