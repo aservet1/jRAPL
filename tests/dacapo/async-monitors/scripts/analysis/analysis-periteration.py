@@ -23,6 +23,10 @@ def diff_list(l, wraparound = 0):
 			print(".> caught negative diff:",diff,"l[i]:",l[i],"l[i-1]:",l[i-1],"wraparound:",wraparound)
 			diff += wraparound#262143.99993896484#wraparound
 			print("...> fixed to:",diff)
+		if wraparound != 0 and diff > 100: # TODO: better way to determine too big. for now we know that its never gonna be anywhere near above 100 unless it was a bug
+			print('...> enormous diff found:',diff)
+			print('     replacing it with',diffs[-1])
+			diff = diffs[-1]
 		diffs.append(diff)
 	return diffs
     # return [ float(float(l[i]) - float(l[i-1])) for i in range(1,len(l))]
@@ -149,3 +153,4 @@ for filename in sorted([ f for f in datafilenames if not f.endswith("nojrapl")])
 
     result.clear()
     print(">=> done processing, json result written to "+filename+".stats.json'")
+

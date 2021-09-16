@@ -6,18 +6,21 @@ function echo_eval() {
 
 set -e
 
-samplingrates='8'
+sudo -v
+
+samplingrates='1 2 4 8'
 systems='SystemA SystemB'
 
 for system in $systems; do
     for r in $samplingrates; do
-		#echo_eval \
-		#	ln -s \
-		#	~/storage/async-monitor-experiments/$system/samplingrate_$r \
-		#	./results/$system/samplingrate_$r/raw
-        echo_eval \
+	(
+		echo_eval \
 			./scripts/analysis/analysis-periteration.py \
 			./results/$system/samplingrate_$r/raw \
 			./results/$system/samplingrate_$r/intermediate-results
+		
+		printf "Subject: parsing status.\ndone with $system $samplingrate_$r\n" \
+			>> status.txt
+	)&
     done
 done
