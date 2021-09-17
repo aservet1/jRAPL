@@ -7,9 +7,8 @@ function log() {
 log ""
 for script in memory-footprint \
               sample-count     \
-              sample-interval  #\
-              #energy-per-sample\
-              #power-per-sample
+              sample-interval  \
+              energypower-per-sample
 do
 	log "starting on $script"
 	./scripts/visualization-multis-permonitor/$script.py
