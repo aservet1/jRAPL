@@ -67,7 +67,7 @@ def megaplot(data_files, keypath=[], color='blue', edgecolor='black', alpha=1):
 
     return fig
 
-def put_bar_on_an_axis(data_file, ax, keypath=[], ylabel=None, title=None, color='blue', edgecolor='black', alpha = 1):
+def put_bar_on_an_axis(data_file, ax, keypath=[], ylabel=None, title=None, color='blue', edgecolor='black', alpha = 1, legend_loc=None):
     
     with open(data_file) as fp:
         data = json.load(fp)
@@ -121,7 +121,8 @@ def put_bar_on_an_axis(data_file, ax, keypath=[], ylabel=None, title=None, color
             alpha = alpha,
             width = w
         )
-        ax.legend()
+        if legend_loc: ax.legend(loc=legend_loc)
+        else: ax.legend()
 
     else:
         ax.bar (
