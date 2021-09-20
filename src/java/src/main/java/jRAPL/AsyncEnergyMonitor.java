@@ -62,23 +62,23 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	}
 
 	/** Last K timestamps */
-	public abstract Instant[] getLastKTimestamps(int k);
+	//public abstract Instant[] getLastKTimestamps(int k);
 	/** Last K samples in raw string format */
 	public abstract String[] getLastKSamples(int k);
 	/** Last K samples as EnergyStats objects  */
-	public EnergyStats[] getLastKSamples_Objects(int k) {
-		String[] strings = getLastKSamples(k);
-		Instant[] timestamps = getLastKTimestamps(k);
+	// public EnergyStats[] getLastKSamples_Objects(int k) {
+	// 	String[] strings = getLastKSamples(k);
+	// 	Instant[] timestamps = getLastKTimestamps(k);
 
-		EnergyStats[] samplesArray = new EnergyStats[k];
-		for (int i = 0; i < strings.length; i++) {
-			String energyString = strings[i];
-			samplesArray[i] = stringToEnergyStats(energyString);
-			samplesArray[i].setTimestamp(timestamps[i]);
-		}
+	// 	EnergyStats[] samplesArray = new EnergyStats[k];
+	// 	for (int i = 0; i < strings.length; i++) {
+	// 		String energyString = strings[i];
+	// 		samplesArray[i] = stringToEnergyStats(energyString);
+	// 		samplesArray[i].setTimestamp(timestamps[i]);
+	// 	}
 
-		return samplesArray;
-	}
+	// 	return samplesArray;
+	// }
 	/** Last K samples as primitive arrays of doubles. You can use this in conjunction with getLastKTimestamps() if you want parralell arrays. */
 	public double[][] getLastKSamples_Arrays(int k) {
 		String[] strings = getLastKSamples(k);

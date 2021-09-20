@@ -25,7 +25,7 @@ public final class EnergyDiff extends EnergySample {
 				.csvHeader()
 					.replace (
 						"timestamp",
-						"elapsedTime"
+						"elapsed_time"
 					);
 	}
 

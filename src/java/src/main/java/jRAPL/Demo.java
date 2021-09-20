@@ -110,8 +110,8 @@ public class Demo {
 		System.out.println(m);
 		int k = 5;
 		System.out.println(Arrays.deepToString(m.getLastKSamples_Arrays(k)));
-		System.out.println();
-		System.out.println(Arrays.toString(m.getLastKTimestamps(k)));
+		// System.out.println();
+		// System.out.println(Arrays.toString(m.getLastKTimestamps(k)));
 		System.out.println();
 		System.out.println(Arrays.toString(m.getLastKSamples(m.getNumSamples())));
 
