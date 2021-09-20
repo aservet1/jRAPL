@@ -1,0 +1,7 @@
+ACPI BIOS Error (bug): AE_AML_PACKAGE_LIMIT, Index (0x00000000FF) is beyond end of object (length 0xF) (20190816/expoarg2-393)
+ACPI Error: Aborting method \_SB.BINF due to previous error (AE_AML_PACKAGE_LIMIT) (20190816/psparse-529)
+ACPI Error: Aborting method \_SB.GADR due to previous error (AE_AML_PACKAGE_LIMIT) (20190816/psparse-529)
+ACPI Error: Aborting method \_SB.SGOV due to previous error (AE_AML_PACKAGE_LIMIT) (20190816/psparse-529)
+ACPI Error: Aborting method \_SB.CGWR due to previous error (AE_AML_PACKAGE_LIMIT) (20190816/psparse-529)
+ACPI Error: Aborting method \_SB.TBF due to previous error (AE_AML_PACKAGE_LIMIT) (20190816/psparse-529)
+ACPI Error: Aborting method \_SB.WMTF.WMTF due to previous error (AE_AML_PACKAGE_LIMIT) (20190816/psparse-529)
