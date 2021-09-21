@@ -54,7 +54,7 @@ def get_overall():
 
     result = {
         'per-socket': {},
-        'combinded-socket': {}
+        'combined-socket': {}
     }
 
     power_domains = sorted (
