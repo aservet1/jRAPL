@@ -1,6 +1,6 @@
 - discard whacky wraparound readings in python analysis script
 - make the asyncenergymonitor discard whacky readings
-	- this involves changing the storage? or keep it as strings, and then do the diffing on lastK or dump?
+    - this involves changing the storage? or keep it as strings, and then do the diffing on lastK or dump?
 - make the output format of the asyncenergymonitor to be diffs instead of raw
     - this is better because then they dont need to manage wraparound, and they can
     - still rebuild the cumulative ones

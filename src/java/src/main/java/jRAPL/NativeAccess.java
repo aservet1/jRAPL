@@ -9,6 +9,7 @@ final class NativeAccess { // @TODO: make sure you know exactly what it means to
     // ArchSpec.c
 	public native static int getSocketNum();
 	public native static double getWraparoundEnergy();
+	public native static double getDramWraparoundEnergy();
 	public native static String getMicroArchitectureName();
 	public native static int getMicroArchitecture();
 	public native static String energyStatsStringFormat();

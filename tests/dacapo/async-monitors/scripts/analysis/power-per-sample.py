@@ -76,22 +76,56 @@ def get_overall():
                 "stdev":  c_da_data[powd]['stdev']
             }
         }
-    for powd in [p for p in power_domains if not '_socket' in p]:
-        result['combined-socket'][powd] = {
-            "java": {
-                "avg"  :  java_data[powd]['avg'],
-                "stdev":  java_data[powd]['stdev']
+    # for powd in [p for p in power_domains if not '_socket' in p]:
+    #     result['combined-socket'][powd] = {
+    #         "java": {
+    #             "avg"  :  java_data[powd]['avg'],
+    #             "stdev":  java_data[powd]['stdev']
+    #         },
+    #         "c-linklist": {
+    #             "avg"  :  c_ll_data[powd]['avg'],
+    #             "stdev":  c_ll_data[powd]['stdev']
+    #         },
+    #         "c-dynamicarray": {
+    #             "avg"  :  c_da_data[powd]['avg'],
+    #             "stdev":  c_da_data[powd]['stdev']
+    #         }
+    #     }
+    # just hardcoding dram and pkg, dont need to make this code more dynamic than necessary
+    result['combined-socket'] = {
+        "java": {
+            "avg"  :  {
+                "dram": java_data["dram"]['avg'],
+                "pkg": java_data["pkg"]['avg']
             },
-            "c-linklist": {
-                "avg"  :  c_ll_data[powd]['avg'],
-                "stdev":  c_ll_data[powd]['stdev']
+            "stdev":  {
+                "dram": java_data["dram"]['stdev'],
+                "pkg": java_data["pkg"]['stdev']
+            }
+        },
+        "c-linklist": {
+            "avg"  :  {
+                "dram": c_ll_data["dram"]['avg'],
+                "pkg" : c_ll_data["pkg"]['avg']
             },
-            "c-dynamicarray": {
-                "avg"  :  c_da_data[powd]['avg'],
-                "stdev":  c_da_data[powd]['stdev']
+            "stdev":  {
+                "dram": c_ll_data["dram"]['stdev'],
+                "pkg" : c_ll_data["pkg"]['stdev']
+            }
+        },
+        "c-dynamicarray": {
+            "avg"  :  {
+                "dram": c_da_data["dram"]['avg'],
+                "pkg" : c_da_data["pkg"]['avg']
+            },
+            "stdev":  {
+                "dram": c_da_data["dram"]['stdev'],
+                "pkg" : c_da_data["pkg"]['stdev']
             }
         }
-    
+    }
+
+
     return result
 
 '''------------------------------------------------------------------------------------'''

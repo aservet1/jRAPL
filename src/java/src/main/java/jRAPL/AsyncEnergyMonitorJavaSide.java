@@ -11,29 +11,33 @@ import java.time.Instant;
 
 public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Runnable {
 
-	private ArrayList<String> samples;
+	private ArrayList<EnergyDiff> samples;
 	private int samplingRate; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
 
+	SyncEnergyMonitor monitor = new SyncEnergyMonitor();
+
 	public AsyncEnergyMonitorJavaSide() {
 		samplingRate = 10;
-		samples = new ArrayList<String>();
+		samples = new ArrayList<EnergyDiff>();
 	}
 
 	public AsyncEnergyMonitorJavaSide(int s) {
 		samplingRate = s;
-		samples = new ArrayList<String>();
+		samples = new ArrayList<EnergyDiff>();
 	}
 
 	@Override
 	public void activate() {
 		super.activate();
+		monitor.activate();
 	}
 
 	@Override
 	public void deactivate() {
 		super.deactivate();
+		monitor.deactivate();
 	}
 
 	/** Overrides the Runnable interface's run() method.
@@ -41,10 +45,13 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 	 * for interface override reasons.
 	*/	
 	public void run() {
+		EnergyStats before = monitor.getSample();
+		EnergyStats after;
 		while (!exit) {
-			String energyString = NativeAccess.energyStatCheck();
-			samples.add(energyString);
 			try { Thread.sleep(samplingRate); } catch (Exception e) {  }
+			after = monitor.getSample();
+			samples.add(EnergyDiff.between(before, after)); //TODO: the rare wraparound / just put in the previous one case
+			before = after;
 		}
 	}
 
@@ -87,30 +94,30 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 
 		String[] samplesArray = new String[k];
 		for (int i = start; i < samples.size(); i++)
-			samplesArray[arrayIndex++] = samples.get(i);
+			samplesArray[arrayIndex++] = samples.get(i).csv();
 		
 		return samplesArray;
 	}
 
-	@Override
-	public Instant[] getLastKTimestamps(int k) { // @TODO this should probably get deprecated, since samples.get(i) now has the full CSV string including the timestamp
-		int start = samples.size() - k;
-		int arrayIndex = 0;
-		if (start < 0) {
-			start = 0;
-			k = samples.size();
-		}
+	// @Override
+	// public Instant[] getLastKTimestamps(int k) { // @TODO this should probably get deprecated, since samples.get(i) now has the full CSV string including the timestamp
+	// 	int start = samples.size() - k;
+	// 	int arrayIndex = 0;
+	// 	if (start < 0) {
+	// 		start = 0;
+	// 		k = samples.size();
+	// 	}
 
-		Instant[] timestampsArray = new Instant[k];
+	// 	Instant[] timestampsArray = new Instant[k];
 
-		for (int i = start; i < samples.size(); i++) {
-			String[] parts = samples.get(i).split(",");
-			long usec = Long.parseLong(parts[parts.length-1]);
-			timestampsArray[arrayIndex++] = Utils.usecToInstant(usec);
-		}
+	// 	for (int i = start; i < samples.size(); i++) {
+	// 		String[] parts = samples.get(i).split(",");
+	// 		long usec = Long.parseLong(parts[parts.length-1]);
+	// 		timestampsArray[arrayIndex++] = Utils.usecToInstant(usec);
+	// 	}
 
-		return timestampsArray;
-	}
+	// 	return timestampsArray;
+	// }
 
 	@Override
 	public int getSamplingRate() {
@@ -136,9 +143,9 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 					? new OutputStreamWriter(System.out)
 					: new FileWriter(new File(fileName))
 			);
-			writer.write(EnergyStats.csvHeader()+"\n");
-			for (String sample : samples)
-				writer.write(sample+"\n");
+			writer.write(EnergyDiff.csvHeader()+"\n");
+			for (EnergyDiff sample : samples)
+				writer.write(sample.csv()+"\n");
 			writer.flush();
 			if (fileName != null) writer.close();
 		} catch (IOException e) {
