@@ -1,46 +1,48 @@
 #!/usr/bin/env python3
 
+import os
 import pandas as pd
 from sys import argv
 
-def diff_list(lst, wrap = 0):
-    diffs = []
-    for i in range(1,len(lst)):
-        diff = lst[i] - lst[i-1]
-        if diff < 0:
-            diff += wrap
-        diffs.append(diff)
-    return diffs
-
 try:
-    infile = argv[1]
-    outfile = argv[2]
+    srcdir = argv[1]
+    dstdir = argv[2]
 except:
-    print("usage:",argv[0],"infile.csv outfile.csv")
+    print("usage:",argv[0],"srcdir dstdir")
     exit(2)
 
-print(' ~0)) '+infile)
+if not os.path.exists(dstdir):
+    os.mkdir(dstdir)
 
-NRML_RAPL_WRAPAROUND = 262143.99993896484
-DRAM_RAPL_WRAPAROUND = 64424.509425000004
+for filename in sorted([ fname for fname in os.listdir(srcdir) if fname.endswith('.csv') ]):
+    def diff_list(lst, wrap = 0):
+        diffs = []
+        for i in range(1,len(lst)):
+            diff = lst[i] - lst[i-1]
+            if diff < 0:
+                diff += wrap
+            diffs.append(diff)
+        return diffs
 
-df = pd.read_csv(infile)
-diffdf = pd.DataFrame()
+    print(' ~0)) '+filename)
 
-for key in df:
-    if key == 'timestamp':
-        continue
-    if 'dram' in key:
-        wrap = DRAM_RAPL_WRAPAROUND
-    else:
-        wrap = NRML_RAPL_WRAPAROUND
+    NRML_RAPL_WRAPAROUND = 262143.99993896484
+    DRAM_RAPL_WRAPAROUND = 64424.509425000004 # while this wraparound only applies to DRAM on broadwell machines, i can broadly apply it as the general DRAM wraparound because from previous investigation i already know that for this dataset there were only incidents of dram wraparound on the broadwell machine (vaporeon)
 
-    diffdf[key] = diff_list(df[key],wrap)
+    df = pd.read_csv(os.path.join(srcdir,filename))
+    diffdf = pd.DataFrame()
 
-diffdf.rename(columns={'timestamp':'time_elapsed'}, inplace = True)
-diffdf['start_timestamp'] = df['timestamp'].to_list()[:-1]
-diffdf['elapsed_time'] = diff_list(df['timestamp'])
+    for key in df:
+        if key == 'timestamp': continue
+        if 'dram' in key: wrap = DRAM_RAPL_WRAPAROUND
+        else: wrap = NRML_RAPL_WRAPAROUND
 
-diffdf.to_csv(outfile, index = False)
+        diffdf[key] = diff_list(df[key],wrap)
 
-print(' ~1)) '+infile)
+    diffdf.rename(columns={'timestamp':'time_elapsed'}, inplace = True)
+    diffdf['start_timestamp'] = df['timestamp'].to_list()[:-1]
+    diffdf['elapsed_time'] = diff_list(df['timestamp'])
+
+    diffdf.to_csv(os.path.join(dstdir,filename), index = False)
+
+    print(' ~1)) '+filename)
