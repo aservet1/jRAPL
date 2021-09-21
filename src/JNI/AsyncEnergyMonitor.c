@@ -67,7 +67,8 @@ Java_jRAPL_NativeAccess_getLastKSamplesMonitor(JNIEnv* env, jclass jcls, int k) 
 
 		for (int j = 0; j < num_sockets; j++)
 			multisocket_sample_buffer[j] = samples[i+j];
-		energy_stat_csv_string(multisocket_sample_buffer, csv_string);
+		energy_info_csv_string(multisocket_sample_buffer, csv_string);
+
 
 		offset += sprintf(sample_strings + offset, "%s_", csv_string);
 

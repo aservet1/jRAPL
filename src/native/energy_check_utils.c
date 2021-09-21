@@ -194,35 +194,35 @@ void energy_diff_csv_header(char csv_header[512]) { energy_info_csv_header(csv_h
 void energy_stat_csv_header(char csv_header[512]) { energy_info_csv_header(csv_header,  "timestamp" );  }
 
 void
-energy_stat_csv_string(energy_info_t energy_stat_per_socket[], char* csv_string) {
+energy_info_csv_string(energy_info_t energy_info_per_socket[], char* csv_string) {
 	int offset = 0;
 	for (int i = 0; i < num_sockets; i++) {
 		switch (power_domains_supported) {
 			case DRAM_GPU_CORE_PKG:
 				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,%.6f,",
-					energy_stat_per_socket[i].dram,
-					energy_stat_per_socket[i].gpu,
-					energy_stat_per_socket[i].core,
-					energy_stat_per_socket[i].pkg
+					energy_info_per_socket[i].dram,
+					energy_info_per_socket[i].gpu,
+					energy_info_per_socket[i].core,
+					energy_info_per_socket[i].pkg
 				);
 				break;
 			case GPU_CORE_PKG:
 				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,",
-					energy_stat_per_socket[i].gpu,
-					energy_stat_per_socket[i].core,
-					energy_stat_per_socket[i].pkg
+					energy_info_per_socket[i].gpu,
+					energy_info_per_socket[i].core,
+					energy_info_per_socket[i].pkg
 				);
 				break;
 			case DRAM_CORE_PKG:
 				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,",
-					energy_stat_per_socket[i].dram,
-					energy_stat_per_socket[i].core,
-					energy_stat_per_socket[i].pkg
+					energy_info_per_socket[i].dram,
+					energy_info_per_socket[i].core,
+					energy_info_per_socket[i].pkg
 				);
 				break;
 			default:
 				assert(0 && "error occurred in energy_stats_csv_string");
 		}
 	}
-	sprintf(csv_string+offset, "%ld", energy_stat_per_socket[0].time);
+	sprintf(csv_string+offset, "%ld", energy_info_per_socket[0].time);
 }

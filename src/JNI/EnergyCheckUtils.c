@@ -32,7 +32,7 @@ Java_jRAPL_NativeAccess_energyStatCheck(JNIEnv *env, jclass jcls) {
 	char ener_info[512];
 	energy_info_t stats_per_socket[num_sockets];
 	EnergyStatCheck(stats_per_socket);
-	energy_stat_csv_string(stats_per_socket, ener_info);
+	energy_info_csv_string(stats_per_socket, ener_info);
 	return (*env)->NewStringUTF(env, ener_info);
 }
 
