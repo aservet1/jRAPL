@@ -12,51 +12,39 @@ import java.time.Duration;
 
 public final class EnergyDiff extends EnergySample {
 
-	//private Duration elapsedTime = null; //time between the two EnergyStamps
-	private Instant startTime;
-	private Instant stopTime;
+	private Instant startTimestamp;
+	private Instant stopTimestamp;
 
-	public EnergyDiff(double[] primitiveSample, Instant startTime, Instant stopTime) { // Duration elapsedTime) {
+	public EnergyDiff(double[] primitiveSample, Instant startTimestamp, Instant stopTimestamp) {
 		super(primitiveSample);
-		//this.elapsedTime = elapsedTime;
-		this.startTime = startTime;
-		this.stopTime = stopTime;
+		this.startTimestamp = startTimestamp;
+		this.stopTimestamp = stopTimestamp;
 	}
 
-	// public void setElapsedTime(Duration elapsed) {
-	// 	elapsedTime = elapsed;
-	// }
-
-	public Duration getElapsedTime() {
-		return Duration.between(startTime, stopTime);//this.elapsedTime;
+	public Duration getTimeElapsed() {
+		return Duration.between(startTimestamp, stopTimestamp);
 	}
 
-	public Instant getStartTime() {
-		return this.startTime;
+	public Instant getStartTimestamp() {
+		return this.startTimestamp;
 	}
 
-	public Instant getStopTime() {
-		return this.stopTime;
+	public Instant getStopTimestamp() {
+		return this.stopTimestamp;
 	}
 
 	public static String csvHeader() {
 		return EnergySample
-				.csvHeader()
-					.replace (
-						"timestamp",
-						"elapsed_time" // @TODO: maybe set up a JNI route now that you have `energy_diff_csv_header` defined in the native code side?
-					);
+			.csvHeader()
+				.replace (
+					"timestamp",
+					"start_timestamp,time_elapsed" // @TODO: maybe set up a JNI route now that you have `energy_diff_csv_header` defined in the native code side?
+				);
 	}
 
 	@Override
 	public String csv() {
-		return super.csv() + (
-			/*(this.elapsedTime == null)
-				? ("null") // TODO ugh, do I really want null timestamps? i dont think that's necessary any more. it might be though
-				:*/ Long.toString (
-					Utils.durationToUsec(getElapsedTime())
-				)
-		);
+		return super.csv() + Long.toString(Utils.timestampToUsec(getStartTimestamp())) + "," + Long.toString(Utils.durationToUsec(getTimeElapsed()));
 	}
 
 	public static EnergyDiff between(EnergyStats before, EnergyStats after) {
@@ -65,18 +53,11 @@ public final class EnergyDiff extends EnergySample {
 				.subtractPrimitiveSamples (
 					after.getPrimitiveSample(),
 					before.getPrimitiveSample()
-			);
-		/*Duration elapsedTime = ( before.getTimestamp() == null || after.getTimestamp() == null )
-			? null // TODO ugh, do I really want null timestamps? i dont think that's necessary any more. it might be though
-			: Duration.between (
-				before.getTimestamp(),
-				after.getTimestamp()
-			);*/
+				);
 		return new EnergyDiff (
 			primitiveSample,
 			before.getTimestamp(),
 			after.getTimestamp()
-			//elapsedTime
 		);
 	}
 

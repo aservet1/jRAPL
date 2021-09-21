@@ -40,7 +40,7 @@ int main(int argc, const char* argv[])
 
 	int k = 7;
 	//energy_info_t* lastk = (energy_info_t*)malloc(sizeof(energy_info_t)*k);
-	energy_info_t lastk[k];
+	energy_measurement_t lastk[k];
 
 	printf("lastk pre-init: %p\n",lastk);
 	lastKSamples(k,m,lastk);
@@ -70,7 +70,7 @@ int main(int argc, const char* argv[])
 
 	// char csv_string[1024];
 	// int num_sockets = getSocketNum();
-	// energy_info_t stats[num_sockets];
+	// energy_stat_t stats[num_sockets];
 	// for (int x = 0; x < 10; x++) {
 	// 	sleep(1);
 	// 	EnergyStatCheck(stats);

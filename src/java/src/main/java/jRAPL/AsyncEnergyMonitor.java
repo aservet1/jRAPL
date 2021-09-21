@@ -62,7 +62,7 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	}
 
 	/** Last K timestamps */
-	//public abstract Instant[] getLastKTimestamps(int k);
+	//public abstract Instant[] getLastKTimestamps(int k); //TODO: go through github history for pre - September 21 if you want to replement and salvage the stuff you commented out or deleted for this functionality
 	/** Last K samples in raw string format */
 	public abstract String[] getLastKSamples(int k);
 	/** Last K samples as EnergyStats objects  */
@@ -79,14 +79,14 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 	// 	return samplesArray;
 	// }
-	/** Last K samples as primitive arrays of doubles. You can use this in conjunction with getLastKTimestamps() if you want parralell arrays. */
+	/** Last K samples as primitive arrays of doubles. */ // You can use this in conjunction with getLastKTimestamps() if you want parralell arrays.
 	public double[][] getLastKSamples_Arrays(int k) {
 		String[] strings = getLastKSamples(k);
 	
 		double[][] samplesArray = new double[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
 		for (int i = 0; i < strings.length; i++) {
 			String energyString = strings[i];
-			samplesArray[i] = stringToPrimitiveSample(energyString);
+			samplesArray[i] = diffStringToPrimitiveSample(energyString);
 		}
 
 		return samplesArray;

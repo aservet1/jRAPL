@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include "msr.h"
 #include "arch_spec.h"
 
 JNIEXPORT jstring JNICALL
@@ -29,6 +30,18 @@ JNIEXPORT jdouble JNICALL
 Java_jRAPL_NativeAccess_getWraparoundEnergy(JNIEnv* env, jclass jcls) {
 	int fd = open("/dev/cpu/0/msr",O_RDONLY);
 	double wraparound_energy = get_wraparound_energy(get_rapl_unit(fd).energy);
+	close(fd);
+	return wraparound_energy;
+}
+JNIEXPORT jdouble JNICALL
+Java_jRAPL_NativeAccess_getDramWraparoundEnergy(JNIEnv* env, jclass jcls) {
+	int fd = open("/dev/cpu/0/msr",O_RDONLY);
+	int microarch = get_micro_architecture();
+	double wraparound_energy = get_wraparound_energy (
+		(microarch == BROADWELL || microarch == BROADWELL2)
+			? BROADWELL_MSR_DRAM_ENERGY_UNIT
+			: get_rapl_unit(fd).energy
+	);
 	close(fd);
 	return wraparound_energy;
 }

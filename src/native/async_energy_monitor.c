@@ -44,7 +44,7 @@ newAsyncEnergyMonitor(int samplingRate, int storageType, size_t initialStorageSi
 	monitor->samplingRate = samplingRate;
 	monitor->storageType = storageType;
 	if (USING_DYNAMIC_ARRAY) {
-		monitor->samples_dynarr = newDynamicArray(initialStorageSize*getSocketNum()); // while the lists store items as individual energy_info_t objs, they're conceptually grouped as energy_info_t readings for all sockets. so an 'item' in the underlying data structure is one energy_info_t struct. but an 'item' from the perspective of the user is a list of energy_info_t structs, each pertaining to the readings of a given socket. the structs are stored in order, so the first one is for socket1, the second one is for socket2, etc.
+		monitor->samples_dynarr = newDynamicArray(initialStorageSize*getSocketNum()); // while the lists store items as individual energy_measurement_t objs, they're conceptually grouped as energy_measurement_t readings for all sockets. so an 'item' in the underlying data structure is one energy_measurement_t struct. but an 'item' from the perspective of the user is a list of energy_measurement_t structs, each pertaining to the readings of a given socket. the structs are stored in order, so the first one is for socket1, the second one is for socket2, etc.
 		monitor->samples_linklist = NULL;
 	}
 	if (USING_LINKED_LIST) {
@@ -69,11 +69,11 @@ freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor) {
 }
 
 static void
-storeEnergySample(AsyncEnergyMonitor *monitor, energy_info_t stats) {
+storeEnergyMeasurement(AsyncEnergyMonitor *monitor, energy_measurement_t energy_measurement) {
 	if (USING_DYNAMIC_ARRAY)
-		addItem_DynamicArray(monitor->samples_dynarr, stats);
+		addItem_DynamicArray(monitor->samples_dynarr, energy_measurement);
 	else if (USING_LINKED_LIST)
-		addItem_LinkedList(monitor->samples_linklist, stats);
+		addItem_LinkedList(monitor->samples_linklist, energy_measurement);
 }
 
 void*
@@ -81,17 +81,17 @@ run(void* monitor_arg) {
 	AsyncEnergyMonitor* monitor = (AsyncEnergyMonitor*)monitor_arg;
 
 	int sockets = getSocketNum();
-	energy_info_t before[sockets];
-	energy_info_t  after[sockets];
+	energy_stat_t before[sockets];
+	energy_stat_t  after[sockets];
 
 	EnergyStatCheck(before);
 	while (!monitor->exit) {
 		sleep_millisecond(monitor->samplingRate);
 		EnergyStatCheck(after);
 		for (int i = 0; i < sockets; i++) {
-			storeEnergySample (
+			storeEnergyMeasurement (
 				monitor,
-				subtract_energy_stat ( after[i], before[i] )
+				measure_energy_between_stat_check ( before[i], after[i] )
 			);
 			before[i] = after[i];
 		}
@@ -136,9 +136,9 @@ writeFileCSV(AsyncEnergyMonitor *monitor, const char* filepath) {
 		exit(1);
 	}
 	char csv_header[512];
-	energy_diff_csv_header(csv_header);
+	energy_measurement_csv_header(csv_header);
 	fprintf(outfile,"%s\n",csv_header);
-	
+
 	if (USING_DYNAMIC_ARRAY) writeFileCSV_DynamicArray(outfile, monitor->samples_dynarr);
 	if (USING_LINKED_LIST)   writeFileCSV_LinkedList(outfile, monitor->samples_linklist);
 
@@ -155,7 +155,7 @@ writeFileCSV(AsyncEnergyMonitor *monitor, const char* filepath) {
 //  note here until you find out what's going on / how to prevent the issue
 //  from happening
 void
-lastKSamples(int k, AsyncEnergyMonitor* monitor, energy_info_t* return_buffer) {
+lastKSamples(int k, AsyncEnergyMonitor* monitor, energy_measurement_t* return_buffer) {
 
 	int nItems = (
 		(USING_DYNAMIC_ARRAY) ?

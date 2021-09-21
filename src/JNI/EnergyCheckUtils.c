@@ -15,8 +15,6 @@
 
 #include "JNIFunctionDeclarations.h"
 
-// #define MSR_DRAM_ENERGY_UNIT 0.000015 // this one is not necessary to define in this file scope, is it?
-
 static uint64_t num_sockets;
 static int power_domains_supported; // this variable is not necessary to store in this file scope, or is it?
 
@@ -29,11 +27,11 @@ Java_jRAPL_NativeAccess_profileInit(JNIEnv *env, jclass jcls) {
 
 JNIEXPORT jstring JNICALL
 Java_jRAPL_NativeAccess_energyStatCheck(JNIEnv *env, jclass jcls) {
-	char ener_info[512];
-	energy_info_t stats_per_socket[num_sockets];
-	EnergyStatCheck(stats_per_socket);
-	energy_info_csv_string(stats_per_socket, ener_info);
-	return (*env)->NewStringUTF(env, ener_info);
+	char energy_str[512];
+	energy_stat_t energy_stat_per_socket[num_sockets];
+	EnergyStatCheck(energy_stat_per_socket);
+	energy_stat_csv_string(energy_stat_per_socket, energy_str);
+	return (*env)->NewStringUTF(env, energy_str);
 }
 
 JNIEXPORT void JNICALL
