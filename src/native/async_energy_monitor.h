@@ -28,7 +28,7 @@ void start(AsyncEnergyMonitor *monitor);
 void stop(AsyncEnergyMonitor *monitor);
 void freeAsyncEnergyMonitor(AsyncEnergyMonitor* monitor);
 void writeFileCSV(AsyncEnergyMonitor *monitor, const char* filepath);
-void lastKSamples(int k, AsyncEnergyMonitor* monitor, EnergyStats return_array[k]);
+void lastKSamples(int k, AsyncEnergyMonitor* monitor, energy_info_t return_array[k]);
 void reset(AsyncEnergyMonitor* monitor);
 int getNumSamples(AsyncEnergyMonitor* monitor);
 void setSamplingRate(AsyncEnergyMonitor* monitor, int s);

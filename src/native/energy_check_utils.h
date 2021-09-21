@@ -9,16 +9,17 @@ typedef struct {
 	float gpu; //pp1
 	float core;//pp0
 	float pkg;
-	unsigned long timestamp;
-} EnergyStats;
+	unsigned long time;
+} energy_info_t;
 
 void ProfileInit();
-void EnergyStatCheck(EnergyStats stats_per_socket[]);
+void EnergyStatCheck(energy_info_t stats_per_socket[]);
 void ProfileDealloc();
 int* get_msr_fds();
 
-EnergyStats energy_stats_subtract(EnergyStats a, EnergyStats b);
-void energy_stats_csv_header(char* csv_header);
-void energy_stats_csv_string(EnergyStats estats[], char* csv_string);
+void energy_stat_csv_header(char* csv_header);
+void energy_diff_csv_header(char* csv_header);
+void energy_stat_csv_string(energy_info_t estats[], char* csv_string);
+energy_info_t subtract_energy_stat(energy_info_t a, energy_info_t b);
 
 #endif //ENERGY_CHECK_UTILS_H

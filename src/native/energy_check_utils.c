@@ -90,60 +90,80 @@ ProfileDealloc() {
 }
 
 void
-EnergyStatCheck(EnergyStats stats_per_socket[num_sockets]) {
+EnergyStatCheck(energy_info_t energy_stat_per_socket[num_sockets]) {
 	switch(power_domains_supported) {
 		case DRAM_GPU_CORE_PKG:
 			for (int i = 0; i < num_sockets; i++) {
-				stats_per_socket[i].dram = read_dram(i);
-				stats_per_socket[i].gpu = read_gpu(i);
-				stats_per_socket[i].core = read_core(i);
-				stats_per_socket[i].pkg = read_pkg(i);
-				stats_per_socket[i].timestamp = usec_since_epoch();
+				energy_stat_per_socket[i].time = usec_since_epoch();
+				energy_stat_per_socket[i].dram = read_dram(i);
+				energy_stat_per_socket[i].core = read_core(i);
+				energy_stat_per_socket[i].gpu  = read_gpu(i);
+				energy_stat_per_socket[i].pkg  = read_pkg(i);
 			} return;
-
 		case DRAM_CORE_PKG:
 			for (int i = 0; i < num_sockets; i++) {
-				stats_per_socket[i].dram = read_dram(i);
-				stats_per_socket[i].gpu = -1;
-				stats_per_socket[i].core = read_core(i);
-				stats_per_socket[i].pkg = read_pkg(i);
-				stats_per_socket[i].timestamp = usec_since_epoch();
+				energy_stat_per_socket[i].time = usec_since_epoch();
+				energy_stat_per_socket[i].dram = read_dram(i);
+				energy_stat_per_socket[i].core = read_core(i);
+				energy_stat_per_socket[i].pkg  = read_pkg(i);
+				energy_stat_per_socket[i].gpu  = -1;
 			} return;
-
 		case GPU_CORE_PKG:
 			for (int i = 0; i < num_sockets; i++) {
-				stats_per_socket[i].dram = -1;
-				stats_per_socket[i].gpu = read_gpu(i);
-				stats_per_socket[i].core = read_core(i);
-				stats_per_socket[i].pkg = read_pkg(i);
-				stats_per_socket[i].timestamp = usec_since_epoch();
+				energy_stat_per_socket[i].time = usec_since_epoch();
+				energy_stat_per_socket[i].dram = -1;
+				energy_stat_per_socket[i].core = read_core(i);
+				energy_stat_per_socket[i].pkg  = read_pkg(i);
+				energy_stat_per_socket[i].gpu  = read_gpu(i);
 			} return;
-
 		case UNDEFINED_ARCHITECTURE:
 			fprintf(stderr,"ERROR: MicroArchitecture not supported: %X\n", micro_architecture);
 			for (int i = 0; i < num_sockets; i++) {
-				stats_per_socket[i].dram = -1;
-				stats_per_socket[i].gpu = -1;
-				stats_per_socket[i].core = -1;
-				stats_per_socket[i].pkg = -1;
-				stats_per_socket[i].timestamp = usec_since_epoch();
+				energy_stat_per_socket[i].time = usec_since_epoch();
+				energy_stat_per_socket[i].dram = -1;
+				energy_stat_per_socket[i].core = -1;
+				energy_stat_per_socket[i].pkg  = -1;
+				energy_stat_per_socket[i].gpu  = -1;
 			} return;
 	}
 }
 
-EnergyStats
-energy_stats_subtract(EnergyStats x, EnergyStats y) {
-	EnergyStats diff; //@TODO -- implement the wraparound for negative values
-	diff.dram = (x.dram != -1 && y.dram != -1) ? x.dram - y.dram : -1;
-	diff.core = (x.core != -1 && y.core != -1) ? x.core - y.core : -1;
-	diff.gpu  = (x.gpu  != -1 && y.gpu  != -1) ? x.gpu  - y.gpu  : -1;
-	diff.pkg  = (x.pkg  != -1 && y.pkg  != -1) ? x.pkg  - y.pkg  : -1;
-	diff.timestamp = x.timestamp - y.timestamp;	
+energy_info_t
+subtract_energy_stat(energy_info_t a, energy_info_t b) {
+	assert(wraparound_energy != -1);
+
+	energy_info_t diff;
+	diff.dram = -1; diff.core = -1; diff.gpu = -1; diff.pkg  = -1;
+
+	if (a.dram != -1 && b.dram != -1) {
+		diff.dram = a.dram - b.dram;
+		if (diff.dram < 0) {
+			diff.dram += wraparound_energy;
+		}
+	} if (a.core != -1 && b.core != -1) {
+		diff.core = a.core - b.core;
+		if (diff.core < 0) {
+			diff.core += wraparound_energy;
+		}
+	} if (a.gpu != -1 && b.gpu != -1) {
+		diff.gpu  = a.gpu  - b.gpu;
+		if (diff.gpu < 0) {
+			diff.gpu += wraparound_energy;
+		}
+	} if (a.pkg != -1 && b.pkg != -1) {
+		diff.pkg  = a.pkg  - b.pkg;
+		if (diff.pkg < 0) {
+			diff.pkg += wraparound_energy;
+		}
+	}
+
+	diff.time =  a.time - b.time;
+
 	return diff;
 }
 
-void
-energy_stats_csv_header(char csv_header[512]) { 
+static void
+energy_info_csv_header(char csv_header[512], char* time_value_column_label) { 
 	int offset = 0;
 	const char* format;
 	switch(power_domains_supported) {
@@ -151,59 +171,58 @@ energy_stats_csv_header(char csv_header[512]) {
 			format = "dram_socket%d,gpu_socket%d,core_socket%d,pkg_socket%d,";
 			for (int s = 1; s <= num_sockets; s++)
 				offset += sprintf(csv_header + offset, format, s,s,s,s);
-			sprintf(csv_header + offset, "timestamp");
+			sprintf(csv_header + offset, "%s", time_value_column_label);
 			return;
-
 		case DRAM_CORE_PKG:
 			format = "dram_socket%d,core_socket%d,pkg_socket%d,";
 			for (int s = 1; s <= num_sockets; s++)
 				offset += sprintf(csv_header + offset, format, s,s,s);
-			sprintf(csv_header + offset, "timestamp");
+			sprintf(csv_header + offset, "%s", time_value_column_label);
 			return;
-
 		case GPU_CORE_PKG:
 			format = "gpu_socket_%d,core_socket%d,pkg_socket%d,";
 			for (int s = 1; s <= num_sockets; s++)
 				offset += sprintf(csv_header + offset, format, s,s,s);
-			sprintf(csv_header + offset, "timestamp");
+			sprintf(csv_header + offset, "%s", time_value_column_label);
 			return;
-
 		default:
 			sprintf(csv_header, "undefined_architecture");
 			return;
 	}
 }
+void energy_diff_csv_header(char csv_header[512]) { energy_info_csv_header(csv_header, "elapsed_time"); }
+void energy_stat_csv_header(char csv_header[512]) { energy_info_csv_header(csv_header,  "timestamp" );  }
 
 void
-energy_stats_csv_string(EnergyStats estats[], char* csv_string) {
+energy_stat_csv_string(energy_info_t energy_stat_per_socket[], char* csv_string) {
 	int offset = 0;
 	for (int i = 0; i < num_sockets; i++) {
 		switch (power_domains_supported) {
 			case DRAM_GPU_CORE_PKG:
 				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,%.6f,",
-					estats[i].dram,
-					estats[i].gpu,
-					estats[i].core,
-					estats[i].pkg
+					energy_stat_per_socket[i].dram,
+					energy_stat_per_socket[i].gpu,
+					energy_stat_per_socket[i].core,
+					energy_stat_per_socket[i].pkg
 				);
 				break;
 			case GPU_CORE_PKG:
 				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,",
-					estats[i].gpu,
-					estats[i].core,
-					estats[i].pkg
+					energy_stat_per_socket[i].gpu,
+					energy_stat_per_socket[i].core,
+					energy_stat_per_socket[i].pkg
 				);
 				break;
 			case DRAM_CORE_PKG:
 				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,",
-					estats[i].dram,
-					estats[i].core,
-					estats[i].pkg
+					energy_stat_per_socket[i].dram,
+					energy_stat_per_socket[i].core,
+					energy_stat_per_socket[i].pkg
 				);
 				break;
 			default:
 				assert(0 && "error occurred in energy_stats_csv_string");
 		}
 	}
-	sprintf(csv_string+offset, "%ld", estats[0].timestamp);
+	sprintf(csv_string+offset, "%ld", energy_stat_per_socket[0].time);
 }

@@ -30,9 +30,9 @@ Java_jRAPL_NativeAccess_profileInit(JNIEnv *env, jclass jcls) {
 JNIEXPORT jstring JNICALL
 Java_jRAPL_NativeAccess_energyStatCheck(JNIEnv *env, jclass jcls) {
 	char ener_info[512];
-	EnergyStats stats_per_socket[num_sockets];
+	energy_info_t stats_per_socket[num_sockets];
 	EnergyStatCheck(stats_per_socket);
-	energy_stats_csv_string(stats_per_socket, ener_info);
+	energy_stat_csv_string(stats_per_socket, ener_info);
 	return (*env)->NewStringUTF(env, ener_info);
 }
 
@@ -44,6 +44,6 @@ Java_jRAPL_NativeAccess_profileDealloc(JNIEnv * env, jclass jcls) {
 JNIEXPORT jstring JNICALL
 Java_jRAPL_EnergySample_csvHeader(JNIEnv * env, jclass jcls) {
 	char header[512];
-	energy_stats_csv_header(header);
+	energy_stat_csv_header(header);
  	return (*env)->NewStringUTF(env, header);	
 }

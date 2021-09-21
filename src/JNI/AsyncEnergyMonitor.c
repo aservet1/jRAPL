@@ -53,21 +53,21 @@ Java_jRAPL_NativeAccess_getLastKSamplesMonitor(JNIEnv* env, jclass jcls, int k) 
 
 	k *= num_sockets;
 
-	EnergyStats samples[k];
+	energy_info_t samples[k];
 	lastKSamples(k, monitor, samples);
 
 	char sample_strings[512*k];
 	bzero(sample_strings, 512*k);
 
 	char csv_string[512];
-	EnergyStats multisocket_sample_buffer[num_sockets];
+	energy_info_t multisocket_sample_buffer[num_sockets];
 
 	int offset = 0;
 	for (int i = 0; i < k; i+=num_sockets) {
 
 		for (int j = 0; j < num_sockets; j++)
 			multisocket_sample_buffer[j] = samples[i+j];
-		energy_stats_csv_string(multisocket_sample_buffer, csv_string);
+		energy_stat_csv_string(multisocket_sample_buffer, csv_string);
 
 		offset += sprintf(sample_strings + offset, "%s_", csv_string);
 
@@ -77,11 +77,11 @@ Java_jRAPL_NativeAccess_getLastKSamplesMonitor(JNIEnv* env, jclass jcls, int k) 
 
 JNIEXPORT jlongArray JNICALL
 Java_jRAPL_NativeAccess_getLastKTimestampsMonitor(JNIEnv* env, jclass jcls, int k) {
-	EnergyStats samples[k];
+	energy_info_t samples[k];
 	lastKSamples(k, monitor, samples);
 
 	long fill[k];
-	for (int i = 0; i < k; i++) fill[i] = samples[i].timestamp;
+	for (int i = 0; i < k; i++) fill[i] = samples[i].time;
 
 	int size = k;
 	jlongArray result = (*env)->NewLongArray(env, size);

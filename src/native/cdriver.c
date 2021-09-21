@@ -39,8 +39,8 @@ int main(int argc, const char* argv[])
 	writeFileCSV(m,NULL);
 
 	int k = 7;
-	//EnergyStats* lastk = (EnergyStats*)malloc(sizeof(EnergyStats)*k);
-	EnergyStats lastk[k];
+	//energy_info_t* lastk = (energy_info_t*)malloc(sizeof(energy_info_t)*k);
+	energy_info_t lastk[k];
 
 	printf("lastk pre-init: %p\n",lastk);
 	lastKSamples(k,m,lastk);
@@ -49,7 +49,7 @@ int main(int argc, const char* argv[])
 	printf(":)\n --\n");
 	char csv_string_buffer[512];
 	int num_sockets = getSocketNum();
-	EnergyStats multisocket_sample_buffer[num_sockets];
+	energy_info_t multisocket_sample_buffer[num_sockets];
 	for (int i = 0; i < k; i+=num_sockets) {
 		for (int j = 0; j < num_sockets; j++) {
 			multisocket_sample_buffer[j] = lastk[i+j];
@@ -70,12 +70,12 @@ int main(int argc, const char* argv[])
 
 	// char csv_string[1024];
 	// int num_sockets = getSocketNum();
-	// EnergyStats stats[num_sockets];
+	// energy_info_t stats[num_sockets];
 	// for (int x = 0; x < 10; x++) {
 	// 	sleep(1);
 	// 	EnergyStatCheck(stats);
 	// 	for (int i = 0; i < num_sockets; i++) {
-	// 		EnergyStats e = stats[i];
+	// 		energy_info_t e = stats[i];
 	// 		energy_stats_csv_string(e, csv_string);
 	// 		printf("%s\n", csv_string);
 	// 	}
