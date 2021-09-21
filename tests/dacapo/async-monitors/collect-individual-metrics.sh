@@ -6,9 +6,9 @@ function echo_eval() {
 
 set -e
 
+systems='SystemA SystemB'
 metrics='sample-count sample-interval memory-footprint energy-per-sample power-per-sample'
 samplingrates='1 2 4 8'
-systems='SystemA SystemB'
 
 for sys in $systems
 do
