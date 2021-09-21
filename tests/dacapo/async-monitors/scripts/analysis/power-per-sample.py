@@ -52,24 +52,80 @@ def get_overall():
     c_ll_data = data['c-linklist']    [0]['time-energy']['power-per-sample']
     c_da_data = data['c-dynamicarray'][0]['time-energy']['power-per-sample']
 
-    result = {}
+    result = {
+        'per-socket': {},
+        'combined-socket': {}
+    }
 
-    power_domains = sorted(data['java'][0]['time-energy']['power-per-sample'].keys()) # ['java'] and [0] are arbirary keys, powdomain will be the same list regardless
-    for powd in power_domains:
-        
-        result[powd]                   = {}
-        result[powd]['java']           = {}
-        result[powd]['c-linklist']     = {}
-        result[powd]['c-dynamicarray'] = {}
+    power_domains = sorted (
+        data['java'][0]['time-energy']['power-per-sample'].keys()
+    ) # ['java'] and [0] are arbirary keys, powder_domains will be the same list regardless
 
-        result[powd]['java']          ['avg']   = java_data[powd]['avg']
-        result[powd]['c-linklist']    ['avg']   = c_ll_data[powd]['avg']
-        result[powd]['c-dynamicarray']['avg']   = c_da_data[powd]['avg']
+    for powd in [p for p in power_domains if '_socket' in p]:
+        result['per-socket'][powd] = {
+            "java": {
+                "avg"  :  java_data[powd]['avg'],
+                "stdev":  java_data[powd]['stdev']
+            },
+            "c-linklist": {
+                "avg"  :  c_ll_data[powd]['avg'],
+                "stdev":  c_ll_data[powd]['stdev']
+            },
+            "c-dynamicarray": {
+                "avg"  :  c_da_data[powd]['avg'],
+                "stdev":  c_da_data[powd]['stdev']
+            }
+        }
+    # for powd in [p for p in power_domains if not '_socket' in p]:
+    #     result['combined-socket'][powd] = {
+    #         "java": {
+    #             "avg"  :  java_data[powd]['avg'],
+    #             "stdev":  java_data[powd]['stdev']
+    #         },
+    #         "c-linklist": {
+    #             "avg"  :  c_ll_data[powd]['avg'],
+    #             "stdev":  c_ll_data[powd]['stdev']
+    #         },
+    #         "c-dynamicarray": {
+    #             "avg"  :  c_da_data[powd]['avg'],
+    #             "stdev":  c_da_data[powd]['stdev']
+    #         }
+    #     }
+    # just hardcoding dram and pkg, dont need to make this code more dynamic than necessary
+    result['combined-socket'] = {
+        "java": {
+            "avg"  :  {
+                "dram": java_data["dram"]['avg'],
+                "pkg": java_data["pkg"]['avg']
+            },
+            "stdev":  {
+                "dram": java_data["dram"]['stdev'],
+                "pkg": java_data["pkg"]['stdev']
+            }
+        },
+        "c-linklist": {
+            "avg"  :  {
+                "dram": c_ll_data["dram"]['avg'],
+                "pkg" : c_ll_data["pkg"]['avg']
+            },
+            "stdev":  {
+                "dram": c_ll_data["dram"]['stdev'],
+                "pkg" : c_ll_data["pkg"]['stdev']
+            }
+        },
+        "c-dynamicarray": {
+            "avg"  :  {
+                "dram": c_da_data["dram"]['avg'],
+                "pkg" : c_da_data["pkg"]['avg']
+            },
+            "stdev":  {
+                "dram": c_da_data["dram"]['stdev'],
+                "pkg" : c_da_data["pkg"]['stdev']
+            }
+        }
+    }
 
-        result[powd]['java']          ['stdev'] = java_data[powd]['stdev']
-        result[powd]['c-linklist']    ['stdev'] = c_ll_data[powd]['stdev']
-        result[powd]['c-dynamicarray']['stdev'] = c_da_data[powd]['stdev']
-    
+
     return result
 
 '''------------------------------------------------------------------------------------'''
@@ -82,9 +138,9 @@ results = {}
 results['overall']  = get_overall ()
 results['perbench'] = get_perbench()
 
-results['plotinfo'] = {}
-results['plotinfo']['perbench'] = { 'filename': 'power-per-sample_perbench', 'xlabel': 'Average Power Per Sample (joules)' } 
-results['plotinfo']['overall']  = { 'filename': 'power-per-sample_overall' , 'ylabel': 'Average Power Per Sample (joules)' } 
+# results['plotinfo'] = {}
+# results['plotinfo']['perbench'] = { 'filename': 'power-per-sample_perbench', 'xlabel': 'Average Power Per Sample (joules)' } 
+# results['plotinfo']['overall']  = { 'filename': 'power-per-sample_overall' , 'ylabel': 'Average Power Per Sample (joules)' } 
 
 with open(outputfile,'w') as fd:
     json.dump(results, fd)

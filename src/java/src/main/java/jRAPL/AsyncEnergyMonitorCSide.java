@@ -84,15 +84,6 @@ public class AsyncEnergyMonitorCSide extends AsyncEnergyMonitor
 	} // this is a potential time and memory overhead hazard
 
 	@Override
-	public Instant[] getLastKTimestamps(int k) {
-		long[] usecValues = NativeAccess.getLastKTimestampsMonitor(k);
-		Instant[] instantValues = new Instant[usecValues.length];
-		for (int i = 0; i < usecValues.length; i++)
-			instantValues[i] = Utils.usecToInstant(usecValues[i]);
-		return instantValues;
-	}
-
-	@Override
 	public int getNumSamples() {
 		return NativeAccess.getNumSamplesMonitor();
 	}

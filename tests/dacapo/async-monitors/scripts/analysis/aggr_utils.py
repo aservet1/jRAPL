@@ -26,10 +26,10 @@ def aggr_mean(sample_sizes, averages):
 
 def aggregate_memory_stats(memory_data):
     mem_stats = {}
-    sample_sizes = [dat['num_samples'] for dat in memory_data]
+    sample_sizes = [dat['numSamples'] for dat in memory_data]
     mem_stats['avg']   = aggr_mean (sample_sizes , [dat['avg'] for dat in memory_data])
     mem_stats['stdev'] = propagate_uncertainty_through_average(sample_sizes, [dat['stdev'] for dat in memory_data])
-    mem_stats['numSamples'] = statistics.mean([ dat['num_samples'] for dat in memory_data ]) #TODO we want {avg:..., stdev:...}. don't we?
+    mem_stats['numSamples'] = statistics.mean([ dat['numSamples'] for dat in memory_data ]) #TODO we want {avg:..., stdev:...}. don't we?
 
     ##.#.## -- Do not delete these! We will probably end up not includling these metrics, but we might!! Do not delete them unless they are confirmed useless!
     ##.#.## mem_stats['global_min'] = min( [ dat['min'] for dat in memory_data] )
@@ -49,14 +49,14 @@ def aggregate_memory_stats(memory_data):
 """
 def general_aggregate(data):
 	res = {}
-	if sorted(list(data[0].keys())) != sorted(['avg','num_samples','stdev']):
+	if sorted(list(data[0].keys())) != sorted(['avg','numSamples','stdev']):
 		for k in data[0].keys():
 			res[k] = general_aggregate( [ d[k] for d in data ] )
 	else: # at the leaves
-		sample_sizes = [ d['num_samples'] for d in data ]
+		sample_sizes = [ d['numSamples'] for d in data ]
 		res['avg'] = aggr_mean(sample_sizes,  [d['avg'] for d in data ])
 		res['stdev'] = propagate_uncertainty_through_average( sample_sizes, [ d['stdev'] for d in data ] )
-		res['num_samples'] = statistics.mean( [ d['num_samples'] for d in data ] )
+		res['numSamples'] = statistics.mean( [ d['numSamples'] for d in data ] )
 
 	return res
 
@@ -84,10 +84,13 @@ def division_propagate_uncertainty(sda, sdb, a, b, covariance = 0): # assume cov
 			2*(covariance/(a*b))
         )
     )
+''' https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae '''
+def divide_by_constant_propagate_uncertainty(s, C):
+    return s / abs( C )
 
 ''' https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae '''
 def multiply_by_constant_propagate_uncertainty(s, C):
-	return math.abs ( C ) * s
+	return s * abs( C )
 
 ''' https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae '''
 def propagate_uncertainty_through_average(sample_sizes, stdevs): # assumed no covariance because yikes not gonna deal with that logic

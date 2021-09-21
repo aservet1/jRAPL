@@ -56,7 +56,7 @@ JNIEXPORT void JNICALL Java_jRAPL_RuntimeTestUtils_energyStatCheckNoReturnValue(
 }
 JNIEXPORT jlong JNICALL Java_jRAPL_RuntimeTestUtils_energyStatCheckPureC(JNIEnv* env, jclass jcls) {
 	STARTSTAMP;
-	EnergyStats stats[num_sockets];
+	energy_stat_t stats[num_sockets];
 	EnergyStatCheck(stats);
 	STOPSTAMP;
 	return DIFF_USEC;

@@ -7,12 +7,12 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from sys import argv
 
-from myutil import parse_cmdline_args
+from common import parse_cmdline_args
 
 result_dir, data_files = parse_cmdline_args(argv)
 
 fds  = [ open(df) for df in data_files ]
-data = [ json.load(fd)['overall'] for fd in fds ]
+data = [ json.load(fd)['overall']['power-per-socket'] for fd in fds ]
 fds  = [ fd.close() for fd in fds ]
 
 # power_domains = sorted(data[0].keys())
@@ -44,12 +44,12 @@ for row, subfig in enumerate(subfigs):
         java_std = data[row][powd][     'java'     ]['stdev']
         c_ll_std = data[row][powd][  'c-linklist'  ]['stdev']
         c_da_std = data[row][powd]['c-dynamicarray']['stdev']
-        labels   = ['J', 'C-L', 'C-D']
+        
         ax.bar (
             x           =  [0,1,2],
             height      =  [java_avg, c_ll_avg, c_da_avg],
             yerr        =  [java_std, c_ll_std, c_da_std],
-            tick_label  =  labels,
+            tick_label  =  ['J'     , 'C-L'   , 'C-D'   ],
             #capsize     =  1,
             color       = 'gold',
             edgecolor   = 'black',
@@ -61,5 +61,5 @@ fig.supxlabel('Monitor Type')
 fig.supylabel('Average Energy Per Sample (joules)')
 
 # plt.show()
-fig.savefig(os.path.join(result_dir, 'energy-per-sample'))
+fig.savefig(os.path.join(result_dir, 'power-per-sample'))
 print(" <.> done making the overall average graph")

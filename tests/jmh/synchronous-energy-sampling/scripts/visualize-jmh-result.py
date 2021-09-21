@@ -31,7 +31,13 @@ except:
     exit(2)
 
 system_names = ['System A', 'System B']
-fig, axs = plt.subplots(nrows=1, ncols=len(system_names))
+fig, axs = plt.subplots (
+	nrows=1,
+	ncols=len(system_names),
+	sharey=True,
+	figsize=(8,4),
+	constrained_layout=True
+)
 for i,jmh_result in enumerate(jmh_results):
     print(jmh_result)
     with open(jmh_result) as f:
@@ -48,10 +54,9 @@ for i,jmh_result in enumerate(jmh_results):
     errors  =  []; # not standard deviation. not sure what the error is
 
     for name in data:
-        if name.startswith('time'):
-            labels.append(name.replace('time','',1))
-        else:
-            labels.append(name)
+
+        labels.append(name.replace('time','',1).replace('Get','',1))
+
         means .append( data[name]['primaryMetric']['score'     ] )
         errors.append( data[name]['primaryMetric']['scoreError'] )
         unit  .append( data[name]['primaryMetric']['scoreUnit' ] )
@@ -81,9 +86,9 @@ for i,jmh_result in enumerate(jmh_results):
     );
 
     ax.set_title(system_names[i])
-    ax.set_ylabel('Average Runtime ({})'.format(unit))
-    ax.set_xlabel('Sampling Version')
-    # plt.title('average sample runtime'.title())
 
-plt.show()
-fig.savefig(os.path.join(result_dir,'sync-samples-runtime'))
+fig.supylabel('Average Runtime ({})'.format(unit))
+fig.supxlabel('Sampling Version')
+# plt.title('average sample runtime'.title())
+
+fig.savefig(os.path.join(result_dir,'sync-samples-runtime_compound'))

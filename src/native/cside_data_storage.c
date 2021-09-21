@@ -10,7 +10,7 @@ DynamicArray* newDynamicArray(size_t capacity) {
 	DynamicArray* list = (DynamicArray*)malloc(sizeof(DynamicArray));
 	list->capacity = capacity;
 	list->nItems = 0;
-	list->items = (EnergyStats*)malloc(sizeof(EnergyStats)*capacity);
+	list->items = (energy_measurement_t*)malloc(sizeof(energy_measurement_t)*capacity);
 	return list;
 }
 
@@ -25,7 +25,7 @@ LinkNode*
 newLinkNode(size_t capacity) {
 	LinkNode* node = malloc(sizeof(LinkNode));
 	node->next = NULL;
-	node->items = (EnergyStats*)malloc(sizeof(EnergyStats)*capacity);
+	node->items = (energy_measurement_t*)malloc(sizeof(energy_measurement_t)*capacity);
 	return node;
 }
 
@@ -62,7 +62,7 @@ freeLinkedList(LinkedList* l) {
 }
 
 void
-addItem_LinkedList(LinkedList* l, EnergyStats stats) { // add to tail
+addItem_LinkedList(LinkedList* l, energy_measurement_t stats) { // add to tail
 	if (l->nItemsAtTail == l->node_capacity) {
 		l->tail->next = newLinkNode(l->node_capacity);
 		l->tail = l->tail->next;
@@ -72,10 +72,10 @@ addItem_LinkedList(LinkedList* l, EnergyStats stats) { // add to tail
 	l->nItems++;
 }
 
-void addItem_DynamicArray(DynamicArray* a, EnergyStats stats) {
+void addItem_DynamicArray(DynamicArray* a, energy_measurement_t stats) {
 	if (a->nItems >= a->capacity) {
 		a->capacity *= 2;
-		a->items = realloc(a->items, a->capacity*sizeof(EnergyStats));
+		a->items = realloc(a->items, a->capacity*sizeof(energy_measurement_t));
 		assert(a->items != NULL);
 	}
 	a->items[a->nItems++] = stats;
@@ -84,13 +84,11 @@ void addItem_DynamicArray(DynamicArray* a, EnergyStats stats) {
 void
 writeFileCSV_DynamicArray(FILE* outfile, DynamicArray* a) {
 	int num_sockets = getSocketNum();
-	EnergyStats multisocket_sample_buffer[num_sockets];
+	energy_measurement_t energy_measurement_per_socket[num_sockets];
 	char csv_line_buffer[512];
 	for (int i = 0; i < a->nItems; i+= num_sockets) {
-		for (int j = 0; j < num_sockets; j++) {
-			multisocket_sample_buffer[j] = a->items[i+j];
-		}
-		energy_stats_csv_string(multisocket_sample_buffer, csv_line_buffer);
+		for (int j = 0; j < num_sockets; j++) { energy_measurement_per_socket[j] = a->items[i+j]; }
+		energy_measurement_csv_string(energy_measurement_per_socket, csv_line_buffer);
 		fprintf(outfile,"%s\n",csv_line_buffer);
 	}
 }
@@ -100,7 +98,7 @@ writeFileCSV_LinkedList(FILE* outfile, LinkedList* l) {
 	int local_index = 0;
 	char csv_line_buffer[512];
 	int num_sockets = getSocketNum();
-	EnergyStats multisocket_sample_buffer[num_sockets];
+	energy_measurement_t energy_measurement_per_socket[num_sockets];
 
 	LinkNode* current = l->head;
 	for (int global_index = 0; global_index < l->nItems; global_index+=num_sockets) {
@@ -110,10 +108,9 @@ writeFileCSV_LinkedList(FILE* outfile, LinkedList* l) {
 			current = current->next; // fprintf(outfile," --\n"); // delimits between the contents of each node (useful to uncomment for debugging)
 		}
 
-		for (int j = 0; j < num_sockets; j++)
-			multisocket_sample_buffer[j] = current->items[local_index+j];
+		for (int j = 0; j < num_sockets; j++) { energy_measurement_per_socket[j] = current->items[local_index+j]; }
 
-		energy_stats_csv_string(multisocket_sample_buffer, csv_line_buffer);
+		energy_measurement_csv_string(energy_measurement_per_socket, csv_line_buffer);
 		fprintf(outfile,"%s\n", csv_line_buffer);
 	}
 }

@@ -20,7 +20,7 @@ public class SyncEnergyMonitor extends EnergyMonitor {
 	}
 
 	public double[] getPrimitiveSample() {
-		return stringToPrimitiveSample (
+		return statStringToPrimitiveSample (
 			NativeAccess.energyStatCheck()
 		);
 	}

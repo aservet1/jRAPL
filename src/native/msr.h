@@ -10,6 +10,10 @@
  */
 #define MSR_RAPL_POWER_UNIT				0x606
 
+
+#define BROADWELL_MSR_DRAM_ENERGY_UNIT 0.000015
+
+
 /**Energy measurement**/
 #define MSR_PP0_ENERGY_STATUS			0x639 //read to core_buffer[i] in EnergyCheckUtils.c
 #define MSR_PP1_ENERGY_STATUS     0x641 //read to gpu_buffer[i] in EnergyCheckUtils.c

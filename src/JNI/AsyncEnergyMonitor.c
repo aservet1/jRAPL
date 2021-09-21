@@ -46,49 +46,46 @@ Java_jRAPL_NativeAccess_writeFileCSVMonitor(JNIEnv* env, jclass jcls, jstring js
 
 JNIEXPORT jstring JNICALL
 Java_jRAPL_NativeAccess_getLastKSamplesMonitor(JNIEnv* env, jclass jcls, int k) {
-	if (monitor->samples_dynarr) assert( k <= monitor->samples_dynarr->nItems );
+	if (monitor->samples_dynarr)   assert( k <= monitor->samples_dynarr->nItems );
 	if (monitor->samples_linklist) assert( k <= monitor->samples_linklist->nItems );
 
 	size_t num_sockets = getSocketNum();
 
 	k *= num_sockets;
 
-	EnergyStats samples[k];
+	energy_measurement_t samples[k];
 	lastKSamples(k, monitor, samples);
 
 	char sample_strings[512*k];
 	bzero(sample_strings, 512*k);
 
 	char csv_string[512];
-	EnergyStats multisocket_sample_buffer[num_sockets];
+	energy_measurement_t energy_measurement_per_socket[num_sockets];
 
 	int offset = 0;
 	for (int i = 0; i < k; i+=num_sockets) {
-
-		for (int j = 0; j < num_sockets; j++)
-			multisocket_sample_buffer[j] = samples[i+j];
-		energy_stats_csv_string(multisocket_sample_buffer, csv_string);
-
+		for (int j = 0; j < num_sockets; j++) {
+			energy_measurement_per_socket[j] = samples[i+j];
+		} energy_measurement_csv_string(energy_measurement_per_socket, csv_string);
 		offset += sprintf(sample_strings + offset, "%s_", csv_string);
-
 	}
 	return (*env)->NewStringUTF(env, sample_strings);	
 }
 
-JNIEXPORT jlongArray JNICALL
-Java_jRAPL_NativeAccess_getLastKTimestampsMonitor(JNIEnv* env, jclass jcls, int k) {
-	EnergyStats samples[k];
-	lastKSamples(k, monitor, samples);
-
-	long fill[k];
-	for (int i = 0; i < k; i++) fill[i] = samples[i].timestamp;
-
-	int size = k;
-	jlongArray result = (*env)->NewLongArray(env, size);
-	(*env)->SetLongArrayRegion(env,result,0,size,fill);
-
-	return result;
-}
+// JNIEXPORT jlongArray JNICALL
+// Java_jRAPL_NativeAccess_getLastKTimestampsMonitor(JNIEnv* env, jclass jcls, int k) {
+// 	energy_measurement_t measurements[k];
+// 	lastKSamples(k, monitor, measurements);
+// 
+// 	long fill[k];
+// 	for (int i = 0; i < k; i++) fill[i] = measurements[i].time_elapsed;
+// 
+// 	int size = k;
+// 	jlongArray result = (*env)->NewLongArray(env, size);
+// 	(*env)->SetLongArrayRegion(env,result,0,size,fill);
+// 
+// 	return result;
+// }
 
 JNIEXPORT jint JNICALL
 Java_jRAPL_NativeAccess_getNumSamplesMonitor(JNIEnv* env, jclass jcls) {

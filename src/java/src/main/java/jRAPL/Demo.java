@@ -111,8 +111,6 @@ public class Demo {
 		int k = 5;
 		System.out.println(Arrays.deepToString(m.getLastKSamples_Arrays(k)));
 		System.out.println();
-		System.out.println(Arrays.toString(m.getLastKTimestamps(k)));
-		System.out.println();
 		System.out.println(Arrays.toString(m.getLastKSamples(m.getNumSamples())));
 
 		String name = args[1] + ((args.length == 2) ? "" : args[2]);

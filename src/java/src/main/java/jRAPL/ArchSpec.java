@@ -5,6 +5,7 @@ public final class ArchSpec {
 	public static final int NUM_SOCKETS;	
 	public static final int NUM_STATS_PER_SOCKET;
 	public static final double RAPL_WRAPAROUND;
+	public static final double DRAM_RAPL_WRAPAROUND;
 	public static final int MICRO_ARCHITECTURE;
 	public static final String MICRO_ARCHITECTURE_NAME;
 
@@ -40,6 +41,7 @@ public final class ArchSpec {
 
 		NUM_SOCKETS = NativeAccess.getSocketNum();
 		RAPL_WRAPAROUND = NativeAccess.getWraparoundEnergy();
+		DRAM_RAPL_WRAPAROUND = NativeAccess.getDramWraparoundEnergy();
 
 		int dramIndex = -1,
 			gpuIndex = -1,
@@ -108,6 +110,7 @@ public final class ArchSpec {
 			"NUM_SOCKETS: " + NUM_SOCKETS,
 			"NUM_STATS_PER_SOCKET: " + NUM_STATS_PER_SOCKET,
 			"RAPL_WRAPAROUND: " + RAPL_WRAPAROUND,
+			"DRAM_RAPL_WRAPAROUND: " + DRAM_RAPL_WRAPAROUND,
 			"",
 			"DRAM_IDX: " + DRAM_IDX,
 			"GPU_IDX: " + GPU_IDX,

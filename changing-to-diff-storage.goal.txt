@@ -1,0 +1,14 @@
+Goal: get the async energy monitors to store and return diffs
+	in getLastKSamples
+
+
+	javaside requirements
+		if crazy high values, just use the previous one (loose definition of crazy high that works well enough for the experiments. the more rigorous proper way of getting wraparound will be embedded in the EnergyDiff subtraction logic. right now, we're just checking the values of each thing and seeing if it's super high)
+
+	cside requirements
+		energy_stat_info_t (rename EnergyStats)
+		energy_diff_info_t (subtraction of two of the former. will have the same structure, but these are different structs)
+			energy_diff_csv_header
+			energy_stat_csv_header
+			energy_stat_csv_dump
+			energy_diff_csv_dump

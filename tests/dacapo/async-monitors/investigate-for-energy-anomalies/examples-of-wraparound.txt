@@ -1,0 +1,30 @@
+def diff_list(l, wraparound = 0):
+	diffs = []
+	for i in range(1,len(l)):
+		diff = l[i] - l[i-1]
+		if diff < 0:
+			print(".> caught negative diff:",diff,"l[i]:",l[i],"l[i-1]:",l[i-1],"wraparound:",wraparound)
+			diff += wraparound
+			print("...> fixed to:",diff)
+		diffs.append(diff)
+	return diffs
+
+Example of strange wraparound
+
+    <=< started working on 'avrora_15_c-linklist'
+    .> caught negative diff: -64424.507482 l[i]: 0.00033 l[i-1]: 64424.507812 wraparound: 262143.999939
+    ...> fixed to: 197719.49245700001
+
+Example of appropriate wraparound
+
+    <=< started working on 'avrora_2_java'
+    .> caught negative diff: -262143.974121 l[i]: 0.025879 l[i-1]: 262144.0 wraparound: 262143.999939
+    ...> fixed to: 0.025817999994615093
+
+
+So far I've only seen this on vaporeon, not my laptop
+Both of these examples are on vaporeon, meaning that there are
+  also examples of appropriate wraparound on vaporeon.
+
+Can gather statistics about how often this happens, if necessary. Can also try to correlate it with
+  points in time, i'm not sure
