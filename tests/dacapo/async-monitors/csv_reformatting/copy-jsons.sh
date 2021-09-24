@@ -14,7 +14,5 @@ SystemB/samplingrate_8/
 
 for d in $dirs; do
 	mkdir -p $d
-	sudo cp -v $base/$d/*.json $d &
+	sudo cp -v $base/$d/*.json $d
 done
-
-wait
