@@ -16,6 +16,7 @@ iterations=30
 resultDir=$1
 [ -z $2 ] && logfile=/dev/null || logfile=$2
 
+rm -f $logfile
 touch $logfile
 
 echo " (||(.. Started on $(date)" | tee -a $logfile
