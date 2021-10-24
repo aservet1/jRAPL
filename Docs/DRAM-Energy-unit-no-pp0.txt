@@ -1,0 +1,14 @@
+Forum post from www.community.intel.com/
+
+04-11-2016 01:35 AM
+723 Views
+
+Intel has changed the implementation of RAPL without much documentation.
+
+For the Xeon E5 v3 there are two issues:
+
+    The only supported domains are "Package" and "DRAM"
+    The "Energy Unit" for DRAM is not the same as the value that is read from the RAPL unit register.   Instead, Xeon E5 v3 processors use a DRAM Energy Unit of 15.3 microJoules.  (Ref:  "Intel Xeon Processor E5-1600/2400/2600/4600 v3 Product Families Datasheet, Volume 2: Registers", document 330784 -- section 5.3.2 in Revision 003).
+
+
+Source: https://community.intel.com/t5/Software-Tuning-Performance/Using-RAPL-to-read-PP0-and-DRAM-energy-on-haswell/td-p/1076202
