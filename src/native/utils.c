@@ -27,4 +27,4 @@ sleep_millisecond(long msec) {
 	} while (res && errno == EINTR);
 
 	return res;
-}
+} /* https://stackoverflow.com/questions/1157209/is-there-an-alternative-sleep-function-in-c-to-milliseconds */
