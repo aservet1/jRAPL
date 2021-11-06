@@ -50,7 +50,7 @@ public class AsyncEnergyMonitorJavaSide extends AsyncEnergyMonitor implements Ru
 		while (!exit) {
 			try { Thread.sleep(samplingRate); } catch (Exception e) {  }
 			after = monitor.getSample();
-			samples.add(EnergyDiff.between(before, after)); //TODO: the rare wraparound / just put in the previous one case
+			samples.add(EnergyDiff.between(before, after));
 			before = after;
 		}
 	}
