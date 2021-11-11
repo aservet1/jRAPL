@@ -28,6 +28,7 @@ void pkg_power_sampleread() {
 
 int main(int argc, const char* argv[])
 {
+	set_csv_delimiter('\t');
 	ProfileInit();
 
 	AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,DYNAMIC_ARRAY_STORAGE,64);
@@ -49,12 +50,12 @@ int main(int argc, const char* argv[])
 	printf(":)\n --\n");
 	char csv_string_buffer[512];
 	int num_sockets = getSocketNum();
-	energy_info_t multisocket_sample_buffer[num_sockets];
+	energy_measurement_t multisocket_sample_buffer[num_sockets];
 	for (int i = 0; i < k; i+=num_sockets) {
 		for (int j = 0; j < num_sockets; j++) {
 			multisocket_sample_buffer[j] = lastk[i+j];
 		}
-		energy_stats_csv_string(multisocket_sample_buffer, csv_string_buffer);
+		energy_measurement_csv_string(multisocket_sample_buffer, csv_string_buffer);
 		printf("%s\n", csv_string_buffer);
 	}
 

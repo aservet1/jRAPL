@@ -23,6 +23,13 @@ static rapl_msr_unit rapl_unit;
 static uint64_t num_sockets;
 static double wraparound_energy = -1;
 static double broadwell_dram_wraparound_energy = -1;
+static char csv_delimiter = ',';
+
+// intended for the case of non-american locales who use commas instead of periods for stringifying floats.
+// most likely will be set to ';' in most cases regarding this, but can also be set to tabs or what have you
+void set_csv_delimiter(char c) {
+	csv_delimiter = c;
+}
 
 int*
 get_msr_fds() { // only valid after ProfileInit() has been called. it's set to NULL in all other cases
@@ -169,26 +176,26 @@ measure_energy_between_stat_check(energy_stat_t start_stat, energy_stat_t stop_s
 }
 
 static void
-energy_info_csv_header(char csv_header[512], char* time_column_label) { 
+energy_info_csv_header(char csv_header[512], char* time_column_label/*, char csv_delimiter*/) { 
 	int offset = 0;
 	const char* format;
 	switch(power_domains_supported) {
 		case DRAM_GPU_CORE_PKG:
-			format = "dram_socket%d,gpu_socket%d,core_socket%d,pkg_socket%d,";
+			format = "dram_socket%d%cgpu_socket%d%ccore_socket%d%cpkg_socket%d%c";
 			for (int s = 1; s <= num_sockets; s++)
-				offset += sprintf(csv_header + offset, format, s,s,s,s);
+				offset += sprintf(csv_header + offset, format, s,csv_delimiter,s,csv_delimiter,s,csv_delimiter,s,csv_delimiter);
 			sprintf(csv_header + offset, "%s", time_column_label);
 			return;
 		case DRAM_CORE_PKG:
-			format = "dram_socket%d,core_socket%d,pkg_socket%d,";
+			format = "dram_socket%d%ccore_socket%d%cpkg_socket%d%c";
 			for (int s = 1; s <= num_sockets; s++)
-				offset += sprintf(csv_header + offset, format, s,s,s);
+				offset += sprintf(csv_header + offset, format, s,csv_delimiter,s,csv_delimiter,s,csv_delimiter);
 			sprintf(csv_header + offset, "%s", time_column_label);
 			return;
 		case GPU_CORE_PKG:
-			format = "gpu_socket_%d,core_socket%d,pkg_socket%d,";
+			format = "gpu_socket_%d%ccore_socket%d%cpkg_socket%d%c";
 			for (int s = 1; s <= num_sockets; s++)
-				offset += sprintf(csv_header + offset, format, s,s,s);
+				offset += sprintf(csv_header + offset, format, s,csv_delimiter,s,csv_delimiter,s,csv_delimiter);
 			sprintf(csv_header + offset, "%s", time_column_label);
 			return;
 		default:
@@ -196,34 +203,40 @@ energy_info_csv_header(char csv_header[512], char* time_column_label) {
 			return;
 	}
 }
-void energy_stat_csv_header(char csv_header[512]) { energy_info_csv_header(csv_header, "timestamp"); }
-void energy_measurement_csv_header(char csv_header[512]) { energy_info_csv_header(csv_header, "start_timestamp,time_elapsed"); }
+void energy_stat_csv_header(char csv_header[512]) {
+	energy_info_csv_header(csv_header, "timestamp");
+}
+void energy_measurement_csv_header(char csv_header[512]) {
+	char tail_of_header[BUFSIZ];
+	sprintf(tail_of_header, "start_timestamp%ctime_elapsed", csv_delimiter);
+	energy_info_csv_header(csv_header, tail_of_header);//"start_timestamp,time_elapsed");
+}
 
 void
-energy_stat_csv_string(energy_stat_t energy_stat_per_socket[], char* csv_string) {
+energy_stat_csv_string(energy_stat_t energy_stat_per_socket[], char* csv_string/*, char csv_delimiter*/) {
 	int offset = 0;
 	for (int i = 0; i < num_sockets; i++) {
 		switch (power_domains_supported) {
 			case DRAM_GPU_CORE_PKG:
-				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,%.6f,",
-					energy_stat_per_socket[i].dram,
-					energy_stat_per_socket[i].gpu,
-					energy_stat_per_socket[i].core,
-					energy_stat_per_socket[i].pkg
+				offset += sprintf(csv_string+offset, "%.6f%c%.6f%c%.6f%c%.6f%c",
+					energy_stat_per_socket[i].dram, csv_delimiter,
+					energy_stat_per_socket[i].gpu,  csv_delimiter,
+					energy_stat_per_socket[i].core, csv_delimiter,
+					energy_stat_per_socket[i].pkg,  csv_delimiter
 				);
 				break;
 			case GPU_CORE_PKG:
-				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,",
-					energy_stat_per_socket[i].gpu,
-					energy_stat_per_socket[i].core,
-					energy_stat_per_socket[i].pkg
+				offset += sprintf(csv_string+offset, "%.6f%c%.6f%c%.6f%c",
+					energy_stat_per_socket[i].gpu,  csv_delimiter,
+					energy_stat_per_socket[i].core, csv_delimiter,
+					energy_stat_per_socket[i].pkg,  csv_delimiter
 				);
 				break;
 			case DRAM_CORE_PKG:
-				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,",
-					energy_stat_per_socket[i].dram,
-					energy_stat_per_socket[i].core,
-					energy_stat_per_socket[i].pkg
+				offset += sprintf(csv_string+offset, "%.6f%c%.6f%c%.6f%c",
+					energy_stat_per_socket[i].dram, csv_delimiter,
+					energy_stat_per_socket[i].core, csv_delimiter,
+					energy_stat_per_socket[i].pkg,  csv_delimiter
 				);
 				break;
 			default:
@@ -237,30 +250,30 @@ energy_stat_csv_string(energy_stat_t energy_stat_per_socket[], char* csv_string)
 }
 
 void
-energy_measurement_csv_string(energy_measurement_t energy_measurement_per_socket[], char* csv_string) {
+energy_measurement_csv_string(energy_measurement_t energy_measurement_per_socket[], char* csv_string/*, char csv_delimiter*/) {
 	int offset = 0;
 	for (int i = 0; i < num_sockets; i++) {
 		switch (power_domains_supported) {
 			case DRAM_GPU_CORE_PKG:
-				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,%.6f,",
-					energy_measurement_per_socket[i].dram,
-					energy_measurement_per_socket[i].gpu,
-					energy_measurement_per_socket[i].core,
-					energy_measurement_per_socket[i].pkg
+				offset += sprintf(csv_string+offset, "%.6f%c%.6f%c%.6f%c%.6f%c",
+					energy_measurement_per_socket[i].dram, csv_delimiter,
+					energy_measurement_per_socket[i].gpu,  csv_delimiter,
+					energy_measurement_per_socket[i].core, csv_delimiter,
+					energy_measurement_per_socket[i].pkg,  csv_delimiter
 				);
 				break;
 			case GPU_CORE_PKG:
-				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,",
-					energy_measurement_per_socket[i].gpu,
-					energy_measurement_per_socket[i].core,
-					energy_measurement_per_socket[i].pkg
+				offset += sprintf(csv_string+offset, "%.6f%c%.6f%c%.6f%c",
+					energy_measurement_per_socket[i].gpu,  csv_delimiter,
+					energy_measurement_per_socket[i].core, csv_delimiter,
+					energy_measurement_per_socket[i].pkg,  csv_delimiter
 				);
 				break;
 			case DRAM_CORE_PKG:
-				offset += sprintf(csv_string+offset, "%.6f,%.6f,%.6f,",
-					energy_measurement_per_socket[i].dram,
-					energy_measurement_per_socket[i].core,
-					energy_measurement_per_socket[i].pkg
+				offset += sprintf(csv_string+offset, "%.6f%c%.6f%c%.6f%c",
+					energy_measurement_per_socket[i].dram, csv_delimiter,
+					energy_measurement_per_socket[i].core, csv_delimiter,
+					energy_measurement_per_socket[i].pkg,  csv_delimiter
 				);
 				break;
 			default:
@@ -268,8 +281,9 @@ energy_measurement_csv_string(energy_measurement_t energy_measurement_per_socket
 		}
 	}
 	sprintf (
-		csv_string+offset, "%ld,%ld",
+		csv_string+offset, "%ld%c%ld",
 		energy_measurement_per_socket[0].start_timestamp,
+		csv_delimiter,
 		energy_measurement_per_socket[0].time_elapsed
 	);
 }
