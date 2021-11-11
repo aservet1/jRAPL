@@ -19,6 +19,11 @@ static uint64_t num_sockets;
 static int power_domains_supported; // this variable is not necessary to store in this file scope, or is it?
 
 JNIEXPORT void JNICALL
+Java_jRAPL_NativeAccess_setCSVDelimiter(JNIEnv *eng, jclass jcls, jchar c) {
+	set_csv_delimiter((char)c);
+}
+
+JNIEXPORT void JNICALL
 Java_jRAPL_NativeAccess_profileInit(JNIEnv *env, jclass jcls) {
 	num_sockets = getSocketNum();
 	power_domains_supported = get_power_domains_supported(get_micro_architecture()); // this variable is not necessary to store in this file scope, or is it?

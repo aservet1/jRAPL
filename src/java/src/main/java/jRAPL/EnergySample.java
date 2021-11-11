@@ -22,7 +22,7 @@ public abstract class EnergySample
 	protected String csv() {
 		String s = new String();
 		for (int i = 0; i < primitiveSample.length; i++) {
-			s += String.format("%.6f,",primitiveSample[i]);
+			s += String.format("%.6f%s", primitiveSample[i], EnergyMonitor.getCSVDelimiter());
 		}
 		return s;
 	}
@@ -74,14 +74,13 @@ public abstract class EnergySample
 	
 }
 // 	protected static String dumpHeader() {
-// 		return ArchSpec.ENERGY_STATS_STRING_FORMAT.replace("@",","); 
+// 		return ArchSpec.ENERGY_STATS_STRING_FORMAT.replace("@",EnergyMonitor.getCSVDelimiter()); 
 // 	}
 // 
 // 	public String dump() {
 // 		String s = new String();
 // 		for (int i = 0; i < primitiveSample.length; i++) {
-// 			s += String.format("%.6f,",primitiveSample[i]);
+// 			s += String.format("%.6f"+EnergyMonitor.getCSVDelimiter(),primitiveSample[i]);
 // 		}
 // 		return s;
 // 	}
-

@@ -38,13 +38,15 @@ public final class EnergyDiff extends EnergySample {
 			.csvHeader()
 				.replace (
 					"timestamp",
-					"start_timestamp,time_elapsed" // @TODO: maybe set up a JNI route now that you have `energy_diff_csv_header` defined in the native code side?
+					"start_timestamp"+EnergyMonitor.getCSVDelimiter()+"time_elapsed" // @TODO: maybe set up a JNI route now that you have `energy_diff_csv_header` defined in the native code side?
 				);
 	}
 
 	@Override
 	public String csv() {
-		return super.csv() + Long.toString(Utils.timestampToUsec(getStartTimestamp())) + "," + Long.toString(Utils.durationToUsec(getTimeElapsed()));
+		return super.csv() + Long.toString(Utils.timestampToUsec(getStartTimestamp()))
+			+ EnergyMonitor.getCSVDelimiter()
+			+ Long.toString(Utils.durationToUsec(getTimeElapsed()));
 	}
 
 	public static EnergyDiff between(EnergyStats before, EnergyStats after) {

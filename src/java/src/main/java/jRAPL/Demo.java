@@ -20,17 +20,17 @@ public class Demo {
 	    public static String csvPrimitiveArray(double[] a) {
 			String s = new String();
 			int i; for (i = 0; i < ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET-1; i++) {
-				s += String.format("%.6f",a[i]) + ",";
+				s += String.format("%.6f",a[i]) + EnergyMonitor.getCSVDelimiter();
 			} s += String.format("%.6f",a[i]);
 			return s;
 		}
 	
 		public static String csvPrimitiveArray(double[] a, Instant timestamp) {
-			return String.format("%s,%d", csvPrimitiveArray(a), Utils.timestampToUsec(timestamp));
+			return String.format("%s%s%d", csvPrimitiveArray(a), EnergyMonitor.getCSVDelimiter(), Utils.timestampToUsec(timestamp));
 		}
 	
 		public static String csvPrimitiveArray(double[] a, Duration elapsedTime) {
-			return String.format("%s,%d", csvPrimitiveArray(a), Utils.durationToUsec(elapsedTime));
+			return String.format("%s%s%d", csvPrimitiveArray(a), EnergyMonitor.getCSVDelimiter(), Utils.durationToUsec(elapsedTime));
 		}
 
 	}
@@ -123,6 +123,8 @@ public class Demo {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
+
+		EnergyMonitor.setCSVDelimiter(',');
 
 		if (args.length == 0) {
 			System.out.println(" .) Must provide run option args: SyncEnergyMonitor, AsyncEnergyMonitor, or ArchSpec");

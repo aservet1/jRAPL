@@ -19,6 +19,7 @@ final class NativeAccess { // @TODO: make sure you know exactly what it means to
     public native static void profileInit();
     public native static void profileDealloc();
     public native static String energyStatCheck();
+    public native static void setCSVDelimiter(char c);
 
     // AsyncEnergyMonitor.c
     public native static void   startMonitor ();

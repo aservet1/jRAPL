@@ -10,7 +10,16 @@ public class EnergyMonitor extends EnergyManager {
 	@Override
 	public void activate() { super.activate(); }
 	@Override
-	public void deactivate() { super.deactivate(); } 
+	public void deactivate() { super.deactivate(); }
+
+	private static String csvDelimiter = ",";
+	public static void setCSVDelimiter(char c) {
+		csvDelimiter = c+"";
+		NativeAccess.setCSVDelimiter(c);
+	}
+	public static String getCSVDelimiter() {
+		return csvDelimiter;
+	}
 
 	private static double[] stringArrayToDoubleArray(String[] s) {
 		double[] d = new double[s.length];
@@ -20,20 +29,20 @@ public class EnergyMonitor extends EnergyManager {
 	}
 
     protected static double[] statStringToPrimitiveSample(String energyString) {
-		String[] parts = energyString.split(",");
+		String[] parts = energyString.split(csvDelimiter);
 		return stringArrayToDoubleArray (
 			Arrays.copyOf(parts, parts.length-1)
 		);
 	}
     protected static double[] diffStringToPrimitiveSample(String energyString) {
-		String[] parts = energyString.split(",");
+		String[] parts = energyString.split(csvDelimiter);
 		return stringArrayToDoubleArray (
 			Arrays.copyOf(parts, parts.length-2)
 		);
 	}
 
 	protected static EnergyStats stringToEnergyStats(String energyString) {
-		String[] parts = energyString.split(",");
+		String[] parts = energyString.split(csvDelimiter);
 		return new EnergyStats (
 			stringArrayToDoubleArray (
 				Arrays.copyOf(parts, parts.length-1)
@@ -44,7 +53,7 @@ public class EnergyMonitor extends EnergyManager {
 		);
     }
 	protected static EnergyDiff stringToEnergyDiff(String energyString) {
-		String[] parts = energyString.split(",");
+		String[] parts = energyString.split(csvDelimiter);
 		Instant startTimestamp = Utils.usecToInstant(
 			Long.parseLong(parts[parts.length-2])
 		);
