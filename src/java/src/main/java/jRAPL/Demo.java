@@ -124,7 +124,7 @@ public class Demo {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		EnergyMonitor.setCSVDelimiter(',');
+		EnergyMonitor.setCSVDelimiter(';');
 
 		if (args.length == 0) {
 			System.out.println(" .) Must provide run option args: SyncEnergyMonitor, AsyncEnergyMonitor, or ArchSpec");

@@ -21,10 +21,22 @@ public class EnergyMonitor extends EnergyManager {
 		return csvDelimiter;
 	}
 
+	private static double stringToDoubleConsideringComma(String s) {
+		double d = 0;
+		try {
+			d = Double.parseDouble(s.replace(",","."));
+		} catch (NumberFormatException ex) {
+			System.err.println("ERROR turning string to a double: " + s);
+			ex.printStackTrace();
+			System.exit(1);
+		}
+		return d;
+	}
+
 	private static double[] stringArrayToDoubleArray(String[] s) {
 		double[] d = new double[s.length];
 		for (int i = 0; i < s.length; i++)
-			d[i] = Double.parseDouble(s[i]);
+			d[i] = stringToDoubleConsideringComma(s[i]);
 		return d;
 	}
 

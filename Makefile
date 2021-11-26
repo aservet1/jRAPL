@@ -11,6 +11,9 @@ DRIVER_OUTPUT_FILES = \
 	AsyncMonitor-Java.csv \
 	AsyncMonitor-Java-metainfo.json \
 
+NATIVE_TARGET = src/JNI/libJNIRAPL.so
+# MAVEN_RESOURCES = src/java/src/resources
+
 all:
 	make nativeLib
 	make javaLib
