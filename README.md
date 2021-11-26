@@ -60,7 +60,7 @@ consumptions for all CPU sockets. You can specify which socket to get the value 
 If a power domain is not supported for your mahine, this method will return `-1`.
 
 To get samples from the primitive array, you need the index that corresponds to the power domain per socket. These are in the `ArchSpec` class, which
-has a lot of system-specific constants. To get the value out of the array for a given socket, you can do `sample[DRAM_ARRAY_INDEX*socketNumber]`. If
+has a lot of system-specific constants. To get the value out of the array for a given socket, you can do `sample[ArchSpec.DRAM_ARRAY_INDEX*socketNumber]`. If
 the power domain is not supported for your machine, the index constant will be `-1`.
 
 ### Types of monitors
