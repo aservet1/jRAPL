@@ -157,6 +157,9 @@ getSocketNum() {
 int
 get_power_domains_supported(uint32_t micro_architecture) {
 	switch (micro_architecture) {
+		case ICELAKE: // verify that these domains are the only ones actually supported
+			return DRAM_PKG;
+
 		case KABYLAKE:			case BROADWELL:
 		
 			return DRAM_GPU_CORE_PKG;

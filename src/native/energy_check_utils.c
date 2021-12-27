@@ -100,6 +100,14 @@ ProfileDealloc() {
 void
 EnergyStatCheck(energy_stat_t energy_stat_per_socket[num_sockets]) {
 	switch(power_domains_supported) {
+		case DRAM_PKG:
+			for (int i = 0; i < num_sockets; i++) {
+				energy_stat_per_socket[i].timestamp = usec_since_epoch();
+				energy_stat_per_socket[i].dram = read_dram(i);
+				energy_stat_per_socket[i].core = -1;
+				energy_stat_per_socket[i].gpu  = -1;
+				energy_stat_per_socket[i].pkg  = read_pkg(i);
+			} return;
 		case DRAM_GPU_CORE_PKG:
 			for (int i = 0; i < num_sockets; i++) {
 				energy_stat_per_socket[i].timestamp = usec_since_epoch();
@@ -198,6 +206,14 @@ energy_info_csv_header(char csv_header[512], char* time_column_label/*, char csv
 				offset += sprintf(csv_header + offset, format, s,csv_delimiter,s,csv_delimiter,s,csv_delimiter);
 			sprintf(csv_header + offset, "%s", time_column_label);
 			return;
+		case DRAM_PKG:
+			format = "dram_socket%d%cpkg_socket%d%c";
+			for (int s = 1; s <= num_sockets; s++)
+				offset += sprintf(csv_header + offset, format, s,csv_delimiter,s,csv_delimiter);
+			sprintf(csv_header + offset, "%s", time_column_label);
+			return;
+
+
 		default:
 			sprintf(csv_header, "undefined_architecture");
 			return;
@@ -239,6 +255,12 @@ energy_stat_csv_string(energy_stat_t energy_stat_per_socket[], char* csv_string/
 					energy_stat_per_socket[i].pkg,  csv_delimiter
 				);
 				break;
+			case DRAM_PKG:
+				offset += sprintf(csv_string+offset, "%.6f%c%.6f%c",
+					energy_stat_per_socket[i].dram, csv_delimiter,
+					energy_stat_per_socket[i].pkg,  csv_delimiter
+				);
+				break;
 			default:
 				assert(0 && "error occurred in energy_stat_csv_string");
 		}
@@ -273,6 +295,12 @@ energy_measurement_csv_string(energy_measurement_t energy_measurement_per_socket
 				offset += sprintf(csv_string+offset, "%.6f%c%.6f%c%.6f%c",
 					energy_measurement_per_socket[i].dram, csv_delimiter,
 					energy_measurement_per_socket[i].core, csv_delimiter,
+					energy_measurement_per_socket[i].pkg,  csv_delimiter
+				);
+				break;
+			case DRAM_PKG:
+				offset += sprintf(csv_string+offset, "%.6f%c%.6f%c",
+					energy_measurement_per_socket[i].dram, csv_delimiter,
 					energy_measurement_per_socket[i].pkg,  csv_delimiter
 				);
 				break;

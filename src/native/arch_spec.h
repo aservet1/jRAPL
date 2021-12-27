@@ -91,5 +91,6 @@ get_power_domains_supported(uint32_t micro_architecture);
 #define DRAM_GPU_CORE_PKG 0xA1U
 #define DRAM_CORE_PKG 0xA2U
 #define GPU_CORE_PKG 0xA3U
+#define DRAM_PKG 0xA4U
 
 #endif

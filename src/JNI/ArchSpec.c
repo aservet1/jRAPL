@@ -20,6 +20,9 @@ Java_jRAPL_NativeAccess_getEnergySampleArrayOrder(JNIEnv* env, jclass jcls) {
 		case GPU_CORE_PKG:
 			order = "gpu,core,pkg";
 			break;
+		case DRAM_PKG:
+			order = "dram,pkg";
+			break;
 		default:
 			order = "undefined_architecture";
 	}
