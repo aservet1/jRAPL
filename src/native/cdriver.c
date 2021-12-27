@@ -31,8 +31,8 @@ int main(int argc, const char* argv[])
 	set_csv_delimiter('\t');
 	ProfileInit();
 
-	AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,DYNAMIC_ARRAY_STORAGE,64);
-	// AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,LINKED_LIST_STORAGE,64);
+	// AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,DYNAMIC_ARRAY_STORAGE,64);
+	AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,LINKED_LIST_STORAGE,64);
 	start(m);
 	sleep_print(3);
 	//sleep(5);
