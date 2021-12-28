@@ -26,6 +26,7 @@ CFLAGS = -fPIC -g -c -Wall
 
 all: $(JNI_LIB)
 	cp $(JNI_LIB) $(MAVEN_RESOURCES)
+	rm -f $(OFILES)
 
 $(JNI_LIB): $(JNIEXPORTS)
 	$(CC) $(CFLAGS) $(INCLUDE_FLAGS) $(JNIEXPORTS) $(JNIEXPORTS)

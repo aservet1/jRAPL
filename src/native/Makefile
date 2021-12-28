@@ -17,7 +17,9 @@ CDRIVER = cdriver
 COMPILER = gcc
 CFLAGS = -fPIC -g -c -Wall
 
-all: $(LIB)
+all:
+	make $(LIB)
+	rm -f $(OFILES)
 
 $(LIB): $(CFILES)
 	$(COMPILER) $(CFLAGS) $(CFILES)
