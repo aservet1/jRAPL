@@ -1,5 +1,7 @@
+## A pure-C archive library that provides RAPL utilities. Meant to be compiled
+## with JNI files into a .so which Java side code will load and use
 
-LIB = libNativeRAPL.a  ## The main target of this makefile: A pure-C archive library that provides RAPL utilities, either on its own or bundled into a JNI library, or other future non-C-language-interface libraries
+LIB = libNativeRAPL.a
 
 CFILES = \
 		energy_check_utils.c \
@@ -8,8 +10,6 @@ CFILES = \
 		async_energy_monitor.c \
 		cside_data_storage.c \
 		utils.c \
-		\
-		dvfs.c \
 
 OFILES = $(CFILES:.c=.o)
 CDRIVER = cdriver
