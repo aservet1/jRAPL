@@ -1,18 +1,16 @@
-
 NATIVE_SRC = src/native
-JNI_SRC = src/JNI
-JAVA_SRC = src/java
+JNI_SRC    = src/JNI
+JAVA_SRC   = src/java
 
-DRIVER_OUTPUT_FILES = \
-	AsyncMonitor-CLINKED_LIST.csv \
-	AsyncMonitor-CLINKED_LIST-metainfo.json \
-	AsyncMonitor-CDYNAMIC_ARRAY.csv \
-	AsyncMonitor-CDYNAMIC_ARRAY-metainfo.json \
-	AsyncMonitor-Java.csv \
-	AsyncMonitor-Java-metainfo.json \
+SAMPLE_DRIVER_OUTPUT_FILES =                    \
+	AsyncMonitor-CLINKED_LIST.csv               \
+	AsyncMonitor-CLINKED_LIST-metainfo.json     \
+	AsyncMonitor-CDYNAMIC_ARRAY.csv             \
+	AsyncMonitor-CDYNAMIC_ARRAY-metainfo.json   \
+	AsyncMonitor-Java.csv                       \
+	AsyncMonitor-Java-metainfo.json
 
 NATIVE_TARGET = src/JNI/libJNIRAPL.so
-# MAVEN_RESOURCES = src/java/src/resources
 
 all:
 	make nativeLib
@@ -25,11 +23,10 @@ nativeLib: ## Compile native .so
 javaLib: ## Build java .jar
 	(cd $(JAVA_SRC) && mvn clean install)
 
-clean-driver-output:
-	rm -f $(DRIVER_OUTPUT_FILES)
+clean-sample-driver-output:
+	rm -f $(SAMPLE_DRIVER_OUTPUT_FILES)
 
-clean: clean-driver-output
+clean: clean-sample-driver-output
 	(cd $(NATIVE_SRC) && make clean)
 	(cd $(JNI_SRC) && make clean)
 	(cd $(JAVA_SRC) && mvn clean)
-
