@@ -1,7 +1,0 @@
-Side experiment, generates a "memory used" time series for one run of an AsyncEnergyMonitor, to watch it grow.
-
-Probably not the best experimental environment. Was not rigorous, was just to see if I can unofficially observe a behavior.
-
-AsyncMemoryMonitor.java is a copy and slight edit of the AsyncMemoryMonitor.java in my DaCapo experiments. This one has the
-addition that it also samples Runtime.getRuntime().totalMemory() and keeps a list of that, in addition to timestamps and
-memoryUsed() samples.

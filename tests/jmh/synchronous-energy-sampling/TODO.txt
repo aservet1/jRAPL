@@ -1,1 +1,0 @@
-Get actual numbers to quantify the difference between getSample and getPrimitiveSample

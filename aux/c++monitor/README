@@ -1,3 +1,0 @@
-Completely isolated pet version of a C++ RAPL reader. Only coped MSR_READING macros from jRAPL, the rest is just being done by me looking at and reading the things.
-
-Currently there is no dependency or association between these files and the jRAPL files. Changes to one won't affect the other

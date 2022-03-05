@@ -1,3 +1,0 @@
-These are results from running the scripts in ../DatacollectionScripts. Run that in the parent of DataCollectionScripts; ./DataCollectionScripts/Dacapo_benchmarking.sh <arguments>.
-
-There needs to be some moving stuff around and tweaking for this to actually work again. A lot of jRAPL stuff has changed around jRAPL and with this subset of tests
