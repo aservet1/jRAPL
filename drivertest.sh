@@ -10,10 +10,8 @@ runDriver=""
 
 for driverArgs in \
 	'ArchSpec' \
-	'SyncEnergyMonitor' \
-	'AsyncEnergyMonitor C LINKED_LIST' \
-	'AsyncEnergyMonitor C DYNAMIC_ARRAY' \
-	'AsyncEnergyMonitor Java'
+	'EnergyMonitor' \
+	'AsyncEnergyMonitor'
 do
 	echo ~~~ $driverArgs ~~~
 	sudo java -cp 'src/java/target/jRAPL-1.0.jar' jRAPL.Demo $driverArgs
