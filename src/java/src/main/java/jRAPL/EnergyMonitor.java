@@ -5,21 +5,43 @@ import java.time.Instant;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
-public class EnergyMonitor extends EnergyManager {
+public class EnergyMonitor {
 
-	@Override
-	public void activate() { super.activate(); }
-	@Override
-	public void deactivate() { super.deactivate(); }
+	private boolean active = false;
+
+	public void activate() {
+		if (active) {
+			System.err.println(
+				"Error: "
+				+ getClass().getName()
+				+ "@"
+				+ Integer.toHexString(hashCode())
+				+ " already activated."
+				+ " Double activate is not allowed. Exiting program."
+			);
+			System.exit(1);
+		}
+		active = true;
+		NativeAccess.subscribe();
+	}
+
+	public void deactivate() {
+		if (!active) {
+			System.err.println(
+				"Error: "
+				+ getClass().getName()
+				+ "@"
+				+ Integer.toHexString(hashCode())
+				+ " already deactivated."
+				+ " Double deactivate is not allowed. Exiting program."
+			);
+			System.exit(1);
+		}
+		active = false;
+        NativeAccess.unsubscribe();
+	}
 
 	private static String csvDelimiter = ",";
-	public static void setCSVDelimiter(char c) {
-		csvDelimiter = c+"";
-		NativeAccess.setCSVDelimiter(c);
-	}
-	public static String getCSVDelimiter() {
-		return csvDelimiter;
-	}
 
 	private static double stringToDoubleConsideringComma(String s) {
 		double d = 0;
@@ -33,70 +55,14 @@ public class EnergyMonitor extends EnergyManager {
 		return d;
 	}
 
-	private static double[] stringArrayToDoubleArray(String[] s) {
-		double[] d = new double[s.length];
-		for (int i = 0; i < s.length; i++)
-			d[i] = stringToDoubleConsideringComma(s[i]);
-		return d;
+	public EnergySample getSample() {
+        String raplString = NativeAccess.energyStatCheck();
+        String[] raplStringParts = raplString.split("#");
+        double[] raplData = new double[raplStringParts.length];
+        for(int i = 0; i < raplData.length; ++i) {
+            raplData[i] = Double.toString(raplStringParts[i]);
+        }
+        return new EnergySample(raplData);
 	}
-
-    protected static double[] statStringToPrimitiveSample(String energyString) {
-		String[] parts = energyString.split(csvDelimiter);
-		return stringArrayToDoubleArray (
-			Arrays.copyOf(parts, parts.length-1)
-		);
-	}
-    protected static double[] diffStringToPrimitiveSample(String energyString) {
-		String[] parts = energyString.split(csvDelimiter);
-		return stringArrayToDoubleArray (
-			Arrays.copyOf(parts, parts.length-2)
-		);
-	}
-
-	protected static EnergyStats stringToEnergyStats(String energyString) {
-		String[] parts = energyString.split(csvDelimiter);
-		return new EnergyStats (
-			stringArrayToDoubleArray (
-				Arrays.copyOf(parts, parts.length-1)
-			),
-			Utils.usecToInstant (
-				Long.parseLong(parts[parts.length-1])
-			)
-		);
-    }
-	protected static EnergyDiff stringToEnergyDiff(String energyString) {
-		String[] parts = energyString.split(csvDelimiter);
-		Instant startTimestamp = Utils.usecToInstant(
-			Long.parseLong(parts[parts.length-2])
-		);
-		Instant stopTimestamp = startTimestamp.plus(
-			Long.parseLong(
-				parts[parts.length-1]
-			),
-			ChronoUnit.MICROS
-		);
-		return new EnergyDiff (
-			stringArrayToDoubleArray (
-				Arrays.copyOf(parts, parts.length-2)
-			),
-			startTimestamp, stopTimestamp
-		);
-    }
-
-	// wondering if this is necessary to have, might as well let the user do their own logic for this if theyre taking on the primitive samples already    
-	protected static double[] subtractPrimitiveSamples(double[] a, double[] b) {
-		assert ( a.length == b.length );
-		double[] diff = new double[a.length];
-		for (int i = 0; i < diff.length; i++) {
-			diff[i] = a[i] - b[i];
-			if (diff[i] < 0)
-				diff[i] +=
-					(i % ArchSpec.NUM_STATS_PER_SOCKET == ArchSpec.DRAM_IDX)
-						? ArchSpec.DRAM_RAPL_WRAPAROUND
-						: ArchSpec.RAPL_WRAPAROUND
-					;
-		}
-		return diff;
-    }
 
 }

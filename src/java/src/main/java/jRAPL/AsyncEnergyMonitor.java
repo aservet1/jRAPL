@@ -1,39 +1,45 @@
-
 package jRAPL;
 
-import java.time.Instant;
-import java.time.Duration;
-
-import java.io.FileWriter;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.FileWriter;
 
-public abstract class AsyncEnergyMonitor extends EnergyMonitor {
+import java.time.Instant;
+
+public class AsyncEnergyMonitor extends EnergyMonitor {
 
 	protected Instant monitorStartTime = null;
 	protected Instant monitorStopTime = null;
 	protected boolean isRunning = false;
 	protected int samplingRate;
 
-	@Override
-	public  void  activate()
-	{  super.activate();   }
-	
-	@Override
-	public void deactivate()
-	{  super.deactivate(); }
+	private ArrayList<EnergyMeasurement> measurements;
+	private int samplingRate; // milliseconds
+	private volatile boolean exit = false;
+	private Thread t = null;
 
-	/** Gets the number of samples the monitor currently collected
-	 *	@return number of samples collected so far
-	*/
-	public abstract int getNumSamples();
-	/** Sets the energy sampling rate
-	 *	@param s sampling rate (in milliseconds)
-	*/
-	public abstract void setSamplingRate(int s);
-	public abstract int getSamplingRate();
+	public AsyncEnergyMonitorJavaSide() {
+		samplingRate = 10;
+		measurements = new ArrayList<EnergyDiff>();
+	}
+
+	public AsyncEnergyMonitorJavaSide(int s) {
+		samplingRate = s;
+		measurements = new ArrayList<EnergyDiff>();
+	}
+
+	@Override
+	public void activate() {
+		super.activate();
+	}
+
+	@Override
+	public void deactivate() {
+		super.deactivate();
+	}
 
 	public Duration getLifetime() {
 		if (monitorStartTime != null && monitorStopTime != null)
@@ -47,60 +53,34 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	public void start() {
 		isRunning = true;
 		monitorStartTime = Instant.now();
+		t = new Thread(this);
+		t.start();
 	}
 
-	/** Stops monitoring and storing energy samples. */
+	/** Stops monitoring and storing energy measurements */
 	public void stop() {
 		monitorStopTime = Instant.now();
 		isRunning = false;
+		exit = true;
+		try {
+		    t.join();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		t = null;
 	}
 
 	/** Resets the object for reuse. */
 	public void reset() {
 		monitorStartTime = null;
 		monitorStopTime = null;
-	}
-
-	/** Last K timestamps */
-	//public abstract Instant[] getLastKTimestamps(int k); //TODO: go through github history for pre - September 21 if you want to replement and salvage the stuff you commented out or deleted for this functionality
-	/** Last K samples in raw string format */
-	public abstract String[] getLastKSamples(int k);
-	/** Last K samples as EnergyStats objects  */
-	// public EnergyStats[] getLastKSamples_Objects(int k) {
-	// 	String[] strings = getLastKSamples(k);
-	// 	Instant[] timestamps = getLastKTimestamps(k);
-
-	// 	EnergyStats[] samplesArray = new EnergyStats[k];
-	// 	for (int i = 0; i < strings.length; i++) {
-	// 		String energyString = strings[i];
-	// 		samplesArray[i] = stringToEnergyStats(energyString);
-	// 		samplesArray[i].setTimestamp(timestamps[i]);
-	// 	}
-
-	// 	return samplesArray;
-	// }
-	/** Last K samples as primitive arrays of doubles. */ // You can use this in conjunction with getLastKTimestamps() if you want parralell arrays.
-	public double[][] getLastKSamples_Arrays(int k) {
-		String[] strings = getLastKSamples(k);
-	
-		double[][] samplesArray = new double[k][ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET];
-		for (int i = 0; i < strings.length; i++) {
-			String energyString = strings[i];
-			samplesArray[i] = diffStringToPrimitiveSample(energyString);
-		}
-
-		return samplesArray;
+        isRunning = false;
 	}
 
 	public boolean isRunning() {
 		return isRunning;
 	}
-
-	/** Dumps all samples to file, along with the sampling rate, in CSV format.
-	 *	Same format as <code>this.toString()</code>
-	 *	@param fileName name of file to write to
-	*/
-	public abstract void writeFileCSV(String fileName);
 
 	public void writeFileMetadata(String fileName) { //@TODO at some point, make it write to stdout instead of a file if fileName == null
 		// currently enforcing only JSON files
@@ -115,12 +95,12 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 		
 		long samplingRate = getSamplingRate();
 		long lifetime = getLifetime().toMillis();
-		long numSamples = getNumSamples();
+		long numMeasurements = getNumMeasurements();
 
 		// java generate JSON for the meta info object RIGHT HERE RIGHT NOW
 		String json = String.format( //@TODO make sure all of the metainfo points are here or if you need to gather more data to display
-				"{\"samplingRate\": %d, \"lifetime\": %d, \"numSamples\": %d, \"energyWrapAround\": %f }",
-				samplingRate, lifetime, numSamples, ArchSpec.RAPL_WRAPAROUND);
+				"{\"samplingRate\": %d, \"lifetime\": %d, \"numMeasurements\": %d, \"energyWrapAround\": %f }",
+				samplingRate, lifetime, numMeasurements, ArchSpec.RAPL_WRAPAROUND);
 		try {
 			BufferedWriter writer = new BufferedWriter (
 							(fileName == null)
@@ -141,15 +121,93 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 
 		int samplingRate = getSamplingRate();
 		long lifetime = getLifetime().toMillis();
-		int numSamples = getNumSamples();
+		int numMeasurements = getNumMeasurements();
 
 		String s = String.join("\n",
 			"samplingRate: " + samplingRate + " milliseconds",
 			"lifetime: " + lifetime + " milliseconds",
-			"numSamples: " + numSamples
+			"numMeasurements: " + numMeasurements
 		);
 
 		return s;
 	}
 
+	/** Overrides the Runnable interface's run() method.
+	 * Dont call this on its own, but it's gotta be public
+	 * for interface override reasons.
+	*/	
+	public void run() {
+		EnergySample before = this.getEnergySample();
+		EnergySample after;
+		while (!exit) {
+			try { Thread.sleep(samplingRate); } catch (Exception e) {  }
+			after = this.getEnergySample();
+			measurements.add(EnergyMeasurement.between(before, after));
+			before = after;
+		}
+	}
+
+	public void reset() {
+		exit = false;
+		measurements.clear();
+	}
+
+	/** Last K measurements in raw string format */
+	public String[] getLastKMeasurements(int k) {
+		int start = measurements.size() - k;
+		int arrayIndex = 0;
+
+		if (start < 0) {
+			start = 0;
+			k = measurements.size();
+		}
+
+		EnergyMeasurement[] lastK = new String[k];
+		for (int i = start; i < measurements.size(); i++) {
+			lastK[arrayIndex++] = measurements.get(i);
+        }
+		
+		return measurementsArray;
+	}
+
+	public int getSamplingRate() {
+		return samplingRate;
+	}
+
+	/** Sets the energy sampling rate
+	 *	@param s sampling rate (in milliseconds)
+	*/
+	public void setSamplingRate(int s) {
+		samplingRate = s;
+	}
+
+	/** Gets the number of measurements the monitor currently collected
+	 *	@return number of measurements collected so far
+	*/
+	public int getNumMeasurements() {
+		return measurements.size();
+	}
+
+	/** Dumps all measurements to file, along with the sampling rate, in CSV format.
+	 *	Same format as <code>this.toString()</code>
+	 *	@param fileName name of file to write to
+	*/
+	public void writeFileCSV(String fileName) {
+		BufferedWriter writer = null;
+		try {
+			writer = new BufferedWriter (
+				(fileName == null)
+					? new OutputStreamWriter(System.out)
+					: new FileWriter(new File(fileName))
+			);
+			writer.write(EnergyDiff.csvHeader()+"\n");
+			for (EnergyDiff measurement : measurements)
+				writer.write(measurement.csv()+"\n");
+			writer.flush();
+			if (fileName != null) writer.close();
+		} catch (IOException e) {
+			System.out.println("error writing " + fileName);
+			e.printStackTrace();
+		}
+	}
 }

@@ -21,34 +21,8 @@ final class NativeAccess { // @TODO: make sure you know exactly what it means to
     public native static String energyStatCheck();
     public native static void setCSVDelimiter(char c);
 
-    // AsyncEnergyMonitor.c
-    public native static void   startMonitor ();
-    public native static void   stopMonitor ();
-    public native static void   resetMonitor ();
-    public native static void   activateMonitor (int samplingRate,int storageType,int size_parameter);
-    public native static void   deactivateMonitor ();
-    public native static void   writeFileCSVMonitor (String filePath);
-    public native static String getLastKSamplesMonitor (int k);
-    public native static long[] getLastKTimestampsMonitor (int k);
-    public native static int    getNumSamplesMonitor ();
-    public native static void   setSamplingRateMonitor (int s);
-    public native static int    getSamplingRateMonitor ();
-
-    // not implemented in my C code, but it's EnergyController.java-related code
-    //  rapl power cap controller
-    private native static double[] GetDramPowerSpec();
-    private native static void SetPackagePowerLimit(int socketId, int level, double costomPower);
-    private native static void SetPackageTimeWindowLimit(int socketId, int level, double costomTimeWin);
-    private native static void SetDramTimeWindowLimit(int socketId, int level, double costomTimeWin);
-    private native static void SetDramPowerLimit(int socketId, int level, double costomPower);
-    private native static void SetPowerLimit(int ENABLE);
-    // dvfs controller
-    private native static int scale(int freq);
-    private native static int[] freqAvailable();
-    private native static void SetGovernor(String gov);
-
 	private static void loadNativeLibrary() {
-		String nativelib = "/native/libJNIRAPL.so";
+		String nativelib = "/jniRAPL/librapl_jni.so";
 		try {
 			NativeUtils.loadLibraryFromJar(nativelib);
 		} catch (Exception e) {
@@ -57,6 +31,7 @@ final class NativeAccess { // @TODO: make sure you know exactly what it means to
 			System.exit(1);
 		}
 	}
+
     static {
         loadNativeLibrary();
     }
@@ -78,10 +53,5 @@ final class NativeAccess { // @TODO: make sure you know exactly what it means to
     }
 
     private NativeAccess() {}
-
-    // private static NativeAccess instance = new NativeAccess();
-    // public static NativeAccess getInstance() {
-    //     return instance;
-    // }
 
 }

@@ -1,86 +1,41 @@
 package jRAPL;
 
-import java.util.Arrays;
+import java.time.Instant;
 
-// @TODO consider making EnergySamples's two subclasses be named EnergyStamp and EnergyLapse, instead of EnergyStats and EnergyDiff
+/** High-level representation of jrapl's energy stats. */
+public final class EnergySample {
 
-public abstract class EnergySample
-{
-	private final double[] primitiveSample;
-	protected native static String csvHeader();
-	
-	public EnergySample(double[] primitiveSample) {
-		this.primitiveSample = Arrays.copyOfRange(
-			primitiveSample, 0, ArchSpec.NUM_SOCKETS*ArchSpec.NUM_STATS_PER_SOCKET
-		);
-	}
-	
+	private Instant timestamp;
+    private double[] raplCounters;
+    
+    public EnergySample(double[] raplData) {
+		this.raplCounters = raplCounters.clone();
+        this.timestamp = Instant.now();
+    }
+
 	public EnergySample(EnergySample other) {
-		this.primitiveSample = other.primitiveSample.clone();
+		this.raplData = other.raplCounters.clone();
+        this.timestamp = other.timestamp;
 	}
 
-	protected String csv() {
+	public String csv() {
 		String s = new String();
-		for (int i = 0; i < primitiveSample.length; i++) {
+		for (int i = 0; i < raplCounters.length; i++) {
 			s += String.format("%.6f%s", primitiveSample[i], EnergyMonitor.getCSVDelimiter());
 		}
-		return s;
+		return s + timestamp;
 	}
 
-	public double[] getPrimitiveSample() {
-		return primitiveSample.clone();
+    public String toString() {
+        return csv();
+    }
+
+	public double[] getRaplCounters() {
+		return raplCounters.clone();
 	}
-	private double getEnergy(int socket, int index) {
-		if (index == -1) return -1; // index of -1 for a power domain means the power domain is not supported by your system
-		int socketOffset = (socket-1)*ArchSpec.NUM_STATS_PER_SOCKET;
-		return primitiveSample[socketOffset + index];
+
+	public Instant getTimestamp() {
+		return timestamp;
 	}
-	public double getCore(int socket) {
-		return getEnergy(socket, ArchSpec.CORE_IDX);
-	}
-	public double getCore() {
-		double result = 0;
-		for (int s = 1; s <= ArchSpec.NUM_SOCKETS; s++) {
-			result += getCore(s);
-		} return result;
-	}
-	public double getGpu(int socket) {
-		return getEnergy(socket, ArchSpec.GPU_IDX);
-	}
-	public double getGpu() {
-		double result = 0;
-		for (int s = 1; s <= ArchSpec.NUM_SOCKETS; s++) {
-			result += getGpu(s);
-		} return result;
-	}
-	public double getPackage(int socket) {
-		return getEnergy(socket, ArchSpec.PKG_IDX);
-	}
-	public double getPackage() {
-		double result = 0;
-		for (int s = 1; s <= ArchSpec.NUM_SOCKETS; s++) {
-			result += getPackage(s);
-		} return result;
-	}
-	public double getDram(int socket) {
-		return getEnergy(socket, ArchSpec.DRAM_IDX);
-	}
-	public double getDram() {
-		double result = 0;
-		for (int s = 1; s <= ArchSpec.NUM_SOCKETS; s++) {
-			result += getDram(s);
-		} return result;
-	}
-	
+
 }
-// 	protected static String dumpHeader() {
-// 		return ArchSpec.ENERGY_STATS_STRING_FORMAT.replace("@",EnergyMonitor.getCSVDelimiter()); 
-// 	}
-// 
-// 	public String dump() {
-// 		String s = new String();
-// 		for (int i = 0; i < primitiveSample.length; i++) {
-// 			s += String.format("%.6f"+EnergyMonitor.getCSVDelimiter(),primitiveSample[i]);
-// 		}
-// 		return s;
-// 	}
