@@ -1,19 +1,12 @@
 package jRAPL;
 
-//@TODO: change name to NativeManager or JNIManager or JNIFunctions or something
-final class NativeAccess { // @TODO: make sure you know exactly what it means to have a final class
-
-    //@TODO: make these methods not static / part of this singleton object if possible, or not.
-    //  but it could be a convention where you wrap each one, and have any 'are you subscribed' guard checks on every single function all
-
+final class NativeAccess {
     // ArchSpec.c
 	public native static int getSocketNum();
 	public native static double getWraparoundEnergy();
 	public native static double getDramWraparoundEnergy();
 	public native static String getMicroArchitectureName();
-	public native static int getMicroArchitecture();
-	public native static String energyStatsStringFormat();
-	public native static String getEnergySampleArrayOrder();
+	public native static int getMicroArchitectureID();
 
     // EnergyCheckUtils.c
     public native static void profileInit();
@@ -44,7 +37,7 @@ final class NativeAccess { // @TODO: make sure you know exactly what it means to
         }
         subscribers++;
     }
-    public static synchronized void unsubscribe() { //@todo: make sure that synchronized actually means 'this method will run atomically because it is a critical section'
+    public static synchronized void unsubscribe() {
         assert (subscribers >= 0);
         if (subscribers == 1) {
             profileDealloc();
@@ -53,5 +46,4 @@ final class NativeAccess { // @TODO: make sure you know exactly what it means to
     }
 
     private NativeAccess() {}
-
 }
