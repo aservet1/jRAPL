@@ -101,8 +101,8 @@ public class AsyncEnergyMonitor extends EnergyMonitor implements Runnable {
 
 		// java generate JSON for the meta info object RIGHT HERE RIGHT NOW
 		String json = String.format( //@TODO make sure all of the metainfo points are here or if you need to gather more data to display
-				"{\"samplingRate\": %d, \"lifetime\": %d, \"numMeasurements\": %d, \"energyWrapAround\": %f }",
-				samplingRate, lifetime, numMeasurements, ArchSpec.RAPL_WRAPAROUND);
+				"{\"samplingRate\": %d, \"lifetime\": %d, \"numMeasurements\": %d }",
+				samplingRate, lifetime, numMeasurements);
 		try {
 			BufferedWriter writer = new BufferedWriter (
 							(fileName == null)
