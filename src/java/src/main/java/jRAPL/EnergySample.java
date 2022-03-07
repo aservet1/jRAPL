@@ -2,7 +2,11 @@ package jRAPL;
 
 import java.time.Instant;
 
-/** High-level representation of jrapl's energy stats. */
+/** High-level representation of jrapl's energy stats.
+ * 	This class should only be used as an intermediate holder
+ * 	for your sample data until you produce an EnergyMeasurement
+ * 	between two of these. It's not really useful data on its own.
+ */
 public final class EnergySample {
 
 	private Instant timestamp;

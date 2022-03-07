@@ -6,8 +6,6 @@ sudo -v
 
 printf "\nhello w0rld\n\n";
 
-runDriver=""
-
 for driverArgs in \
 	'ArchSpec' \
 	'EnergyMonitor' \
