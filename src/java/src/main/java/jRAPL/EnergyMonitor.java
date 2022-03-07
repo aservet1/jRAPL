@@ -1,10 +1,5 @@
 package jRAPL;
 
-import java.util.Arrays;
-import java.time.Instant;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-
 public class EnergyMonitor {
 
 	private boolean active = false;
@@ -43,24 +38,16 @@ public class EnergyMonitor {
 
 	private static String csvDelimiter = ",";
 
-	private static double stringToDoubleConsideringComma(String s) {
-		double d = 0;
-		try {
-			d = Double.parseDouble(s.replace(",","."));
-		} catch (NumberFormatException ex) {
-			System.err.println("ERROR turning string to a double: " + s);
-			ex.printStackTrace();
-			System.exit(1);
-		}
-		return d;
+	public static String getCSVDelimiter() {
+		return csvDelimiter;
 	}
 
-	public EnergySample getSample() {
+	public EnergySample getEnergySample() {
         String raplString = NativeAccess.energyStatCheck();
         String[] raplStringParts = raplString.split("#");
         double[] raplData = new double[raplStringParts.length];
         for(int i = 0; i < raplData.length; ++i) {
-            raplData[i] = Double.toString(raplStringParts[i]);
+            raplData[i] = Double.parseDouble(raplStringParts[i]);
         }
         return new EnergySample(raplData);
 	}

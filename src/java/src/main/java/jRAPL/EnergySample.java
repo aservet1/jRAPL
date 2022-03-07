@@ -14,14 +14,14 @@ public final class EnergySample {
     }
 
 	public EnergySample(EnergySample other) {
-		this.raplData = other.raplCounters.clone();
+		this.raplCounters = other.raplCounters.clone();
         this.timestamp = other.timestamp;
 	}
 
 	public String csv() {
 		String s = new String();
 		for (int i = 0; i < raplCounters.length; i++) {
-			s += String.format("%.6f%s", primitiveSample[i], EnergyMonitor.getCSVDelimiter());
+			s += String.format("%.6f%s", raplCounters[i], EnergyMonitor.getCSVDelimiter());
 		}
 		return s + timestamp;
 	}

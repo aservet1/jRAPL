@@ -5,23 +5,21 @@ import java.time.Duration;
 
 public final class EnergyMeasurement {
 
-    private int[] dramPerSocket = new int[ArchSpec.NUM_SOCKETS];
-    private int[] pp0PerSocket  = new int[ArchSpec.NUM_SOCKETS];
-    private int[] pp1PerSocket  = new int[ArchSpec.NUM_SOCKETS];
-    private int[] pkgPerSocket  = new int[ArchSpec.NUM_SOCKETS];
+    private double[] dramPerSocket;
+    private double[] pp0PerSocket ;
+    private double[] pp1PerSocket ;
+    private double[] pkgPerSocket ;
 
 	private Instant startTimestamp;
 	private Instant stopTimestamp;
 
-	private EnergyMeasurement(double[] measurements, Instant startTimestamp, Instant stopTimestamp) {
-        for(int socket = 0; socket < ArchSpec.NUM_SOCKETS; socket+=4) {
-            dramPerSocket[socket] = diffArray[socket+0];
-            pp0PerSocket[socket]  = diffArray[socket+1];
-            pp1PerSocket[socket]  = diffArray[socket+2];
-            pkgPerSocket[socket]  = diffArray[socket+3];
-        }
+	private EnergyMeasurement(double[] dram, double[] pp0, double[] pp1, double[] pkg, Instant startTimestamp, Instant stopTimestamp) {
+        this.dramPerSocket  = dram;
+        this.pp0PerSocket   = pp0;
+        this.pp1PerSocket   = pp1;
+        this.pkgPerSocket   = pkg;
 		this.startTimestamp = startTimestamp;
-		this.stopTimestamp = stopTimestamp;
+		this.stopTimestamp  = stopTimestamp;
 	}
 
     public double getDRAM(int socket) { return dramPerSocket[socket]; }
@@ -109,46 +107,56 @@ public final class EnergyMeasurement {
         return csv + getStartTimestamp() + delim + getTimeElapsed();
 	}
 
-    private double raplSubtract(double x, double y) {
-        if (x < 0 || y < 0) return -1;
-        double diff = x - y;
+    private static boolean bothPositive(double x, double y) {
+        return !(x < 0 || y < 0);
     }
 
-	public static EnergyMeasurement between(EnergyStats before, EnergyStats after) {
+	public static EnergyMeasurement between(EnergySample before, EnergySample after) {
         // see src/native/JNI/EnergyCheckUtils.c for the source of truth behind these indices
-        int dram_pos =  0;
-        int pp0_pos  =  1;
-        int pp1_pos  =  2;
-        int pkg_pos  =  3;
+        int dram_i =  0;
+        int pp0_i  =  1;
+        int pp1_i  =  2;
+        int pkg_i  =  3;
 
-        double[] dram = int[ArchSpec.NUM_SOCKETS];
-        double[] pp0  = int[ArchSpec.NUM_SOCKETS];
-        double[] pp1  = int[ArchSpec.NUM_SOCKETS];
-        double[] pkg  = int[ArchSpec.NUM_SOCKETS];
+        double[] dram = new double[ArchSpec.NUM_SOCKETS];
+        double[] pp0  = new double[ArchSpec.NUM_SOCKETS];
+        double[] pp1  = new double[ArchSpec.NUM_SOCKETS];
+        double[] pkg  = new double[ArchSpec.NUM_SOCKETS];
        
+        double[] raplCountersAfter  = after.getRaplCounters();
         double[] raplCountersBefore = before.getRaplCounters();
-        double[] raplCountersAfter  = after.getRaplCoutners();
+
         for(int socket = 0; socket < ArchSpec.NUM_SOCKETS; ++socket) {
-            dram[socket+dram_i] = raplCountersAfter[socket+dram_i] - raplCountersBefore[socket+dram_i];
-            pp0[socket+pp0_i]   = raplCountersAfter[socket+pp0_i]  - raplCountersBefore[socket+pp0_i];
-            pp1[socket+pp1_i]   = raplCountersAfter[socket+pp1_i]  - raplCountersBefore[socket+pp1_i];
-            pkg[socket+pkg_i]   = raplCountersAfter[socket+pkg_i]  - raplCountersBefore[socket+pkg_i];
-            if (dram[socket+dram_pos] < 0) {
-                
+            if (bothPositive(raplCountersAfter[socket+dram_i], raplCountersBefore[socket+dram_i])) {
+                dram[socket] = raplCountersAfter[socket+dram_i] - raplCountersBefore[socket+dram_i];
+                if (dram[socket] < 0 ) dram[socket] += ArchSpec.DRAM_RAPL_WRAPAROUND;
+            } else {
+                dram[socket] = -1;
+            }
+            if (bothPositive(raplCountersAfter[socket+pp0_i], raplCountersBefore[socket+pp0_i])) {
+                pp0[socket] = raplCountersAfter[socket+pp0_i] - raplCountersBefore[socket+pp0_i];
+                if (pp0[socket] < 0 ) pp0[socket] += ArchSpec.RAPL_WRAPAROUND;
+            } else {
+                pp0[socket] = -1;
+            }
+            if (bothPositive(raplCountersAfter[socket+pp1_i], raplCountersBefore[socket+pp1_i])) {
+                pp1[socket] = raplCountersAfter[socket+pp1_i] - raplCountersBefore[socket+pp1_i];
+                if (pp1[socket] < 0 ) pp1[socket] += ArchSpec.RAPL_WRAPAROUND;
+            } else { 
+                pp1[socket] = -1;
+            }
+            if (bothPositive(raplCountersAfter[socket+pkg_i], raplCountersBefore[socket+pkg_i])) {
+                pkg[socket] = raplCountersAfter[socket+pkg_i] - raplCountersBefore[socket+pkg_i];
+                if (pkg[socket] < 0 ) pkg[socket] += ArchSpec.RAPL_WRAPAROUND;
+            } else {
+                pkg[socket] = -1;
             }
         }
 
-		double[] primitiveSample =
-			EnergyMonitor
-				.subtractPrimitiveSamples (
-					after.getPrimitiveSample(),
-					before.getPrimitiveSample()
-				);
-		return new EnergyMeasurement (
-			primitiveSample,
+        return new EnergyMeasurement (
+			dram, pp0, pp1, pkg,
 			before.getTimestamp(),
 			after.getTimestamp()
 		);
 	}
-
 }

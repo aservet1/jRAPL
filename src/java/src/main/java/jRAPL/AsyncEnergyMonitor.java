@@ -8,27 +8,27 @@ import java.io.OutputStreamWriter;
 import java.io.FileWriter;
 
 import java.time.Instant;
+import java.time.Duration;
 
-public class AsyncEnergyMonitor extends EnergyMonitor {
+public class AsyncEnergyMonitor extends EnergyMonitor implements Runnable {
 
-	protected Instant monitorStartTime = null;
-	protected Instant monitorStopTime = null;
-	protected boolean isRunning = false;
-	protected int samplingRate;
+	private Instant monitorStartTime = null;
+	private Instant monitorStopTime = null;
+	private boolean isRunning = false;
 
 	private ArrayList<EnergyMeasurement> measurements;
 	private int samplingRate; // milliseconds
 	private volatile boolean exit = false;
 	private Thread t = null;
 
-	public AsyncEnergyMonitorJavaSide() {
+	public AsyncEnergyMonitor() {
 		samplingRate = 10;
-		measurements = new ArrayList<EnergyDiff>();
+		measurements = new ArrayList<EnergyMeasurement>();
 	}
 
-	public AsyncEnergyMonitorJavaSide(int s) {
+	public AsyncEnergyMonitor(int s) {
 		samplingRate = s;
-		measurements = new ArrayList<EnergyDiff>();
+		measurements = new ArrayList<EnergyMeasurement>();
 	}
 
 	@Override
@@ -76,6 +76,8 @@ public class AsyncEnergyMonitor extends EnergyMonitor {
 		monitorStartTime = null;
 		monitorStopTime = null;
         isRunning = false;
+		exit = false;
+		measurements.clear();
 	}
 
 	public boolean isRunning() {
@@ -147,13 +149,8 @@ public class AsyncEnergyMonitor extends EnergyMonitor {
 		}
 	}
 
-	public void reset() {
-		exit = false;
-		measurements.clear();
-	}
-
 	/** Last K measurements in raw string format */
-	public String[] getLastKMeasurements(int k) {
+	public EnergyMeasurement[] getLastKMeasurements(int k) {
 		int start = measurements.size() - k;
 		int arrayIndex = 0;
 
@@ -162,12 +159,12 @@ public class AsyncEnergyMonitor extends EnergyMonitor {
 			k = measurements.size();
 		}
 
-		EnergyMeasurement[] lastK = new String[k];
+		EnergyMeasurement[] lastK = new EnergyMeasurement[k];
 		for (int i = start; i < measurements.size(); i++) {
 			lastK[arrayIndex++] = measurements.get(i);
         }
 		
-		return measurementsArray;
+		return lastK;
 	}
 
 	public int getSamplingRate() {
@@ -200,8 +197,8 @@ public class AsyncEnergyMonitor extends EnergyMonitor {
 					? new OutputStreamWriter(System.out)
 					: new FileWriter(new File(fileName))
 			);
-			writer.write(EnergyDiff.csvHeader()+"\n");
-			for (EnergyDiff measurement : measurements)
+			writer.write(EnergyMeasurement.csvHeader()+"\n");
+			for (EnergyMeasurement measurement : measurements)
 				writer.write(measurement.csv()+"\n");
 			writer.flush();
 			if (fileName != null) writer.close();
