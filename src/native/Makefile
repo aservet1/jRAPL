@@ -20,10 +20,10 @@ CFLAGS = -fPIC -g -c -Wall
 
 all: preprocess_code_from_text $(LIB)
 
-preprocess_code_from_text: $(PLATFORM_SUPPORT).c
+preprocess_code_from_text: $(PLATFORM_SUPPORT).c $(PLATFORM_SUPPORT).tsv generate_$(PLATFORM_SUPPORT).awk
 
 $(PLATFORM_SUPPORT).c: $(PLATFORM_SUPPORT).tsv
-	awk -f generate_platform_support.awk $< > $@
+	awk -f generate_$(PLATFORM_SUPPORT).awk $< > $@
 
 $(LIB): $(CFILES)
 	$(COMPILER) $(CFLAGS) $(CFILES)
