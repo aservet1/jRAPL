@@ -15,14 +15,18 @@
 
 
 /**Energy measurement**/
-#define MSR_PP0_ENERGY_STATUS			0x639 //read to core_buffer[i] in EnergyCheckUtils.c
-#define MSR_PP1_ENERGY_STATUS     0x641 //read to gpu_buffer[i] in EnergyCheckUtils.c
-#define MSR_PKG_ENERGY_STATUS			0x611 //read to package[i] in EnergyCheckUtils.c (total energy usage)
-#define MSR_DRAM_ENERGY_STATUS		0x619 //read to dram_buffer[i] in EnergyCheckUtils.c
+#define MSR_DRAM_ENERGY_STATUS   0x619
+#define MSR_PP0_ENERGY_STATUS    0x639
+#define MSR_PP1_ENERGY_STATUS    0x641
+#define MSR_PKG_ENERGY_STATUS    0x611
 
 /**Power/time window maximum/minimum information(Only support for PKG and DRAM **/
 #define MSR_PKG_POWER_INFO				0x614
 #define MSR_DRAM_POWER_INFO     	0x61C
+
+/*Power domains*/
+#define PKG_DOMAIN	0
+#define DRAM_DOMAIN	1
 
 /**Power limit**/
 #define MSR_PKG_POWER_LIMIT       0x610
@@ -30,14 +34,9 @@
 #define MSR_PP0_POWER_LIMIT       0x638
 #define MSR_PP1_POWER_LIMIT       0x640
 
-/*Power domains*/
-#define PKG_DOMAIN	0
-#define DRAM_DOMAIN	1
-
 /*Power limit set*/
 #define DISABLE 0
 #define ENABLE 1
-
 
 //---------Alejandro's recent #defines---------------//
 //@TODO group them with reasonable /**Descriptions**/ like the ones above
@@ -121,13 +120,6 @@ typedef struct rapl_msr_power_limit_t {
 	uint64_t lock_enable;
 } rapl_msr_power_limit_t;
 
-////deglobalized(?)
-/*extern char *ener_info;
-extern rapl_msr_unit rapl_unit;
-extern int *fd;
-extern rapl_msr_parameter *parameters;*/
-
-
 typedef enum {
 	MINIMUM_POWER_LIMIT = 0,
 	MAXIMUM_POWER_LIMIT,
@@ -183,7 +175,7 @@ read_msr(int fd, uint64_t which);
 void
 write_msr(int fd, uint64_t which, uint64_t limit_info);
 
-double get_wraparound_energy(double energy_unit);
+double get_rapl_wraparound(double energy_unit);
 
 void get_msr_unit(rapl_msr_unit *unit_obj, uint64_t data);
 

@@ -1,17 +1,11 @@
-#include <stdint.h>
-#include <unistd.h>
 #ifndef _ARCH_SPEC_H
 #define _ARCH_SPEC_H
-#include "msr.h"
-#include "micro_architectures.h"
 
-#define CPUID				\
-    __asm__ volatile ("cpuid"   	\
-			: "=a" (eax),	\
-			"=b" (ebx),	\
-			"=c" (ecx),	\
-			"=d" (edx)	\
-			: "0" (eax), "2" (ecx))
+#include <stdint.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include "msr.h"
+#include "platform_support.h"
 
 typedef struct APIC_ID_t {
 	uint64_t smt_id;
@@ -26,6 +20,9 @@ typedef struct cpuid_info_t {
 	uint32_t ecx;
 	uint32_t edx;
 } cpuid_info_t;
+
+#define CPUID \
+  __asm__ volatile ("cpuid" : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx) : "0" (eax), "2" (ecx))
 
 /** 
   *	None of these are global variables any more
@@ -79,17 +76,13 @@ getSocketNum();
 rapl_msr_unit
 get_rapl_unit();
 
-int 
-get_power_domains_supported(uint32_t micro_architecture);
+power_domain_support_info_t
+get_power_domains_supported();
 
-/*
-    These macros possible return values of
-    get_power_domains_supported. The actual values
-    are arbitary as long as they are distinct.
-*/
-#define UNDEFINED_ARCHITECTURE 0xA0U
-#define DRAM_GPU_CORE_PKG 0xA1U
-#define DRAM_CORE_PKG 0xA2U
-#define GPU_CORE_PKG 0xA3U
+bool
+is_this_the_current_architecture(const char* candidate_arch_name);
+
+void
+get_arch_name(char buf[]);
 
 #endif

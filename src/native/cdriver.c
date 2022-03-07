@@ -7,83 +7,74 @@
 #include <fcntl.h>
 
 #include "energy_check_utils.h"
-#include "async_energy_monitor.h"
 #include "arch_spec.h"
+#include "platform_support.h"
 
-void sleep_print(int seconds)
-{
+void sleep_print(int seconds) {
 	for (int s = 1; s <= seconds; s++) {
 		printf("%d\n",s);
 		sleep(1);
 	}
 }
 
-void pkg_power_sampleread() {
-	int fd = open("/dev/cpu/0/msr",O_RDONLY);
-	rapl_msr_unit rapl_unit = get_rapl_unit(fd);
-	double power_pkg = read_msr(fd, MSR_PKG_POWER_INFO) * rapl_unit.power;
-	printf("%f\n",power_pkg);
-	close(fd);
-}
-
-int main(int argc, const char* argv[])
-{
-	set_csv_delimiter('\t');
+int main(int argc, const char* argv[]) {
 	ProfileInit();
+	power_domain_support_info_t pds = get_power_domains_supported();
+	fprintf(
+		stdout,
+		"platform power domain support: {cpuid 0x%x, dram = %d, pp0 = %d, pp1 = %d, pkg = %d}\n",
+		pds.cpuid, pds.dram, pds.pp0, pds.pp1, pds.pkg
+	);
+	uint32_t microarch = get_micro_architecture();
 
-	AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,DYNAMIC_ARRAY_STORAGE,64);
-	// AsyncEnergyMonitor* m = newAsyncEnergyMonitor(10,LINKED_LIST_STORAGE,64);
-	start(m);
-	sleep_print(3);
-	//sleep(5);
-	stop(m);
-	writeFileCSV(m,NULL);
+	fprintf(
+		stdout,
+		"reported microarch id: 0x%x\n",
+		microarch
+	);
 
-	int k = 7;
-	//energy_info_t* lastk = (energy_info_t*)malloc(sizeof(energy_info_t)*k);
-	energy_measurement_t lastk[k];
+	char arch_name_buf[32];
+	get_arch_name(arch_name_buf);
+	fprintf(
+		stdout,
+		"reported microarch name: %s\n",
+		arch_name_buf
+	);
 
-	printf("lastk pre-init: %p\n",lastk);
-	lastKSamples(k,m,lastk);
-	printf("lastk pos-init: %p\n",lastk);
-
-	printf(":)\n --\n");
-	char csv_string_buffer[512];
 	int num_sockets = getSocketNum();
-	energy_measurement_t multisocket_sample_buffer[num_sockets];
-	for (int i = 0; i < k; i+=num_sockets) {
-		for (int j = 0; j < num_sockets; j++) {
-			multisocket_sample_buffer[j] = lastk[i+j];
-		}
-		energy_measurement_csv_string(multisocket_sample_buffer, csv_string_buffer);
-		printf("%s\n", csv_string_buffer);
+
+	energy_stat_t energy_before[num_sockets];
+	EnergyStatCheck(energy_before);
+	for(int i = 0; i < num_sockets; ++i) {
+		fprintf(
+			stdout,
+			"\nbefore: socket %d: {dram = %.6f, pkg = %.6f, pp0 = %.6f, pp1 = %.6f}\n",
+			i, energy_before[i].dram, energy_before[i].pkg, energy_before[i].pp0, energy_before[i].pp1
+		);
 	}
 
-	//free(lastk); lastk = NULL;
-	freeAsyncEnergyMonitor(m);
+	sleep(1);
+
+	energy_stat_t energy_after[num_sockets];
+	EnergyStatCheck(energy_after);
+	for(int i = 0; i < num_sockets; ++i) {
+		fprintf(
+			stdout,
+			"after:  socket %d: {dram = %.6f, pkg = %.6f, pp0 = %.6f, pp1 = %.6f}\n",
+			i, energy_after[i].dram, energy_after[i].pkg, energy_after[i].pp0, energy_after[i].pp1
+		);
+	}
+
+	fprintf(stdout,"\n");
+
+	for (int i = 0; i < num_sockets; ++i) {
+		energy_measurement_t joules = measure_energy_between_stat_check(energy_before[i],energy_after[i]);
+		fprintf(
+			stdout,
+			"joules:  socket %d: {dram = %.6f, pkg = %.6f, pp0 = %.6f, pp1 = %.6f}\n",
+			i, joules.dram, joules.pkg, joules.pp0, joules.pp1
+		);
+	}
 
 	ProfileDealloc();
-
-	// ProfileInit();
-	// char csv_header[1024];
-	// energy_stats_csv_header(csv_header);
-	// printf("%s\n", csv_header);
-
-	// char csv_string[1024];
-	// int num_sockets = getSocketNum();
-	// energy_stat_t stats[num_sockets];
-	// for (int x = 0; x < 10; x++) {
-	// 	sleep(1);
-	// 	EnergyStatCheck(stats);
-	// 	for (int i = 0; i < num_sockets; i++) {
-	// 		energy_info_t e = stats[i];
-	// 		energy_stats_csv_string(e, csv_string);
-	// 		printf("%s\n", csv_string);
-	// 	}
-	// }
-	// ProfileDealloc();
-
-	// ProfileInitAllCores(5);
-	// ProfileDeallocAllCores();
-
 }

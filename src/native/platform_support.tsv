@@ -1,0 +1,15 @@
+"id"    "platform name" "dram"  "pp0"   "pp1"   "pkg"
+0x2A    SANDYBRIDGE     false   true    true     true
+0x2D    SANDYBRIDGE_EP  true    true    false    true
+0x3A    IVYBRIDGE       false   true    true     true
+0x3C    HASWELL1        true    true    false    true
+0x3F    HASWELL_EP      true    true    false    true
+0x45    HASWELL2        true    true    false    true
+0x46    HASWELL3        true    true    false    true
+0x4E    SKYLAKE1        true    true    false    true
+0x4F    BROADWELL2      true    true    false    true
+0x5C    APOLLOLAKE      true    true    false    true
+0x5E    SKYLAKE2        true    true    false    true
+0x8e    KABYLAKE        true    true    true     true
+0x9e    COFFEELAKE2     true    true    false    true
+0xD4    BROADWELL       true    true    true     true

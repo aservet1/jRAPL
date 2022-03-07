@@ -1,23 +1,17 @@
-
 JAVAHOME = $(shell readlink -f /usr/bin/javac | sed "s:bin/javac::")
 JAVA_INCLUDE = $(JAVAHOME)/include
 JAVA_INCLUDE_LINUX = $(JAVA_INCLUDE)/linux
 
-JNI_LIB = libJNIRAPL.so
-NATIVE_FILES_LOCATION = ../native
+JNI_LIB = librapl_jni.so
+NATIVE_FILES_LOCATION = ..
 NATIVE_LIB = $(NATIVE_FILES_LOCATION)/libNativeRAPL.a
 
-MAVEN_RESOURCES = ../../src/java/src/main/resources/native/
+MAVEN_RESOURCES = ../../../src/java/src/main/resources/jniRAPL/
   # where maven will find the native library in the JavaSide compilation
 
 INCLUDE_FLAGS = -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE_LINUX) -I$(NATIVE_FILES_LOCATION) 
 
-JNIEXPORTS = \
-		ArchSpec.c \
-		AsyncEnergyMonitor.c \
-		EnergyCheckUtils.c \
-		\
-		RuntimeTestUtils.c
+JNIEXPORTS = ArchSpec.c EnergyCheckUtils.c
 
 OFILES = $(JNIEXPORTS:.c=.o)
 
@@ -35,4 +29,3 @@ $(JNI_LIB): $(JNIEXPORTS)
 clean:
 	rm -f $(JNI_LIB) $(OFILES) $(CDRIVER)
 	rm -f $(MAVEN_RESOURCES)/$(JNI_LIB)
-

@@ -5,8 +5,10 @@
 #include <math.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
 #include "arch_spec.h"
 #include "msr.h"
+#include "platform_support.h"
 
 /** RAPL conversion unit */ //@TODO shouldn't this be in MSR.c??
 rapl_msr_unit
@@ -154,26 +156,36 @@ getSocketNum() {
 	return num_pkg;
 }
 
-int
-get_power_domains_supported(uint32_t micro_architecture) {
-	switch (micro_architecture) {
-		case KABYLAKE:			case BROADWELL:
-		
-			return DRAM_GPU_CORE_PKG;
-		
-		case SANDYBRIDGE_EP:	case HASWELL1:
-		case HASWELL2:			case HASWELL3:
-		case HASWELL_EP:		case SKYLAKE1:
-		case SKYLAKE2: 			case BROADWELL2:
-		case APOLLOLAKE:		case COFFEELAKE2:
+bool is_platform_defined(uint32_t microarch_id) {
+    for(int i = 0; i < NUM_PLATFORMS_SUPPORTED; ++i) {
+		// printf("%x\n",PLATFORM_SUPPORT_TABLE[i].cpuid);
+        if (KNOWN_PLATFORM_ID_SET[i] == microarch_id) return true;
+    } return false;
+}
 
-			return DRAM_CORE_PKG;
-		
-		case SANDYBRIDGE:		case IVYBRIDGE:
-		
-			return GPU_CORE_PKG;
-		
-		default:
-			return UNDEFINED_ARCHITECTURE;
+power_domain_support_info_t
+get_power_domains_supported() {
+    uint32_t microarch_id = get_micro_architecture();
+    if (is_platform_defined(microarch_id)) {
+        return PLATFORM_SUPPORT_TABLE[microarch_id];
+    }
+	return PLATFORM_NOT_SUPPORTED;
+}
+
+bool is_this_the_current_architecture(const char* candidate_arch_name) {
+	uint32_t myarch = get_micro_architecture();
+	if (is_platform_defined(myarch)) {
+		return ( 0 == strcmp(PLATFORM_SUPPORT_TABLE[myarch].name,candidate_arch_name) );
+	}
+	return false;
+}
+
+void get_arch_name(char buf[]) {
+	uint32_t myarch = get_micro_architecture();
+	if (is_platform_defined(myarch)) {
+		sprintf(buf,"%s",PLATFORM_SUPPORT_TABLE[myarch].name);
+	} else {
+		sprintf(buf,"%s","UNDEFINED_ARCHITECTURE");
 	}
 }
+

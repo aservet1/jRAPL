@@ -304,7 +304,7 @@ void get_msr_unit(rapl_msr_unit *unit_obj, uint64_t data) {
  * across an instance of the register wrapping around.
  */
 double
-get_wraparound_energy(double energy_unit) {
+get_rapl_wraparound(double energy_unit) {
 	uint32_t highest_possible_register_value = 0xFFFFFFFF;
 	return highest_possible_register_value * energy_unit;
 }

@@ -5,16 +5,16 @@
 
 typedef struct {
 	float dram;
-	float gpu; //pp1;
-	float core;//pp0;
+	float pp1;
+	float pp0;
 	float pkg;
 	unsigned long timestamp;
 } energy_stat_t;
 
 typedef struct {
 	float dram;
-	float gpu; //pp1;
-	float core;//pp0;
+	float pp1;
+	float pp0;
 	float pkg;
 	unsigned long start_timestamp;
 	unsigned long time_elapsed;

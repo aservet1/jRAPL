@@ -3,6 +3,8 @@
 #include <errno.h>
 #include <sys/time.h>
 
+#include "utils.h"
+
 unsigned long
 usec_since_epoch() {
 	struct timeval t; gettimeofday(&t,0);

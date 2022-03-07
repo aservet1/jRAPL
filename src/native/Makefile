@@ -3,13 +3,14 @@
 
 LIB = libNativeRAPL.a
 
+PLATFORM_SUPPORT = platform_support
+
 CFILES = \
 		energy_check_utils.c \
 		arch_spec.c \
 		msr.c \
-		async_energy_monitor.c \
-		cside_data_storage.c \
 		utils.c \
+        $(PLATFORM_SUPPORT).c
 
 OFILES = $(CFILES:.c=.o)
 CDRIVER = cdriver
@@ -17,17 +18,20 @@ CDRIVER = cdriver
 COMPILER = gcc
 CFLAGS = -fPIC -g -c -Wall
 
-all:
-	make $(LIB)
-	rm -f $(OFILES)
+all: preprocess_code_from_text $(LIB)
+
+preprocess_code_from_text: $(PLATFORM_SUPPORT).c
+
+$(PLATFORM_SUPPORT).c: $(PLATFORM_SUPPORT).tsv
+	awk -f generate_platform_support.awk $< > $@
 
 $(LIB): $(CFILES)
 	$(COMPILER) $(CFLAGS) $(CFILES)
 	ar -rc $(LIB) $(OFILES)
+	rm -f $(OFILES)
 
 $(CDRIVER): $(LIB) $(CFILES) $(CDRIVER).c
 	$(COMPILER) -g -fsanitize=address -fno-omit-frame-pointer $(CDRIVER).c $(LIB) -o $(CDRIVER) -lm -lpthread
-	#gcc -g -fsanitize=address -fno-omit-frame-pointer $(CDRIVER).c $(LIB) -o $(CDRIVER) -lm -lpthread
 
 clean:
-	rm -f $(LIB) $(OFILES) $(CDRIVER)
+	rm -f $(LIB) $(OFILES) $(PLATFORM_SUPPORT).c $(CDRIVER)
