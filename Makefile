@@ -2,13 +2,9 @@ NATIVE_SRC = src/native
 JNI_SRC    = src/native/JNI
 JAVA_SRC   = src/java
 
-SAMPLE_DRIVER_OUTPUT_FILES =                    \
-	AsyncMonitor-CLINKED_LIST.csv               \
-	AsyncMonitor-CLINKED_LIST-metainfo.json     \
-	AsyncMonitor-CDYNAMIC_ARRAY.csv             \
-	AsyncMonitor-CDYNAMIC_ARRAY-metainfo.json   \
-	AsyncMonitor-Java.csv                       \
-	AsyncMonitor-Java-metainfo.json
+SAMPLE_DRIVER_OUTPUT_FILES = \
+	AsyncMonitor.csv         \
+	AsyncMonitor-metainfo.json
 
 NATIVE_TARGET = src/JNI/libJNIRAPL.so
 
