@@ -1,1 +1,2 @@
-*.so # for native library
+# for native library
+*.so
