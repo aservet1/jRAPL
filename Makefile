@@ -1,5 +1,5 @@
 NATIVE_SRC = src/native
-JNI_SRC    = src/JNI
+JNI_SRC    = src/native/JNI
 JAVA_SRC   = src/java
 
 SAMPLE_DRIVER_OUTPUT_FILES =                    \
@@ -12,9 +12,7 @@ SAMPLE_DRIVER_OUTPUT_FILES =                    \
 
 NATIVE_TARGET = src/JNI/libJNIRAPL.so
 
-all:
-	make nativeLib
-	make javaLib
+all: nativeLib javaLib
 
 nativeLib: ## Compile native .so
 	(cd $(NATIVE_SRC) && make)
