@@ -14,7 +14,7 @@ for driverArgs in \
 	'AsyncEnergyMonitor'
 do
 	echo ~~~ $driverArgs ~~~
-	sudo java -cp 'src/java/target/jRAPL-1.0.jar' jRAPL.Demo $driverArgs
+	sudo java -cp 'jRAPL.jar' jRAPL.Demo $driverArgs
 
 	echo =============================================
 done
