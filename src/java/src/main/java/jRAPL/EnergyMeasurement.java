@@ -104,8 +104,12 @@ public final class EnergyMeasurement {
                 getPKG(socket),delim
             );
         }
-        return csv + getStartTimestamp() + delim + getTimeElapsed();
+        return csv + getStartTimestamp().toEpochMilli() + delim + getTimeElapsed().toMillis();
 	}
+
+    public String toString() {
+        return csv();
+    }
 
     private static boolean bothPositive(double x, double y) {
         return !(x < 0 || y < 0);

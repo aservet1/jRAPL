@@ -39,7 +39,7 @@ public class Demo {
 		Thread.sleep(1000);
 		EnergyMeasurement m = EnergyMeasurement.between(stats, monitor.getEnergySample());
 		System.out.println("EnergyMeasurement over 1000ms:");
-		for (int socket = 1; socket <= ArchSpec.NUM_SOCKETS; socket++) {
+		for (int socket = 0; socket < ArchSpec.NUM_SOCKETS; socket++) {
 			System.out.println("DRAM_Sock"+socket+": "+m.getDRAM(socket));
 			System.out.println("PP0_Sock"+socket+": "+m.getPP0(socket));
 			System.out.println("PP1_Sock"+socket+": "+m.getPP1(socket));
@@ -70,15 +70,36 @@ public class Demo {
 		m.deactivate();
 	}
 
+	static void
+	miscMain() {
+		EnergyMonitor m = new EnergyMonitor();
+		m.activate();
+		EnergySample before = m.getEnergySample();
+		try { sleepPrint(10000); } catch (InterruptedException e) { }
+		EnergySample after  = m.getEnergySample();
+		EnergyMeasurement energy = EnergyMeasurement.between(before, after);
+		for(int s = 0; s < ArchSpec.NUM_SOCKETS; ++s) {
+			System.out.print(
+				String.format(
+					"socket %d: { dram = %f, pp0 = %f, pp1 = %f, pkg = %f }\n",
+					s, energy.getDRAM(s), energy.getPP0(s),
+					   energy.getPP1(s) , energy.getPKG(s)
+				)
+			);
+		}
+		m.deactivate();
+	}
+
 	public static void main(String[] args) throws InterruptedException {
 		if (args.length == 0) {
-			System.out.println(" .) Must provide run option args: SyncEnergyMonitor, AsyncEnergyMonitor, or ArchSpec");
+			System.out.println(" .) Must provide run option args: EnergyMonitor, AsyncEnergyMonitor, or ArchSpec");
 			System.exit(args.length);
 		}
 		switch (args[0]) {
 			case "EnergyMonitor" :      demoEnergyMonitor();  break;
 			case "AsyncEnergyMonitor" : demoAsyncEnergyMonitor(); break;
 			case "ArchSpec" :           demoArchSpec();           break;
+			case "miscmain" :			miscMain(); break;
 			default :   System.out.println("invalid args: " + Arrays.toString(args));
 		}
 	}

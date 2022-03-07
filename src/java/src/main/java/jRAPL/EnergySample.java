@@ -8,7 +8,7 @@ public final class EnergySample {
 	private Instant timestamp;
     private double[] raplCounters;
     
-    public EnergySample(double[] raplData) {
+    public EnergySample(double[] raplCounters) {
 		this.raplCounters = raplCounters.clone();
         this.timestamp = Instant.now();
     }
@@ -23,7 +23,7 @@ public final class EnergySample {
 		for (int i = 0; i < raplCounters.length; i++) {
 			s += String.format("%.6f%s", raplCounters[i], EnergyMonitor.getCSVDelimiter());
 		}
-		return s + timestamp;
+		return s + timestamp.toEpochMilli();
 	}
 
     public String toString() {
