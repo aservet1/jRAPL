@@ -9,16 +9,29 @@ I am developing this library as part of a research project for energy aware prog
 version of jRAPL was made several years ago by one of my team members, used for several projects that were going on at the time. I'm taking his existing
 code and expanding on it, adding improvements and making it a standalone general purpose library for the research community to be able to use.
 
-This is still an ongoing development project. As of now (June 10, 2021) the API is mostly done and I'm running benchmarks to measure its performance, to
-see where it can be optimized, and for a technical writeup of the new development of jRAPL.
-
-Because this is still under development, I don't have robust documentation on all of the features and how it works. I have the basics listed below for if
-anyone wants to use it right now for what it is, but there is still development that needs to be done.
-
 ### Prerequeisites
 The Intel RAPL interface requires root access, so all jRAPL programs need to be run as root. It is also not turned on by default, so you can turn it on it
 with `sudo modprobe msr`. If you get errors such as `ERROR read_msr(): pread error!` it's likely that you're either not running root or that you haven't
 used `sudo modprobe msr` since the last time the system booted.
+
+Maven is required to build the Java part of the library.
+
+## How to use
+Build the jRAPL jar with the Makefile in the root of this project. It will trigger sub-Makefiles and Maven to build and piece together
+each component, ending in the jar file. Move/copy this Jar anywhere you'd like and include it in the classpath of any project that references
+it. Note that there is a native library in the Jar, so keep this in mind if you're compiling a larger Jar out of this one; you must ensure that
+the native library is present in any larger Jar that encompasses this project, otherwise jRAPL can't find the essential native code.
+
+## Checking if it works on your machine
+To see if your computer's architecture is supported, run 
+```sudo java -cp jRAPL.jar jRAPL.Demo ArchSpec```
+which will print out a few architecture-specific parameters that jRAPL uses. The relevant output will be something like:
+```
+MICRO_ARCHITECTURE: 8e
+MICRO_ARCHITECTURE_NAME: KABYLAKE
+```
+If `MICRO_ARCHITECTURE_NAME` says something like `UNDEFINED_ARCHITECTURE`, it won't work on your machine.
+Make an entry in `src/native/platform_support.tsv` to add new platform support. See my "Add New Platform Support section"
 
 ### Add new platform suport
 If your platform is not currently supported, and you know it has Intel RAPL capabilities, add a new entry in `src/native/platform_support.tsv` and
@@ -43,6 +56,10 @@ Sample `platform_support.tsv`:
 0x9e    COFFEELAKE2     true    true    false    true
 0xD4    BROADWELL       true    true    true     true
 ```
+`id` is the Model ID provided by Intel specific to this architecture. `platform name` can be any unique
+string you want that will help you identify it, altough we do recommend that it at least somewhat resembles
+the intended name ;)
+
 Simply add a new row with your platform information, available in Intel
 documentation.  The rightmost 4 columns indicate whether your platform
 supports RAPL for each power domain. It's the updater's responsibility
@@ -129,17 +146,6 @@ m.writeFileCSV('data/monitored-activity.csv');
 m.deactivate();
 ```
 This will take energy samples ever 100ms while `doWork()` executes and will then dump the collected data to a CSV file.
-
-## Checking if it works on your machine
-To see if your computer's architecture is supported, run 
-```sudo java -cp src/java/target/jRAPL-1.0.jar jRAPL.Demo ArchSpec```
-which will print out a few architecture-specific parameters that jRAPL uses. The relevant output will be something like:
-```
-MICRO_ARCHITECTURE: 8e
-MICRO_ARCHITECTURE_NAME: KABYLAKE
-```
-If `MICRO_ARCHITECTURE_NAME` says something like `UNDEFINED_ARCHITECTURE`, it won't work on your machine.
-Make an entry in `src/native/platform_support.tsv` to add new platform support. See my "Add New Platform Support section"
 
 ### Contact
 Any questions, feel free to email. Alejandro Servetto {aservet1@binghamton.edu}
