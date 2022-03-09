@@ -5,7 +5,7 @@ jRAPL is a computer energy monitoring API in Java. RAPL stands for Running Avera
 and set power limits. jRAPL uses the energy monitoring technology and implements it in Java, abstracting out low-level details about register reading and how to
 access the data.
 
-This is an extension of the [original](https://github.com/kliu20/jRAPL) jRAPL. That first version was made by one of the researchers under my advisor
+This is an extension of the [original jRAPL](https://github.com/kliu20/jRAPL). That first version was made by one of the researchers under my advisor
 at university. It was used for several PhD projects by different members of the team. Part of my undergraduate research project was to take the jRAPL
 tool and add features, improvements, and modularity to the source code, turning a tool made for a few peoples' projects into a general standalone
 energy monitoring tool, available to the open source community for their own energy-aware research and projects.
@@ -88,11 +88,11 @@ Uncore refers to the parts of a CPU that are not the main cores.
 
 #### EnergySample vs EnergyMeasurement
 There are two types of energy sample objects. `EnergySample` is a running total of energy consumed since the last time the reporting register
-overflowed back to 0. `EnergyMeasurement` is the subtraction of two `EnergySample` objects. The subtraction in constructing and `EnergyMeasurement` handles wraparound
-logic, in case the first sample was ten pre-overflow and the second sample was taken post-overflow.
+overflowed back to 0. `EnergyMeasurement` is the subtraction of two `EnergySample` objects. The subtraction in constructing and `EnergyMeasurement`
+handles wraparound logic, in case the first sample was ten pre-overflow and the second sample was taken post-overflow.
 
 `EnergySample` has an `Instant` timestamp for when the sample was taken and `EnergyMeasurement` has a start and stop timestamp,
-taken from the two `EnergySample`s that created it. There's a `getElapsedTime()` method to get the duration between these timestamps,
+taken from the two `EnergySample` objects that created it. There's a `getElapsedTime()` method to get the duration between these timestamps,
 which is most often useful for calculating power; divide the Joules reported by the time period over which your machine consumed
 those joules.
 
@@ -101,11 +101,11 @@ converted to Joules, but that's not useful on its own. The way RAPL energy statu
 of joules consumed so far. The reason this is not useful is because the counters wrap back to zero. This data becomes useful when you
 take the measurement of energy consumed between two samples. The logic implemented here takes care of register wraparound and makes sure
 that useful, human-consumable values are reported. Therefore, the only useful data you will get is once you convert your series of
-`Energy Samples`s to `Energy Measurement`s.
+`Energy Sample` objects to `Energy Measurement` objects.
 
 #### Getting values from the sample
 The sample object makes it easy to get values for each power domain. Simply call one of the EnergyMeasurement.get\*().
-`sample.getDRAM(void)`, which reports the combined DRAM energy consumptions for all CPU sockets. `sample.getDram(int socket)` and you'll get the value
+`sample.getDRAM(void)`, which reports the combined DRAM energy consumptions for all CPU sockets. `energy.getDram(int socket)` and you'll get the value
 for a given socket.  If a power domain is not supported for your machine, this will return -1.
 
 ### Types of monitors
