@@ -48,9 +48,6 @@ get_num_pkg_core();
 uint64_t
 getSocketNum();
 
-rapl_msr_unit
-get_rapl_unit();
-
 power_domain_support_info_t
 get_power_domains_supported();
 

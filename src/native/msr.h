@@ -171,6 +171,10 @@ write_msr(int fd, uint64_t which, uint64_t limit_info);
 
 double get_rapl_wraparound(double energy_unit);
 
+rapl_msr_unit get_rapl_unit(int msr_fd);
+
+void set_rapl_unit_for_general_MSR_interface_functions_to_reference(int fd);
+
 void get_msr_unit(rapl_msr_unit *unit_obj, uint64_t data);
 
 void get_rapl_pkg_parameters(int fd, rapl_msr_unit *unit_obj, rapl_msr_parameter *paras);

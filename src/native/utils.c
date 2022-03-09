@@ -5,11 +5,6 @@
 
 #include "utils.h"
 
-unsigned long
-usec_since_epoch() {
-	struct timeval t; gettimeofday(&t,0);
-	return t.tv_sec * 1000000UL + t.tv_usec;
-}
 
 int
 sleep_millisecond(long msec) {

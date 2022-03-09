@@ -14,6 +14,7 @@
 
 //factor of F for time_window_limit. It represents these four value.
 static double F_arr[4] = {1.0, 1.25, 1.50, 1.75};
+static rapl_msr_unit rapl_unit;
 
 // Bit twiddling logic for value about to be written to MSR
 void
@@ -69,12 +70,25 @@ void write_msr(int fd, uint64_t msrOffset, uint64_t limit_info) {
 	}
 }
 
+/** RAPL conversion unit */
+rapl_msr_unit
+get_rapl_unit(int msr_fd)
+{
+	rapl_msr_unit rapl_unit;
+	uint64_t unit_info = read_msr(msr_fd, MSR_RAPL_POWER_UNIT);
+	get_msr_unit(&rapl_unit, unit_info);
+	return rapl_unit;
+}
+void
+set_rapl_unit_for_general_MSR_interface_functions_to_reference(int fd) {
+	rapl_unit = get_rapl_unit(fd);
+}
+
 /**
  * Calculates the actual time window from the bits stored in the time window field
  * Formula from Intel Manual: Actual time window value = 2^Y * (1.0 + Z/4.0) * TimeWindowBits.
  */
 double calc_time_window(uint64_t Y, uint64_t F) {
-	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	return _2POW(Y) * F_arr[F] * rapl_unit.time;
 }
 
@@ -83,7 +97,6 @@ double calc_time_window(uint64_t Y, uint64_t F) {
  */
 void
 calc_y(uint64_t *Y, uint64_t F, double custm_time) {
-	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	*Y = log2(custm_time / rapl_unit.time / F_arr[F]);
 }
 
@@ -93,7 +106,6 @@ calc_y(uint64_t *Y, uint64_t F, double custm_time) {
  */
 rapl_msr_power_limit_t
 get_specs(int fd, uint64_t addr) {
-	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	uint64_t msr;
 	rapl_msr_power_limit_t limit_info;
 	msr = read_msr(fd, addr);
@@ -225,7 +237,6 @@ set_dram_time_window_limit(int fd, uint64_t addr, double custm_time) {
  */
 void
 set_pkg_power_limit(int fd, uint64_t addr, double custm_power) {
-	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	uint64_t msr;
 	msr = read_msr(fd, addr);
 	//Set the customized power.
@@ -243,7 +254,6 @@ set_pkg_power_limit(int fd, uint64_t addr, double custm_power) {
  */
 void
 set_dram_power_limit(int fd, uint64_t addr, double custm_power) {
-	rapl_msr_unit rapl_unit = get_rapl_unit(get_msr_fds()[0]);
 	uint64_t msr;
 	msr = read_msr(fd, addr);
 	//Set the customized power.

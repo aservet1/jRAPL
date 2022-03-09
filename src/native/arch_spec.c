@@ -10,16 +10,6 @@
 #include "msr.h"
 #include "platform_support.h"
 
-/** RAPL conversion unit */ //@TODO shouldn't this be in MSR.c??
-rapl_msr_unit
-get_rapl_unit(int msr_fd)
-{
-	rapl_msr_unit rapl_unit;
-	uint64_t unit_info = read_msr(msr_fd, MSR_RAPL_POWER_UNIT);
-	get_msr_unit(&rapl_unit, unit_info);
-	return rapl_unit;
-}
-
 /**
 	Calls cpuid with eax=1 which returns info abt if its SANDYBRIDGE, BROADWELL, ...
 	EAX	Version Information: Type, Family, Model, and Stepping ID

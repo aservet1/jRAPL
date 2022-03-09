@@ -16,43 +16,46 @@
 #include "utils.h"
 #include "platform_support.h"
 
+rapl_msr_unit rapl_unit;
+
 static rapl_msr_parameter* parameters = NULL; // this is for powercap RAPL interface, not energy status RAPL interface
-static int* msr_fds = NULL;
+static int* fd = NULL;
 
 static power_domain_support_info_t power_domains_supported;
 static uint32_t micro_architecture_id;
-static rapl_msr_unit rapl_unit;
 static uint64_t num_sockets;
 static double rapl_wraparound = 0;
 static double dram_rapl_wraparound = 0;
 static double dram_energy_unit = 1;
 static double energy_unit = 1;
 
-int*
-get_msr_fds() { // only valid after ProfileInit() has been called. it's set to NULL in all other cases
-	return msr_fds;
-}
-
 static inline float
 read_PKG(int socket) {
-	uint32_t msr_info = read_msr(msr_fds[socket], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
+	uint32_t msr_info = read_msr(fd[socket], MSR_PKG_ENERGY_STATUS);	//First 32 bits so don't need shift bits.
 	return   msr_info * rapl_unit.energy;
 }
 static inline float
 read_PP0(int socket) {
-	uint32_t msr_info = read_msr(msr_fds[socket], MSR_PP0_ENERGY_STATUS);
+	uint32_t msr_info = read_msr(fd[socket], MSR_PP0_ENERGY_STATUS);
 	return   msr_info * rapl_unit.energy;
 }
 static inline float
 read_PP1(int socket) {
-	uint32_t msr_info = read_msr(msr_fds[socket], MSR_PP1_ENERGY_STATUS);
+	uint32_t msr_info = read_msr(fd[socket], MSR_PP1_ENERGY_STATUS);
 	return   msr_info * rapl_unit.energy;
 }
 
 static inline float
 read_DRAM(int socket) {
-	uint32_t msr_info = read_msr(msr_fds[socket], MSR_DRAM_ENERGY_STATUS);
+	uint32_t msr_info = read_msr(fd[socket], MSR_DRAM_ENERGY_STATUS);
 	return msr_info * dram_energy_unit;
+}
+
+static
+unsigned long
+usec_since_epoch() {
+	struct timeval t; gettimeofday(&t,0);
+	return t.tv_sec * 1000000UL + t.tv_usec;
 }
 
 void
@@ -66,7 +69,7 @@ ProfileInit() {
 
 	/*only two domains are supported for parameters check*/
 	parameters = (rapl_msr_parameter *)malloc(2 * sizeof(rapl_msr_parameter));
-	msr_fds = (int *) malloc(num_sockets * sizeof(int));
+	fd = (int *) malloc(num_sockets * sizeof(int));
 
 	int core = 0;
 	for(int i = 0; i < num_sockets; i++) {
@@ -74,10 +77,11 @@ ProfileInit() {
 			core += num_pkg_thread / 2; 	//measure the first core of each package //@TODO: is the 2 because of HyperThreading??? I need to make sure of this because that's essential!!!!!!!!!!
 		}
 		sprintf(msr_filename, "/dev/cpu/%d/msr", core);
-		msr_fds[i] = open(msr_filename, O_RDWR);
+		fd[i] = open(msr_filename, O_RDWR);
 	}
 
-	rapl_unit = get_rapl_unit(msr_fds[0]);
+	rapl_unit = get_rapl_unit(fd[0]);
+	set_rapl_unit_for_general_MSR_interface_functions_to_reference(fd[0]);
 
 	energy_unit = rapl_unit.energy;
 	rapl_wraparound = get_rapl_wraparound(energy_unit);
@@ -96,16 +100,16 @@ ProfileInit() {
 
 void
 ProfileDealloc() {
-	for (int i = 0; i < num_sockets; i++)
-		close(msr_fds[i]);
-	free(msr_fds); msr_fds = NULL;
+	for (int i = 0; i < num_sockets; i++) {
+		close(fd[i]);
+	} free(fd); fd = NULL;
 	free(parameters); parameters = NULL;
 }
 
 void
 EnergyStatCheck(energy_stat_t energy_stat_per_socket[num_sockets]) {
 	for (int socket = 0; socket < num_sockets; socket++) {
-		energy_stat_per_socket[socket].timestamp = usec_since_epoch();
+		energy_stat_per_socket[socket].timestamp = usec_since_epoch(); // timestamping energy values is useless if this is just being given to Java since I don't give the timestamp to Java. However, I have this field from when I was storing energy samples in C code, and I decided to leave it in here for anyone that uses this code and wants to add features to the native side that require it. Feel free to remove this line and the 'timestamp' field from the struct if you're certain you'll never need to keep samples in C at all
 		energy_stat_per_socket[socket].dram = (power_domains_supported.dram) ? read_DRAM(socket) : -1;
 		energy_stat_per_socket[socket].pp0  = (power_domains_supported.pp0 ) ? read_PP0 (socket) : -1;
 		energy_stat_per_socket[socket].pp1  = (power_domains_supported.pp1 ) ? read_PP1 (socket) : -1;
