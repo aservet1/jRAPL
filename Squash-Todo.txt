@@ -1,13 +1,17 @@
+
 native:
-- have it fail and crash if /dev/cpu/x/msr file not found, tell them they need to load the kernel module
-  - is there any chance whatsoever that mac or windows would have a /dev/cpu/x/msr file?? maybe prevent
-    this slight possibility by just having bazel say 'hey this isnt going to work on your OS, you need linux, sorry'
-    - 'os {OS_NAME} not supported. please contact the maintainer of this repo to discuss jRAPL support for your operating system'
 
 jni:
 - make sure the JNI string converts the numbers to dot decimal
   - even on a comma decimal machine, if Java is parsing a dot decimal string with Double.toString()
 
+java:
+- Proper JavaDoc
+
 build process:
 - consider how to make this the best maven build
 - consider making this a bazel build
+
+other:
+- reread updated readme
+

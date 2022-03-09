@@ -83,6 +83,12 @@ ProfileInit() {
 		}
 		sprintf(msr_filename, "/dev/cpu/%d/msr", core);
 		fd[i] = open(msr_filename, O_RDWR);
+        if (fd[i] < 0) {
+          fprintf(stderr,"ERROR opening MSR interface file.\n"
+            "Most often caused by not running this program as root,\n"
+            "or because MSR kernel module is not enabled. For the latter\n"
+            "circumstance, use the command `sudo modprobe msr` \n.");
+        }
 	}
 
 	rapl_unit = get_rapl_unit(fd[0]);
