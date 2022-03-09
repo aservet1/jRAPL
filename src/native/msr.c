@@ -10,17 +10,12 @@
  *
  *  Great info found on https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
  *    starting on page 3207
- *
- *  "<--- Alejandro's Interpretation --->" comments are not official documentation. Mostly just notes to
- *    self to remember how the functions work and what they do.
  */
 
 //factor of F for time_window_limit. It represents these four value.
-static double F_arr[4] = {1.0, 1.25, 1.50, 1.75}; //was at one point {1.1, 1.2, 1.3, 1.4}
+static double F_arr[4] = {1.0, 1.25, 1.50, 1.75};
 
-/* <--- Alejandro's Interpretation --->
- * Sets the bits in the *data field (has always been MSR so far) to whatever infield is
- */
+// Bit twiddling logic for value about to be written to MSR
 void
 putBitField(uint64_t inField, uint64_t *data, uint64_t width, uint64_t offset)
 {
@@ -41,9 +36,7 @@ putBitField(uint64_t inField, uint64_t *data, uint64_t width, uint64_t offset)
 }
 
 
-/* <--- Alejandro's Interpretation --->
- * Extracts bits from inField. "width" specifies how many bits, "offset" specifies where to start
- */
+// Bit twiddling logic to extract bits from a recent MSR read
 uint64_t
 extractBitField(uint64_t inField, uint64_t width, uint64_t offset)
 {
@@ -61,9 +54,6 @@ extractBitField(uint64_t inField, uint64_t width, uint64_t offset)
 	return outField;
 }
 
-/* <--- Alejandro's Interpretation --->
- * Reads the msr into a uint64_t
- */
 uint64_t read_msr(int fd, uint64_t msrOffset)
 {
 	uint64_t data = 0;
@@ -73,16 +63,13 @@ uint64_t read_msr(int fd, uint64_t msrOffset)
 	return data;
 }
 
-/* <--- Alejandro's Interpretation --->
- * Writes (presumably updated) msr data to msr register
- */
 void write_msr(int fd, uint64_t msrOffset, uint64_t limit_info) {
 	if ( pwrite(fd, &limit_info , sizeof limit_info, msrOffset) != sizeof limit_info) {
 	  fprintf(stderr,"pwrite error!\n");
 	}
 }
 
-/* <--- Alejandro's Interpretation --->
+/**
  * Calculates the actual time window from the bits stored in the time window field
  * Formula from Intel Manual: Actual time window value = 2^Y * (1.0 + Z/4.0) * TimeWindowBits.
  */
@@ -92,7 +79,7 @@ double calc_time_window(uint64_t Y, uint64_t F) {
 }
 
 /* <--- Alejandro's Interpretation --->
- * Takes the previously calculated time window (the human readable verson) and a given F and calculates the Y value. See formula above.
+ * Calculate real Y and F from how they are represented in MSR bits (see Intel Manual MSR API for what Y and F are)
  */
 void
 calc_y(uint64_t *Y, uint64_t F, double custm_time) {
@@ -149,10 +136,6 @@ set_dram_power_limit_enable(int fd, uint64_t setting, uint64_t addr) {
 
 }
 
-/* <--- Alejandro's Interpretation --->
- * Disables both clamp settings. Why doesn't the function give the option to enable them? Is this on purpouse?
- *   If clamp bit is set, "Allow going below OS-requested P/T state setting during time window specified by bits 23:17 [timewindow1]"
- */
 void
 set_package_clamp_enable(int fd, uint64_t setting, uint64_t addr) {
 	uint64_t msr;
@@ -168,12 +151,6 @@ set_package_clamp_enable(int fd, uint64_t setting, uint64_t addr) {
 
 }
 
-/* <--- Alejandro's Interpretation --->
- * Takes the "human readable" time window values custm_time and figures out which
- * bit fields Y and F it would like to use and store in the MSR to represent it. The
- * ideal Y and F values are the ones that would represent a custom time closest to custm_time
- * but would still be lower, so we don't overstep the time window limit.
- */
 //This idea is loop four possible sets of Y and F, and in return to get
 //the time window, then use the set of Y and F that is smaller than but
 //closest to the customized time.
@@ -196,7 +173,7 @@ convert_optimal_yf_from_time(uint64_t *Y, uint64_t *F, double custm_time) {
 	}
 }
 
-/* <--- Alejandro's Interpretation --->
+/**
  * Takes a "human readable" time window value, figures out the best Y and F values to represent
  * it as a bit field, stores the bit field as both the upper and lower time window fields of the MSR
  */
@@ -218,10 +195,9 @@ set_pkg_time_window_limit(int fd, uint64_t addr, double custm_time) {
 	putBitField(Y, &msr, Y_SIZE, Y_START_TIMEWINDOW_2);
 
 	write_msr(fd, addr, msr);
-
 }
 
-/* <--- Alejandro's Interpretation --->
+/**
  * Takes a "human readable" time window value, figures out the best Y and F values to represent
  * it as a bit field, stores the bit field as just the lower time window
  */
@@ -242,7 +218,7 @@ set_dram_time_window_limit(int fd, uint64_t addr, double custm_time) {
 	write_msr(fd, addr, msr);
 }
 
-/* <--- Alejandro's Interpretation --->
+/**
  * Takes a "human readable" power limit value, converts it into a storable bit field by dividing it by the rapl_unit's power attrib, stores it in both
  * the package power limit sections of the MSR
  * (***is rapl_unit just a conversion unit for each type of data?)
@@ -259,10 +235,9 @@ set_pkg_power_limit(int fd, uint64_t addr, double custm_power) {
 	putBitField(power_limit, &msr, POWER_LIMIT_FIELD_SIZE, POWER_LIMIT_START_HIGH_END);
 
 	write_msr(fd, addr, msr);
-
 }
 
-/* <--- Alejandro's Interpretation --->
+/**
  * Takes "human readable" power value, adjusts it to fit in the bit field, stores in the low end power limit field
  * (the high end is also included here but commented out)
  */
@@ -281,24 +256,19 @@ set_dram_power_limit(int fd, uint64_t addr, double custm_power) {
 
 }
 
-/* <--- Alejandro's Interpretation --->
- * Extract the power bit, every bit, and time bit data from msr and do some math on it. The resulting values are used for
- * packing and unpacking values to and from the msr bit field (pack in so it's a fitting representation, pack out so it's a
- * relevant "human readable" value).
- */
-/*Get unit information to be multiplied with */
+/* Gets conversion unit from msr data->meaningful data of a certain unit */
 void get_msr_unit(rapl_msr_unit *unit_obj, uint64_t data) {
 
 	uint64_t power_bits = extractBitField(data, POWER_BIT_SIZE, POWER_BIT_START);
 	uint64_t energy_bits = extractBitField(data, ENERGY_BIT_SIZE, ENERGY_BIT_START);
 	uint64_t time_bits = extractBitField(data, TIME_BIT_SIZE, TIME_BIT_START);       //// ask kenan - what is the time being retrieved?
 
-	unit_obj->power = (1.0 / _2POW(power_bits));
+	unit_obj->power  = (1.0 / _2POW(power_bits) );
 	unit_obj->energy = (1.0 / _2POW(energy_bits));
-	unit_obj->time = (1.0 / _2POW(time_bits));
+	unit_obj->time   = (1.0 / _2POW(time_bits)  );
 }
 
-/* <--- Alejandro's Interpretation --->
+/**
  * Calculates highest possible energy value the MSR can represent, by multiplying the highest possible
  * value for a 32 bit register by the energy conversion unit. This is used when calculating energy difference
  * across an instance of the register wrapping around.
@@ -309,7 +279,7 @@ get_rapl_wraparound(double energy_unit) {
 	return highest_possible_register_value * energy_unit;
 }
 
-/* <--- Alejandro's Interpretation --->
+/**
  * Gets rapl parameters (see two functions below) but this one is used to get pkg information. Sneaks MSR_PKG_POWER_INFO in
  * so the caller doesnt need to know that value
  */
@@ -318,7 +288,7 @@ get_rapl_pkg_parameters(int fd, rapl_msr_unit *unit_obj, rapl_msr_parameter *par
 	get_rapl_parameters(fd, MSR_PKG_POWER_INFO, (rapl_msr_unit *)unit_obj, (rapl_msr_parameter *)paras);
 }
 
-/* <--- Alejandro's Interpretation --->
+/**
  * Gets rapl parameters (see function below) but used to get dram information. Sneaks MSR_PKG_POWER_INFO in
  * so the caller doesnt need to know that value
  */
@@ -327,8 +297,7 @@ get_rapl_dram_parameters(int fd, rapl_msr_unit *unit_obj, rapl_msr_parameter *pa
 	get_rapl_parameters(fd, MSR_DRAM_POWER_INFO, (rapl_msr_unit *)unit_obj, (rapl_msr_parameter *)paras);
 }
 
-
-/* <--- Alejandro's Interpretation --->
+/**
  * Extracts bit fields for thermal spec power, max power, min power, and max time window from MSR.
  * Processes bit field data into relevant human-readable number using the unit object's data
  * ...data put into unit_obj was proceessed with fomula [1.0 / _2POW(data)]
@@ -355,9 +324,9 @@ get_rapl_parameters(int fd, uint64_t msr_addr, rapl_msr_unit *unit_obj, rapl_msr
 	paras->max_time_window = unit_obj->time * max_time_window;
 }
 
-/* <--- Alejandro's Interpretation --->
- * Gets your rapl parameters and the domain (?) you wanna get them from. Then puts the data from
- * the parameter list into an an array. {thermal_spec_power, min_power, max_power, max_time_window}
+/** Fill an array of 4 places with the 4 fields of rapl_msr_parameter. Takes an array
+ * of those, indexed by domain, and selects the 4 fields from the array entry of that
+ * domain.
  */
 void
 getPowerSpec(double result[4], rapl_msr_parameter *parameters, int domain) {

@@ -21,7 +21,7 @@
 #define MSR_PKG_ENERGY_STATUS    0x611
 
 /**Power/time window maximum/minimum information(Only support for PKG and DRAM **/
-#define MSR_PKG_POWER_INFO				0x614
+#define MSR_PKG_POWER_INFO			0x614
 #define MSR_DRAM_POWER_INFO     	0x61C
 
 /*Power domains*/
@@ -38,9 +38,7 @@
 #define DISABLE 0
 #define ENABLE 1
 
-//---------Alejandro's recent #defines---------------//
-//@TODO group them with reasonable /**Descriptions**/ like the ones above
-//@TODO Should the _SIZE ones of width 1 have a special name to denote that it's just one bit? Seems possibly important
+/* ---- Various constants for MSR setting / reading / evaluating ----- */
 #define MSR_SIZE        64
 #define DELTA_MAX		5000000000.0
 
@@ -75,7 +73,6 @@
 #define POWER_LIMIT_START_LOW_END    0
 #define POWER_LIMIT_START_HIGH_END  32
 
-
 #define POWER_BIT_SIZE      4
 #define POWER_BIT_START     0
 
@@ -85,17 +82,14 @@
 #define TIME_BIT_SIZE       4
 #define	TIME_BIT_START     16
 
-
 #define POWER_INFO_FIELD_SIZE       15
 #define THERMAL_SPEC_POWER_START     0
 #define MIN_POWER_START             16
 #define MAX_POWER_START             32
 #define MAX_TIME_WINDOW_SIZE         6
 #define MAX_TIME_WINDOW_START       32
-//------------------------------------------------------------//
+/* -------------------------------------------------------------------- */
 
-
-/***global variable***/
 typedef struct rapl_msr_unit {
 	double power;
 	double energy;
