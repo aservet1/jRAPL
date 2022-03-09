@@ -10,7 +10,7 @@ SAMPLE_DRIVER_OUTPUT_FILES = \
 
 NATIVE_TARGET = src/JNI/libJNIRAPL.so
 
-all: nativeLib javaLib
+all: clean nativeLib javaLib
 
 nativeLib: ## Compile native .so
 	(cd $(NATIVE_SRC) && make)
