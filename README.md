@@ -15,69 +15,96 @@ see where it can be optimized, and for a technical writeup of the new developmen
 Because this is still under development, I don't have robust documentation on all of the features and how it works. I have the basics listed below for if
 anyone wants to use it right now for what it is, but there is still development that needs to be done.
 
-## Performance Tests
-I'm currently running several runtime and memory overhead tests on the tool. All of the code for that is in the `tests` directory. That part is still
-very ad-hoc and under development. Once it's all done, it'll be organized into a way where all of the experiments can be run and the results can be
-reported on any system with little to no prior configuration.
-
-I have some runtime micro-benchmarks done with the [Java MicroBenchmark Harness](https://github.com/openjdk/jmh) and some longer-term benchmarks
-to observe memory footprint and some other performance metrics with the [DaCapo Benchmark Suite](http://dacapobench.sourceforge.net/).
-
-## How to build
-Right now, it's all made by a shell script at the top level, and then Maven plus a few Makefiles. I'll have a more sophisticated build by the time the project is done.
-You can do `./build.sh` and `./build clean`. It triggers other makefiles to build the native library, found in `src/native` and calls Maven to compile the Java
-files in `src/java`. The final JAR is in `src/java/target/jRAPL-1.0.jar`, which you can move anywhere you want to include in your project and import the
-relevant modules.
-
-## The Interface
-Since the project is still under development, these are not final, but they are close to final.
-
 ### Prerequeisites
 The Intel RAPL interface requires root access, so all jRAPL programs need to be run as root. It is also not turned on by default, so you can turn it on it
 with `sudo modprobe msr`. If you get errors such as `ERROR read_msr(): pread error!` it's likely that you're either not running root or that you haven't
 used `sudo modprobe msr` since the last time the system booted.
 
+### Add new platform suport
+If your platform is not currently supported, and you know it has Intel RAPL capabilities, add a new entry in `src/native/platform_support.tsv` and
+recompile the whole tool. The build process uses an awk script to generate a C file with the platform support values, which gets compiled in with the
+rest of the code.
+
+Sample `platform_support.tsv`:
+```
+"id"    "platform name" "dram"  "pp0"   "pp1"   "pkg"
+0x2A    SANDYBRIDGE     false   true    true     true
+0x2D    SANDYBRIDGE_EP  true    true    false    true
+0x3A    IVYBRIDGE       false   true    true     true
+0x3C    HASWELL1        true    true    false    true
+0x3F    HASWELL_EP      true    true    false    true
+0x45    HASWELL2        true    true    false    true
+0x46    HASWELL3        true    true    false    true
+0x4E    SKYLAKE1        true    true    false    true
+0x4F    BROADWELL2      true    true    false    true
+0x5C    APOLLOLAKE      true    true    false    true
+0x5E    SKYLAKE2        true    true    false    true
+0x8e    KABYLAKE        true    true    true     true
+0x9e    COFFEELAKE2     true    true    false    true
+0xD4    BROADWELL       true    true    true     true
+```
+Simply add a new row with your platform information, available in Intel
+documentation.  The rightmost 4 columns indicate whether your platform
+supports RAPL for each power domain. It's the updater's responsibility
+to know this information and accurately report it.
+
 ### Energy Samples
 How to access the energy samples is described in the below sections. There are two ways to implement a sample: as a Java object and as a Java array.
 The array provides a less friendly interface, but has less memory footprint. The object has getter methods as well as a timestamp. Units are Joules.
 #### Power Domains
-A power domain refers to a hardware component whose energy consumption is reported. This implementation of jRAPL can report on DRAM, Cores, CPU Package,
-and GPU. Power domains reported are dependent on your machine.
+A "power domain" is a term for how RAPL narrows down energy activity. It refers to a specific hardware component, any RAPL readings will
+come from that domain. For example, we have the DRAM domain, so whenever jRAPL returns an energy sample, there will be a DRAM section, which
+is energy consumption attributed to your machine's DRAM.
 
-#### EnergyStats vs EnergyDiff
-There are two types of energy sample objects. `EnergyStats` is a running total of energy consumed since the last time the reporting register
-overflowed back to 0. `EnergyDiff` is the subtraction of two `EnergyStats` objects. The subtraction in constructing and `EnergyDiff` handles wraparound
+The PKG power domain refers to a CPU package, cores and uncore. The term "socket" (CPU socket, not network socket) is used interchangeably with "Package".
+
+The PP0 power domain refers to all of the CPU cores on a given socket.
+
+The PP1 power domain is platform dependent, but refers to some uncore device, oftentimes an on-chip GPU. It could refer to part of the uncore,
+or the entire uncore. `PP0 + PP1 <= PKG`, since PP0 is the energy consumed by CPU cores and PP1 is energy consumed by CPU uncore, or a component
+of uncore.
+
+Uncore refers to the parts of a CPU that are not the main cores.
+
+#### EnergySample vs EnergyMeasurement
+There are two types of energy sample objects. `EnergySample` is a running total of energy consumed since the last time the reporting register
+overflowed back to 0. `EnergyMeasurement` is the subtraction of two `EnergySample` objects. The subtraction in constructing and `EnergyMeasurement` handles wraparound
 logic, in case the first sample was ten pre-overflow and the second sample was taken post-overflow.
 
-`EnergyStats` has an `Instant` timestamp for when the sample was taken and `EnergyDiff` has a `Duration` time value for the time over which this sample
-refers. It can also be used to calculate power, since you now have joules and time.
+`EnergySample` has an `Instant` timestamp for when the sample was taken and `EnergyMeasurement` has a start and stop timestamp,
+taken from the two `EnergySample`s that created it. There's a `getElapsedTime()` method to get the duration between these timestamps,
+which is most often useful for calculating power; divide the Joules reported by the time period over which your machine consumed
+those joules.
 
-Both of these types inherit from the same type, so the getters for energy values per power domain (described below) are the same.
+The `EnergySample` is intended as only an intermediate value. It's essentially a high level representation of the RAPL MSR counters
+converted to Joules, but that's not useful on its own. The way RAPL energy status is reported is as a perpetually accumulating count
+of joules consumed so far. The reason this is not useful is because the counters wrap back to zero. This data becomes useful when you
+take the measurement of energy consumed between two samples. The logic implemented here takes care of register wraparound and makes sure
+that useful, human-consumable values are reported. Therefore, the only useful data you will get is once you convert your series of
+`Energy Samples`s to `Energy Measurement`s.
 
 #### Getting values from the sample
-The sample object makes it easy to get values for each power domain. Simple getters, ie `sample.getDram()`, which reports the combined DRAM energy
-consumptions for all CPU sockets. You can specify which socket to get the value from with `sample.getDram(2)` and you'll get the value for socket 2.
-If a power domain is not supported for your mahine, this method will return `-1`.
-
-To get samples from the primitive array, you need the index that corresponds to the power domain per socket. These are in the `ArchSpec` class, which
-has a lot of system-specific constants. To get the value out of the array for a given socket, you can do `sample[ArchSpec.DRAM_ARRAY_INDEX*socketNumber]`. If
-the power domain is not supported for your machine, the index constant will be `-1`.
+The sample object makes it easy to get values for each power domain. Simply call one of the EnergyMeasurement.get\*().
+`sample.getDRAM(void)`, which reports the combined DRAM energy consumptions for all CPU sockets. `sample.getDram(int socket)` and you'll get the value
+for a given socket.  If a power domain is not supported for your machine, this will return -1.
 
 ### Types of monitors
-The library currently has two types of energy monitors, for synchronous and asynchronous energy monitoring. Both have an `activate()` and `deactivate()`
-method that allocate and deallocate memory and resources in native C code. Using them before activated or after deactivated is undefined behavior.
+The library has two types of energy monitors, for synchronous and asynchronous energy monitoring. Both have an `activate()` and `deactivate()`
+method that allocate and deallocate memory and other resources in native C code. Using them before activated or after deactivated is undefined behavior.
+Failing to call `activate()` before using an energy monitor will cause undefined behaviour and failing to call `deactivate()` will result in
+memory leaks and unclosed file descriptors.
 
 #### Synchronous Energy Monitor
-The `jRAPL.SyncEnergyMonitor` class is for taking energy samples during the execution of your main program. Sample code:
+The `jRAPL.EnergyMonitor` class is for taking energy samples during the execution of your main program. Sample code:
 ```
-SyncEnergyMonitor m = new SyncEnergyMonitor();
+EnergyMonitor m = new EnergyMonitor();
 m.activate();
 
-EnergyStats before = m.getSample();
+EnergySample before = m.getSample();
 doWork();
-EnergyStats after = m.getSample();
+EnergySample after = m.getSample();
 
-EnergyDiff diff = EnergyDiff.between(before, after);
+EnergyMeasurement joules = EnergyMeasurement.between(before, after);
 m.deactivate();
 ```
 You now have the amount of energy your machine consumed over the course of `doWork()` in the `diff` variable.
@@ -95,15 +122,13 @@ m.start();
 doWork();
 m.stop();
 
+EnergyMeasurement[] last100 = m.getLastKMeasurements(100); // for if necessary to do online processing of energy, as opposed to profiling and dumping.
+
 m.writeFileCSV('data/monitored-activity.csv');
 
 m.deactivate();
 ```
 This will take energy samples ever 100ms while `doWork()` executes and will then dump the collected data to a CSV file.
-
-The reason I initialized it as a `new AsyncEnergyMonitorJavaSide()` is because we are testing different implementations of the monitor. We also have two
-versions where all the computations are done and stored in native code. The API for how to initialize this will be cleaned up once we find what the best 
-implementation is.
 
 ## Checking if it works on your machine
 To see if your computer's architecture is supported, run 
@@ -114,7 +139,7 @@ MICRO_ARCHITECTURE: 8e
 MICRO_ARCHITECTURE_NAME: KABYLAKE
 ```
 If `MICRO_ARCHITECTURE_NAME` says something like `UNDEFINED_ARCHITECTURE`, it won't work on your machine.
-Feel free to open a pull request with whatever your output was and I'll update, if possible.
+Make an entry in `src/native/platform_support.tsv` to add new platform support. See my "Add New Platform Support section"
 
 ### Contact
 Any questions, feel free to email. Alejandro Servetto {aservet1@binghamton.edu}
