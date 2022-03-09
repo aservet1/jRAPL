@@ -27,6 +27,8 @@ public final class EnergyMeasurement {
     public double getPP1(int socket)  { return pp1PerSocket[socket];  }
     public double getPKG(int socket)  { return pkgPerSocket[socket];  }
 
+    /* The get*() with no socket argument passed is a total for that
+        power component across all sockets. */
     public double getDRAM() {
         double total = 0;
         for(int socket = 0; socket < ArchSpec.NUM_SOCKETS; socket++) {
