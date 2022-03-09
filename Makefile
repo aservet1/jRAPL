@@ -27,4 +27,4 @@ clean: clean-sample-driver-output
 	(cd $(NATIVE_SRC) && make clean)
 	(cd $(JNI_SRC) && make clean)
 	(cd $(JAVA_SRC) && mvn clean)
-	rm $(FINAL_JAR)
+	rm -f $(FINAL_JAR)
