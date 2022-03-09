@@ -104,8 +104,8 @@ that useful, human-consumable values are reported. Therefore, the only useful da
 
 #### Getting values from the sample
 The sample object makes it easy to get values for each power domain. Simply call one of the EnergyMeasurement.get\*().
-`sample.getDRAM(void)`, which reports the combined DRAM energy consumptions for all CPU sockets. `energy.getDram(int socket)` and you'll get the value
-for a given socket.  If a power domain is not supported for your machine, this will return -1.
+`measurement.getDRAM(void)`, which reports the combined DRAM energy consumptions for all CPU sockets. `measurement.getDram(int socket)` and you'll get the value
+for the given socket.  If a power domain is not supported for your machine, this will return -1.
 
 ### Types of monitors
 The library has two types of energy monitors, for synchronous and asynchronous energy monitoring. Both have an `activate()` and `deactivate()`
