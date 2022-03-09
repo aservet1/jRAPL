@@ -11,9 +11,8 @@ tool and add features, improvements, and modularity to the source code, turning 
 energy monitoring tool, available to the open source community for their own energy-aware research and projects.
 
 ### Prerequeisites
-The Intel RAPL interface requires root access, so all jRAPL programs need to be run as root. It is also not turned on by default, so you can turn it on it
-with `sudo modprobe msr`. If you get errors such as `ERROR read_msr(): pread error!` it's likely that you're either not running root or that you haven't
-used `sudo modprobe msr` since the last time the system booted.
+The Intel RAPL interface requires root access, so all jRAPL programs need to be run as root. The interface is not on by default, it can be
+triggered by invoking the Linux kernel module: `sudo modprobe msr`
 
 Maven is required to build the Java part of the library.
 
