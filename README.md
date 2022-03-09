@@ -5,9 +5,10 @@ jRAPL is a computer energy monitoring API in Java. RAPL stands for Running Avera
 and set power limits. jRAPL uses the energy monitoring technology and implements it in Java, abstracting out low-level details about register reading and how to
 access the data.
 
-I am developing this library as part of a research project for energy aware programming at my university. The [original](https://github.com/kliu20/jRAPL)
-version of jRAPL was made several years ago by one of my team members, used for several projects that were going on at the time. I'm taking his existing
-code and expanding on it, adding improvements and making it a standalone general purpose library for the research community to be able to use.
+This is an extension of the [original](https://github.com/kliu20/jRAPL) jRAPL. That first version was made by one of the researchers under my advisor
+at university. It was used for several PhD projects by different members of the team. Part of my undergraduate research project was to take the jRAPL
+tool and add features, improvements, and modularity to the source code, turning a tool made for a few peoples' projects into a general standalone
+energy monitoring tool, available to the open source community for their own energy-aware research and projects.
 
 ### Prerequeisites
 The Intel RAPL interface requires root access, so all jRAPL programs need to be run as root. It is also not turned on by default, so you can turn it on it
@@ -15,6 +16,8 @@ with `sudo modprobe msr`. If you get errors such as `ERROR read_msr(): pread err
 used `sudo modprobe msr` since the last time the system booted.
 
 Maven is required to build the Java part of the library.
+
+Currently supported on Intel processors with Linux OS.
 
 ## How to use
 Build the jRAPL jar with the Makefile in the root of this project. It will trigger sub-Makefiles and Maven to build and piece together
