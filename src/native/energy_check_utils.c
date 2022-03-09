@@ -60,6 +60,11 @@ usec_since_epoch() {
 
 void
 ProfileInit() {
+    #ifdef __linux__
+    #else
+    fprintf(stderr,"OS not supported. Only Linux OS for now.\n")
+    #endif
+
 	char msr_filename[BUFSIZ];
 
 	num_sockets = getSocketNum();
