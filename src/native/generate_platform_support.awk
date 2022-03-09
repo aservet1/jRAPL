@@ -35,9 +35,15 @@ BEGIN {
     print "const power_domain_support_info_t\n\tPLATFORM_NOT_SUPPORTED = {0x00, 0, false, false, false, false};"
     print ""
     print "const uint32_t KNOWN_PLATFORM_ID_SET[] = {"
+    c = 0
     for (i = 1; i <= n; i++) {
-        printf "\t%s,\n", ids[i]
+        printf "\t%s, ", ids[i]
+        c = ( c + 1 ) % 5
+        if (c == 0)
+            printf "\n"
     }
+    if ( c != 0)
+        printf "\n"
     print "};"
     print ""
     print "const int NUM_PLATFORMS_SUPPORTED = "n";"
