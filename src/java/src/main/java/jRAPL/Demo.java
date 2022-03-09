@@ -7,10 +7,11 @@ public class Demo {
 	private static void sleepPrint(int ms) throws InterruptedException {
 		int sec = (int)ms/1000;
 		ms = ms%1000;
-		for (int s = 0; s < sec; s++) {
-			System.out.printf("%d/%d\n",s,(sec+ms));
+		for (int s = 1; s <= sec; s++) {
+			System.out.printf("\r [%d/%d] ",s,(sec+ms));
 			Thread.sleep(1000);
 		} Thread.sleep(ms);
+        System.out.println("\r          ");
 	}
 
 	private static void demoArchSpec() {
@@ -56,7 +57,7 @@ public class Demo {
 		m.setSamplingRate(100);
 
 		m.start();
-        sleepPrint(3000);
+        sleepPrint(10000);
 		m.stop();
 
 		System.out.println(m);
