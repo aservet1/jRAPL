@@ -8,18 +8,6 @@
 #include "arch_spec.h"
 #include "platform_support.h"
 
-JNIEXPORT jstring JNICALL
-Java_jRAPL_NativeAccess_getEnergySampleArrayOrder(JNIEnv* env, jclass jcls) {
-	char* order;
-    power_domain_support_info_t pds = get_power_domains_supported();
-	if(pds.dram && pds.pp1 && pds.pp0 && pds.pkg)  { order = "dram,pp1,pp0,pkg";       }
-	else if(pds.dram && pds.pp0 && pds.pkg)        { order = "dram,pp0,pkg";           }
-	else if(pds.pp1 && pds.pp0 && pds.pkg)         { order = "pp1,pp0,pkg";            }
-	else                                           { order = "undefined_architecture"; }
-
-    return (*env)->NewStringUTF(env, order);
-}
-
 JNIEXPORT jdouble JNICALL
 Java_jRAPL_NativeAccess_getWraparoundEnergy(JNIEnv* env, jclass jcls) {
 	int fd = open("/dev/cpu/0/msr",O_RDONLY);
