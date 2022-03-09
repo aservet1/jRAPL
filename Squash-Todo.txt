@@ -1,42 +1,13 @@
 native:
-- reformat how you update for new processors.
-  - look back to see how many places you had to change to add ice lake support, see how much you can minimize that process
-  - instead of a macro, just have your function return a bool struct...this is way easier to build stuff around
 - have it fail and crash if /dev/cpu/x/msr file not found, tell them they need to load the kernel module
   - is there any chance whatsoever that mac or windows would have a /dev/cpu/x/msr file?? maybe prevent
     this slight possibility by just having bazel say 'hey this isnt going to work on your OS, you need linux, sorry'
     - 'os {OS_NAME} not supported. please contact the maintainer of this repo to discuss jRAPL support for your operating system'
 
 jni:
-- make a JNI string. forget mangling it up with a CSV string
 - make sure the JNI string converts the numbers to dot decimal
   - even on a comma decimal machine, if Java is parsing a dot decimal string with Double.toString()
-- the source of truth for your C side CSV string should not be the same as the source of truth for your
-  Java side CSV string. these are different entities. they have a lot in common, but it's not worth it.
-  the effort to harmonize their source of truth just makes it convoluted. and we don't expect end users
-  to play around with something as rudimentary as CSV formatting, so if they really want to that's on them
-  to work out
-  - or you can just harmonize this by removing all of the C-side file dumping. make your CSV dump methods all
-    be abstractly related to the EnergyMonitor, and then implement them in the Java subclasses. this would
-    involve making,,,,,,,,,,,,,,,,,,okay before you do this just consider if you want the C side energy monitor
-    to be in your compressed release to begin with. you can also just super simplify this by having an
-    AsyncEnergyMonitor.java that does this in Java and doesn't concern itself with all of this native stuff...
-    this is for Java apps, after all
-
-java:
-- energy sample / energy measurement name instead of enery stats and energy diff
-- pp0 and pp1 name? is it ok to name it core and uncore? gpu is bad because it just might be the on chip gpu.
-  uncore is less bad because its closer to accurate, but it doesn't always measure whole uncore...so if youre
-  expecting to stress a specific part of the uncore
-- consider just deploying your asyncenergymonitor java side...how worth it is this to get that perfect 1ms sampling rate?
-  it would be at the cost of giving the user a slightly more complicated set of source code and set of options for use
-- simplify your energy samples, dude. just have 4 fields don't do this whole array thing where you have to coordinate the indices
-- 
-
-all:
-- add a getUncore function to C side? pkg - pp0
 
 build process:
 - consider how to make this the best maven build
 - consider making this a bazel build
-- at the very least (and probably just this), pull out jRAPL.jar
