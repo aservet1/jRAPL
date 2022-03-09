@@ -6,8 +6,8 @@ and set power limits. jRAPL uses the energy monitoring technology and implements
 access the data.
 
 This is an extension of the [original jRAPL](https://github.com/kliu20/jRAPL). That first version was made by one of the researchers under my advisor
-at university. It was used for several PhD projects by different members of the team. Part of my undergraduate research project was to take the jRAPL
-tool and add features, improvements, and modularity to the source code, turning a tool made for a few peoples' projects into a general standalone
+at university. It was used for several PhD projects by different members of the team. As an undergrad, part of my undergraduate research project was to take the 
+jRAPL tool and add features, improvements, and modularity to the source code, turning a tool made for a few peoples' projects into a general standalone
 energy monitoring tool, available to the open source community for their own energy-aware research and projects.
 
 ### Prerequeisites
