@@ -104,7 +104,7 @@ that useful, human-consumable values are reported. Therefore, the only useful da
 
 #### Getting values from the sample
 The sample object makes it easy to get values for each power domain. Simply call one of the EnergyMeasurement.get\*().
-`measurement.getDRAM(void)`, which reports the combined DRAM energy consumptions for all CPU sockets. `measurement.getDram(int socket)` and you'll get the value
+`measurement.getDRAM(void)`, which reports the combined DRAM energy consumptions for all CPU sockets. `measurement.getDRAM(int socket)` and you'll get the value
 for the given socket.  If a power domain is not supported for your machine, this will return -1.
 
 ### Types of monitors
@@ -133,7 +133,7 @@ The `jRAPL.AsyncEnergyMonitor` class is a monitor that takes samples at a set sa
 You can extract samples in your main thread with the `getLastKSamples()` method or you can dump results to a file in CSV format with `writeFileCSV()`.
 Sample code:
 ```
-AsyncEnergyMonitor m = new AsyncEnergyMonitorJavaSide();
+AsyncEnergyMonitor m = new AsyncEnergyMonitor();
 m.activate();
 m.setSamplingRate(100);
 
