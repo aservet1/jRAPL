@@ -59,10 +59,11 @@ uint64_t read_msr(int fd, uint64_t msrOffset)
 {
 	uint64_t data = 0;
 	if ( pread(fd, &data, sizeof data, msrOffset) != sizeof data ) {
-	  fprintf(stderr,"ERROR reading from MSR.\n"
-        "Most often caused by not running this program as root,\n"
-        "or because MSR kernel module is not enabled. For the latter\n"
-        "circumstance, use the command `sudo modprobe msr` \n.");
+	  // fprintf(stderr,"ERROR reading from MSR.\n"
+      //   "Most often caused by not running this program as root,\n"
+      //   "or because MSR kernel module is not enabled. For the latter\n"
+      //   "circumstance, use the command `sudo modprobe msr` \n.");
+      return -1;
 	}
 	return data;
 }
