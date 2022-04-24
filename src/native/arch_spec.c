@@ -118,7 +118,7 @@ getSocketNum() {
 bool is_platform_defined(uint32_t microarch_id) {
     for(int i = 0; i < NUM_PLATFORMS_SUPPORTED; ++i) {
 		// printf("%x\n",PLATFORM_SUPPORT_TABLE[i].cpuid);
-        if (KNOWN_PLATFORM_ID_SET[i] == microarch_id) return true;
+        if (SUPPORTED_PLATFORM_IDS[i] == microarch_id) return true;
     } return false;
 }
 

@@ -14,6 +14,7 @@ BEGIN {
     print "// showcased this \"TSV file to C data structures via AWK\" idea"
     print ""
     print "#include <stdint.h>"
+    print "#include <stddef.h>"
     print "#include \"platform_support.h\""
     print ""
     print "const power_domain_support_info_t PLATFORM_SUPPORT_TABLE[] = {"
@@ -32,9 +33,10 @@ BEGIN {
 } END {
     print "};"
     print ""
-    print "const power_domain_support_info_t\n\tPLATFORM_NOT_SUPPORTED = {0x00, 0, false, false, false, false};"
+    print "const power_domain_support_info_t"
+    print "\tPLATFORM_NOT_SUPPORTED = {0x00, NULL, false, false, false, false};"
     print ""
-    print "const uint32_t KNOWN_PLATFORM_ID_SET[] = {"
+    print "const uint32_t SUPPORTED_PLATFORM_IDS[] = {"
     c = 0
     for (i = 1; i <= n; i++) {
         printf "\t%s, ", ids[i]
