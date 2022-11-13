@@ -48,10 +48,10 @@ set -e
 [ $# = 0 ] && usage $0
 resultDir=$1
 
-warmups=2 #5
-iterations=7 #30
+warmups=1 #5
+iterations=3 #30
 
- ### Validating logfile and resultDir args ###
+### Validating logfile and resultDir args
 [ -z $2 ] && logfile=/dev/null || logfile=$2
 if [ -d $resultDir ]; then
 	echo " ERROR: directory '$resultDir' already exists."
@@ -62,7 +62,7 @@ if [ -f $logfile ] && [ $logfile != /dev/null ]; then
 	echo "ERROR: logfile '$logfile' already exists!"
 	exit 1
 fi
- #############################################
+###
 
 touch $logfile
 
@@ -91,7 +91,10 @@ do
 			$benchmark $monitoringEnergy $iterations \
 			$warmups no-monitor $samplingRate $resultDir
 	done
+	printf 'Subject: Your jRAPL calmness experiments for sampling rate %s are done.\n\nOn to the next one.' $samplingRate 
 done 2>&1 | tee -a $logfile
 
 echo " (||(.. Completed on $(date)" | tee -a $logfile
+
+printf 'Subject: Your jRAPL calmness experiments are done.\nYou can log on to %s to collect your data\n' $(hostname) 
 
