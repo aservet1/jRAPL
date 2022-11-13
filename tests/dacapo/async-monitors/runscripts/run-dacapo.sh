@@ -24,7 +24,7 @@ resultDir=$7;
 
 mkdir -p $resultDir
 
-source scripts/benchmark_size_assoc
+source runscripts/benchmark_size_assoc
 size=${benchmark_size_assoc[$benchmark]}
 
 echo "@run_dac po.sh@@ @ benchmark -> $benchmark @ @"

@@ -11,9 +11,9 @@ set -e
 
 [ $# = 0 ] && usage $0
 
-warmups=5
-iterations=30
-samplingRate=8
+warmups=3
+iterations=7
+samplingRate=4
 resultDir=$1
 [ -z $2 ] && logfile=/dev/null || logfile=$2
 if [ -d $resultDir ]; then
@@ -33,8 +33,7 @@ echo " (||(.. Started on $(date)" | tee -a $logfile
 sudo -v
 sudo echo 'hello w0rld :))' | tee -a $logfile
 
-mkdir $resultDir
-sudo ps -ef > $resultDir/SYSTEM_PROCESSES_THAT_WERE_RUNNING.txt
+sudo mkdir -p $resultDir
 
 make clean all | tee -a $logfile
 
@@ -43,19 +42,16 @@ do
 	monitoringEnergy=true
 	for monitorType in c-dynamicarray c-linklist java
 	do
-		sudo scripts/run-dacapo.sh \
+		sudo runscripts/run-dacapo.sh \
 			$benchmark $monitoringEnergy $iterations \
 			$warmups $monitorType $samplingRate $resultDir
 	done
 
 	monitoringEnergy=false
-	sudo scripts/run-dacapo.sh \
+	sudo runscripts/run-dacapo.sh \
 		$benchmark $monitoringEnergy $iterations \
 		$warmups no-monitor $samplingRate $resultDir
 
 done 2>&1 | tee -a $logfile
 
 echo " (||(.. Completed on $(date)" | tee -a $logfile
-
-printf 'Subject: Your jRAPL experiments are done.\nYou can log on to %s to collect your data\n' $(hostname) | sudo ssmtp a.l.servetto@gmail.com
-
