@@ -102,31 +102,36 @@ public abstract class AsyncEnergyMonitor extends EnergyMonitor {
 	*/
 	public abstract void writeFileCSV(String fileName);
 
-	public void writeFileMetadata(String fileName) { //@TODO at some point, make it write to stdout instead of a file if fileName == null
+	public void writeFileMetadata(String fileName) {
 		// currently enforcing only JSON files
 		if (fileName != null) {
 			String[] parts = fileName.split("\\.");
 			if (parts.length > 0 && !(parts[parts.length-1].equalsIgnoreCase("json"))) {
-				System.err.printf("<<<<<<<<<<<< ERROR: writeToFileMetaInfo() only acccepts .json output file format, not the received: %s\n", fileName);
+				System.err.printf("<<<<<<<<<<<< ERROR: writeToFileMetadata() only acccepts .json output file format, not the received: %s\n", fileName);
 				System.err.println(Thread.currentThread().getStackTrace());
 				System.exit(2);
 			}
 		}
-		
+
 		long samplingRate = getSamplingRate();
 		long lifetime = getLifetime().toMillis();
 		long numSamples = getNumSamples();
 
-		// java generate JSON for the meta info object RIGHT HERE RIGHT NOW
-		String json = String.format( //@TODO make sure all of the metainfo points are here or if you need to gather more data to display
-				"{\"samplingRate\": %d, \"lifetime\": %d, \"numSamples\": %d, \"energyWrapAround\": %f }",
-				samplingRate, lifetime, numSamples, ArchSpec.RAPL_WRAPAROUND);
+		String json = String.format(
+			"{"
+			+"\n\t\"samplingRate\":%d,"
+			+"\n\t\"lifetime\":%d,"
+			+"\n\t\"numSamples\":%d"
+			+"\n}",
+			samplingRate, lifetime, numSamples
+		); //@TODO make sure all of the metainfo points are here or if you need to gather more data to display
+
 		try {
 			BufferedWriter writer = new BufferedWriter (
-							(fileName == null)
-								? new OutputStreamWriter(System.out)
-								: new FileWriter(new File(fileName))
-							);
+				(fileName == null)
+					? new OutputStreamWriter(System.out)
+					: new FileWriter(new File(fileName))
+			);
 			//FileWriter writer = new FileWriter(fileName);
 			writer.write(json);
 			writer.flush();
